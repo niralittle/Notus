@@ -48,10 +48,10 @@ public class TestConnectionPoolServlet extends HttpServlet {
             out.println(u);
             ps.close();
         } catch (SQLException exc) {
-            out.println("EXC: " + exc.getMessage());
+            out.println("Exception: " + exc.getMessage());
             out.close();
         } catch (NamingException e) {
-            out.println("EXC: " + e.getMessage());
+            out.println("Exception: " + e.getMessage());
             out.close();
         }
     }
