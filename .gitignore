@@ -1,0 +1,48 @@
+# NetBeans specific #
+# For Unix #
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+NotusOSS-ejb/nbproject/private/
+NotusOSS-ejb/build/
+NotusOSS-ejb/nbbuild/
+NotusOSS-ejb/dist/
+
+NotusOSS-war/nbproject/private/
+NotusOSS-war/build/
+NotusOSS-war/nbbuild/
+NotusOSS-war/dist/
+
+# For Windows #
+nbproject\private\
+build\
+nbbuild\
+dist\
+nbdist\
+nbactions.xml
+nb-configuration.xml
+
+NotusOSS-ejb\nbproject\private\
+NotusOSS-ejb\build\
+NotusOSS-ejb\nbbuild\
+NotusOSS-ejb\dist\
+
+NotusOSS-war\nbproject\private\
+NotusOSS-war\build\
+NotusOSS-war\nbbuild\
+NotusOSS-war\dist\
+
+# Class Files #
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+.DS_Store
