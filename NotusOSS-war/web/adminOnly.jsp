@@ -13,8 +13,29 @@
 	<form method="get" action="logout">
 			<input type="submit" value="Logout"/>
 	</form>
-	<form method="get" action="printReport">
-			<input type="submit" value="Print Report"/>
-	</form>
+        <p>EMail</p>
+        <form name="Email" action="MailServlet">
+            <table border="1">
+                <tbody>
+                    <tr>
+                        <td>Adress</td>
+                        <td><input type="text" name="adress" value="" /></td>
+                    </tr>
+                    <tr>
+                        <td>Subject</td>
+                        <td><input type="text" name="subject" value="" /></td>
+                    </tr>
+                    <tr>
+                        <td>Text</td>
+                        <td><input type="text" name="text" value="" style="height:200px;"/></td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" value="Send" name="Send Email" /></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </form>
 </body>
 </html>

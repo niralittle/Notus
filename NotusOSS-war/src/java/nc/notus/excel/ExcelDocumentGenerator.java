@@ -1,7 +1,7 @@
 package nc.notus.excel;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
-import javax.servlet.ServletOutputStream;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -139,13 +139,13 @@ public class ExcelDocumentGenerator {
      * Creates a new excel document. Document will contain sheets created with
      * createNewSheet method.
      */
-    public void generateReport(ServletOutputStream sos) {
+    void generateReport() {
         try {
-
-            workBook.write(sos);
-            sos.close();
+            FileOutputStream fileOut = new FileOutputStream("workbook.xls");
+            workBook.write(fileOut);
+            fileOut.close();
         } catch (IOException e) {
-            e.getStackTrace();
+            System.err.print(e.getMessage());
         }
     }
 }
