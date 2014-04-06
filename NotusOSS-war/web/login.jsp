@@ -9,7 +9,7 @@
 </head>
 <body>
 	<p>Please enter your username and password to access the
-		system</p>
+		system.</p>
 	<form method="POST" action="j_security_check">
 		<table cellpadding="0" cellspacing="0" border="0">
 			<tr>

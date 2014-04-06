@@ -1,4 +1,4 @@
-package java.nc.notus;
+package nc.notus;
 
 import java.io.IOException;
 
