@@ -5,18 +5,18 @@
         <servlet-name>TestConnectionPoolServlet</servlet-name>
         <servlet-class>nc.notus.TestConnectionPoolServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>TestConnectionPoolServlet</servlet-name>
-        <url-pattern>/TestConnectionPoolServlet</url-pattern>
-    </servlet-mapping>
     <servlet>
-		<servlet-name>LogoutServlet</servlet-name>
-		<servlet-class>nc.notus.LogoutServlet</servlet-class>
-	</servlet>
+	<servlet-name>LogoutServlet</servlet-name>
+	<servlet-class>nc.notus.LogoutServlet</servlet-class>
+    </servlet>
 	<servlet-mapping>
 		<servlet-name>LogoutServlet</servlet-name>
 		<url-pattern>/logout</url-pattern>
 	</servlet-mapping>
+	    <servlet-mapping>
+        <servlet-name>TestConnectionPoolServlet</servlet-name>
+        <url-pattern>/TestConnectionPoolServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
