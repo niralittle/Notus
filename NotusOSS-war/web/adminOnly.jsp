@@ -13,6 +13,7 @@
 	<form method="get" action="logout">
 			<input type="submit" value="Logout"/>
 	</form>
+<<<<<<< HEAD
         <p>EMail</p>
         <form name="Email" action="MailServlet">
             <table border="1">
@@ -37,5 +38,10 @@
             </table>
 
         </form>
+=======
+	<form method="get" action="printReport">
+			<input type="submit" value="Print Report"/>
+	</form>
+>>>>>>> b20fce0d7512ba9ec069834aa57ee62d64cefabb
 </body>
 </html>

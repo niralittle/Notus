@@ -9,9 +9,15 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>nc.notus.LogoutServlet</servlet-class>
     </servlet>
+<<<<<<< HEAD
      <servlet>
         <servlet-name>MailServlet</servlet-name>
         <servlet-class>nc.notus.email.MailServlet</servlet-class>
+=======
+    <servlet>
+        <servlet-name>PrintReportServlet</servlet-name>
+        <servlet-class>nc.notus.PrintReportServlet</servlet-class>
+>>>>>>> b20fce0d7512ba9ec069834aa57ee62d64cefabb
     </servlet>
     <servlet-mapping>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
@@ -22,8 +28,13 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+<<<<<<< HEAD
         <servlet-name>MailServlet</servlet-name>
         <url-pattern>/MailServlet</url-pattern>
+=======
+        <servlet-name>PrintReportServlet</servlet-name>
+        <url-pattern>/printReport</url-pattern>
+>>>>>>> b20fce0d7512ba9ec069834aa57ee62d64cefabb
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -55,4 +66,3 @@
         </form-login-config>
     </login-config>
 </web-app>
-
