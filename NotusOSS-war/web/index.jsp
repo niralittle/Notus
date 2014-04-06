@@ -15,5 +15,14 @@
     </head>
     <body>
         <h1>Hello World!</h1>
+        
+        <%=request.getUserPrincipal() %>
+	
+	<p>
+	<a href="login.jsp"><input type="button" value="Login" name="submit"/></a>	
+	</p>
+	<form method="get" action="logout">
+		<input type="submit" value="Logout" />
+	</form>
     </body>
 </html>
