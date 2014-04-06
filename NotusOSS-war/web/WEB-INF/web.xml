@@ -13,6 +13,10 @@
         <servlet-name>MailServlet</servlet-name>
         <servlet-class>nc.notus.email.MailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GenerateReportServlet</servlet-name>
+        <servlet-class>nc.notus.excel.GenerateReportServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
         <url-pattern>/TestConnectionPoolServlet</url-pattern>
@@ -24,6 +28,10 @@
     <servlet-mapping>
         <servlet-name>MailServlet</servlet-name>
         <url-pattern>/MailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GenerateReportServlet</servlet-name>
+        <url-pattern>/getreport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -55,4 +63,3 @@
         </form-login-config>
     </login-config>
 </web-app>
-

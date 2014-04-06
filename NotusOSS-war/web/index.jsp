@@ -7,7 +7,7 @@
 <%-- just test --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
+    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
     <head>
@@ -16,14 +16,14 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        
-        <%=request.getUserPrincipal() %>
-	
-	<p>
-	<a href="login.jsp"><input type="button" value="Login" name="submit"/></a>	
-	</p>
-	<form method="get" action="logout">
-		<input type="submit" value="Logout" />
-	</form>
+
+        <%=request.getUserPrincipal()%>
+
+        <p>
+            <a href="login.jsp"><input type="button" value="Login" name="submit"/></a>
+        </p>
+        <form method="get" action="logout">
+            <input type="submit" value="Logout" />
+        </form>
     </body>
 </html>
