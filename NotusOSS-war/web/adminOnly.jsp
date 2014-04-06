@@ -13,6 +13,8 @@
 	<form method="get" action="logout">
 			<input type="submit" value="Logout"/>
 	</form>
-	
+	<form method="get" action="printReport">
+			<input type="submit" value="Print Report"/>
+	</form>
 </body>
 </html>

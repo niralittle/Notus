@@ -9,6 +9,10 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>nc.notus.LogoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PrintReportServlet</servlet-name>
+        <servlet-class>nc.notus.PrintReportServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
         <url-pattern>/TestConnectionPoolServlet</url-pattern>
@@ -16,6 +20,10 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PrintReportServlet</servlet-name>
+        <url-pattern>/printReport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -47,4 +55,3 @@
         </form-login-config>
     </login-config>
 </web-app>
-
