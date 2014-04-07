@@ -25,5 +25,6 @@
         <form method="get" action="logout">
             <input type="submit" value="Logout" />
         </form>
+        <a href='adminOnly.jsp'>admin page</a>
     </body>
 </html>
