@@ -1,15 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dao;
 
 import javax.naming.NamingException;
 
 /**
  * Class of exceptions that may occur while using DAO
- * @author Igor
+ * @author Igor Litvinenko
  */
 public class DAOException extends Exception {
 

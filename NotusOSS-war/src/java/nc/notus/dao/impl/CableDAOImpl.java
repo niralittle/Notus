@@ -14,7 +14,7 @@ import nc.notus.dao.DAOException;
 import nc.notus.dao.CableDAO;
 
 /**
- *
+ * Implementation of DAO for entity Cable
  * @author Igor Litvinenko
  */
 public class CableDAOImpl extends GenericDAOImpl implements CableDAO {
@@ -27,9 +27,10 @@ public class CableDAOImpl extends GenericDAOImpl implements CableDAO {
         try {
             conn = getConnection();
 
-            String queryString = "SELECT '42' FROM DUAL";
+            String queryString = "SELECT cable FROM cable WHERE id = ?";
             PreparedStatement selectCableStatement =
                                             conn.prepareStatement(queryString);
+            selectCableStatement.setInt(1, cableID);
             ResultSet rs = selectCableStatement.executeQuery();
             rs.next();
             return rs.getString(1);

@@ -1,15 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dao;
 
 /**
- *
- * @author Igor
+ * Interface of DAO for entity Cable
+ * @author Igor Litvinenko
  */
-public interface CableDAO {
+public interface CableDAO extends GenericDAO {
 
     String getCableName(int cableID) throws DAOException;
 

@@ -9,7 +9,7 @@ import java.sql.Connection;
 import nc.notus.dao.DAOException;
 
 /**
- *
+ * Implementation of generic DAO interface
  * @author Igor Litvinenko
  */
 public abstract class GenericDAOImpl implements GenericDAO {
@@ -26,7 +26,6 @@ public abstract class GenericDAOImpl implements GenericDAO {
         }
     }
 
-    @Override
     public Connection getConnection() throws DAOException {
         try {
             Connection conn = dataSource.getConnection();
@@ -38,7 +37,6 @@ public abstract class GenericDAOImpl implements GenericDAO {
         }
     }
 
-    @Override
     public void releaseConnection(Connection conn) throws DAOException {
         try {
             conn.close();

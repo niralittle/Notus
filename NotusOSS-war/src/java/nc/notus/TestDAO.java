@@ -11,8 +11,8 @@ import nc.notus.dao.DAOException;
 import nc.notus.dao.impl.CableDAOImpl;
 
 /**
- *
- * @author Igor
+ * Temporary servlet to test DAO functionality
+ * @author Igor Litvinenko
  */
 public class TestDAO extends HttpServlet {
    
@@ -30,7 +30,7 @@ public class TestDAO extends HttpServlet {
         try {
             try {
                 CableDAO dao = new CableDAOImpl(); // TODO: add this to context on server startup
-                out.println(dao.getCableName(0));
+                out.println(dao.getCableName(1));
             } catch (DAOException exc) {
                 exc.printStackTrace();
                 out.println("Error: " + exc);
