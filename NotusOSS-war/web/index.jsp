@@ -22,6 +22,10 @@
         <p>
             <a href="login.jsp"><input type="button" value="Login" name="submit"/></a>
         </p>
+        <p>
+	    <a href="register.jsp"><input type="button" value="Register" name="submit"/></a>	
+	    </p>
+        
         <form method="get" action="logout">
             <input type="submit" value="Logout" />
         </form>
