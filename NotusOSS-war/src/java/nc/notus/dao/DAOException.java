@@ -1,12 +1,10 @@
 package nc.notus.dao;
 
-import javax.naming.NamingException;
-
 /**
  * Class of exceptions that may occur while using DAO
  * @author Igor Litvinenko
  */
-public class DAOException extends RuntimeException {
+public class DAOException extends Exception {
 
     /**
      * Creates a new instance of <code>DAOException</code> without detail message.

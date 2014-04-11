@@ -26,7 +26,7 @@ public abstract class GenericDAOImpl implements GenericDAO {
         }
     }
 
-    public Connection getConnection() throws DAOException {
+    protected Connection getConnection() throws DAOException {
         try {
             Connection conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -37,7 +37,7 @@ public abstract class GenericDAOImpl implements GenericDAO {
         }
     }
 
-    public void releaseConnection(Connection conn) throws DAOException {
+    protected void releaseConnection(Connection conn) throws DAOException {
         try {
             conn.close();
         } catch (SQLException exc) {
