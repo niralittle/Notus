@@ -6,9 +6,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.dao.CableDAO;
+//import nc.notus.dao.CableDAO;
 import nc.notus.dao.DAOException;
-import nc.notus.dao.impl.CableDAOImpl;
+//import nc.notus.dao.impl.CableDAOImpl;
+import nc.notus.dao.impl.RoleDAOImpl;
+import nc.notus.entity.Role;
 
 /**
  * Temporary servlet to test DAO functionality
@@ -27,10 +29,14 @@ public class TestDAO extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        
         try {
             try {
-                CableDAO dao = new CableDAOImpl(); // TODO: add this to context on server startup
-                out.println(dao.getCableName(1));
+                RoleDAOImpl roleDAO = new RoleDAOImpl();
+                Role role = roleDAO.read(1);
+                //CableDAO dao = new CableDAOImpl(); // TODO: add this to context on server startup
+                //out.println(dao.getCableName(1));
+                out.println("Role " + role.getId() + " " + role.getRole());
             } catch (DAOException exc) {
                 exc.printStackTrace();
                 out.println("Error: " + exc);
