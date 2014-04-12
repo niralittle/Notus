@@ -4,7 +4,7 @@ package nc.notus.dao;
  * Class of exceptions that may occur while using DAO
  * @author Igor Litvinenko
  */
-public class DAOException extends Exception {
+public class DAOException extends RuntimeException {
 
     /**
      * Creates a new instance of <code>DAOException</code> without detail message.

@@ -11,6 +11,7 @@ import nc.notus.entity.OSSUser;
  * Interface of DAO for entity OSSUser
  * @author Vladimir Ermolenko
  */
-public interface OSSUserDAO extends GenericDAO {
-    void blockUser(OSSUser user) throws DAOException;
+public interface OSSUserDAO extends GenericDAO<OSSUser> {
+
+    void blockUser(OSSUser user);
 }
