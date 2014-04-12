@@ -7,11 +7,11 @@
 <h3><%=request.getUserPrincipal()%></h3>
 
 <p>
-    <a href="Login.jsp">Login</a> | <a href="Registration.jsp">Register</a>
+    <a href="login.jsp">Login</a> | <a href="registration.jsp">Register</a>
 </p>
 
 <form method="GET" action="logout">
     <input type="submit" value="Logout" />
 </form>
 
-<a href='AdminOnly.jsp'>Admin page</a>
+<a href='adminOnly.jsp'>Admin page</a>

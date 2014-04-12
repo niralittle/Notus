@@ -4,7 +4,7 @@
     <div id="pages_list">
     </div>
     <div id="auth">
-       <a href="Login.jsp">Login</a> | <a href="Registration.jsp">Register</a>
+       <a href="login.jsp">Login</a> | <a href="registration.jsp">Register</a>
     </div>
 </div>
 

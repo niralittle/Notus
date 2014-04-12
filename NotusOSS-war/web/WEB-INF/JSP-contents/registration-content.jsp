@@ -4,9 +4,9 @@
     Author     : Katya Atamanchuk <nira@niralittle.name>
 --%>
 
-<script type="text/javascript" src="assets/registerValidator.js"/></script>
-<form name="register" method="post" onsubmit="return validate()" action="Login.jsp">
-    <h3>To join our happy customers, please, fill in the form below: </h3>
+<script type="text/javascript" src="assets/registerValidator.js"></script>
+<form name="register" method="post" onsubmit="return validate()">
+    <h4>To join our happy customers, please, fill in the form below: </h4>
     <table border="0" cellpadding="5">
         <tr>
             <td>Login: </td>
@@ -55,4 +55,4 @@
 
 </form>
 
-<h4>Already registered!? <a href="Login.jsp">Login Here</a></h4>
+<h4>Already registered!? <a href="login.jsp">Login Here</a></h4>
