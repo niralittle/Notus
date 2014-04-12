@@ -10,9 +10,8 @@ import java.util.Map;
 public interface GenericDAO<T> extends Closeable {
     /**
      * Method that returns the number of entries from a table that meet some
-     * criteria (where clause params)
-     *
-     * @param params sql parameters
+     * criteria (WHERE clause params)
+     * @param params sql parameters (name-value) that are criteria for SELECT
      * @return the number of records meeting the criteria
      */
     long countAll(Map<String, Object> params);
