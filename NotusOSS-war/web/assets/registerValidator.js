@@ -5,7 +5,8 @@
 function validate() {
 		//getting inputed values in fields
 		var login = document.getElementById("login");
-		var pass = document.getElementById("pass");
+		var pass = document.getElementById("pass2");
+		var pass2 = document.getElementById("pass");
 		var email = document.getElementById("email");
 		var fname = document.getElementById("fname");
 		var lname = document.getElementById("lname");
@@ -23,6 +24,10 @@ function validate() {
 		}
 		if (pass.value.length <= 0) {
 			document.getElementById("passMsg").innerHTML = "password can't be empty; ";
+			valid = false;
+		}
+                if (pass.value !== pass2.value) {
+			document.getElementById("passMsg2").innerHTML = "passwords don't match!; ";
 			valid = false;
 		}
 		if (lname.value.length <= 0) {

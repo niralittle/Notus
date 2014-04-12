@@ -35,7 +35,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GenerateReportServlet</servlet-name>
-        <url-pattern>/getreport</url-pattern>
+        <url-pattern>/ViewReport</url-pattern>
     </servlet-mapping>
     <servlet-mapping><servlet-name>TestDAO</servlet-name><url-pattern>/TestDAO</url-pattern></servlet-mapping><session-config>
         <session-timeout>
@@ -49,8 +49,9 @@
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Admin only</web-resource-name>
-            <url-pattern>/adminOnly.jsp</url-pattern>
+            <web-resource-name>Admin Page</web-resource-name>
+            <description/>
+            <url-pattern>/AdminPage.jsp</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
@@ -62,8 +63,8 @@
         <auth-method>FORM</auth-method>
         <realm-name>jdbcNotusRealm</realm-name>
         <form-login-config>
-            <form-login-page>/login.jsp</form-login-page>
-            <form-error-page>/loginError.jsp</form-error-page>
+            <form-login-page>/Login.jsp</form-login-page>
+            <form-error-page>/LoginError.jsp</form-error-page>
         </form-login-config>
     </login-config>
 </web-app>

@@ -1,0 +1,11 @@
+<hr>
+
+<div id="top_menu">
+    <div id="pages_list">
+    </div>
+    <div id="auth">
+       <a href="Login.jsp">Login</a> | <a href="Registration.jsp">Register</a>
+    </div>
+</div>
+
+<hr>

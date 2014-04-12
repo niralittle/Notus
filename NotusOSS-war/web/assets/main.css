@@ -1,0 +1,25 @@
+/* 
+    Document   : map.css
+    Created on : 12 квіт 2014, 18:58:52
+    Author     : Katya Atamanchuk
+    Description: Map canvas params
+*/
+#map-canvas {
+    height: 600px;
+    width: 500px;
+    margin: 0px;
+    padding: 0px
+}
+
+#panel {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    margin-left: -180px;
+    z-index: 5;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #999;
+}
+
+
