@@ -8,7 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nc.notus.dao.CableDAO;
 import nc.notus.dao.DAOException;
+import nc.notus.dao.GenericDAO;
 import nc.notus.dao.impl.CableDAOImpl;
+import nc.notus.dao.impl.GenericDAOImpl;
+import nc.notus.entity.Cable;
+import java.util.*;
 
 /**
  * Temporary servlet to test DAO functionality
@@ -30,7 +34,17 @@ public class TestDAO extends HttpServlet {
         try {
             try {
                 CableDAO dao = new CableDAOImpl(); // TODO: add this to context on server startup
-                out.println(dao.getCableName(1));
+                out.println(dao.countAll(null));
+                //dao.delete(3);
+                Cable cable = new Cable(69, "New cable"); // TODO: solve problem with PK overwrite
+                dao.add(cable);
+                out.println(dao.countAll(null));
+                cable = dao.find(67);
+                out.println("Found: " + cable.getCable());
+                cable.setCable("Very new Cable");
+                dao.update(cable);
+                cable = dao.find(67);
+                out.println("Found: " + cable.getCable());
             } catch (DAOException exc) {
                 exc.printStackTrace();
                 out.println("Error: " + exc);
