@@ -3,7 +3,7 @@
         <input type="submit" value="View report"/>
     </form>
 
-<a href="/NotusOSS-war/map.jsp">Map</a>
+<a href="/NotusOSS-war/selectLocation.jsp">Map</a>
 
 <form method="get" action="logout">
     <input type="submit" value="Logout"/>
