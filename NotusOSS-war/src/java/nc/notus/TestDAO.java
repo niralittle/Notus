@@ -8,18 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 //import nc.notus.dao.CableDAO;
 import nc.notus.dao.DAOException;
-<<<<<<< HEAD
 import nc.notus.dao.GenericDAO;
 import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.dao.impl.GenericDAOImpl;
 import nc.notus.entity.Cable;
 import java.util.*;
-=======
 //import nc.notus.dao.impl.CableDAOImpl;
+import nc.notus.dao.CableDAO;
 import nc.notus.dao.impl.RoleDAOImpl;
 import nc.notus.entity.Role;
->>>>>>> 6feff15e5f538b32e8cec6d4a8ea512ccfa4fc7a
-
 /**
  * Temporary servlet to test DAO functionality
  * @author Igor Litvinenko
@@ -40,18 +37,17 @@ public class TestDAO extends HttpServlet {
         
         try {
             try {
-<<<<<<< HEAD
                 CableDAO dao = new CableDAOImpl(); // TODO: add this to context on server startup
                 out.println(dao.countAll(null));
                 //dao.delete(3);
                 Cable cable = new Cable(69, "New cable"); // TODO: solve problem with PK overwrite
                 dao.add(cable);
                 out.println(dao.countAll(null));
-                cable = dao.find(67);
+                cable = dao.find(68);
                 out.println("Found: " + cable.getCable());
                 cable.setCable("Very new Cable");
                 dao.update(cable);
-                cable = dao.find(67);
+                cable = dao.find(68);
                 out.println("Found: " + cable.getCable());
 
                 /*RoleDAOImpl roleDAO = new RoleDAOImpl();
