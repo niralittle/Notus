@@ -12,7 +12,7 @@
         <form method="get" action="getreport">
             <input type="submit" value="Get Report"/>
         </form>
-
+        <a href="/NotusOSS-war/map.jsp">Map</a>
         <form method="get" action="logout">
             <input type="submit" value="Logout"/>
         </form>
