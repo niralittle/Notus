@@ -22,7 +22,7 @@
                 <tbody>
                     <tr>
                         <td>Adress</td>
-                        <td><input type="text" name="adress" value="" /></td>
+                        <td><input type="text" name="address" value="" /></td>
                     </tr>
                     <tr>
                         <td>Subject</td>
@@ -40,5 +40,6 @@
             </table>
 
         </form>
+
     </body>
 </html>

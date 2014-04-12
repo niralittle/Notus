@@ -45,7 +45,7 @@ public class MailServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        String toEmail = request.getParameter("adress");
+        String toEmail = request.getParameter("address");
         String subject = request.getParameter("subject");
         String text = request.getParameter("text");
 
