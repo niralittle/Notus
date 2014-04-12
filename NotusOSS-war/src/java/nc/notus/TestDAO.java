@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.entity.Cable;
 import nc.notus.dao.CableDAO;
+import nc.notus.dao.DAOException;
+import nc.notus.reports.RoutersUtilizationCapacityReport;
 
 /**
  * Temporary servlet to test DAO functionality
@@ -42,6 +44,15 @@ public class TestDAO extends HttpServlet {
             cable = dao.find(68);
             out.println("Found: " + cable.getCable());
             dao.close();
+
+//            RoutersUtilizationCapacityReport rucr = new RoutersUtilizationCapacityReport();
+//            rucr.getReportData();
+//            String[] str = rucr.getRows();
+//            for (String st : str) {
+//                out.println(st);
+//            }
+//        } catch (DAOException e) {
+//            out.println(e.getMessage());
         } finally {
             out.close();
         }
