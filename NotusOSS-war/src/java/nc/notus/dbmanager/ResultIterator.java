@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
+ * Wraps ResultSet class to handle SQL exceptions
  * @author Igor Litvinenko
  */
 public class ResultIterator {

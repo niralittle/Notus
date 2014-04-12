@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nc.notus.dbmanager;
 
 import java.io.Closeable;
@@ -13,14 +9,20 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- *
+ * This class provides functionality of managing connection to DB.
+ * It incapsulates <code>DataSource</code> and is responsible for obtaining and
+ * releasing DB connection.
  * @author Igor Litvinenko
  */
 public class DBManager implements Closeable {
 
-    private DataSource dataSource;
-    private Connection conn;
+    private DataSource dataSource; // DataSource respresening DB
+    private Connection conn;       // DB connection
 
+    /**
+     * Creates new instance of <code>DBManager</code>.
+     * Uses JNDI lookup to obtain DataSource.
+     */
     public DBManager() {
         try {
             InitialContext initContext = new InitialContext();
@@ -31,6 +33,11 @@ public class DBManager implements Closeable {
         conn = this.getConnection();
     }
 
+    /**
+     * Creates new <code>Statement</code> from given SQL query.
+     * @param query SQL query to form statement from
+     * @return Statement of given query
+     */
     public Statement prepareStatement(String query) {
         try {
             PreparedStatement prStatement = conn.prepareStatement(query);
@@ -40,6 +47,10 @@ public class DBManager implements Closeable {
         }
     }
 
+    /**
+     * Gets connection to DataSource
+     * @return Connection
+     */
     private Connection getConnection() {
         try {
             conn = dataSource.getConnection();
@@ -50,6 +61,9 @@ public class DBManager implements Closeable {
         }
     }
 
+    /**
+     * Releases obtained connection
+     */
     private void releaseConnection() {
         try {
             conn.close();
@@ -58,6 +72,9 @@ public class DBManager implements Closeable {
         }
     }
 
+    /**
+     * Releases resources
+     */
     public void close() {
         this.releaseConnection();
     }

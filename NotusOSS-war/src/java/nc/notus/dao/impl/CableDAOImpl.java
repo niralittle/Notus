@@ -14,7 +14,4 @@ import nc.notus.entity.Cable;
  * @author Igor Litvinenko
  */
 public class CableDAOImpl extends GenericDAOImpl<Cable> implements CableDAO {
-
-    public CableDAOImpl() throws DAOException { }
-
 }

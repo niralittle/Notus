@@ -11,7 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
+ * Wraps <code>PreparedStatement</code> class to handle SQL exceptions and
+ * hide <code>Connection</code> from user.
  * @author Igor Litvinenko
  */
 public class Statement implements Closeable {
@@ -46,6 +47,10 @@ public class Statement implements Closeable {
         }
     }
 
+    /**
+     * Executes query on created statement.
+     * @return ResultIterator that represents result of query
+     */
     public ResultIterator executeQuery() {
         try {
             ResultSet rs = prStatement.executeQuery();
@@ -56,6 +61,10 @@ public class Statement implements Closeable {
         }
     }
 
+    /**
+     * Executes update query on created statement.
+     * @return number of affected rows
+     */
     public int executeUpdate() {
         try {
             int rowsAffected = prStatement.executeUpdate();
