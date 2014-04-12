@@ -14,4 +14,4 @@
     <input type="submit" value="Logout" />
 </form>
 
-<a href='adminOnly.jsp'>Admin page</a>
+<a href='adminPage.jsp'>Admin page</a>
