@@ -1,4 +1,4 @@
-package nc.notus.excel;
+package nc.notus.reports;
 
 import java.io.IOException;
 import javax.servlet.ServletOutputStream;

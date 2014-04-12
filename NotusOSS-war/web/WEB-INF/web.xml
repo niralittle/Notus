@@ -15,7 +15,7 @@
     </servlet>
     <servlet>
         <servlet-name>GenerateReportServlet</servlet-name>
-        <servlet-class>nc.notus.excel.GenerateReportServlet</servlet-class>
+        <servlet-class>nc.notus.reports.GenerateReportServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TestDAO</servlet-name>
