@@ -13,7 +13,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.util.WorkbookUtil;
 
 /**
- * Class provides a methods to generate a formatted excel document
+ * Class provides methods to generate formatted excel document
  * @author Andrey Ilin
  */
 public class ExcelDocumentGenerator {
@@ -23,7 +23,7 @@ public class ExcelDocumentGenerator {
     private final int STYLES_NUM = 4;
     private HSSFWorkbook workBook = new HSSFWorkbook();
     private HSSFSheet sheet;
-    //TODO: Change arrays to some proper data source.
+    //TODO: Change arrays to some proper data source.                           // REVIEW: yeap
     private String[] titles = {"Requirement", "Requirement description",
         "Priority"};
     private String[] reqDesc = {"Assumed system uses English language for all" +
@@ -34,7 +34,7 @@ public class ExcelDocumentGenerator {
     private String req = "NC.KYIV.2014.WIND.OSS.";
     private String priority = "M";
 
-    private CellStyle[] initStyles() {
+    private CellStyle[] initStyles() {                                          // REVIEW: documenting expected
         int counter = 0;
         Font boldFont = workBook.createFont();
         Font defaultFont = workBook.createFont();
@@ -99,7 +99,7 @@ public class ExcelDocumentGenerator {
             cell = header.createCell(i, HSSFCell.CELL_TYPE_STRING);
             cell.setCellStyle(cs[0]);
             cell.setCellValue(titles[i]);
-            if (i == 2) {
+            if (i == 2) {                                                       // REVIEW: magic number was used
                 cell.setCellStyle(cs[styleIndex]);
             }
         }
@@ -113,7 +113,7 @@ public class ExcelDocumentGenerator {
             for (int j = 0; j < CELL_NUM; j++) {
                 tempCell = tempRow.createCell(j);
                 if (j == 0) {
-                    styleIndex = 2;
+                    styleIndex = 2;                                             // REVIEW: magic number was used
                     tempCell.setCellStyle(cs[styleIndex]);
                     tempCell.setCellValue(req + Integer.toString(i + 1));
                 } else {
@@ -121,23 +121,23 @@ public class ExcelDocumentGenerator {
                         tempCell.setCellValue(reqDesc[i]);
                     }
                     if (j == 2) {
-                        styleIndex = 3;
+                        styleIndex = 3;                                         // REVIEW: magic number was used
                         tempCell.setCellStyle(cs[styleIndex]);
                         tempCell.setCellValue(priority);
                     }
                 }
             }
             //setting column width
-            sheet.setColumnWidth(0, 40 * 256);
-            sheet.setColumnWidth(1, 60 * 256);
-            sheet.setColumnWidth(2, 10 * 256);
+            sheet.setColumnWidth(0, 40 * 256);                                  // REVIEW: magic number was used
+            sheet.setColumnWidth(1, 60 * 256);                                  // REVIEW: magic number was used
+            sheet.setColumnWidth(2, 10 * 256);                                  // REVIEW: magic number was used
 
         }
     }
 
     /**
      * Creates a new excel document. Document will contain sheets created with
-     * createNewSheet method.
+     * createNewSheet method.                                                   // REVIEW: document params
      */
     void generateReport(ServletOutputStream sos) {
         try {
@@ -145,7 +145,7 @@ public class ExcelDocumentGenerator {
             sos.close();
 
         } catch (IOException e) {
-            e.getStackTrace();
+            e.getStackTrace();                                                  // REVIEW: exception should be thrown
         }
     }
 }

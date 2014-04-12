@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+                                                                                // REVIEW: wrong order in documenting. See CodingConventions in Google Disk
 /**
  *
  * @author Roman Martynuyk
@@ -35,13 +36,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MailServlet extends HttpServlet {
 
-    private String username = "notus.noreply@gmail.com";
+    private String username = "notus.noreply@gmail.com";                        // REVIEW: static final should be used
     private String password = "notusnotus";
     private Properties props;
 
     protected void processRequest(HttpServletRequest request,
             HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException {                                      // REVIEW: wrong formatting
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
@@ -51,12 +52,12 @@ public class MailServlet extends HttpServlet {
 
         try {
             send(toEmail, subject, text);
-        } finally { 
+        } finally {                                                             // REVIEW: why is finally used
             out.close();
         }
     }
 
-     public void send(String toEmail, String subject, String text){
+     public void send(String toEmail, String subject, String text){             // REVIEW: documenting expected
         props = new Properties();
 
         /*Parameters for Gmail (Shoud be changed)*/
@@ -80,7 +81,7 @@ public class MailServlet extends HttpServlet {
             try {
                 address[i] = new InternetAddress(s[i].trim());
             } catch (AddressException ex) {
-                Logger.getLogger(MailServlet.class.getName()).log(Level.SEVERE,
+                Logger.getLogger(MailServlet.class.getName()).log(Level.SEVERE, // REVIEW: exeption should be thrown
                         null, ex);
             }
         }

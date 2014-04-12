@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dbmanager;
 
 /**
- *
+ * Wrapper of exceptions, occured in nc.notus.dbmanager packet
  * @author Igor Litvinenko
  */
 public class DBManagerException extends RuntimeException {

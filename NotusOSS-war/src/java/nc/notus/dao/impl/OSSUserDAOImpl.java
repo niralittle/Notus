@@ -1,6 +1,5 @@
 package nc.notus.dao.impl;
 
-import nc.notus.dao.DAOException;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.OSSUser;
@@ -11,6 +10,7 @@ import nc.notus.entity.OSSUser;
  */
 public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDAO {
 
+    // REVIEW: documentation expected
     public void blockUser(OSSUser user) {
         String query = "UPDATE OSS_User SET blocked = 1 WHERE id = ?";
         Statement statement = dbManager.prepareStatement(query);
