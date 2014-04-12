@@ -6,13 +6,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.dao.CableDAO;
+//import nc.notus.dao.CableDAO;
 import nc.notus.dao.DAOException;
+<<<<<<< HEAD
 import nc.notus.dao.GenericDAO;
 import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.dao.impl.GenericDAOImpl;
 import nc.notus.entity.Cable;
 import java.util.*;
+=======
+//import nc.notus.dao.impl.CableDAOImpl;
+import nc.notus.dao.impl.RoleDAOImpl;
+import nc.notus.entity.Role;
+>>>>>>> 6feff15e5f538b32e8cec6d4a8ea512ccfa4fc7a
 
 /**
  * Temporary servlet to test DAO functionality
@@ -31,8 +37,10 @@ public class TestDAO extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        
         try {
             try {
+<<<<<<< HEAD
                 CableDAO dao = new CableDAOImpl(); // TODO: add this to context on server startup
                 out.println(dao.countAll(null));
                 //dao.delete(3);
@@ -45,6 +53,12 @@ public class TestDAO extends HttpServlet {
                 dao.update(cable);
                 cable = dao.find(67);
                 out.println("Found: " + cable.getCable());
+
+                /*RoleDAOImpl roleDAO = new RoleDAOImpl();
+                Role role = roleDAO.read(1);
+                //CableDAO dao = new CableDAOImpl(); // TODO: add this to context on server startup
+                //out.println(dao.getCableName(1));
+                out.println("Role " + role.getId() + " " + role.getRole());*/
             } catch (DAOException exc) {
                 exc.printStackTrace();
                 out.println("Error: " + exc);
