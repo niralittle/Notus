@@ -14,32 +14,30 @@ import nc.notus.entity.Device;
  */
 public class DeviceDAOImpl extends GenericDAOImpl<Device> implements DeviceDAO {
 
+    private final int FIRST_COLUMN = 1;
+
     /**
      * Gets a list of devices (routers) in system
      * @return list of Device objects
      */
     public List<Device> getDevices() {
-        int fieldsNumber = 3;
-        int columnCounter = 1; //columns are numbered from 1
+        int columnCounter = FIRST_COLUMN; //columns are numbered from 1
         List<Device> deviceList = new ArrayList<Device>();
         Device device = null;
         String queryString = "SELECT * FROM device";
         Statement statement = dbManager.prepareStatement(queryString);
         ResultIterator ri = statement.executeQuery();
         if (!ri.next()) {
-            throw new DAOException("No devices found in system");
+            throw new DAOException("No devices were found in system");
         }
         do {
             device = new Device();
-            for (int i = 0; i < fieldsNumber; i++) {
-                device.setId(ri.getInt(columnCounter));
-                columnCounter++;
-                device.setName(ri.getString(columnCounter));
-                columnCounter++;
-                device.setPortQuantity(ri.getInt(columnCounter));
-                columnCounter = 1;
-
-            }
+            device.setId(ri.getInt(columnCounter));
+            columnCounter++;
+            device.setName(ri.getString(columnCounter));
+            columnCounter++;
+            device.setPortQuantity(ri.getInt(columnCounter));
+            columnCounter = FIRST_COLUMN;
             deviceList.add(device);
         } while (ri.next());
         return deviceList;

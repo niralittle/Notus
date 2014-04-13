@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package nc.notus.entity;
 
 /**
@@ -10,6 +9,7 @@ package nc.notus.entity;
  * @author Vladimir Ermolenko
  */
 public class Device {
+
     private int id;
     private String name;
     private int portQuantity;
@@ -45,5 +45,38 @@ public class Device {
 
     public void setPortQuantity(int portQuantity) {
         this.portQuantity = portQuantity;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Device)) {
+            return false;
+        }
+        Device dev = (Device) obj;
+        if (dev.getId() != this.id) {
+            return false;
+        }
+        if (!dev.getName().equals(this.name)) {
+            return false;
+        }
+        if (dev.getPortQuantity() != this.portQuantity) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + this.id;
+        hash = 59 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 59 * hash + this.portQuantity;
+        return hash;
     }
 }

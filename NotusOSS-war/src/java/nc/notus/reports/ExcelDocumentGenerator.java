@@ -14,6 +14,8 @@ import org.apache.poi.ss.util.WorkbookUtil;
 
 /**
  * Class provides methods to generate formatted excel document
+ * This class is no longer supported and will be deleted. Leave it as an example
+ * for a short term
  * @author Andrey Ilin
  */
 public class ExcelDocumentGenerator {

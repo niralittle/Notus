@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *                                                                              // REVIEW: documenting expected
- * @author Druce                                                                // REVIEW: who the fuck is Druce?
+ * Servlet that handles requests for report generation.
+ * @author Andrey Ilin                                                                
  */
 public class GenerateReportServlet extends HttpServlet {
 

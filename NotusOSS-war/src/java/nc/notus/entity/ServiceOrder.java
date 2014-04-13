@@ -1,15 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.entity;
 
 /**
  *
  * @author Vladimir Ermolenko
  */
-public class SeviceOrder {
+public class ServiceOrder {
+
     private int id;
     private String serviceOrderDate;
     private int serviceOrderStatus;
@@ -83,10 +79,10 @@ public class SeviceOrder {
         this.userID = userID;
     }
 
-    public SeviceOrder() {
+    public ServiceOrder() {
     }
 
-    public SeviceOrder(int id, String serviceOrderDate, int serviceOrderStatus, int scenario, int userID, int serviceCatalogID, int serviceInctanceID, String serviceLocation) {
+    public ServiceOrder(int id, String serviceOrderDate, int serviceOrderStatus, int scenario, int userID, int serviceCatalogID, int serviceInctanceID, String serviceLocation) {
         this.id = id;
         this.serviceOrderDate = serviceOrderDate;
         this.serviceOrderStatus = serviceOrderStatus;

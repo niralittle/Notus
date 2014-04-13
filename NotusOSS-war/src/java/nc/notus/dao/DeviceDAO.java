@@ -8,5 +8,10 @@ import nc.notus.entity.Device;
  * @author Andrey Ilin
  */
 public interface DeviceDAO extends GenericDAO<Device> {
+
+    /**
+     * Gets a list of devices (routers) in system
+     * @return list of Device objects
+     */
     List<Device> getDevices();
 }
