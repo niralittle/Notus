@@ -8,5 +8,17 @@ import nc.notus.entity.OSSUser;
  */
 public interface OSSUserDAO extends GenericDAO<OSSUser> {
 
-    void blockUser(OSSUser user);                                               // REVIEW: documentation expected
+    /**
+     * Implementation of method for block accounts in DB
+     * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O
+     * @param user
+     */
+    void blockUser(OSSUser user);
+    
+    /**
+     * Return user by id with all text fields
+     * @param id
+     * @return OSSUser
+     */
+    public OSSUser getUserByID( int id);
 }
