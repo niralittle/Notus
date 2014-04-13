@@ -60,6 +60,7 @@
 
             //geocode from coordinates to address
             function codeLatLng(input) {
+                objSel.style.display = "none";
                 var latlng = getLatLng(input);
                 geocoder.geocode({'latLng': latlng}, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
