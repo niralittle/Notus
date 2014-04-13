@@ -5,13 +5,13 @@ import nc.notus.dbmanager.Statement;
 import nc.notus.entity.OSSUser;
 
 /**
- * Implementation of DAO for entity OSSUsre
+ * Implementation of DAO for entity OSSUser
  * @author Vladimir Ermolenko
  */
 public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDAO {
 
     /**
-     * Implementation of method for blocking accounts in DB
+     * Implementation of method for block accounts in DB
      * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O
      * @param user
      */

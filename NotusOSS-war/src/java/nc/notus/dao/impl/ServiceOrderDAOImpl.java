@@ -30,9 +30,9 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         ServiceOrder so = null;
         String queryString = null;
         if (serviceStatusId == null) {
-            queryString = "SELECT * FROM service_order";
+            queryString = "SELECT id, serviceOrderDate,serviceOrderStatusID, scenarioID, userID, serviceCatalogID, serviceInstanceID, serviceLocation FROM ServiceOrder";
         } else {
-            queryString = "SELECT * FROM service_order WHERE so_status_id = ?";
+            queryString = "SELECT id, serviceOrderDate,serviceOrderStatusID, scenarioID, userID, serviceCatalogID, serviceInstanceID, serviceLocation FROM ServiceOrder WHERE serviceOrderStatusID = ?";
         }
         Statement statement = dbManager.prepareStatement(queryString);
         statement.setInt(paramIndex, serviceStatusId);
