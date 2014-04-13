@@ -14,15 +14,20 @@ import nc.notus.entity.Port;
  */
 public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
 
+    public PortDAOImpl(DBManager dbManager) {
+        super(dbManager);
+    }
+
     /**
      * Return list of all our free ports in system
+     * portStatus field in SQL select - it's a flag with 0 value as a free port and with 1 value when port is connected
      * @return list of all free ports
      */
-    public List<Port> getFreePort() {                                           // REVIEW: method should be renamed to getFreePorts()
+    public List<Port> getFreePort() {                                           
         List<Port> fp = new ArrayList<Port>();
-        Port  port = null;                                                      // REVIEW: port was not instantiated below
+        Port  port = new Port();                                                     
         String query = "SELECT p.id, p.deviceID, p.portNumber, p.portStatus, p.cableID" +
-                       "FROM port p WHERE p.portStatus = 0";// portStatus  - it's a flag with 0 - free and with 1  - connected // REVIEW: comment formatting should be improved
+                       "FROM port p WHERE p.portStatus = 0";// portStatus  - it's a flag with 0 as free and with 1 when connected
         Statement statement = dbManager.prepareStatement(query);
         ResultIterator ri = statement.executeQuery();
         while (ri.next()) {
@@ -35,8 +40,6 @@ public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
         }
         return fp;
     }
+    
 
-    public PortDAOImpl(DBManager dbManager) {                                   // REVIEW: constructor should be placed at the top
-        super(dbManager);
-    }
 }

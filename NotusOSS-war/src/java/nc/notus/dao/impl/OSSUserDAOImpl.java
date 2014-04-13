@@ -19,7 +19,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     /**
      * Implementation of method for block accounts in DB
      * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O
-     * @param user                                                              // REVIEW: no param description
+     * @param user - our user of type OSSUser 
      */
 
     public void blockUser(OSSUser user) {
@@ -31,11 +31,11 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 
     /**
      * Return user by id with all text fields
-     * @param id
-     * @return OSSUser
+     * @param id - id number of user
+     * @return OSSUser object
      */
-    public OSSUser getUserByID( int id) {                                       // REVIEW: method duplicates find() method of CRUD and should be removed
-        OSSUser user = null;
+    public OSSUser getUserByID( int id) {
+        OSSUser user = new OSSUser();
         String query = "SELECT u.id, u.firstname, u.lastname, u.email, u.login, u.password, u.blocked, r.role" +
                        "FROM ossuser u LEFT JOIN role r ON u.roleid = r.id WHERE u.roleid = ?";
         Statement statement = dbManager.prepareStatement(query);
