@@ -18,11 +18,11 @@ public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
      * Return list of all our free ports in system
      * @return list of all free ports
      */
-    public List<Port> getFreePort() {
+    public List<Port> getFreePort() {                                           // REVIEW: method should be renamed to getFreePorts()
         List<Port> fp = new ArrayList<Port>();
-        Port  port = null;
+        Port  port = null;                                                      // REVIEW: port was not instantiated below
         String query = "SELECT p.id, p.deviceID, p.portNumber, p.portStatus, p.cableID" +
-                       "FROM port p WHERE p.portStatus = 0";// portStatus  - it's a flag with 0 - free and with 1  - connected
+                       "FROM port p WHERE p.portStatus = 0";// portStatus  - it's a flag with 0 - free and with 1  - connected // REVIEW: comment formatting should be improved
         Statement statement = dbManager.prepareStatement(query);
         ResultIterator ri = statement.executeQuery();
         while (ri.next()) {
@@ -36,7 +36,7 @@ public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
         return fp;
     }
 
-    public PortDAOImpl(DBManager dbManager) {
+    public PortDAOImpl(DBManager dbManager) {                                   // REVIEW: constructor should be placed at the top
         super(dbManager);
     }
 }

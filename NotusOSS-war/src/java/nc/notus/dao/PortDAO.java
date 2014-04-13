@@ -13,5 +13,5 @@ public interface PortDAO extends GenericDAO<Port> {
      * Return list of all our free ports in system
      * @return list of all free ports
      */
-    public List<Port> getFreePort();
+    public List<Port> getFreePort();                                            // REVIEW: method should be renamed to getFreePorts()
 }

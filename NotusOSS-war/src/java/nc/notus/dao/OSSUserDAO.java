@@ -11,7 +11,7 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
     /**
      * Implementation of method for block accounts in DB
      * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O
-     * @param user
+     * @param user                                                              // REVIEW: no description of param
      */
     void blockUser(OSSUser user);
     
@@ -20,5 +20,5 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * @param id
      * @return OSSUser
      */
-    public OSSUser getUserByID( int id);
+    public OSSUser getUserByID( int id);                                        // REVIEW: method duplicates find() method of CRUD and should be removed
 }

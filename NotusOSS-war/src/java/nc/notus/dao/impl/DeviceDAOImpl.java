@@ -30,16 +30,13 @@ public class DeviceDAOImpl extends GenericDAOImpl<Device> implements DeviceDAO {
         String queryString = "SELECT id, name FROM device";
         Statement statement = dbManager.prepareStatement(queryString);
         ResultIterator ri = statement.executeQuery();
-        if (!ri.next()) {
-            throw new DAOException("No devices were found in system");
-        }
-        do {
+        while(ri.next()) {
             device = new Device();
             device.setId(ri.getInt("id"));
             device.setName(ri.getString("name"));
             device.setPortQuantity(ri.getInt("portQuantity"));
             deviceList.add(device);
-        } while (ri.next());
+        }
         return deviceList;
     }
 }
