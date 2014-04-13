@@ -17,10 +17,6 @@
         <servlet-name>GenerateReportServlet</servlet-name>
         <servlet-class>nc.notus.reports.GenerateReportServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>TestDAO</servlet-name>
-        <servlet-class>nc.notus.TestDAO</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
         <url-pattern>/TestConnectionPoolServlet</url-pattern>
@@ -37,7 +33,7 @@
         <servlet-name>GenerateReportServlet</servlet-name>
         <url-pattern>/ViewReport</url-pattern>
     </servlet-mapping>
-    <servlet-mapping><servlet-name>TestDAO</servlet-name><url-pattern>/TestDAO</url-pattern></servlet-mapping><session-config>
+    <session-config>
         <session-timeout>
             30
         </session-timeout>
