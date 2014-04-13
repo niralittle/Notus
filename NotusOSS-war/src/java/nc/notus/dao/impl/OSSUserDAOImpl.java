@@ -53,4 +53,17 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
         }
         return user;
     }
+    
+    @Override
+    public boolean isExist(String login) {
+    	if (login == null) {
+    		throw new NullPointerException("Null reference invoke.");
+    	}
+    	String queryString = "SELECT lastname FROM OSSUSER WHERE login = ?";
+	    Statement statement = dbManager.prepareStatement(queryString);
+	    statement.setString(1, login);
+	    ResultIterator ri = statement.executeQuery();
+	    return ri != null ? true : false;
+
+    }
 }
