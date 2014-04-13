@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import nc.notus.dao.DeviceDAO;
+import nc.notus.dao.PortDAO;
+import nc.notus.dao.ServiceCatalogDAO;
+import nc.notus.dao.ServiceInstanceDAO;
+import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.impl.DeviceDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
@@ -24,31 +29,30 @@ import nc.notus.entity.ServiceOrder;
 public class MostProfitableRouterReport extends AbstractReport {
 
     /**
-     * Gets a data for report from the database and handles it.
+     * Gets data for report from the database and handles it.
      */
-    public void getReportData() {
+    public void getReportData() {                                               // REVIEW: getReportData() returns nothing
         DBManager dbManager = new DBManager();
-        ServiceOrderDAOImpl sodi = new ServiceOrderDAOImpl(dbManager);
-        ServiceCatalogDAOImpl scdi = new ServiceCatalogDAOImpl(dbManager);
-        ServiceInstanceDAOImpl sidi = new ServiceInstanceDAOImpl(dbManager);
-        DeviceDAOImpl ddi = new DeviceDAOImpl(dbManager);
-        PortDAOImpl pdi = new PortDAOImpl(dbManager);
+        ServiceOrderDAO sodi = new ServiceOrderDAOImpl(dbManager);
+        ServiceCatalogDAO scdi = new ServiceCatalogDAOImpl(dbManager);
+        ServiceInstanceDAO sidi = new ServiceInstanceDAOImpl(dbManager);
+        DeviceDAO ddi = new DeviceDAOImpl(dbManager);
+        PortDAO pdi = new PortDAOImpl(dbManager);
         ArrayList<ServiceOrder> serviceOrderList = 
                 (ArrayList<ServiceOrder>) sodi.getServiceOrders("Completed");
-        ServiceCatalog sc = null;
-        ServiceInstance si = null;
+
         int arrayIndexer = 0;
         Port[] ports = new Port[serviceOrderList.size()];
         int[] prices = new int[serviceOrderList.size()];
         for (ServiceOrder so : serviceOrderList) {
-            si = sidi.find(so.getServiceInstanceID());
+            ServiceInstance si = sidi.find(so.getServiceInstanceID());
             ports[arrayIndexer] = pdi.find(si.getPortID());
-            sc = scdi.find(so.getServiceCatalogID());
+            ServiceCatalog sc = scdi.find(so.getServiceCatalogID());
             prices[arrayIndexer] = sc.getPrice();
         }
         //We got ports associated prices
         //Now must get device profit
-        //Do not modify this keys in, because of hashCode()
+        //Do not modify this keys in, because of hashCode()                     // REVIEW: "Do not modify this keys in", what does it mean?
         Map<Device, Integer> devicePriceMap = new HashMap<Device, Integer>();
         for (int i = 0; i < serviceOrderList.size(); i++) {
             Device device = ddi.find(ports[i].getDeviceID());
@@ -64,7 +68,7 @@ public class MostProfitableRouterReport extends AbstractReport {
         while (it.hasNext()) {
             Map.Entry<Device, Integer> entry = (Map.Entry<Device, Integer>) it.next();
             if (entry.getValue() > maxPrice) {
-                routerProfitEntry = entry;
+                routerProfitEntry = entry;                                      // REVIEW: we found it, so what?
             }
         }
         dbManager.close();

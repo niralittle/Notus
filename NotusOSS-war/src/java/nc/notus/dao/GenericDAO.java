@@ -1,6 +1,5 @@
 package nc.notus.dao;
 
-import java.io.Closeable;
 import java.util.Map;
 
 /**

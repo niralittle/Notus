@@ -23,7 +23,8 @@ public class DeviceDAOImpl extends GenericDAOImpl<Device> implements DeviceDAO {
      * Gets a list of devices (routers) in system
      * @return list of Device objects
      */
-    public List<Device> getDevices() {                                          // REVIEW: do you really need this function?
+    @Override
+    public List<Device> getAllDevices() {                                       
         List<Device> deviceList = new ArrayList<Device>();
         Device device = null;
         String queryString = "SELECT id, name FROM device";

@@ -26,6 +26,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
      * @param serviceStatus service status used to return specific list.
      * @return List of ServiceOrder objects.
      */
+    @Override
     public List<ServiceOrder> getServiceOrders(String serviceStatus) {
 
         List<ServiceOrder> deviceList = new ArrayList<ServiceOrder>();
