@@ -10,6 +10,7 @@ import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
+import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.Device;
 import nc.notus.entity.Port;
 import nc.notus.entity.ServiceCatalog;
@@ -26,11 +27,12 @@ public class MostProfitableRouterReport extends AbstractReport {
      * Gets a data for report from the database and handles it.
      */
     public void getReportData() {
-        ServiceOrderDAOImpl sodi = new ServiceOrderDAOImpl();
-        ServiceCatalogDAOImpl scdi = new ServiceCatalogDAOImpl();
-        ServiceInstanceDAOImpl sidi = new ServiceInstanceDAOImpl();
-        DeviceDAOImpl ddi = new DeviceDAOImpl();
-        PortDAOImpl pdi = new PortDAOImpl();
+        DBManager dbManager = new DBManager();
+        ServiceOrderDAOImpl sodi = new ServiceOrderDAOImpl(dbManager);
+        ServiceCatalogDAOImpl scdi = new ServiceCatalogDAOImpl(dbManager);
+        ServiceInstanceDAOImpl sidi = new ServiceInstanceDAOImpl(dbManager);
+        DeviceDAOImpl ddi = new DeviceDAOImpl(dbManager);
+        PortDAOImpl pdi = new PortDAOImpl(dbManager);
         ArrayList<ServiceOrder> serviceOrderList = 
                 (ArrayList<ServiceOrder>) sodi.getServiceOrders("Completed");
         ServiceCatalog sc = null;
@@ -65,11 +67,7 @@ public class MostProfitableRouterReport extends AbstractReport {
                 routerProfitEntry = entry;
             }
         }
-        sodi.close();
-        sidi.close();
-        scdi.close();
-        ddi.close();
-        pdi.close();
+        dbManager.close();
     }
 
     /**

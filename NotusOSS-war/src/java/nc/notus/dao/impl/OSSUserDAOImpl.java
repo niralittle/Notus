@@ -1,6 +1,7 @@
 package nc.notus.dao.impl;
 
 import nc.notus.dao.OSSUserDAO;
+import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.OSSUser;
@@ -10,6 +11,10 @@ import nc.notus.entity.OSSUser;
  * @author Vladimir Ermolenko
  */
 public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDAO {
+
+    public OSSUserDAOImpl(DBManager dbManager) {
+        super(dbManager);
+    }
 
     /**
      * Implementation of method for block accounts in DB

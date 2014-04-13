@@ -7,7 +7,7 @@ import java.util.Map;
  * This interface provides general DAO functions for all entities
  * @author Igor Litvinenko
  */
-public interface GenericDAO<T> extends Closeable {
+public interface GenericDAO<T> {
     /**
      * Method that returns the number of entries from a table that meet some
      * criteria (WHERE clause params)

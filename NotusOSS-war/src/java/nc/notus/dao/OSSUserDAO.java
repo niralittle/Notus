@@ -8,6 +8,5 @@ import nc.notus.entity.OSSUser;
  */
 public interface OSSUserDAO extends GenericDAO<OSSUser> {
 
-
     void blockUser(OSSUser user);                                               // REVIEW: documentation expected
 }

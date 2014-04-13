@@ -1,6 +1,7 @@
 package nc.notus.dao.impl;
 
 import nc.notus.dao.ServiceInstanceDAO;
+import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.ServiceInstance;
 
 /**
@@ -9,4 +10,9 @@ import nc.notus.entity.ServiceInstance;
  */
 public class ServiceInstanceDAOImpl extends GenericDAOImpl<ServiceInstance>
         implements ServiceInstanceDAO {
+
+    public ServiceInstanceDAOImpl(DBManager dbManager) {
+        super(dbManager);
+    }
+
 }

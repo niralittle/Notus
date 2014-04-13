@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.DAOException;
 import nc.notus.dao.DeviceDAO;
+import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.Device;
@@ -14,17 +15,18 @@ import nc.notus.entity.Device;
  */
 public class DeviceDAOImpl extends GenericDAOImpl<Device> implements DeviceDAO {
 
-    private final int FIRST_COLUMN = 1;
+    public DeviceDAOImpl(DBManager dbManager) {
+        super(dbManager);
+    }
 
     /**
      * Gets a list of devices (routers) in system
      * @return list of Device objects
      */
-    public List<Device> getDevices() {
-        int columnCounter = FIRST_COLUMN; //columns are numbered from 1
+    public List<Device> getDevices() {                                          // REVIEW: do you really need this function?
         List<Device> deviceList = new ArrayList<Device>();
         Device device = null;
-        String queryString = "SELECT * FROM device";
+        String queryString = "SELECT id, name FROM device";
         Statement statement = dbManager.prepareStatement(queryString);
         ResultIterator ri = statement.executeQuery();
         if (!ri.next()) {
@@ -32,12 +34,9 @@ public class DeviceDAOImpl extends GenericDAOImpl<Device> implements DeviceDAO {
         }
         do {
             device = new Device();
-            device.setId(ri.getInt(columnCounter));
-            columnCounter++;
-            device.setName(ri.getString(columnCounter));
-            columnCounter++;
-            device.setPortQuantity(ri.getInt(columnCounter));
-            columnCounter = FIRST_COLUMN;
+            device.setId(ri.getInt("id"));
+            device.setName(ri.getString("name"));
+            device.setPortQuantity(ri.getInt("portQuantity"));
             deviceList.add(device);
         } while (ri.next());
         return deviceList;
