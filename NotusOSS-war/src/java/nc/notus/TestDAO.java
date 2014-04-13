@@ -10,6 +10,9 @@ import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.entity.Cable;
 import nc.notus.dao.CableDAO;
 import nc.notus.dao.DAOException;
+import nc.notus.dao.OSSUserDAO;
+import nc.notus.dao.impl.OSSUserDAOImpl;
+import nc.notus.entity.OSSUser;
 import nc.notus.reports.RoutersUtilizationCapacityReport;
 
 /**
@@ -31,19 +34,21 @@ public class TestDAO extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            CableDAO dao = new CableDAOImpl();
-            out.println(dao.countAll(null));
+  
+            //CableDAO dao = new CableDAOImpl();
+            //out.println(dao.countAll(null));
             //dao.delete(3);
-            Cable cable = new Cable(69, "New cable"); // TODO: solve problem with PK overwrite
-            dao.add(cable);
-            out.println(dao.countAll(null));
-            cable = dao.find(68);
-            out.println("Found: " + cable.getCable());
-            cable.setCable("Very new Cable");
-            dao.update(cable);
-            cable = dao.find(68);
-            out.println("Found: " + cable.getCable());
-            dao.close();
+            //facepalm: don't try to write PK manually, we are using DB logic for it!
+            //Cable cable = new Cable(69, "New cable"); // TODO: solve problem with PK overwrite
+            //dao.add(cable);
+            //out.println(dao.countAll(null));
+            //cable = dao.find(68);
+            //out.println("Found: " + cable.getCable());
+            //cable.setCable("Very new Cable");
+            //dao.update(cable);
+            //cable = dao.find(68);
+            //out.println("Found: " + cable.getCable());
+            //dao.close();
 
 //            RoutersUtilizationCapacityReport rucr = new RoutersUtilizationCapacityReport();
 //            rucr.getReportData();

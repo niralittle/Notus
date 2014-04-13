@@ -17,6 +17,7 @@ public class OSSUser {
     private String login;
     private String password;
     private int blocked;
+    private String role;
 
     public OSSUser() {
     }
@@ -96,4 +97,8 @@ public class OSSUser {
         this.roleID = roleID;
     }
     private int roleID;
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
