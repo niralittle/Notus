@@ -17,6 +17,14 @@
         <servlet-name>GenerateReportServlet</servlet-name>
         <servlet-class>nc.notus.reports.GenerateReportServlet</servlet-class>
     </servlet>
+    <servlet>
+    	<servlet-name>RegisterServlet</servlet-name>
+        <servlet-class>nc.notus.RegistrateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegisterServlet</servlet-name>
+        <url-pattern>/Register</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
         <url-pattern>/TestConnectionPoolServlet</url-pattern>
