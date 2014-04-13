@@ -20,5 +20,12 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * @param id - id number of user
      * @return OSSUser object
      */
-    public OSSUser getUserByID( int id);                                        
+    public OSSUser getUserByID( int id);    
+    
+    /**
+     * Check if user with specified login is already exist in system
+     * @param login login to check
+     * @return true - if exist, false - otherwise
+     */
+    boolean isExist(String login);
 }
