@@ -12,8 +12,9 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 
     // REVIEW: documentation expected
     public void blockUser(OSSUser user) {
-        String query = "UPDATE OSS_User SET blocked = 1 WHERE id = ?";
+        String query = "UPDATE OSSUser SET blocked = 1 WHERE id = ?";
         Statement statement = dbManager.prepareStatement(query);
+        statement.setInt(1, user.getId());
         statement.executeUpdate();
     }
 }
