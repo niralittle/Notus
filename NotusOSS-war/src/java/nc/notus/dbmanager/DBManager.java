@@ -4,6 +4,8 @@ import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -44,6 +46,14 @@ public class DBManager implements Closeable {
             return new Statement(prStatement);
         } catch (SQLException exc) {
             throw new DBManagerException("SQL Exception", exc);
+        }
+    }
+
+    public void commit() {
+        try {
+            conn.commit();
+        } catch (SQLException exc) {
+            throw new DBManagerException("Cannot execute commit", exc);
         }
     }
 

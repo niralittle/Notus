@@ -68,7 +68,6 @@ public class Statement implements Closeable {
     public int executeUpdate() {
         try {
             int rowsAffected = prStatement.executeUpdate();
-            prStatement.getConnection().commit();
             return rowsAffected;
         } catch (SQLException exc) {
             throw new DBManagerException("Can't execute query.", exc);

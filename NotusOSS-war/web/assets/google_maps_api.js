@@ -34,7 +34,9 @@ function addMarker(location) {
 //geocode from coordinates to address
 function codeLatLng(input) {
     var latlng = getLatLng(input);
-    geocoder.geocode({'latLng': latlng}, function(results, status) {
+    geocoder.geocode({
+        'latLng': latlng
+    }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[1]) {
                 if(map.getZoom()==19){
@@ -54,25 +56,31 @@ function codeLatLng(input) {
 
 //geocode from address to coordinates
 function codeAddress() {
-    var address = document.getElementById('address').value;
-    var latlng;
-    geocoder.geocode( {'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            if(results.length>1){
-                objSel = document.getElementById("addressSelect");
-                objSel.style.display = "block";
-                for(i=0;i<results.length;i++){
-                    objSel.options[i] = new Option(results[i].formatted_address, results[i].geometry.location);
+    if(document.getElementById('address').value.is){
+        alert('Please, input the name');
+    }else{
+        var address = document.getElementById('address').value;
+        var latlng;
+        geocoder.geocode( {
+            'address': address
+        }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if(results.length>1){
+                    objSel = document.getElementById("addressSelect");
+                    objSel.style.display = "block";
+                    for(i=0;i<results.length;i++){
+                        objSel.options[i] = new Option(results[i].formatted_address, results[i].geometry.location);
+                    }
                 }
+                latlng = getLatLng(results[0].geometry.location);
+                map.setCenter(latlng);
+                document.getElementById('address').value = results[0].formatted_address;
+                map.setZoom(8);
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
             }
-            latlng = getLatLng(results[0].geometry.location);
-            map.setCenter(latlng);
-            document.getElementById('address').value = results[0].formatted_address;
-            map.setZoom(8);
-        } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-        }
-    });
+        });
+    }
 }
 
 //Set marker on select option. Changes the value of input address

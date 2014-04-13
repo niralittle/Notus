@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.DAOException;
 import nc.notus.dao.ServiceOrderDAO;
+import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.ServiceOrder;
@@ -14,6 +15,11 @@ import nc.notus.entity.ServiceOrder;
  */
 public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         implements ServiceOrderDAO {
+
+    public ServiceOrderDAOImpl(DBManager dbManager) {
+        super(dbManager);
+    }
+
 
     /**
      * Gets a list of service orders in system with specific service status.

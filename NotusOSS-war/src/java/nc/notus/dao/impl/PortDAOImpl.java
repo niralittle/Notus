@@ -3,6 +3,7 @@ package nc.notus.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.PortDAO;
+import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.Port;
@@ -33,5 +34,9 @@ public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
             fp.add(port);
         }
         return fp;
+    }
+
+    public PortDAOImpl(DBManager dbManager) {
+        super(dbManager);
     }
 }

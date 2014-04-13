@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import nc.notus.dao.impl.DeviceDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
+import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.Device;
 
 /**
@@ -25,8 +26,9 @@ public class RoutersUtilizationCapacityReport extends AbstractReport {
         int fieldsIndex = 0;
         int portStatusValue = 0; //port status TODO: discuss constants
         int index = 0; //index for rows array
-        PortDAOImpl pdi = new PortDAOImpl();
-        DeviceDAOImpl ddi = new DeviceDAOImpl();
+        DBManager dbManager = new DBManager();
+        PortDAOImpl pdi = new PortDAOImpl(dbManager);
+        DeviceDAOImpl ddi = new DeviceDAOImpl(dbManager);
         ArrayList<Device> devices = (ArrayList<Device>) ddi.getDevices();
         rows = new String[devices.size()];
         Map<String, Object> params = new HashMap<String, Object>();
@@ -39,8 +41,7 @@ public class RoutersUtilizationCapacityReport extends AbstractReport {
                     ((float) pdi.countAll(params) / device.getPortQuantity() * 100); // Value in percents
             index++; //increase array index
         }
-        pdi.close();
-        ddi.close();
+        dbManager.close();
     }
 
     /**
