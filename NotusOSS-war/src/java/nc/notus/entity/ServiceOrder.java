@@ -8,11 +8,11 @@ public class ServiceOrder {
 
     private int id;
     private String serviceOrderDate;
-    private int serviceOrderStatus;
-    private int scenario;
+    private int serviceOrderStatusID;
+    private int scenarioID;
     private int userID;
     private int serviceCatalogID;
-    private int serviceInctanceID;
+    private int serviceInstanceID;
     private String serviceLocation;
 
     public int getId() {
@@ -23,12 +23,12 @@ public class ServiceOrder {
         this.id = id;
     }
 
-    public int getScenario() {
-        return scenario;
+    public int getScenarioID() {
+        return scenarioID;
     }
 
-    public void setScenario(int scenario) {
-        this.scenario = scenario;
+    public void setScenario(int scenarioID) {
+        this.scenarioID = scenarioID;
     }
 
     public int getServiceCatalogID() {
@@ -39,12 +39,12 @@ public class ServiceOrder {
         this.serviceCatalogID = serviceCatalogID;
     }
 
-    public int getServiceInctanceID() {
-        return serviceInctanceID;
+    public int getServiceInstanceID() {
+        return serviceInstanceID;
     }
 
-    public void setServiceInctanceID(int serviceInctanceID) {
-        this.serviceInctanceID = serviceInctanceID;
+    public void setServiceInstanceID(int serviceInstanceID) {
+        this.serviceInstanceID = serviceInstanceID;
     }
 
     public String getServiceLocation() {
@@ -63,12 +63,12 @@ public class ServiceOrder {
         this.serviceOrderDate = serviceOrderDate;
     }
 
-    public int getServiceOrderStatus() {
-        return serviceOrderStatus;
+    public int getServiceOrderStatusID() {
+        return serviceOrderStatusID;
     }
 
-    public void setServiceOrderStatus(int serviceOrderStatus) {
-        this.serviceOrderStatus = serviceOrderStatus;
+    public void setServiceOrderStatusID(int serviceOrderStatus) {
+        this.serviceOrderStatusID = serviceOrderStatus;
     }
 
     public int getUserID() {
@@ -82,14 +82,14 @@ public class ServiceOrder {
     public ServiceOrder() {
     }
 
-    public ServiceOrder(int id, String serviceOrderDate, int serviceOrderStatus, int scenario, int userID, int serviceCatalogID, int serviceInctanceID, String serviceLocation) {
+    public ServiceOrder(int id, String serviceOrderDate, int serviceOrderStatusID, int scenarioID, int userID, int serviceCatalogID, int serviceInstanceID, String serviceLocation) {
         this.id = id;
         this.serviceOrderDate = serviceOrderDate;
-        this.serviceOrderStatus = serviceOrderStatus;
-        this.scenario = scenario;
+        this.serviceOrderStatusID = serviceOrderStatusID;
+        this.scenarioID = scenarioID;
         this.userID = userID;
         this.serviceCatalogID = serviceCatalogID;
-        this.serviceInctanceID = serviceInctanceID;
+        this.serviceInstanceID = serviceInstanceID;
         this.serviceLocation = serviceLocation;
     }
 }

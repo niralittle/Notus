@@ -25,9 +25,9 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     }
 
     /**
-     *
+     * Return user by id with all text fields
      * @param id
-     * @return
+     * @return OSSUser
      */
     public OSSUser getUserByID( int id) {
         OSSUser user = null;

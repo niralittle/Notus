@@ -11,9 +11,8 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
 
     /**
      * Gets a list of service orders in system with specific service status.
-     * @param serviceStatusId the id of service status used to return specific
-     * list. If serviceStatusId is null, method returns list of all service orders.
+     * @param serviceStatus service status used to return specific list.
      * @return List of ServiceOrder objects.
      */
-    List<ServiceOrder> getServiceOrders(Integer serviceStatusId);
+    List<ServiceOrder> getServiceOrders(String serviceStatus);
 }

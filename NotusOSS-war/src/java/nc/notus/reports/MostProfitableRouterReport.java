@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javanet.staxutils.BaseXMLEventReader;
 import nc.notus.dao.impl.DeviceDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
@@ -27,20 +26,20 @@ public class MostProfitableRouterReport extends AbstractReport {
      * Gets a data for report from the database and handles it.
      */
     public void getReportData() {
-        int serviceStatusId = 4; //completed TODO: discuss emun constants
         ServiceOrderDAOImpl sodi = new ServiceOrderDAOImpl();
         ServiceCatalogDAOImpl scdi = new ServiceCatalogDAOImpl();
         ServiceInstanceDAOImpl sidi = new ServiceInstanceDAOImpl();
         DeviceDAOImpl ddi = new DeviceDAOImpl();
         PortDAOImpl pdi = new PortDAOImpl();
-        ArrayList<ServiceOrder> serviceOrderList = (ArrayList<ServiceOrder>) sodi.getServiceOrders(serviceStatusId);
+        ArrayList<ServiceOrder> serviceOrderList = 
+                (ArrayList<ServiceOrder>) sodi.getServiceOrders("Completed");
         ServiceCatalog sc = null;
         ServiceInstance si = null;
         int arrayIndexer = 0;
         Port[] ports = new Port[serviceOrderList.size()];
         int[] prices = new int[serviceOrderList.size()];
         for (ServiceOrder so : serviceOrderList) {
-            si = sidi.find(so.getServiceInctanceID());
+            si = sidi.find(so.getServiceInstanceID());
             ports[arrayIndexer] = pdi.find(si.getPortID());
             sc = scdi.find(so.getServiceCatalogID());
             prices[arrayIndexer] = sc.getPrice();
@@ -66,6 +65,11 @@ public class MostProfitableRouterReport extends AbstractReport {
                 routerProfitEntry = entry;
             }
         }
+        sodi.close();
+        sidi.close();
+        scdi.close();
+        ddi.close();
+        pdi.close();
     }
 
     /**
