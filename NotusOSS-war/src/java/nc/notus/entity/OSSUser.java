@@ -5,6 +5,8 @@
 
 package nc.notus.entity;
 
+// library you can download om GoogleDisk in Development folder
+import org.apache.commons.codec.digest.DigestUtils;
 /**
  *
  * @author Vladimir Ermolenko
@@ -18,6 +20,7 @@ public class OSSUser {
     private String password;
     private int blocked;
     private String role;
+    private int roleID;
 
     public OSSUser() {
     }
@@ -29,6 +32,16 @@ public class OSSUser {
         this.email = email;
         this.login = login;
         this.password = password;
+        this.blocked = blocked;
+        this.roleID = roleID;
+    }
+    
+     public OSSUser(String firstName, String lastName, String email, String login, String password, int blocked, int roleID) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.login = login;
+        this.password = DigestUtils.sha256Hex(password);
         this.blocked = blocked;
         this.roleID = roleID;
     }
@@ -96,7 +109,6 @@ public class OSSUser {
     public void setRoleID(int roleID) {
         this.roleID = roleID;
     }
-    private int roleID;
 
     public void setRole(String role) {
         this.role = role;
