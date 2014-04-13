@@ -15,49 +15,39 @@ import nc.notus.entity.ServiceOrder;
 public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         implements ServiceOrderDAO {
 
-    private final int FIRST_COLUMN = 1;
-
     /**
      * Gets a list of service orders in system with specific service status.
-     * @param serviceStatusId the id of service status used to return specific
-     * list. If serviceStatusId is null, method returns list of all service orders.
+     * @param serviceStatus service status used to return specific list.
      * @return List of ServiceOrder objects.
      */
-    public List<ServiceOrder> getServiceOrders(Integer serviceStatusId) {
-        int columnCounter = FIRST_COLUMN; //columns are numbered from 1
-        int paramIndex = 1; //placeholder indexes are numbered from 1
+    public List<ServiceOrder> getServiceOrders(String serviceStatus) {
+
         List<ServiceOrder> deviceList = new ArrayList<ServiceOrder>();
-        ServiceOrder so = null;
-        String queryString = null;
-        if (serviceStatusId == null) {
-            queryString = "SELECT id, serviceOrderDate,serviceOrderStatusID, scenarioID, userID, serviceCatalogID, serviceInstanceID, serviceLocation FROM ServiceOrder";
-        } else {
-            queryString = "SELECT id, serviceOrderDate,serviceOrderStatusID, scenarioID, userID, serviceCatalogID, serviceInstanceID, serviceLocation FROM ServiceOrder WHERE serviceOrderStatusID = ?";
-        }
+        String queryString = "SELECT ServiceOrder.id, serviceOrderDate, serviceOrderStatusID, " +
+                                    "scenarioID, userID, serviceCatalogID, " +
+                                    "serviceInstanceID, serviceLocation " +
+                             "FROM ServiceOrder " +
+                             "INNER JOIN ServiceOrderStatus ON " +
+                                    "serviceOrderStatusID = ServiceOrderStatus.id" +
+                             "WHERE status = '?'";
+        
         Statement statement = dbManager.prepareStatement(queryString);
-        statement.setInt(paramIndex, serviceStatusId);
+        statement.setString(1, serviceStatus);
         ResultIterator ri = statement.executeQuery();
+
         if (!ri.next()) {
             throw new DAOException("No service orders were found in system");
         }
         do {
-            so = new ServiceOrder();
-            so.setId(ri.getInt(columnCounter));
-            columnCounter++;
-            so.setServiceOrderDate(ri.getString(columnCounter));
-            columnCounter++;
-            so.setServiceOrderStatus(ri.getInt(columnCounter));
-            columnCounter++;
-            so.setScenario(ri.getInt(columnCounter));
-            columnCounter++;
-            so.setUserID(ri.getInt(columnCounter));
-            columnCounter++;
-            so.setServiceCatalogID(ri.getInt(columnCounter));
-            columnCounter++;
-            so.setServiceInctanceID(ri.getInt(columnCounter));
-            columnCounter++;
-            so.setServiceLocation(ri.getString(columnCounter));
-            columnCounter = FIRST_COLUMN;
+            ServiceOrder so = new ServiceOrder();
+            so.setId(ri.getInt("id"));
+            so.setServiceOrderDate(ri.getString("serviceOrderDate"));
+            so.setServiceOrderStatusID(ri.getInt("serviceOrderStatusID"));
+            so.setScenario(ri.getInt("scenario"));
+            so.setUserID(ri.getInt("userID"));
+            so.setServiceCatalogID(ri.getInt("catalogID"));
+            so.setServiceInstanceID(ri.getInt("serviceInstanceID"));
+            so.setServiceLocation(ri.getString("serviceLocation"));
             deviceList.add(so);
         } while (ri.next());
         return deviceList;

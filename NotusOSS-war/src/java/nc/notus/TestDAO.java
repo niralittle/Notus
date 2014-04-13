@@ -6,11 +6,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.dao.impl.CableDAOImpl;
-import nc.notus.entity.Cable;
-import nc.notus.dao.CableDAO;
 import nc.notus.dao.DAOException;
-import nc.notus.reports.RoutersUtilizationCapacityReport;
+import nc.notus.dao.OSSUserDAO;
+import nc.notus.dao.impl.OSSUserDAOImpl;
+import nc.notus.entity.OSSUser;
 
 /**
  * Temporary servlet to test DAO functionality
@@ -31,28 +30,24 @@ public class TestDAO extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            CableDAO dao = new CableDAOImpl();
-            out.println(dao.countAll(null));
-            //dao.delete(3);
-            Cable cable = new Cable(69, "New cable"); // TODO: solve problem with PK overwrite
-            dao.add(cable);
-            out.println(dao.countAll(null));
-            cable = dao.find(68);
-            out.println("Found: " + cable.getCable());
-            cable.setCable("Very new Cable");
-            dao.update(cable);
-            cable = dao.find(68);
-            out.println("Found: " + cable.getCable());
-            dao.close();
-
-//            RoutersUtilizationCapacityReport rucr = new RoutersUtilizationCapacityReport();
-//            rucr.getReportData();
-//            String[] str = rucr.getRows();
-//            for (String st : str) {
-//                out.println(st);
-//            }
-//        } catch (DAOException e) {
-//            out.println(e.getMessage());
+            OSSUserDAO userDAO = new OSSUserDAOImpl();
+            OSSUser user = new OSSUser();
+            user.setFirstName("John");
+            user.setBlocked(0);
+            user.setEmail("email");
+            user.setLastName("Smith");
+            user.setLogin("john");
+            user.setPassword("11111");
+            user.setRoleID(1);
+            userDAO.add(user);
+            user = userDAO.find(7);  // not real id actually
+            userDAO.blockUser(user);
+            user.setPassword("22222");
+            userDAO.update(user);
+            userDAO.delete(7);       // not real id actually
+            userDAO.close();
+       } catch (DAOException exc) {
+            out.println("Error: " + exc.getMessage());
         } finally {
             out.close();
         }
