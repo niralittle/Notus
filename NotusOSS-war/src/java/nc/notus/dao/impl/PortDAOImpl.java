@@ -1,7 +1,5 @@
 package nc.notus.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import nc.notus.dao.PortDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
@@ -19,26 +17,24 @@ public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
     }
 
     /**
-     * Return list of all our free ports in system
+     * Return one free port in system for engineer
      * portStatus field in SQL select - it's a flag with 0 value as a free port and with 1 value when port is connected
-     * @return list of all free ports
+     * @return one  free port
      */
-    public List<Port> getFreePort() {                                           
-        List<Port> fp = new ArrayList<Port>();
+    public Port getFreePort() {                                           
         Port  port = new Port();                                                     
         String query = "SELECT p.id, p.deviceID, p.portNumber, p.portStatus, p.cableID" +
-                       "FROM port p WHERE p.portStatus = 0";// portStatus  - it's a flag with 0 as free and with 1 when connected
+                       "FROM port p WHERE p.portStatus = 0 AND rownum <=1";// portStatus  - it's a flag with 0 as free and with 1 when connected
         Statement statement = dbManager.prepareStatement(query);
         ResultIterator ri = statement.executeQuery();
-        while (ri.next()) {
+        if (ri.next()) {
             port.setId(ri.getInt("id"));
             port.setDeviceID(ri.getInt("deviceID"));
             port.setPortNumber(ri.getInt("portNumber"));
             port.setPortStatus(ri.getInt("portStatus"));
             port.setCableID(ri.getInt("cableID"));
-            fp.add(port);
         }
-        return fp;
+        return port;
     }
     
 

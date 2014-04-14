@@ -10,8 +10,8 @@ import nc.notus.entity.Port;
 public interface PortDAO extends GenericDAO<Port> {
 
     /**
-     * Return list of all our free ports in system
-     * @return list of all free ports
+     * Return one free port in system for engineer
+     * @return one  free port
      */
-    public List<Port> getFreePort();                                            
+    public Port getFreePort();                                            
 }
