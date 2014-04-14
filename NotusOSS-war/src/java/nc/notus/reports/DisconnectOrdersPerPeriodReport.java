@@ -1,6 +1,5 @@
 package nc.notus.reports;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.ServiceOrderDAO;
@@ -12,11 +11,11 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 /**
- * Represents report about new order in system by specified period.
- * Period is an interval between two dates in which new orders where created.
+ * Represents report about disconnect order in system by specified period.
+ * Period is an interval between two dates in which disconnect orders where created.
  * @author Andrey Ilin
  */
-public class NewOrdersPerPeriodReport implements Report {
+public class DisconnectOrdersPerPeriodReport {
 
     /* Date strings passed into the object must match this pattern */
     private final String DATE_PATTERN = "dd.MM.yyyy";
@@ -45,22 +44,18 @@ public class NewOrdersPerPeriodReport implements Report {
     private DateTimeFormatter dateTimeFormatter;
 
     /**
-     * Constructor that creates a NewOrdersPerPeriodReport object with specified
+     * Constructor that creates a DisconnectOrdersPerPeriodReport object with specified
      * time period presented as dates it starts and ends with.
      * @param fromDate date from which period starts
      * @param toDate date in which priod ends
      */
-    public NewOrdersPerPeriodReport(String fromDate, String toDate) {
+    public DisconnectOrdersPerPeriodReport(String toDate, String fromDate) {
         dateTimeFormatter = DateTimeFormat.forPattern(DATE_PATTERN);
         this.fromDate = dateTimeFormatter.parseDateTime(fromDate);
         this.toDate = dateTimeFormatter.parseDateTime(toDate);
         this.reportData = null;
     }
 
-    /**
-     * Gets a data for report from the database and stores data to reportData
-     * class field, that is represented as string array
-     */
     private void retrieveReportData() {
 
         /* DBManager and DAOImpl instances creation */
@@ -69,7 +64,7 @@ public class NewOrdersPerPeriodReport implements Report {
 
         List<ServiceOrder> serviceOrderList = new ArrayList<ServiceOrder>();
         List<ServiceOrder> filteredServiceOrderList = new ArrayList<ServiceOrder>();
-        serviceOrderList = sodi.getServiceOrdersByScenario("New");
+        serviceOrderList = sodi.getServiceOrdersByScenario("Disconnect");
         DateTime serviceOrderDate = null;
 
         /* Filtering service order list by date: include fromDate, exclude toDate */
@@ -90,9 +85,5 @@ public class NewOrdersPerPeriodReport implements Report {
             arrayIndexer++;
         }
     }
-
-    public void generateReport(OutputStream os) {
-        /* NEW EXCEL DOCUMENT CREATION CODE WILL BE HERE */
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }
+

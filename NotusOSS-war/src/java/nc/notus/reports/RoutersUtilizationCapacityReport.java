@@ -17,12 +17,12 @@ import nc.notus.entity.Device;
  */
 public class RoutersUtilizationCapacityReport implements Report {
 
-    /* Separates data columns in srings stored in reportData array */
-    private final String FIELD_SEPARATOR = "#";
-    
-    /* Data for reports stored here 
+    /* Separates data coluFIELD_SEPARATORmns in srings stored in reportData array */
+    private final String COLUMN_SEPARATOR = "#";
+    /*
+     * Data for reports stored here 
      * Each string is a representation of a table column that stores report data
-     * Columns are separated with FIELD_SEPARATOR
+     * Columns are separated with COLUMN_SEPARATOR
      * String example: router name#router port quantity#router's utilization in %
      */
     private String[] reportData = null;
@@ -32,6 +32,7 @@ public class RoutersUtilizationCapacityReport implements Report {
      * class field, that is represented as string array.
      */
     private void retrieveReportData() {
+
         /* DBManager and DAOImpl instances creation */
         DBManager dbManager = new DBManager();
         PortDAO pdi = new PortDAOImpl(dbManager);
@@ -45,8 +46,8 @@ public class RoutersUtilizationCapacityReport implements Report {
         int index = 0; //index for reportData array
         for (Device device : devices) {
             params.put("deviceID", device.getId());
-            this.reportData[index] = device.getName() + FIELD_SEPARATOR +
-                    device.getPortQuantity() + FIELD_SEPARATOR +
+            this.reportData[index] = device.getName() + COLUMN_SEPARATOR +
+                    device.getPortQuantity() + COLUMN_SEPARATOR +
                     ((float) pdi.countAll(params) / device.getPortQuantity() * 100); // Value in percents
             index++; //increase array index
         }
