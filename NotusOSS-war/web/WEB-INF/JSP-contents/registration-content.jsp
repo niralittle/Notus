@@ -5,7 +5,7 @@
 --%>
 
 <script type="text/javascript" src="assets/registerValidator.js"></script>
-<form name="Register" method="post" onsubmit="return validate()">
+<form name="Register" method="post" onsubmit="return validate()" action="Register">
     <h4>To join our happy customers, please, fill in the form below: </h4>
     <table border="0" cellpadding="5">
         <tr>
