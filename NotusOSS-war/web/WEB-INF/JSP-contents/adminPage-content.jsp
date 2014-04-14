@@ -1,7 +1,4 @@
 <p>Hello admin, <%= request.getUserPrincipal()%> </p>
-    <form method="get" action="ViewReport">
-        <input type="submit" value="View report"/>
-    </form>
 
 <a href="selectLocation.jsp">Map</a>
 

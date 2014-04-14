@@ -57,7 +57,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
      * @return List of ServiceOrder objects.
      */
     @Override
-    public List<ServiceOrder> getServiceOrders(String serviceStatus) {
+    public List<ServiceOrder> getServiceOrdersByStatus(String serviceStatus) {
 
         List<ServiceOrder> deviceList = new ArrayList<ServiceOrder>();
         String queryString = "SELECT ServiceOrder.id, serviceOrderDate," +

@@ -58,7 +58,7 @@ public class MostProfitableRouterReport implements Report {
 
         /* List of service orders with status "Completed" */
         ArrayList<ServiceOrder> serviceOrderList =
-                (ArrayList<ServiceOrder>) sodi.getServiceOrders("Completed");
+                (ArrayList<ServiceOrder>) sodi.getServiceOrdersByStatus("Completed");
 
         /* Getting ports associated with prices */
         Port[] ports = new Port[serviceOrderList.size()];
