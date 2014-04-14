@@ -12,33 +12,40 @@ import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.Device;
 
 /**
- * Represents report utilization and capacity of the system routers.
+ * Represents utilization and capacity of the system routers report.
  * @author Andrey Ilin
  */
-public class RoutersUtilizationCapacityReport extends AbstractReport {
+public class RoutersUtilizationCapacityReport implements Report {
 
+    /* Separates data columns in srings stored in reportData array */
     private final String FIELD_SEPARATOR = "#";
-    private String[] rows = null;                                               // REVIEW: what it this and why it hangs out here?
+    
+    /* Data for reports stored here 
+     * Each string is a representation of a table column that stores report data
+     * Columns are separated with FIELD_SEPARATOR
+     * String example: router name#router port quantity#router's utilization in %
+     */
+    private String[] reportData = null;
 
     /**
-     * Gets a data for report from the database and handles it.
-     */                                                                         // REVIEW: override keyword expected
-    public void getReportData() {                                               // REVIEW: getReportData() returns nothing
-        String[] fields = {"port_status", "device_id"};                         // REVIEW: can't you just place it in params.put()?
-        int fieldsIndex = 0;                                                    // REVIEW: why do you need field index? just put 'em in
-        int portStatusValue = 0; //port status TODO: discuss constants
-        int index = 0; //index for rows array                                   // REVIEW: why do you place index for array so far from the array?
+     * Gets a data for report from the database and stores data to reportData
+     * class field, that is represented as string array.
+     */
+    private void retrieveReportData() {
+        /* DBManager and DAOImpl instances creation */
         DBManager dbManager = new DBManager();
         PortDAO pdi = new PortDAOImpl(dbManager);
         DeviceDAO ddi = new DeviceDAOImpl(dbManager);
+
         ArrayList<Device> devices = (ArrayList<Device>) ddi.getAllDevices();
-        rows = new String[devices.size()];
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put(fields[fieldsIndex], portStatusValue); //put first parameter to map
-        fieldsIndex++; //index second paramerter
+        int portStatusValue = 0; // 0 - port is free
+        Map<String, Object> params = new HashMap<String, Object>(); //params for <code>find()</code> method
+        params.put("portStatus", portStatusValue);
+        this.reportData = new String[devices.size()]; //init class variable, that stores a result
+        int index = 0; //index for reportData array
         for (Device device : devices) {
-            params.put(fields[fieldsIndex], device.getId()); //put next parameter to map
-            rows[index] = device.getName() + FIELD_SEPARATOR +
+            params.put("deviceID", device.getId());
+            this.reportData[index] = device.getName() + FIELD_SEPARATOR +
                     device.getPortQuantity() + FIELD_SEPARATOR +
                     ((float) pdi.countAll(params) / device.getPortQuantity() * 100); // Value in percents
             index++; //increase array index
@@ -50,7 +57,8 @@ public class RoutersUtilizationCapacityReport extends AbstractReport {
      * Generates report and writes it to output stream.
      * @param os output stream to be written
      */
-    protected void generateReport(OutputStream os) {
+    public void generateReport(OutputStream os) {
+        /* NEW EXCEL DOCUMENT CREATION CODE WILL BE HERE */
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -26,33 +26,52 @@ import nc.notus.entity.ServiceOrder;
  * Represents a system report. Generates report about most profitable router.
  * @author Andrey Ilin
  */
-public class MostProfitableRouterReport extends AbstractReport {
+public class MostProfitableRouterReport implements Report {
+
+    /*
+     * Number of strings to store in reportData array
+     * 1. Device ID
+     * 2. Device name
+     * 3. Profit $
+     */
+    private final int STRING_NUMBER = 3;
+
+    /*
+     * Data for reports stored here
+     * Each string is representation of single report parameter
+     */
+    private String[] reportData = new String[STRING_NUMBER]; //report data stored here
 
     /**
-     * Gets data for report from the database and handles it.
+     * Gets a data for report from the database and stores data to reportData
+     * class field, that is represented as String array.
      */
-    public void getReportData() {                                               // REVIEW: getReportData() returns nothing
+    private void retrieveReportData() {
+        
+        /* DBManager and DAOImpl instances creation */
         DBManager dbManager = new DBManager();
         ServiceOrderDAO sodi = new ServiceOrderDAOImpl(dbManager);
         ServiceCatalogDAO scdi = new ServiceCatalogDAOImpl(dbManager);
         ServiceInstanceDAO sidi = new ServiceInstanceDAOImpl(dbManager);
         DeviceDAO ddi = new DeviceDAOImpl(dbManager);
         PortDAO pdi = new PortDAOImpl(dbManager);
-        ArrayList<ServiceOrder> serviceOrderList = 
+
+        /* List of service orders with status "Completed" */
+        ArrayList<ServiceOrder> serviceOrderList =
                 (ArrayList<ServiceOrder>) sodi.getServiceOrders("Completed");
 
-        int arrayIndexer = 0;
+        /* Getting ports associated with prices */
         Port[] ports = new Port[serviceOrderList.size()];
         int[] prices = new int[serviceOrderList.size()];
+        int arrayIndexer = 0;
         for (ServiceOrder so : serviceOrderList) {
             ServiceInstance si = sidi.find(so.getServiceInstanceID());
             ports[arrayIndexer] = pdi.find(si.getPortID());
             ServiceCatalog sc = scdi.find(so.getServiceCatalogID());
             prices[arrayIndexer] = sc.getPrice();
         }
-        //We got ports associated prices
-        //Now must get device profit
-        //Do not modify this keys in, because of hashCode()                     // REVIEW: "Do not modify this keys in", what does it mean?
+
+        /* Getting devices associated with prices */
         Map<Device, Integer> devicePriceMap = new HashMap<Device, Integer>();
         for (int i = 0; i < serviceOrderList.size(); i++) {
             Device device = ddi.find(ports[i].getDeviceID());
@@ -62,15 +81,26 @@ public class MostProfitableRouterReport extends AbstractReport {
                 devicePriceMap.put(device, prices[i]);
             }
         }
+        
+        /* Getting most profitable device and storing it to entry */
         Iterator it = devicePriceMap.entrySet().iterator();
         int maxPrice = 0;
         Map.Entry<Device, Integer> routerProfitEntry = null;
         while (it.hasNext()) {
             Map.Entry<Device, Integer> entry = (Map.Entry<Device, Integer>) it.next();
             if (entry.getValue() > maxPrice) {
-                routerProfitEntry = entry;                                      // REVIEW: we found it, so what?
+                routerProfitEntry = entry;
+                maxPrice = entry.getValue();
             }
         }
+
+        /* Saving data from enrty to String array */
+        arrayIndexer = 0;
+        reportData[arrayIndexer] = Integer.toString(routerProfitEntry.getKey().getId());
+        arrayIndexer++;
+        reportData[arrayIndexer] = routerProfitEntry.getKey().getName();
+        arrayIndexer++;
+        reportData[arrayIndexer] = Float.toString(maxPrice);
         dbManager.close();
     }
 
@@ -79,6 +109,7 @@ public class MostProfitableRouterReport extends AbstractReport {
      * @param os output stream to be written
      */
     public void generateReport(OutputStream os) {
+        /* NEW EXCEL DOCUMENT CREATION CODE WILL BE HERE */
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

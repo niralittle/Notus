@@ -2,7 +2,6 @@ package nc.notus.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import nc.notus.dao.DAOException;
 import nc.notus.dao.DeviceDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;

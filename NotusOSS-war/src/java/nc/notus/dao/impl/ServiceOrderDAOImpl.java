@@ -20,6 +20,36 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         super(dbManager);
     }
 
+    public List<ServiceOrder> getServiceOrdersByScenario(String scenario) {
+        List<ServiceOrder> deviceList = new ArrayList<ServiceOrder>();
+        String queryString = "SELECT ServiceOrder.id, serviceOrderDate, " +
+                "serviceOrderStatusID, scenarioID, userID, serviceCatalogID, " +
+                "serviceInstanceID, serviceLocation " +
+                "FROM ServiceOrder " +
+                "INNER JOIN Scenario ON " +
+                "ScenarioID = Scenario.id " +
+                "WHERE scenario = '?'";
+        Statement statement = dbManager.prepareStatement(queryString);
+        statement.setString(1, scenario);
+        ResultIterator ri = statement.executeQuery();
+        if (!ri.next()) {
+            throw new DAOException("No service orders with specified " +
+                    "scenario were found in system");
+        }
+        do {
+            ServiceOrder so = new ServiceOrder();
+            so.setId(ri.getInt("id"));
+            so.setServiceOrderDate(ri.getString("serviceOrderDate"));
+            so.setServiceOrderStatusID(ri.getInt("serviceOrderStatusID"));
+            so.setScenario(ri.getInt("scenario"));
+            so.setUserID(ri.getInt("userID"));
+            so.setServiceCatalogID(ri.getInt("catalogID"));
+            so.setServiceInstanceID(ri.getInt("serviceInstanceID"));
+            so.setServiceLocation(ri.getString("serviceLocation"));
+            deviceList.add(so);
+        } while (ri.next());
+        return deviceList;
+    }
 
     /**
      * Gets a list of service orders in system with specific service status.
@@ -30,20 +60,21 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     public List<ServiceOrder> getServiceOrders(String serviceStatus) {
 
         List<ServiceOrder> deviceList = new ArrayList<ServiceOrder>();
-        String queryString = "SELECT ServiceOrder.id, serviceOrderDate, serviceOrderStatusID, " +
-                                    "scenarioID, userID, serviceCatalogID, " +
-                                    "serviceInstanceID, serviceLocation " +
-                             "FROM ServiceOrder " +
-                             "INNER JOIN ServiceOrderStatus ON " +
-                                    "serviceOrderStatusID = ServiceOrderStatus.id" +
-                             "WHERE status = '?'";
-        
+        String queryString = "SELECT ServiceOrder.id, serviceOrderDate," +
+                " serviceOrderStatusID, scenarioID, userID, serviceCatalogID, " +
+                "serviceInstanceID, serviceLocation " +
+                "FROM ServiceOrder " +
+                "INNER JOIN ServiceOrderStatus ON " +
+                "serviceOrderStatusID = ServiceOrderStatus.id" +
+                "WHERE status = '?'";
+
         Statement statement = dbManager.prepareStatement(queryString);
         statement.setString(1, serviceStatus);
         ResultIterator ri = statement.executeQuery();
 
         if (!ri.next()) {
-            throw new DAOException("No service orders were found in system");
+            throw new DAOException("No service orders with specified " +
+                    "service status were found in system");
         }
         do {
             ServiceOrder so = new ServiceOrder();
