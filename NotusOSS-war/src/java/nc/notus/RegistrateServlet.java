@@ -31,6 +31,7 @@ public class RegistrateServlet extends HttpServlet {
 		OSSUserDAOImpl userDAO = new OSSUserDAOImpl(dbManager);
 		userDAO.add(new OSSUser(firstName, lastName, email, login, password, 0, 5));
 		dbManager.commit();
+		dbManager.close();
 		
 	
 /*
