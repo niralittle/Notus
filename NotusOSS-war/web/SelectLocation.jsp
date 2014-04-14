@@ -1,7 +1,7 @@
 <!--
     Document   : map
     Created on : 12 04 2014, 19:32:43
-    Author     : Katya Atamanchuk <nira@niralittle.name>
+    Author     : Katya Atamanchuk <nira@niralittle.name>.
 -->
 
 <jsp:include page="/WEB-INF/template.jsp">
