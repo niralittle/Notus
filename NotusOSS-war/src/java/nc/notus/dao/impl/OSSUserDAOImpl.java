@@ -19,7 +19,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     /**
      * Implementation of method for block accounts in DB
      * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O
-     * @param user - our user of type OSSUser 
+     * @param user: our user of type OSSUser
      */
 
     public void blockUser(OSSUser user) {
