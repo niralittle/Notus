@@ -1,6 +1,5 @@
 package nc.notus.dao;
 
-import java.util.List;
 import nc.notus.entity.Port;
 
 /**
