@@ -23,3 +23,22 @@
 }
 
 
+#map-container{
+    width: 100%;
+}
+
+#map-canvas{
+    width:500px;
+    position:fixed;
+}
+
+#rigtblock{
+    width:500px;
+    position: absolute;
+    top: 125px;
+    left: 600px;
+}
+
+#addressSelect{
+    margin-left: 0px;
+}

@@ -3,6 +3,7 @@ var marker;
 var geocoder;
 var objSel; //HTML <select> object for multiple addresses
 
+
 //Map initialization: map, marker and clock listener
 function initialize() {
     var haightAshbury = new google.maps.LatLng(37.7699298, 0.4469157);
@@ -10,7 +11,7 @@ function initialize() {
     var mapOptions = {
         zoom: 3,
         center: haightAshbury,
-        mapTypeId: google.maps.MapTypeId.HYBRID
+        mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
     marker = new google.maps.Marker({
@@ -34,12 +35,10 @@ function addMarker(location) {
 //geocode from coordinates to address
 function codeLatLng(input) {
     var latlng = getLatLng(input);
-    geocoder.geocode({
-        'latLng': latlng
-    }, function(results, status) {
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[1]) {
-                if(map.getZoom()==19){
+                if(map.getZoom()>15){
                     marker.setPosition(input);
                     document.getElementById('address').value = results[0].formatted_address;
                 }else{
@@ -49,21 +48,19 @@ function codeLatLng(input) {
                 alert('No results found');
             }
         } else {
-            alert('Wrong place');
+            alert('Wrong place. Please choose another one');
         }
     });
 }
 
 //geocode from address to coordinates
 function codeAddress() {
-    if(document.getElementById('address').value.is){
-        alert('Please, input the name');
+    if(document.getElementById('address').value==""){
+        alert('Please, input the address');
     }else{
         var address = document.getElementById('address').value;
         var latlng;
-        geocoder.geocode( {
-            'address': address
-        }, function(results, status) {
+        geocoder.geocode( {'address': address}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if(results.length>1){
                     objSel = document.getElementById("addressSelect");
@@ -75,9 +72,9 @@ function codeAddress() {
                 latlng = getLatLng(results[0].geometry.location);
                 map.setCenter(latlng);
                 document.getElementById('address').value = results[0].formatted_address;
-                map.setZoom(8);
+                map.setZoom(16);
             } else {
-                alert('Geocode was not successful for the following reason: ' + status);
+                alert('Wrong address. Please input another one');
             }
         });
     }
@@ -104,8 +101,8 @@ function getLatLng(loc){
 //remove marker froma map
 function removePointer(){
     marker.setMap(null);
-    objSel.style.display = "none";
     document.getElementById("address").value = "";
+    objSel.style.display = "none";
 }
 
 function showZoomMessage(){
