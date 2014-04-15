@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.states;
 
 /**
- * User role should be referred by role ID(because of the role mapping)
+ * This class enumarates possible User Roles in System.
+ * User role should be referred by role ID (because of the role mapping)
  * @author Igor Litvinenko
  */
 public enum UserRole {

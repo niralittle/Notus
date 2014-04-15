@@ -1,7 +1,7 @@
 package nc.notus.states;
 
 /**
- *
+ * This class enumerates possible states of User.
  * @author Igor Litvinenko
  */
 public enum UserState {

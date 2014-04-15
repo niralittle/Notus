@@ -36,7 +36,7 @@ public class RegistrationServlet extends HttpServlet {
                 user.setLastName(lastName);
                 user.setEmail(email);
                 user.setLogin(login);
-                user.setPassword(password);
+                user.setPassword(password);             // TODO: add cipher here
                 user.setBlocked(UserState.ACTIVE.toInt());
                 user.setRoleID(UserRole.CUSTOMER_USER.toInt());
 		userDAO.add(user);
