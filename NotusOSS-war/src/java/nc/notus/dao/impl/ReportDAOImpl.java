@@ -17,9 +17,16 @@ import nc.notus.entity.Device;
  */
 public class ReportDAOImpl implements ReportDAO {
     private DBManager dbManager;
-
-    public Device returnMostProfitableRouter(DBManager dbManager) {
-        this.dbManager = dbManager;
+    public ReportDAOImpl(DBManager dbManager) {
+         this.dbManager = dbManager;
+}
+     /**
+     * Method that return most profitable router in system
+     * @return device which is most profitable
+     */
+    @Override
+    public Device returnMostProfitableRouter() {
+        //this.dbManager = dbManager;
         dbManager = new DBManager();
         Device device = new Device();
         String query = "SELECT d.id, d.name, d.portQuantity" +
