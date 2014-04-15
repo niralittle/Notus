@@ -12,7 +12,7 @@ import nc.notus.states.OrderStatus;
 
 /**
  * Implementation of DAO for entity ServiceOrder
- * @author Andrey Ilin
+ * @author Andrey Ilin & Vladimir Ermolenko
  */
 public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         implements ServiceOrderDAO {

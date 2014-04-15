@@ -26,8 +26,6 @@ public class ReportDAOImpl implements ReportDAO {
      */
     @Override
     public Device returnMostProfitableRouter() {
-        //this.dbManager = dbManager;
-        dbManager = new DBManager();
         Device device = new Device();
         String query = "SELECT d.id, d.name, d.portQuantity" +
                        "FROM device d" +
