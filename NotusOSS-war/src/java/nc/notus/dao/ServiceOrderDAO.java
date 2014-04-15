@@ -2,11 +2,10 @@ package nc.notus.dao;
 
 import java.util.List;
 import nc.notus.entity.ServiceOrder;
-import nc.notus.states.OrderStatus;
 
 /**
  * Interface of DAO for entity ServiceOrder.
- * @author Andrey Ilin & Vladimir Ermolenko
+ * @author Andrey Ilin
  */
 public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
 
@@ -18,10 +17,5 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
     List<ServiceOrder> getServiceOrdersByStatus(String serviceStatus);
     List<ServiceOrder> getServiceOrdersByScenario(String scenario);
 
-     /**
-     * Method return id of status of ServiceOrder
-     * @param ServiceOrderStatusName
-     * @return id of our ServiceOrder's ststus
-     */
-    public int getServiceOrderStatusID(OrderStatus status);
+
 }

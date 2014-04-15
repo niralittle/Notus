@@ -8,11 +8,10 @@ import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.ServiceOrder;
-import nc.notus.states.OrderStatus;
 
 /**
  * Implementation of DAO for entity ServiceOrder
- * @author Andrey Ilin & Vladimir Ermolenko
+ * @author Andrey Ilin
  */
 public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         implements ServiceOrderDAO {
@@ -92,24 +91,5 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         return deviceList;
     }
 
-    /**
-     * Method return id of status of ServiceOrder
-     * @param ServiceOrderStatusName
-     * @return id of our ServiceOrder's ststus
-     */
-    @Override
-    public int getServiceOrderStatusID(OrderStatus status) {
-        String serviceOrderStatusName = status.toString();
-        if (serviceOrderStatusName == null) {
-            throw new NullPointerException("Null reference invoked!");
-    	}
-    	String queryString = "SELECT sos.id, sos.status FROM serviceorderstatus sos WHERE sos.status = ?";
-	Statement statement = dbManager.prepareStatement(queryString);
-	statement.setString(1, serviceOrderStatusName);
-	ResultIterator ri = statement.executeQuery();
-        if (ri.next()){
-            return ri.getInt("id");
-        }
-        return 0;
-    }
+
 }
