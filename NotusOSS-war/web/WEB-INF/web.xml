@@ -15,7 +15,7 @@
     </servlet>
     <servlet>
     	<servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>nc.notus.RegistrateServlet</servlet-class>
+        <servlet-class>nc.notus.RegistrationServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
