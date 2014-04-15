@@ -6,8 +6,6 @@ package nc.notus.dao.impl;
 
 import nc.notus.dao.RoleDAO;
 import nc.notus.dbmanager.DBManager;
-import nc.notus.dbmanager.ResultIterator;
-import nc.notus.dbmanager.Statement;
 import nc.notus.entity.Role;
 
 /**
