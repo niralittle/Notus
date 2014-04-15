@@ -5,13 +5,14 @@
 
 package nc.notus.dao;
 
+import nc.notus.entity.ServiceOrderStatus;
 import nc.notus.states.OrderStatus;
 
 /**
  *
  * @author Vladimir Ermolenko
  */
-public interface ServiceOrderStatusDAO {
+public interface ServiceOrderStatusDAO extends GenericDAO<ServiceOrderStatus>{
 
     /**
      * Method return id of status of ServiceOrder
