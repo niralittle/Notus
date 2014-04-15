@@ -41,6 +41,11 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    
+    <error-page>
+		<error-code>403</error-code>
+		<location>/deniedResource.jsp</location>
+	</error-page>
 
 
     <security-constraint>
@@ -52,7 +57,7 @@
             <http-method>POST</http-method>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>ADMIN_ROLE</role-name>
+            <role-name>ADMINISTRATOR</role-name>
         </auth-constraint>
     </security-constraint>
     <login-config>
@@ -63,4 +68,20 @@
             <form-error-page>/loginError.jsp</form-error-page>
         </form-login-config>
     </login-config>
+    
+    <security-role>
+		<role-name>ADMINISTRATOR</role-name>
+	</security-role>
+	<security-role>
+		<role-name>SUPPORT_ENGINEER</role-name>
+	</security-role>
+	<security-role>
+		<role-name>PROVISION_ENGINEER</role-name>
+	</security-role>
+	<security-role>
+		<role-name>INSTALLATION_ENGINEER</role-name>
+	</security-role>
+	<security-role>
+		<role-name>CUSTOMER_USER</role-name>
+	</security-role>
 </web-app>
