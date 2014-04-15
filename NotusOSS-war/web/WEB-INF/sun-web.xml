@@ -4,28 +4,28 @@
   <context-root>/NotusOSS-war</context-root>
   
   	<security-role-mapping>
-		<role-name>ADMIN_ROLE</role-name>
+		<role-name>ADMINISTRATOR</role-name>
 		<group-name>1</group-name>
 	</security-role-mapping>
-	
+
 	<security-role-mapping>
-		<role-name>SUPPORT_ENGINEER_ROLE</role-name>
+		<role-name>SUPPORT_ENGINEER</role-name>
 		<group-name>2</group-name>
 	</security-role-mapping>
 	
 	<security-role-mapping>
-		<role-name>PROVISION_ENGINEER_ROLE</role-name>
+		<role-name>PROVISION_ENGINEER</role-name>
 		<group-name>3</group-name>
 	</security-role-mapping>
 	
 	<security-role-mapping>
-		<role-name>INSTALLATION_ENGINEER_ROLE</role-name>
+		<role-name>INSTALLATION_ENGINEER</role-name>
 		<group-name>4</group-name>
 	</security-role-mapping>
 
 	<security-role-mapping>
-		<role-name>USER_ROLE</role-name>
-		<group-name>5</group-name>
+		<role-name>CUSTOMER_USER</role-name>
+		<group-name>5</group-name></group-name>
 	</security-role-mapping>
 	
 	
