@@ -6,7 +6,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import nc.notus.dao.GenericDAO;
 import nc.notus.dao.DAOException;
@@ -41,12 +40,31 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      */
     @Override
     public long countAll(Map<String, Object> params) {
+        // form SQL query
         String queryString = "SELECT COUNT(*) FROM " + type.getSimpleName();
-        String queryClauses = getQueryClauses(params, "AND");
-        if (!queryClauses.isEmpty()) {
-            queryString += " WHERE " + queryClauses;
+        if (params != null && !params.isEmpty()) {
+            queryString += " WHERE ";
+            for (Object value : params.values()) {
+                if (value != null) {
+                    queryString += "? = ?";
+                } else {
+                    queryString += "? IS NULL";
+                }
+                queryString += " AND ";
+            }
+            queryString = queryString.substring(0, queryString.length() - 5); // delete last " AND "
         }
+
         Statement statement = dbManager.prepareStatement(queryString);
+        // fill in statement
+        int paramIndex = 1;
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            statement.setString(paramIndex++, entry.getKey());
+            if (entry.getValue() != null) {
+                statement.setObject(paramIndex++, entry.getValue());
+            }
+        }
+
         ResultIterator ri = statement.executeQuery();
         ri.next();
         return ri.getLong(1);
@@ -66,20 +84,27 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         queryString = queryString.substring(0, queryString.length() - 2); // trim last ", "
         queryString += ") VALUES (";
         for (Object value : fields.values()) {
-            if (value instanceof Number) {
-                queryString += value;
-            } else if (value == null) {
-                queryString += "NULL";
+            if (value != null) {
+                queryString += "?";
             } else {
-                // string
-                queryString += "'" + value + "'";
+                queryString += "NULL";
             }
             queryString += ", ";
         }
         queryString = queryString.substring(0, queryString.length() - 2); // trim last ", "
         queryString += ")";
+
         Statement statement = dbManager.prepareStatement(queryString);
+//        throw new DAOException(queryString);
+        // fill in statement
+        int paramIndex = 1;
+        for (Object value : fields.values()) {
+            if (value != null) {
+                statement.setObject(paramIndex++, value);
+            }
+        }
         statement.executeUpdate();
+        statement.close();
     }
 
     /**
@@ -94,6 +119,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
             Statement statement = dbManager.prepareStatement(queryString);
             statement.setObject(1, id);
             statement.executeUpdate();
+            statement.close();
         } else {
             throw new DAOException("Wrong primary key type");
         }
@@ -113,7 +139,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         }
 
         String queryString =
-                "SELECT * FROM " + type.getSimpleName() + "  WHERE id = ?";
+                "SELECT * FROM " + type.getSimpleName() + " WHERE id = ?";
         Statement statement = dbManager.prepareStatement(queryString);
         statement.setObject(1, id);
         ResultIterator ri = statement.executeQuery();
@@ -166,17 +192,33 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         if (!(id instanceof Number)) {
             throw new DAOException("Wrong primary key type");
         }
+
+        // form SQL query
         String queryString = "UPDATE " + type.getSimpleName() + " SET ";
-
         Map<String, Object> fieldsList = getFieldsList(t);
-        String queryClauses = getQueryClauses(fieldsList, ",");
-        queryString += queryClauses;
-
+        for (Object value : fieldsList.values()) {
+            if (value != null) {
+                queryString += "? = ?";
+            } else {
+                queryString += "? = NULL";
+            }
+            queryString += ", ";
+        }
+        queryString = queryString.substring(0, queryString.length() - 2); // delete last ", "
         queryString += " WHERE id = ?";
 
         Statement statement = dbManager.prepareStatement(queryString);
-        statement.setObject(1, id);
+        // fill in statement
+        int paramIndex = 1;
+        for (Map.Entry<String, Object> entry : fieldsList.entrySet()) {
+            statement.setString(paramIndex++, entry.getKey());
+            if(entry.getValue() != null) {
+                statement.setObject(paramIndex++, entry.getValue());
+            }
+        }
+        statement.setObject(paramIndex, id);
         statement.executeUpdate();
+        statement.close();
     }
 
     /**
@@ -201,38 +243,6 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
             }
         }
         return map;
-    }
-
-    /**
-     * Mathod forms query clauses by putting proper equality operators and separate
-     * those with given delimenter.
-     * Output example: <code>id = 4, name = 'John', working is TRUE</code>
-     * @param params map of param names and their values
-     * @param delim delimiter that separates clauses
-     * @return query clauses
-     */
-    private String getQueryClauses(final Map<String, Object> params, String delim) {
-        final StringBuffer queryString = new StringBuffer();
-        if ((params != null) && !params.isEmpty()) {
-            for (final Iterator<Map.Entry<String, Object>> it = params.entrySet().iterator(); it.hasNext();) {
-                final Map.Entry<String, Object> entry = it.next();
-                if (entry.getValue() instanceof Boolean) {
-                    queryString.append(entry.getKey()).append(" is ").append(entry.getValue()).append(" ");
-                } else {
-                    if (entry.getValue() instanceof Number) {
-                        queryString.append(entry.getKey()).append(" = ").append(entry.getValue());
-                    } else {
-                        // string equality
-                        queryString.append(entry.getKey()).append(" = '").append(entry.getValue()).append("'");
-                    }
-                }
-                if (it.hasNext()) {
-                    queryString.append(" " + delim + " ");
-                }
-            }
-        }
-
-        return queryString.toString();
     }
 }
 
