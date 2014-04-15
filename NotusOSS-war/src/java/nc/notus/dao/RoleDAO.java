@@ -7,5 +7,5 @@ import nc.notus.entity.Role;
  * @author Vladimir Ermolenko
  */
 public interface RoleDAO extends GenericDAO<Role> {
-    public int getRoleID(String role);
+
 }
