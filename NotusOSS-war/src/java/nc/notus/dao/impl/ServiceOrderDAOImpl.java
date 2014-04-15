@@ -90,4 +90,24 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         } while (ri.next());
         return deviceList;
     }
+
+    /**
+     * Method return id of status of ServiceOrder
+     * @param ServiceOrderStatusName
+     * @return id of our ServiceOrder's ststus
+     */
+    @Override
+    public int getServiceOrderStatusID(String ServiceOrderStatusName) {
+        if (ServiceOrderStatusName == null) {
+            throw new NullPointerException("Null reference invoked!");
+    	}
+    	String queryString = "SELECT sos.id, sos.status FROM serviceorderstatus sos WHERE sos.status = ?";
+	Statement statement = dbManager.prepareStatement(queryString);
+	statement.setString(1, ServiceOrderStatusName);
+	ResultIterator ri = statement.executeQuery();
+        if (ri.next()){
+            return ri.getInt("id");
+        }
+        return 0;
+    }
 }
