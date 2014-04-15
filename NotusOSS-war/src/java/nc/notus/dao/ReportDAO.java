@@ -5,10 +5,13 @@
 
 package nc.notus.dao;
 
+import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.Device;
+
 /**
  * Interface of DAO for our reports
  * @author Vladimir Ermolenko
  */
 public interface ReportDAO {
-
+    public Device returnMostProfitableRouter(DBManager dbManager);
 }
