@@ -25,7 +25,7 @@
 
 	<security-role-mapping>
 		<role-name>CUSTOMER_USER</role-name>
-		<group-name>5</group-name></group-name>
+		<group-name>5</group-name>
 	</security-role-mapping>
 	
 	
