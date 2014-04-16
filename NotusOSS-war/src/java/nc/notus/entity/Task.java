@@ -12,14 +12,14 @@ package nc.notus.entity;
 public class Task {
     private int id;
     private int serviceOrderID;
-    private int employeeID;
+    private Integer employeeID; // could be null
     private int roleID;
     private int taskStatusID;
 
     public Task() {
     }
 
-    public Task(int id, int serviceOrderID, int employeeID, int roleID, int taskStatusID) {
+    public Task(int id, int serviceOrderID, Integer employeeID, int roleID, int taskStatusID) {
         this.id = id;
         this.serviceOrderID = serviceOrderID;
         this.employeeID = employeeID;
@@ -27,11 +27,11 @@ public class Task {
         this.taskStatusID = taskStatusID;
     }
 
-    public int getEmployeeID() {
+    public Integer getEmployeeID() {
         return employeeID;
     }
 
-    public void setEmployeeID(int employeeID) {
+    public void setEmployeeID(Integer employeeID) {
         this.employeeID = employeeID;
     }
 

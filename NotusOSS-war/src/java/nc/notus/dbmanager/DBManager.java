@@ -42,7 +42,8 @@ public class DBManager implements Closeable {
      */
     public Statement prepareStatement(String query) {
         try {
-            PreparedStatement prStatement = conn.prepareStatement(query);
+            String generatedColumns[] = { "ID" }; // primary key column for Statement.getGeneratedPrimaryKey()
+            PreparedStatement prStatement = conn.prepareStatement(query, generatedColumns);
             return new Statement(prStatement);
         } catch (SQLException exc) {
             throw new DBManagerException("SQL Exception", exc);
@@ -54,6 +55,14 @@ public class DBManager implements Closeable {
             conn.commit();
         } catch (SQLException exc) {
             throw new DBManagerException("Cannot execute commit", exc);
+        }
+    }
+
+    public void rollback() {
+        try {
+            conn.rollback();
+        } catch (SQLException exc) {
+            throw new DBManagerException("Cannot execute rollback", exc);
         }
     }
 

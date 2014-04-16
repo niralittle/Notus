@@ -5,21 +5,23 @@
 
 package nc.notus.entity;
 
+import java.util.Date;
+
 /**
  *
  * @author Vladimir Ermolenko
  */
 public class ServiceInstance {
     private int id;
-    private String serviceInstanceDate;
+    private Date serviceInstanceDate;
     private int serviceInstanceStatusID;
-    private int circuitID;
-    private int portID;
+    private Integer circuitID; // could be null
+    private Integer portID;    // could be null
 
     public ServiceInstance() {
     }
 
-    public ServiceInstance(int id, String serviceInstanceDate, int serviceInstanceStatusID, int circuitID, int portID) {
+    public ServiceInstance(int id, Date serviceInstanceDate, int serviceInstanceStatusID, Integer circuitID, Integer portID) {
         this.id = id;
         this.serviceInstanceDate = serviceInstanceDate;
         this.serviceInstanceStatusID = serviceInstanceStatusID;
@@ -27,11 +29,11 @@ public class ServiceInstance {
         this.portID = portID;
     }
 
-    public int getCircuitID() {
+    public Integer getCircuitID() {
         return circuitID;
     }
 
-    public void setCircuitID(int circuitID) {
+    public void setCircuitID(Integer circuitID) {
         this.circuitID = circuitID;
     }
 
@@ -43,19 +45,19 @@ public class ServiceInstance {
         this.id = id;
     }
 
-    public int getPortID() {
+    public Integer getPortID() {
         return portID;
     }
 
-    public void setPortID(int portID) {
+    public void setPortID(Integer portID) {
         this.portID = portID;
     }
 
-    public String getServiceInstanceDate() {
+    public Date getServiceInstanceDate() {
         return serviceInstanceDate;
     }
 
-    public void setServiceInstanceDate(String serviceInstanceDate) {
+    public void setServiceInstanceDate(Date serviceInstanceDate) {
         this.serviceInstanceDate = serviceInstanceDate;
     }
 

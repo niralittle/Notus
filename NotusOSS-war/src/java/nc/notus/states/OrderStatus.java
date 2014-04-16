@@ -7,10 +7,10 @@ package nc.notus.states;
  * @author Igor Litvinenko
  */
 public enum OrderStatus {
-    ENTERING("entering"),
-    PROCESSING("processing"),
-    COMPLETED("completed"),
-    CANCELLED("cancelled");
+    ENTERING("Entering"),
+    PROCESSING("Processing"),
+    COMPLETED("Completed"),
+    CANCELLED("Cancelled");
 
     private final String status;
 

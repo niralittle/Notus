@@ -39,9 +39,9 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         do {
             ServiceOrder so = new ServiceOrder();
             so.setId(ri.getInt("id"));
-            so.setServiceOrderDate(ri.getString("serviceOrderDate"));
+            so.setServiceOrderDate(ri.getDate("serviceOrderDate"));
             so.setServiceOrderStatusID(ri.getInt("serviceOrderStatusID"));
-            so.setScenario(ri.getInt("scenario"));
+            so.setScenarioID(ri.getInt("scenarioID"));
             so.setUserID(ri.getInt("userID"));
             so.setServiceCatalogID(ri.getInt("catalogID"));
             so.setServiceInstanceID(ri.getInt("serviceInstanceID"));
@@ -79,9 +79,9 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         do {
             ServiceOrder so = new ServiceOrder();
             so.setId(ri.getInt("id"));
-            so.setServiceOrderDate(ri.getString("serviceOrderDate"));
+            so.setServiceOrderDate(ri.getDate("serviceOrderDate"));
             so.setServiceOrderStatusID(ri.getInt("serviceOrderStatusID"));
-            so.setScenario(ri.getInt("scenario"));
+            so.setScenarioID(ri.getInt("scenarioID"));
             so.setUserID(ri.getInt("userID"));
             so.setServiceCatalogID(ri.getInt("catalogID"));
             so.setServiceInstanceID(ri.getInt("serviceInstanceID"));

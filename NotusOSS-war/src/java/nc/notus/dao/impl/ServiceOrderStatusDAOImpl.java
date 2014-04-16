@@ -5,6 +5,7 @@
 
 package nc.notus.dao.impl;
 
+import nc.notus.dao.DAOException;
 import nc.notus.dao.ServiceOrderStatusDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
@@ -30,16 +31,15 @@ public class ServiceOrderStatusDAOImpl extends GenericDAOImpl<ServiceOrderStatus
     @Override
     public int getServiceOrderStatusID(OrderStatus status) {
         String serviceOrderStatusName = status.toString();
-        if (serviceOrderStatusName == null) {
-            throw new NullPointerException("Null reference invoked!");
-    	}
     	String queryString = "SELECT sos.id, sos.status FROM serviceorderstatus sos WHERE sos.status = ?";
 	Statement statement = dbManager.prepareStatement(queryString);
 	statement.setString(1, serviceOrderStatusName);
 	ResultIterator ri = statement.executeQuery();
         if (ri.next()){
             return ri.getInt("id");
+        } else {
+            throw new DAOException("Given Order Status was not found in DB: " +
+                    status.toString());
         }
-        return 0;
     }
 }

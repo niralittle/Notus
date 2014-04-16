@@ -57,39 +57,39 @@ public class NewOrdersPerPeriodReport implements Report {
         this.reportData = null;
     }
 
-    /**
-     * Gets a data for report from the database and stores data to reportData
-     * class field, that is represented as string array
-     */
-    private void retrieveReportData() {
-
-        /* DBManager and DAOImpl instances creation */
-        DBManager dbManager = new DBManager();
-        ServiceOrderDAO sodi = new ServiceOrderDAOImpl(dbManager);
-
-        List<ServiceOrder> serviceOrderList = new ArrayList<ServiceOrder>();
-        List<ServiceOrder> filteredServiceOrderList = new ArrayList<ServiceOrder>();
-        serviceOrderList = sodi.getServiceOrdersByScenario("New");
-        DateTime serviceOrderDate = null;
-
-        /* Filtering service order list by date: include fromDate, exclude toDate */
-        for (ServiceOrder order : serviceOrderList) {
-            serviceOrderDate = this.dateTimeFormatter.parseDateTime(order.getServiceOrderDate());
-            if ((serviceOrderDate.isAfter(this.fromDate) || serviceOrderDate.isEqual(fromDate)) &&
-                    serviceOrderDate.isBefore(this.toDate)) {
-                filteredServiceOrderList.add(order);
-            }
-        }
-
-        /* Saving data to reportData array */
-        this.reportData = new String[filteredServiceOrderList.size()];
-        int arrayIndexer = 0;
-        for (ServiceOrder so : filteredServiceOrderList) {
-            reportData[arrayIndexer] = so.getServiceOrderDate() +
-                    COLUMN_SEPARATOR + so.getId();
-            arrayIndexer++;
-        }
-    }
+//    /**
+//     * Gets a data for report from the database and stores data to reportData
+//     * class field, that is represented as string array
+//     */
+//    private void retrieveReportData() {
+//
+//        /* DBManager and DAOImpl instances creation */
+//        DBManager dbManager = new DBManager();
+//        ServiceOrderDAO sodi = new ServiceOrderDAOImpl(dbManager);
+//
+//        List<ServiceOrder> serviceOrderList = new ArrayList<ServiceOrder>();
+//        List<ServiceOrder> filteredServiceOrderList = new ArrayList<ServiceOrder>();
+//        serviceOrderList = sodi.getServiceOrdersByScenario("New");
+//        DateTime serviceOrderDate = null;
+//
+//        /* Filtering service order list by date: include fromDate, exclude toDate */
+//        for (ServiceOrder order : serviceOrderList) {
+//            serviceOrderDate = this.dateTimeFormatter.parseDateTime(order.getServiceOrderDate());
+//            if ((serviceOrderDate.isAfter(this.fromDate) || serviceOrderDate.isEqual(fromDate)) &&
+//                    serviceOrderDate.isBefore(this.toDate)) {
+//                filteredServiceOrderList.add(order);
+//            }
+//        }
+//
+//        /* Saving data to reportData array */
+//        this.reportData = new String[filteredServiceOrderList.size()];
+//        int arrayIndexer = 0;
+//        for (ServiceOrder so : filteredServiceOrderList) {
+//            reportData[arrayIndexer] = so.getServiceOrderDate() +
+//                    COLUMN_SEPARATOR + so.getId();
+//            arrayIndexer++;
+//        }
+//    }
 
     public void generateReport(OutputStream os) {
         /* NEW EXCEL DOCUMENT CREATION CODE WILL BE HERE */
