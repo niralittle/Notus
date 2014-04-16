@@ -17,8 +17,18 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
     
     /**
      * Check if user with specified login is already exist in system
+     * 
      * @param login login to check
      * @return true - if exist, false - otherwise
+     * @throws NullPointerException if null reference
      */
-    boolean isExist(String login);
+    boolean isLoginDuplicate(String login);
+    
+    /**
+     * Check if specified email is already exist in system
+     * 
+     * @param email email to check
+     * @return true - if exist, false - otherwise
+     */
+    boolean isEmailDuplicate(String email);
 }
