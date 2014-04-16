@@ -10,7 +10,7 @@
     <table border="0" cellpadding="5">
         <tr>
             <td>Login: </td>
-            <td><input required type="text" name="login" id="login" value="" />
+            <td><input required type="text" name="login" id="login" oninput="loginValidate()" value="" />
                     <div id="loginMsg"></div>
             </td>
         </tr>
@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td>Email: </td>
-            <td><input required type="text" name="email" id="email" value="" />
+            <td><input required type="text" name="email" oninput="emailValidate()" id="email"  value="" />
                     <div id="emailMsg"></div>
             </td>
         </tr>
