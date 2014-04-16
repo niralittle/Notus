@@ -31,6 +31,26 @@ public class RegistrationServlet extends HttpServlet {
 		DBManager dbManager = new DBManager();
 		
 		OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+		
+		// server-side validation for duplicating login and email
+		if (userDAO.isLoginDuplicate(login)) {
+			request.setAttribute("duplicateLogin",
+					"User with specified login already exist. Choose other login.");
+			dbManager.close();
+			RequestDispatcher view = request.getRequestDispatcher("registration.jsp");
+			view.forward(request, response);
+		}
+
+		if (userDAO.isEmailDuplicate(email)) {
+			request.setAttribute("duplicateLogin",
+					"User with specified email already exist in system. "
+					+ "Try write to administrator for restoring you account.");
+			dbManager.close();
+			RequestDispatcher view = request.getRequestDispatcher("registration.jsp");
+			view.forward(request, response);
+		}
+		
+
                 OSSUser user = new OSSUser();
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
