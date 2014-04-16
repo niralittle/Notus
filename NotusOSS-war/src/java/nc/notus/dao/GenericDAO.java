@@ -18,8 +18,9 @@ public interface GenericDAO<T> {
     /**
      * Method creates new instance of entity in DB
      * @param t entity to add to DB
+     * @return Primary Key of created instance
      */
-    void add(T t);
+    Object add(T t);
 
     /**
      * Method deletes instance of entity from DB by given primary key

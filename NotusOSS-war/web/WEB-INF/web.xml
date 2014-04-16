@@ -17,6 +17,10 @@
     	<servlet-name>RegisterServlet</servlet-name>
         <servlet-class>nc.notus.RegistrationServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>WorkflowTestServlet</servlet-name>
+        <servlet-class>nc.notus.WorkflowTestServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -32,6 +36,10 @@
     <servlet-mapping>
         <servlet-name>MailServlet</servlet-name>
         <url-pattern>/MailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>WorkflowTestServlet</servlet-name>
+        <url-pattern>/WorkflowTestServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

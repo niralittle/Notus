@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.sql.Date;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -44,11 +45,11 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         String queryString = "SELECT COUNT(*) FROM " + type.getSimpleName();
         if (params != null && !params.isEmpty()) {
             queryString += " WHERE ";
-            for (Object value : params.values()) {
-                if (value != null) {
-                    queryString += "? = ?";
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                if (entry.getValue() != null) {
+                    queryString += entry.getKey() + " = ?";
                 } else {
-                    queryString += "? IS NULL";
+                    queryString += entry.getKey() + " IS NULL";
                 }
                 queryString += " AND ";
             }
@@ -58,10 +59,9 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         Statement statement = dbManager.prepareStatement(queryString);
         // fill in statement
         int paramIndex = 1;
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            statement.setString(paramIndex++, entry.getKey());
-            if (entry.getValue() != null) {
-                statement.setObject(paramIndex++, entry.getValue());
+        for (Object value : params.values()) {
+            if (value != null) {
+                statement.setObject(paramIndex++, value);
             }
         }
 
@@ -73,9 +73,10 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     /**
      * Method creates new instance of entity in DB
      * @param t entity to add to DB
+     * @return Primary Key of created instance
      */
     @Override
-    public void add(T t) {
+    public Object add(T t) {
         String queryString = "INSERT INTO " + type.getSimpleName() + "(";
         Map<String, Object> fields = getFieldsList(t);
         for (String fieldName : fields.keySet()) {
@@ -95,7 +96,6 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         queryString += ")";
 
         Statement statement = dbManager.prepareStatement(queryString);
-//        throw new DAOException(queryString);
         // fill in statement
         int paramIndex = 1;
         for (Object value : fields.values()) {
@@ -104,7 +104,8 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
             }
         }
         statement.executeUpdate();
-        statement.close();
+        Object primaryKey = statement.getGeneratedPrimaryKey();
+        return primaryKey;
     }
 
     /**
@@ -163,6 +164,22 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
                     method.invoke(t, ri.getBoolean(fieldName));
                 } else if (field.getType() == String.class) {
                     method.invoke(t, ri.getString(fieldName));
+                } else if(field.getType() == Integer.class) {
+                    Integer val;
+                    if(ri.getObject(fieldName) != null) {
+                        val = ri.getInt(fieldName);
+                    } else {
+                        val = null;
+                    }
+                    method.invoke(t, val);
+                } else if(field.getType() == Date.class) {
+                    Date date;
+                    if(ri.getObject(fieldName) != null) {
+                        date = ri.getDate(fieldName);
+                    } else {
+                        date = null;
+                    }
+                    method.invoke(t, date);
                 } else {
                     throw new DAOException("Incompatible field type");
                 }
@@ -196,11 +213,11 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         // form SQL query
         String queryString = "UPDATE " + type.getSimpleName() + " SET ";
         Map<String, Object> fieldsList = getFieldsList(t);
-        for (Object value : fieldsList.values()) {
-            if (value != null) {
-                queryString += "? = ?";
+        for (Map.Entry<String, Object> entry : fieldsList.entrySet()) {
+            if (entry.getValue() != null) {
+                queryString += entry.getKey() + " = ?";
             } else {
-                queryString += "? = NULL";
+                queryString += entry.getKey() + " = NULL";
             }
             queryString += ", ";
         }
@@ -210,10 +227,9 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         Statement statement = dbManager.prepareStatement(queryString);
         // fill in statement
         int paramIndex = 1;
-        for (Map.Entry<String, Object> entry : fieldsList.entrySet()) {
-            statement.setString(paramIndex++, entry.getKey());
-            if(entry.getValue() != null) {
-                statement.setObject(paramIndex++, entry.getValue());
+        for (Object value : fieldsList.values()) {
+            if(value != null) {
+                statement.setObject(paramIndex++, value);
             }
         }
         statement.setObject(paramIndex, id);

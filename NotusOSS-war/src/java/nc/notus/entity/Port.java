@@ -14,12 +14,12 @@ public class Port {
     private int deviceID;
     private int portNumber;
     private int portStatus;
-    private int cableID;
+    private Integer cableID; // could be null
 
     public Port() {
     }
 
-    public Port(int id, int deviceID, int portNumber, int portStatus, int cableID) {
+    public Port(int id, int deviceID, int portNumber, int portStatus, Integer cableID) {
         this.id = id;
         this.deviceID = deviceID;
         this.portNumber = portNumber;
@@ -27,11 +27,11 @@ public class Port {
         this.cableID = cableID;
     }
 
-    public int getCableID() {
+    public Integer getCableID() {
         return cableID;
     }
 
-    public void setCableID(int cableID) {
+    public void setCableID(Integer cableID) {
         this.cableID = cableID;
     }
 

@@ -1,5 +1,7 @@
 package nc.notus.entity;
 
+import java.sql.Date;
+
 /**
  *
  * @author Vladimir Ermolenko
@@ -7,13 +9,30 @@ package nc.notus.entity;
 public class ServiceOrder {
 
     private int id;
-    private String serviceOrderDate;
+    private Date serviceOrderDate;
     private int serviceOrderStatusID;
     private int scenarioID;
     private int userID;
     private int serviceCatalogID;
-    private int serviceInstanceID;
+    private Integer serviceInstanceID; // could be null
     private String serviceLocation;
+
+
+    public ServiceOrder() {
+    }
+
+    public ServiceOrder(int id, Date serviceOrderDate, int serviceOrderStatusID,
+                            int scenarioID, int userID, int serviceCatalogID,
+                            Integer serviceInstanceID, String serviceLocation) {
+        this.id = id;
+        this.serviceOrderDate = serviceOrderDate;
+        this.serviceOrderStatusID = serviceOrderStatusID;
+        this.scenarioID = scenarioID;
+        this.userID = userID;
+        this.serviceCatalogID = serviceCatalogID;
+        this.serviceInstanceID = serviceInstanceID;
+        this.serviceLocation = serviceLocation;
+    }
 
     public int getId() {
         return id;
@@ -27,7 +46,7 @@ public class ServiceOrder {
         return scenarioID;
     }
 
-    public void setScenario(int scenarioID) {
+    public void setScenarioID(int scenarioID) {
         this.scenarioID = scenarioID;
     }
 
@@ -39,11 +58,11 @@ public class ServiceOrder {
         this.serviceCatalogID = serviceCatalogID;
     }
 
-    public int getServiceInstanceID() {
+    public Integer getServiceInstanceID() {
         return serviceInstanceID;
     }
 
-    public void setServiceInstanceID(int serviceInstanceID) {
+    public void setServiceInstanceID(Integer serviceInstanceID) {
         this.serviceInstanceID = serviceInstanceID;
     }
 
@@ -55,11 +74,11 @@ public class ServiceOrder {
         this.serviceLocation = serviceLocation;
     }
 
-    public String getServiceOrderDate() {
+    public Date getServiceOrderDate() {
         return serviceOrderDate;
     }
 
-    public void setServiceOrderDate(String serviceOrderDate) {
+    public void setServiceOrderDate(Date serviceOrderDate) {
         this.serviceOrderDate = serviceOrderDate;
     }
 
@@ -77,19 +96,5 @@ public class ServiceOrder {
 
     public void setUserID(int userID) {
         this.userID = userID;
-    }
-
-    public ServiceOrder() {
-    }
-
-    public ServiceOrder(int id, String serviceOrderDate, int serviceOrderStatusID, int scenarioID, int userID, int serviceCatalogID, int serviceInstanceID, String serviceLocation) {
-        this.id = id;
-        this.serviceOrderDate = serviceOrderDate;
-        this.serviceOrderStatusID = serviceOrderStatusID;
-        this.scenarioID = scenarioID;
-        this.userID = userID;
-        this.serviceCatalogID = serviceCatalogID;
-        this.serviceInstanceID = serviceInstanceID;
-        this.serviceLocation = serviceLocation;
     }
 }

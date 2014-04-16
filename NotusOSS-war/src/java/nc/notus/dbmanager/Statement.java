@@ -1,9 +1,13 @@
 package nc.notus.dbmanager;
 
 import java.io.Closeable;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.RowId;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Wraps <code>PreparedStatement</code> class to handle SQL exceptions and
@@ -29,6 +33,14 @@ public class Statement implements Closeable {
     public void setString(int parameterIndex, String value) {
         try {
             this.prStatement.setString(parameterIndex, value);
+        } catch (SQLException exc) {
+            throw new DBManagerException("SQL Exception", exc);
+        }
+    }
+
+    public void setDate(int parameterIndex, Date value) {
+        try {
+            this.prStatement.setDate(parameterIndex, value);
         } catch (SQLException exc) {
             throw new DBManagerException("SQL Exception", exc);
         }
@@ -66,6 +78,25 @@ public class Statement implements Closeable {
             return rowsAffected;
         } catch (SQLException exc) {
             throw new DBManagerException("Can't execute query.", exc);
+        }
+    }
+
+    /**
+     * Method returns primary key that was genereted in Statement execution
+     * process.
+     * @return generated primary key
+     */
+    public Object getGeneratedPrimaryKey() {
+        try {
+            ResultSet generatedKeys = prStatement.getGeneratedKeys();
+            if (generatedKeys != null && generatedKeys.next()) {
+                int primaryKey = generatedKeys.getInt(1);
+                return primaryKey;
+            } else {
+                throw new DBManagerException("No PK were generated");
+            }
+        } catch (SQLException exc) {
+            throw new DBManagerException("Cannot get generated PK", exc);
         }
     }
 

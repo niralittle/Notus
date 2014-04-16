@@ -1,5 +1,6 @@
 package nc.notus.dbmanager;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -34,6 +35,22 @@ public class ResultIterator {
     public Object getObject(int columnNumber) {
         try {
             return rs.getObject(columnNumber);
+        } catch (SQLException exc) {
+            throw new DBManagerException("SQL exception", exc);
+        }
+    }
+
+    public Date getDate(String columnName) {
+        try {
+            return rs.getDate(columnName);
+        } catch (SQLException exc) {
+            throw new DBManagerException("SQL exception", exc);
+        }
+    }
+
+    public Date getDate(int columnNumber) {
+        try {
+            return rs.getDate(columnNumber);
         } catch (SQLException exc) {
             throw new DBManagerException("SQL exception", exc);
         }
