@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.entity;
 
-// library you can download om GoogleDisk in Development folder
 import org.apache.commons.codec.digest.DigestUtils;
+
 /**
  *
  * @author Vladimir Ermolenko
@@ -24,23 +19,25 @@ public class OSSUser {
     public OSSUser() {
     }
 
-    public OSSUser(int id, String firstName, String lastName, String email, String login, String password, int blocked, int roleID) {
+    public OSSUser(int id, String firstName, String lastName, String email,
+                    String login, String password, int blocked, int roleID) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.login = login;
-        this.password = password;
+        this.setPassword(password);
         this.blocked = blocked;
         this.roleID = roleID;
     }
     
-     public OSSUser(String firstName, String lastName, String email, String login, String password, int blocked, int roleID) {
+     public OSSUser(String firstName, String lastName, String email,
+                    String login, String password, int blocked, int roleID) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.login = login;
-        this.password = DigestUtils.sha256Hex(password);
+        this.setPassword(password);
         this.blocked = blocked;
         this.roleID = roleID;
     }
@@ -97,8 +94,13 @@ public class OSSUser {
         return password;
     }
 
+    /**
+     * This method calculates SHA-256 hash of given clear-text password and
+     * writes it into class variable.
+     * @param password clear-text password
+     */
     public void setPassword(String password) {
-        this.password = password;
+        this.password =  DigestUtils.sha256Hex(password);
     }
 
     public int getRoleID() {
