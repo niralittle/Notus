@@ -22,7 +22,7 @@ function initialize() {
     });
 }
 
-// Add a marker to the map if ZOOM is max (19)!!
+// Add a marker to the map if ZOOM is more than 15
 function addMarker(location) {
     if (marker.getMap()==null){
         marker = new google.maps.Marker({
@@ -59,16 +59,25 @@ function codeAddress() {
         alert('Please, input the address');
     }else{
         var address = document.getElementById('address').value;
+        objSel = document.getElementById("addressSelect");
         var latlng;
         geocoder.geocode( {'address': address}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if(results.length>1){
-                    objSel = document.getElementById("addressSelect");
                     objSel.style.display = "block";
                     for(i=0;i<results.length;i++){
                         objSel.options[i] = new Option(results[i].formatted_address, results[i].geometry.location);
                     }
                 }
+                for(var j = 0; j<results.length;j++){
+                   for (var i=0; i<results[j].address_components.length; i++){
+                    if(results[j].address_components[i].types[0]=="country"){
+                        alert('country');
+                    }
+                }
+                }
+                
+
                 latlng = getLatLng(results[0].geometry.location);
                 map.setCenter(latlng);
                 document.getElementById('address').value = results[0].formatted_address;
