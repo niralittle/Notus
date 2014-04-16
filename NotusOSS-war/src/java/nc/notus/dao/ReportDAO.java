@@ -12,5 +12,5 @@ import nc.notus.entity.Device;
  * @author Vladimir Ermolenko
  */
 public interface ReportDAO {
-    public Device returnMostProfitableRouter();
+    public Device returnMostProfitableRouter(String startDate, String finishDate);
 }

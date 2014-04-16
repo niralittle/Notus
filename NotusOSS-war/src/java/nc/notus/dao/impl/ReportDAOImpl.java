@@ -25,12 +25,25 @@ public class ReportDAOImpl implements ReportDAO {
      * @return device which is most profitable
      */
     @Override
-    public Device returnMostProfitableRouter() {
+    public Device returnMostProfitableRouter(String startDate, String finishDate) {
         Device device = new Device();
-        String query = "SELECT d.id, d.name, d.portQuantity" +
-                       "FROM device d" +
-                       "WHERE rownum <=1"; // SELECT is not ready yet!
+
+        // The query below needed in review with a lot of complex examples in table!
+        String query = "SELECT p.deviceid, sum(sc.price) total " +
+                       "FROM serviceorder so " +
+                       "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                       "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si " +
+                       "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                       "LEFT JOIN port p ON si.portid  = p.id " +
+                       "LEFT JOIN device d ON p.deviceid = d.id " +
+                       "WHERE (sis.status = 'Active'  " +
+                       "OR sis.status = 'Disconnected') " +
+                       "AND si.serviceinstancedate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
+                       "GROUP BY p.deviceid " +
+                       "ORDER BY total DESC;";
         Statement statement = dbManager.prepareStatement(query);
+        statement.setString(1, startDate);
+        statement.setString(2, finishDate);
         ResultIterator ri = statement.executeQuery();
         if (ri.next()){
             device.setId(ri.getInt("id"));
