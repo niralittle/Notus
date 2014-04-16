@@ -29,21 +29,37 @@ public class ReportDAOImpl implements ReportDAO {
         Device device = new Device();
 
         // The query below needed in review with a lot of complex examples in table!
-        String query = "SELECT p.deviceid, sum(sc.price) total " +
-                       "FROM serviceorder so " +
-                       "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
-                       "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si " +
-                       "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                       "LEFT JOIN port p ON si.portid  = p.id " +
-                       "LEFT JOIN device d ON p.deviceid = d.id " +
-                       "WHERE (sis.status = 'Active'  " +
-                       "OR sis.status = 'Disconnected') " +
-                       "AND si.serviceinstancedate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
-                       "GROUP BY p.deviceid " +
-                       "ORDER BY total DESC;";
+
+        String query = "SELECT p.deviceid, sum(sc.price*(TO_DATE(?, 'DD-MM-YYYY')-TO_DATE(?, 'DD-MM-YYYY'))) total " +
+                        "FROM serviceorder so " +
+                        "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                        "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
+                        "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                        "LEFT JOIN port p ON si.portid  = p.id " +
+                        "LEFT JOIN device d ON p.deviceid = d.id " +
+                        "WHERE sis.status = 'Active' " +
+                        "AND si.serviceinstancedate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
+                        "GROUP BY p.deviceid " +
+                        "UNION ALL " +
+                        "SELECT p.deviceid, sum(sc.price*(si.serviceinstancedate -TO_DATE(?, 'DD-MM-YYYY'))) total " +
+                        "FROM serviceorder so " +
+                        "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                        "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
+                        "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                        "LEFT JOIN port p ON si.portid  = p.id " +
+                        "LEFT JOIN device d ON p.deviceid = d.id " +
+                        "WHERE sis.status = 'Disconnected' " +
+                        "AND si.serviceinstancedate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
+                        "GROUP BY p.deviceid " +
+                        "ORDER BY total DESC";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, startDate);
-        statement.setString(2, finishDate);
+        statement.setString(1, finishDate);
+        statement.setString(2, startDate);
+        statement.setString(3, finishDate);
+        statement.setString(4, startDate);
+        statement.setString(5, startDate);
+        statement.setString(6, finishDate);
+        statement.setString(7, startDate);
         ResultIterator ri = statement.executeQuery();
         if (ri.next()){
             device.setId(ri.getInt("id"));
