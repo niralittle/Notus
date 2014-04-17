@@ -16,12 +16,23 @@ import nc.notus.states.UserRole;
 import nc.notus.states.UserState;
 
 
+/**
+* Provides registration new user in system and create new scenario workflow 
+* with order status="ENTERING"
+* @see {@link nc.notus.states.OrderStatus } 
+* @param request
+* @param response
+* @throws ServletException
+* @throws IOException
+*/
 public class RegistrationServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
 	protected void processRequest(HttpServletRequest request,
                         HttpServletResponse response) throws ServletException, IOException {
+                        	
+		// get parameters from request scope
 		String login = (String) request.getParameter("login");
 		String password = (String) request.getParameter("password");
 		String email = (String) request.getParameter("email");
@@ -29,7 +40,6 @@ public class RegistrationServlet extends HttpServlet {
 		String lastName = (String) request.getParameter("lastName");
 		
 		DBManager dbManager = new DBManager();
-		
 		OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 		
 		// server-side validation for duplicating login and email
@@ -51,20 +61,46 @@ public class RegistrationServlet extends HttpServlet {
 		}
 		
 
-                OSSUser user = new OSSUser();
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setEmail(email);
-                user.setLogin(login);
-                user.setPassword(password);             // TODO: add cipher here
-                user.setBlocked(UserState.ACTIVE.toInt());
-                user.setRoleID(UserRole.CUSTOMER_USER.toInt());
+               // create new user
+		OSSUser user = new OSSUser();
+	         user.setFirstName(firstName);
+	         user.setLastName(lastName);
+	         user.setEmail(email);
+	         user.setLogin(login);
+	         user.setPassword(password);             
+	         user.setBlocked(UserState.ACTIVE.toInt());
+	         user.setRoleID(UserRole.CUSTOMER_USER.toInt());
+	         
 		userDAO.add(user);
                 
 		dbManager.commit();
 		dbManager.close();
-	
-		RequestDispatcher view = request.getRequestDispatcher("index.jsp");
+		
+		/*
+		//create workflow with Scenario NEW
+		ServiceCatalogDAOImpl cat = new ServiceCatalogDAOImpl(dbManager);
+		
+		int serviceCatalogID = Integer.parseInt(request.getParameter("serviceCatalogID"));
+		String serviceLocation = (String) request.getParameter("serviceLocation");
+		
+		// create new order with status ENTERING
+        ServiceOrder so = new ServiceOrder();
+        	so.setServiceOrderStatusID(1); // need add id to states
+        	so.setScenarioID(1); // new scenario id
+        	so.setServiceCatalogID(serviceCatalogID);
+        	so.setServiceLocation(serviceLocation);
+        	// set date
+        	// set generated user id
+        	
+        
+        Workflow wf = new NewScenarioWorkflow(so);
+        wf.proceedOrder();
+		
+		*/
+
+		
+		//redirect to congratulation page
+		RequestDispatcher view = request.getRequestDispatcher("orderRecieved.jsp");
 		view.forward(request, response);
 	}
 
