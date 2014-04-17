@@ -5,10 +5,12 @@
 --%>
 
 <script type="text/javascript" src="assets/registerValidator.js"></script>
-<form name="Register" method="post" onsubmit="return validate()" action="Register">
+<form name="Register" method="post" onsubmit="return validate()" action="Validate">
+
     <h4>To join our happy customers, please, fill in the form below: </h4>
     
-    <%= request.getAttribute("duplicateLogin") == null ? "" : request.getAttribute("duplicateLogin")%>
+    <%= request.getAttribute("errors") == null ? "" : request.getAttribute("errors")%>
+						
     <table border="0" cellpadding="5">
         <tr>
             <td>Login: </td>
