@@ -11,6 +11,7 @@ package nc.notus.entity;
  */
 public class ProviderLocation {
     private int id;
+    private String name;
     private String location;
 
     public ProviderLocation() {
@@ -35,5 +36,13 @@ public class ProviderLocation {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

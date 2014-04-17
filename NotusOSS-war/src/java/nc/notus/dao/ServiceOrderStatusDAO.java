@@ -9,7 +9,7 @@ import nc.notus.entity.ServiceOrderStatus;
 import nc.notus.states.OrderStatus;
 
 /**
- *
+ * Interface of DAO for entity ServiceOrderStatus
  * @author Vladimir Ermolenko
  */
 public interface ServiceOrderStatusDAO extends GenericDAO<ServiceOrderStatus>{

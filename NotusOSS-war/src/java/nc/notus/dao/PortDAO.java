@@ -10,7 +10,8 @@ public interface PortDAO extends GenericDAO<Port> {
 
     /**
      * Return one free port in system for engineer
-     * @return one  free port
+     * portStatus field in SQL select - it's a flag with 0 value as a free port and with 1 value when port is connected
+     * @return one free port or null if allthe ports are busy
      */
     public Port getFreePort();                                            
 }
