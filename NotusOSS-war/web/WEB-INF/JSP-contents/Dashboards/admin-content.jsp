@@ -1,9 +1,16 @@
-<div id="content">
-    <div id="admin-left">
-        <div id="container-header"><span>Create Employee Account</span></div>
-        <script type="text/javascript" src="assets/registerValidator.js"></script>
+<script type="text/javascript" src="assets/dashboard.js"></script>
 
-        <form name="Register" method="post" onsubmit="return validate()" action="Register">
+
+<div id="content">
+    <ul class="tabs">
+        <li><a href="javascript:tabSwitch('tab_1', 'admin-left');" id="tab_1" class="active">Create Employee Account</a></li>
+        <li><a href="javascript:tabSwitch('tab_2', 'admin-center');" id="tab_2">Reassign task</a></li>
+        <li><a href="javascript:tabSwitch('tab_3', 'admin-right');" id="tab_3">Block Account</a></li>
+    </ul>
+    <div id="admin-left" class="content">
+        <div id="container-header"><span>Create Employee Account</span>        </div>  
+        <script type="text/javascript" src="assets/registerValidator.js"></script>
+  <%--      <form name="Register" method="post" onsubmit="return validate()" action="Register">--%>
             <table border="0" cellpadding="5">
                 <tr>
                     <td>Login: </td>
@@ -45,54 +52,74 @@
                     </td>
                 </tr>
             </table>
+            <div id="admin-buttons">
+                <input type="submit" value="Register" />
 
-            <input type="submit" value="Register" />
+                <a href="index.jsp"><input type="button" value="Home" name="submit"/> </a>
+            </div>
 
 
-        </form>
-
-
+    <%--     </form> --%>
     </div>
-    <div id="admin-center">
-        <div id="container-header"><span>Reassign Task</span></div>
-        <form name="reassign" action="ReassignTask" method="POST">
-            <table cellpadding="5">
-                <tr>
-                    <td>Task ID:</td>
-                    <td><input type="text" name="taskId" value="" /></td>
-                </tr>
-                <tr>
-                    <td>New Employee for task:</td>
-                    <td><input type="text" name="taskEmployeeId" value="" /></td>
-                </tr>
-                <tr>
-                    <td>Reason:</td>
-                    <td><input type="text" name="reason" value="" style="width:200px; height:50px;"/></td>
-                </tr>
-                <tr>
-                    <td><input type="submit" value="Appoint" /></td>
-                </tr>
-            </table>
-        </form>
-
-    </div>
-    <div id="admin-right">
-        <div id="container-header"><span>Block Account</span></div>
-        <table cellpadding="5">
+    <div id="admin-center" class="content">
+        <div id="container-header"><span>Reassign</span></div>
+        <table>
             <tr>
-                <td>Account Login:</td>
-                <td><input type="text" name="accountId" value="" /></td>
-            </tr>            
-            <tr>
-                <td>Reason:</td>
-                <td><input type="text" name="reason" value="" style="width:200px; height:50px;"/></td>
+                <td>
+                    Service Order:
+                </td>
+                <td>
+                    <input type="text" name="blockAcc" value="" />
+                </td>
             </tr>
             <tr>
-                <td><input type="submit" value="Block" /></td>
+                <td>
+                    New Employee:
+                </td>
+                <td>
+                    <input type="text" name="NewEmployee" value="" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Reason:
+                </td>
+                <td>
+                    <input type="text" name="reasonBlock" value="" style="width:200px;height:200px;" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Block" name="Block" />
+                </td>
             </tr>
         </table>
-        <form name="Block" action="BlockAcc" method="POST">
-        </form>
+    </div>
 
+    <div id="admin-right" class="content">
+        <div id="container-header"><span>Block Account</span>          </div>
+        <table>
+            <tr>
+                <td>
+                    Account login:
+                </td>
+                <td>
+                    <input type="text" name="blockAcc" value="" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Reason:
+                </td>
+                <td>
+                    <input type="text" name="reasonBlock" value="" style="width:200px;height:200px;" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Block" name="Block" />
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
