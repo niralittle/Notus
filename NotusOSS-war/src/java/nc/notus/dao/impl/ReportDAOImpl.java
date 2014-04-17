@@ -6,11 +6,14 @@
 package nc.notus.dao.impl;
 
 import java.sql.Date;
+import java.util.List;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.Device;
+import nc.notus.entity.ServiceInstance;
+import nc.notus.entity.ServiceOrder;
 
 /**
  * Implementation of DAO for our reports
@@ -23,10 +26,12 @@ public class ReportDAOImpl implements ReportDAO {
 }
      /**
      * Method that return most profitable router in system
-     * @return device which is most profitable
+     * @param startDate - start of period
+     * @param finishDate - finish of period
+     * @return device which is most profitable per period
      */
     @Override
-    public Device returnMostProfitableRouter(Date startDate, Date finishDate) {
+    public Device getMostProfitableRouter(Date startDate, Date finishDate) {
         Device device = new Device();
 
         // The query below needed in review with a lot of complex examples in table!
@@ -68,6 +73,28 @@ public class ReportDAOImpl implements ReportDAO {
             device.setPortQuantity(ri.getInt("portQuantity"));
         }
         return device;
+    }
+
+    /**
+     * Method that return list of new ServiceOrders per period
+     * @param startDate - start of period
+     * @param finishDate - finish of period
+     * @return list of new ServiceOrders per period
+     */
+    @Override
+    public List<ServiceOrder> getNewServiceOrders(Date startDate, Date finishDate) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Method that return list of disconnected ServiceInstances per period
+     * @param startDate - start of period
+     * @param finishDate - finish of period
+     * @return list list of disconnected ServiceInstances per period
+     */
+    @Override
+    public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate, Date finishDate) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
