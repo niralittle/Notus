@@ -10,64 +10,76 @@ import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
 import java.util.Calendar;
+import nc.notus.dao.PortDAO;
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceInstanceStatusDAO;
+import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceStatusDAOImpl;
+import nc.notus.entity.Port;
 import nc.notus.states.InstanceStatus;
 
 /**
  * This class provides functionality for "New" scenarion workflow
  * @author Igor Litvinenko
  */
-public class NewScenarioWorkflow implements Workflow {
-
-    private ServiceOrder order;
+public class NewScenarioWorkflow extends Workflow {
 
     public NewScenarioWorkflow(ServiceOrder order) {
-        // TODO: check order status(should be 'entering'
-        this.order = order;
+        super(order);
     }
 
     @Override
     public void proceedOrder() {
+        if(!this.isNewOrder()) {
+            throw new WorkflowException("Order with status " +
+                    "\"Entering\" is expected");
+        }
+
         DBManager dbManager = new DBManager();
+        ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
+        PortDAO portDAO = new PortDAOImpl(dbManager);
+
         changeOrderStatus(dbManager, OrderStatus.PROCESSING);
         ServiceInstance serviceInstance = createServiceInstance(dbManager);
-//        // Link Order with SI
-//        order.setServiceInstanceID(serviceInstance.getId());
-//        ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
-//        orderDAO.update(order);
+
+        // Link Order with SI
+        order.setServiceInstanceID(serviceInstance.getId());
+        orderDAO.update(order);
+
+        // Find free port
+        Port port = portDAO.getFreePort();
+        if(port == null) {
+            //createNewRouter(dbManager);
+            //port = portDAO.getFreePort();
+        }
+
         dbManager.commit();
         dbManager.close();
-        
-//        
     }
 
     private void changeOrderStatus(DBManager dbManager, OrderStatus status) {
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
+
         int statusID = orderStatusDAO.getServiceOrderStatusID(status);
         order.setServiceOrderStatusID(statusID);
         orderDAO.update(order);
     }
 
     private ServiceInstance createServiceInstance(DBManager dbManager) {
-        ServiceInstance serviceInstance = new ServiceInstance();
+        ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+        ServiceInstanceStatusDAO sisDAO = new ServiceInstanceStatusDAOImpl(dbManager);
 
+        ServiceInstance serviceInstance = new ServiceInstance();
         serviceInstance.setCircuitID(null);
         serviceInstance.setPortID(null);
-
         Calendar cal = java.util.Calendar.getInstance();
         Date date = new Date(cal.getTimeInMillis());
         serviceInstance.setServiceInstanceDate(date);
-
-        ServiceInstanceStatusDAO statusDAO;
-        statusDAO = new ServiceInstanceStatusDAOImpl(dbManager);
-        int statusID = statusDAO.getServiceInstanceStatusID(InstanceStatus.PLANNED);
+        int statusID = sisDAO.getServiceInstanceStatusID(InstanceStatus.PLANNED);
         serviceInstance.setServiceInstanceStatusID(statusID);
 
-        ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
         Object id = siDAO.add(serviceInstance);
         serviceInstance.setId((Integer)id);
 
