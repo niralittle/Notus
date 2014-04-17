@@ -11,8 +11,10 @@ public interface ServiceCatalogDAO extends GenericDAO<ServiceCatalog> {
 
     /**
      * Method to obtain services and prices(ServicCatalog) by providerLocationID
-     * @param id
+     * @param id - id of provider location
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
      * @return ServiceCatalog object
      */
-    public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id);
+    public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id, int offset, int numberOfRecords);
 }
