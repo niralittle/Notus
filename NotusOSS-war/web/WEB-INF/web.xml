@@ -30,6 +30,14 @@
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
     </servlet-mapping>
+    <servlet>
+	<servlet-name>ValidationServlet</servlet-name>
+	<servlet-class>nc.notus.ValidationServlet</servlet-class>
+	</servlet>
+    <servlet-mapping>
+	<servlet-name>ValidationServlet</servlet-name>
+	<url-pattern>/Validate</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
         <url-pattern>/TestConnectionPoolServlet</url-pattern>
