@@ -17,8 +17,9 @@ public class ProviderLocation {
     public ProviderLocation() {
     }
 
-    public ProviderLocation(int id, String location) {
+    public ProviderLocation(int id, String name, String location) {
         this.id = id;
+        this.name = name;
         this.location = location;
     }
 
