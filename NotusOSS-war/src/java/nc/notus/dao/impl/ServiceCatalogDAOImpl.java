@@ -1,5 +1,6 @@
 package nc.notus.dao.impl;
 
+import java.util.List;
 import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.ServiceCatalog;
@@ -21,7 +22,7 @@ public class ServiceCatalogDAOImpl extends GenericDAOImpl<ServiceCatalog>
      * @return ServiceCatalog object
      */
     @Override
-    public ServiceCatalog getServiceCatalogByProviderLocationID(int id) {
+    public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

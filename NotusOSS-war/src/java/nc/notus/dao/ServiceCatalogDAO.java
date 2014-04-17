@@ -1,5 +1,6 @@
 package nc.notus.dao;
 
+import java.util.List;
 import nc.notus.entity.ServiceCatalog;
 
 /**
@@ -13,5 +14,5 @@ public interface ServiceCatalogDAO extends GenericDAO<ServiceCatalog> {
      * @param id
      * @return ServiceCatalog object
      */
-    public ServiceCatalog getServiceCatalogByProviderLocationID(int id);
+    public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id);
 }
