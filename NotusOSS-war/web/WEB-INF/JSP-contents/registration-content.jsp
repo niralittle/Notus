@@ -20,6 +20,8 @@
             </td>
             <td>
 				<div id="loginMsg"></div>
+				<%= request.getAttribute("loginMsg") == null ? "" 
+						:request.getAttribute("loginMsg")%>
 			<td>
         </tr>
         <tr>
@@ -48,6 +50,8 @@
             </td>
             <td>
                 <div id="emailMsg"></div>
+                <%= request.getAttribute("emailMsg") == null ? "" 
+						:request.getAttribute("emailMsg")%>
             </td>
         </tr>
 
