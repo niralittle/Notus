@@ -10,6 +10,7 @@ package nc.notus.states;
  * @author Vladimir Ermolenko
  */
 public enum TaskState {
+    ACTIVE("Active"),
     SUSPENDED("Suspended"),
     COMPLETED("Completed");
 
