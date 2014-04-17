@@ -5,6 +5,7 @@
 
 package nc.notus.dao.impl;
 
+import java.sql.Date;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
@@ -25,7 +26,7 @@ public class ReportDAOImpl implements ReportDAO {
      * @return device which is most profitable
      */
     @Override
-    public Device returnMostProfitableRouter(String startDate, String finishDate) {
+    public Device returnMostProfitableRouter(Date startDate, Date finishDate) {
         Device device = new Device();
 
         // The query below needed in review with a lot of complex examples in table!
@@ -53,13 +54,13 @@ public class ReportDAOImpl implements ReportDAO {
                         "GROUP BY p.deviceid " +
                         "ORDER BY total DESC";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, finishDate);
-        statement.setString(2, startDate);
-        statement.setString(3, finishDate);
-        statement.setString(4, startDate);
-        statement.setString(5, startDate);
-        statement.setString(6, finishDate);
-        statement.setString(7, startDate);
+        statement.setDate(1, finishDate);
+        statement.setDate(2, startDate);
+        statement.setDate(3, finishDate);
+        statement.setDate(4, startDate);
+        statement.setDate(5, startDate);
+        statement.setDate(6, finishDate);
+        statement.setDate(7, startDate);
         ResultIterator ri = statement.executeQuery();
         if (ri.next()){
             device.setId(ri.getInt("id"));
