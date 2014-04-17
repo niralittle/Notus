@@ -36,13 +36,11 @@ public class WorkflowTestServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             DBManager dbManager = new DBManager();
-            ServiceCatalogDAO scd = new ServiceCatalogDAOImpl(dbManager);
-            List<ServiceCatalog> lsc = scd.getServiceCatalogByProviderLocationID(2, 1, 20);
-//            ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
-//            ServiceOrder so = soDAO.find(3);
+            ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
+            ServiceOrder so = soDAO.find(3);
             dbManager.close();
-//            Workflow wf = new NewScenarioWorkflow(so);
-//            wf.proceedOrder();
+            Workflow wf = new NewScenarioWorkflow(so);
+            wf.proceedOrder();
         } finally {
             out.close();
         }

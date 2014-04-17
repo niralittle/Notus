@@ -13,11 +13,18 @@ import java.util.Calendar;
 import nc.notus.dao.PortDAO;
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceInstanceStatusDAO;
+import nc.notus.dao.TaskDAO;
+import nc.notus.dao.TaskStatusDAO;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceStatusDAOImpl;
+import nc.notus.dao.impl.TaskDAOImpl;
+import nc.notus.dao.impl.TaskStatusDAOImpl;
 import nc.notus.entity.Port;
+import nc.notus.entity.Task;
 import nc.notus.states.InstanceStatus;
+import nc.notus.states.TaskState;
+import nc.notus.states.UserRole;
 
 /**
  * This class provides functionality for "New" scenarion workflow
@@ -39,6 +46,8 @@ public class NewScenarioWorkflow extends Workflow {
         DBManager dbManager = new DBManager();
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
         PortDAO portDAO = new PortDAOImpl(dbManager);
+        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+        TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
         changeOrderStatus(dbManager, OrderStatus.PROCESSING);
         ServiceInstance serviceInstance = createServiceInstance(dbManager);
@@ -50,8 +59,12 @@ public class NewScenarioWorkflow extends Workflow {
         // Find free port
         Port port = portDAO.getFreePort();
         if(port == null) {
-            //createNewRouter(dbManager);
-            //port = portDAO.getFreePort();
+            Task task = new Task();
+            task.setEmployeeID(null);
+            task.setRoleID(UserRole.INSTALLATION_ENGINEER.toInt());
+            task.setServiceOrderID(order.getId());
+            task.setTaskStatusID(taskStatusDAO.getTaskStatusID(TaskState.ACTIVE));
+            taskDAO.add(task);
         }
 
         dbManager.commit();
