@@ -21,6 +21,11 @@
         <div id="spoiler_body" style="display:none;">
             You should zoom more
         </div>
+
+        <form action="GetLocationsServlet">
+            <input type="submit" value="getLocations" />
+        </form>
+
     </div>
 </div>
 

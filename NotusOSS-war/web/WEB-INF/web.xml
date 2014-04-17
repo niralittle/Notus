@@ -21,6 +21,11 @@
         <servlet-name>WorkflowTestServlet</servlet-name>
         <servlet-class>nc.notus.WorkflowTestServlet</servlet-class>
     </servlet>
+  
+    <servlet>
+        <servlet-name>GetLocationsServlet</servlet-name>
+        <servlet-class>nc.notus.maps.GetLocationsServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -40,6 +45,10 @@
     <servlet-mapping>
         <servlet-name>WorkflowTestServlet</servlet-name>
         <url-pattern>/WorkflowTestServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetLocationsServlet</servlet-name>
+        <url-pattern>/GetLocationsServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
