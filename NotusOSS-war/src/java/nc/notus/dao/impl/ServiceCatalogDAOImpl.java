@@ -20,15 +20,14 @@ public class ServiceCatalogDAOImpl extends GenericDAOImpl<ServiceCatalog>
     }
 
     /**
-     * Method to obtain services and prices(ServicCatalog) by providerLocationID
+     * Method to obtain services and prices(ServiceCatalog) by providerLocationID
      * @param id - id of provider location
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
-     * @return ServiceCatalog object
+     * @return ServiceCatalog list of objects
      */
     @Override
     public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id, int offset, int numberOfRecords) {
-        //throw new UnsupportedOperationException("Not supported yet.");
         List<ServiceCatalog> serviceCatalogs = new ArrayList<ServiceCatalog>();
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                 "SELECT sc.id, sc.providerlocationid, sc.servicetypeid, sc.price FROM servicecatalog sc" +
