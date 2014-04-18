@@ -28,7 +28,7 @@ public class TaskStatusDAOImpl extends GenericDAOImpl<TaskStatus> implements Tas
      */
     public int getTaskStatusID(TaskState taskState) {
         int  id = 0;
-        String query = "SELECT ts.id, ts.status" +
+        String query = "SELECT ts.id, ts.status " +
                        "FROM taskstatus ts WHERE ts.status = ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setString(1, taskState.toString());
