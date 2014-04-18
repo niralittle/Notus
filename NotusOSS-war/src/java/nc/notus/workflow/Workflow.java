@@ -3,14 +3,17 @@ package nc.notus.workflow;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ServiceOrderStatusDAO;
 import nc.notus.dao.TaskDAO;
+import nc.notus.dao.TaskStatusDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
+import nc.notus.dao.impl.TaskStatusDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
 import nc.notus.states.OrderStatus;
+import nc.notus.states.TaskState;
 
 /**
  * This class provides functionality of managing workflow under particular Order.
@@ -77,10 +80,16 @@ public abstract class Workflow {
      * @param taskID ID of task
      */
     public void completeTask(int taskID) {
-        /*DBManager dbManager = new DBManager();
+        DBManager dbManager = new DBManager();
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
+
         Task task = taskDAO.find(taskID);
-        task.setTaskStatusID(taskID);*/
+        int taskStatusID = taskStatusDAO.getTaskStatusID(TaskState.ACTIVE);
+        task.setTaskStatusID(taskStatusID);
+        taskDAO.update(task);
+
+        dbManager.commit();
+        dbManager.close();
     }
 }
