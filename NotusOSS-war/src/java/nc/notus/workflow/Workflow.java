@@ -44,7 +44,7 @@ public abstract class Workflow {
     /**
      * This method is used to create tasks and assign it to user groups.
      * Method is <code>protected</code> because it can only be invoked in
-     * method of particular Workflow.
+     * Workflow methods.
      * @param dbManager connection to database encapsulated in DBManager class
      * @param userRole identifies user group to create task for
      */
@@ -58,6 +58,22 @@ public abstract class Workflow {
         task.setServiceOrderID(order.getId());
         task.setTaskStatusID(taskStatusDAO.getTaskStatusID(TaskState.ACTIVE));
         taskDAO.add(task);
+    }
+
+    /**
+     * This method sets task status to "Completed".
+     * Method is <code>protected</code> because it can only be invoked in
+     * Workflow methods.
+     * @param taskID ID of task
+     */
+    protected void completeTask(DBManager dbManager, int taskID) {
+        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+        TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
+
+        Task task = taskDAO.find(taskID);
+        int taskStatusID = taskStatusDAO.getTaskStatusID(TaskState.COMPLETED);
+        task.setTaskStatusID(taskStatusID);
+        taskDAO.update(task);
     }
 
     /**
@@ -84,24 +100,6 @@ public abstract class Workflow {
         } finally {
             dbManager.close();
         }
-    }
-
-    /**
-     * This method sets task status to "Completed"
-     * @param taskID ID of task
-     */
-    public void completeTask(int taskID) {
-        DBManager dbManager = new DBManager();
-        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-        TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
-
-        Task task = taskDAO.find(taskID);
-        int taskStatusID = taskStatusDAO.getTaskStatusID(TaskState.ACTIVE);
-        task.setTaskStatusID(taskStatusID);
-        taskDAO.update(task);
-
-        dbManager.commit();
-        dbManager.close();
     }
 
     protected String getOrderStatus(DBManager dbManager) {

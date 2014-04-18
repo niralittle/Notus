@@ -41,7 +41,7 @@ public class WorkflowTestServlet extends HttpServlet {
             
             NewScenarioWorkflow wf = new NewScenarioWorkflow(so);
             //wf.proceedOrder();
-            wf.createRouter(60);
+            //wf.createRouter(60);
         } finally {
             out.close();
         }
