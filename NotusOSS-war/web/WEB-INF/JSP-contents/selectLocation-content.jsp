@@ -5,10 +5,9 @@
 --%>
 
 
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=en"></script>
+<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&language=en"></script>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="assets/google_maps_api.js"></script>
-<script src="http://maps.google.com/maps/api/js?libraries=geometry&sensor=false"></script>
 
 <div id ="map-container">
     <div id="map-canvas"></div>
@@ -22,11 +21,12 @@
         <div id="spoiler_body" style="display:none;">
             You should zoom more
         </div>
-
+<%--
         <form action="GetLocationsServlet">
             <input type="submit" value="getLocations" />
         </form>
-        <input type="button" value="Remove Pointer" onclick="getMinDistance()">
+--%>
+        <input type="button" value="Calc min distance" onclick="getMinDistance()">
          <div id="outputDiv"></div>
     </div>
 </div>

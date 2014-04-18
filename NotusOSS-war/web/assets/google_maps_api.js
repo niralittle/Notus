@@ -4,12 +4,12 @@ var geocoder;
 var objSel; //HTML <select> object for multiple addresses
 var destination = [];
 var minimumDistance;
-var minLngLat;
+var minPosition = 0; // The nearest provider!!!!
 
 //ADDRESSES OF PROVIDER LOCATIONS!!!
-destination[0] = 'Stockholm+Sweden';
-destination[1] = '25 Craven Street, London WC2N, UK';
-destination[2] = 'Kiev, Ua';
+destination[2] = '77-141 Park Row, New York, NY 10038, USA';
+destination[0] = '25 Craven Street, London WC2N, UK';
+destination[1] = 'Kiev, Ua';
 
 //Map initialization: map, marker and clock listener
 function initialize() {
@@ -42,7 +42,9 @@ function addMarker(location) {
 //geocode from coordinates to address
 function codeLatLng(input) {
     var latlng = getLatLng(input);
-    geocoder.geocode({'latLng': latlng}, function(results, status) {
+    geocoder.geocode({
+        'latLng': latlng
+    }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[1]) {
                 if(map.getZoom()>15){
@@ -68,7 +70,9 @@ function codeAddress() {
         var address = document.getElementById('address').value;
         objSel = document.getElementById("addressSelect");
         var latlng;
-        geocoder.geocode( {'address': address}, function(results, status) {
+        geocoder.geocode( {
+            'address': address
+        }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if(results.length>1){
                     objSel.style.display = "block";
@@ -120,70 +124,42 @@ function showZoomMessage(){
         document.getElementById("spoiler_body").style.display = "none";
     },5000);
 }
-/*
- *Google api. DONT WORK IF points are lie across the ocean
-function calculateDistances() {
-  var service = new google.maps.DistanceMatrixService();
-  service.getDistanceMatrix(
-    {
-      origins: [marker.getPosition()],
-      destinations: destination,
-      unitSystem: google.maps.UnitSystem.METRIC,
-      avoidHighways: false,
-      avoidTolls: false
-    }, callback);
-}
 
-function callback(response, status) {
-  if (status != google.maps.DistanceMatrixStatus.OK) {
-    alert('Error was: ' + status);
-  } else {
-    var origins = response.originAddresses;
-    var destinations = response.destinationAddresses;
-    var outputDiv = document.getElementById('outputDiv');
-    outputDiv.innerHTML = '';
-    var min;
-    for (var i = 0; i < origins.length; i++) {
-      var results = response.rows[i].elements;
-      min = results[i].distance.text;
-      for (var j = 0; j < results.length; j++) {
-          if(results[j].distance.text<min){
-              min = results[j].distance.text;
-              minimumDistance = j;
-          }
-        outputDiv.innerHTML += origins[i] + ' to ' + destinations[j]
-            + ': ' + results[j].distance.text+ '<br>';
-
-      }
-       outputDiv.innerHTML += 'Minimal location: '+ destination[minimumDistance];
-    }
-  }
-}
-*/
-
+ var dis =10000000000;
+/*THIS function calculate distance*/
 function getMinDistance(){
-    var dis = 100000;
-    for(var i=0; i<destination.length;i++){
-        geocode(destination[i]);
-        var distance = google.maps.geometry.spherical.computeDistanceBetween(
-           getLatLng(marker.getPosition()),
-           minLngLat).toFixed(2);
-        if(distance<dis){
-            dis = i;
-        }
-    }
-    alert(dis);
-}
-
-
-function geocode(address){
-        geocoder.geocode( {'address': address}, function(results, status) {
+    var k;
+    for(k=0; k<destination.length;k++){
+        geocoder.geocode( {'address': destination[k]}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 minLngLat = getLatLng(results[0].geometry.location);
+                var distance = google.maps.geometry.spherical.computeDistanceBetween(
+                    getLatLng(marker.getPosition()),minLngLat).toFixed(2);
+                if(distance<dis){
+                    dis = distance;
+                    minPosition = results[0].formatted_address;
+                }
             } else {
                 alert('Wrong address. Please input another one');
             }
         });
+    }
+}
+
+function getMinDistancess(){
+    alert (minPosition);
+}
+function geocode(address){
+    geocoder.geocode( {
+        'address': address
+    }, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            this.minLngLat = getLatLng(results[0].geometry.location);
+            alert(minLngLat);
+        } else {
+            alert('Wrong address. Please input another one');
+        }
+    });
 }
 
 
