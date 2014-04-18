@@ -12,15 +12,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.dao.impl.ProviderLocationDAOImpl;
-import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.ServiceCatalog;
+import nc.notus.entity.ServiceType;
 
 /**
  *
- * @author Roman
+ * @author Alina
  */
-public class GetLocationsServlet extends HttpServlet {
-
+public class ServicesServlet extends HttpServlet {
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -30,20 +29,25 @@ public class GetLocationsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         StringBuffer sb = new StringBuffer();
-        try {
-            GetProviderLocations gpl = new GetProviderLocations();
-            List<String> providerLocations = gpl.getLocations();
-            for(String providerLocation : providerLocations){
-                sb.append("<providerLocation>");
-                sb.append(providerLocation);
-                sb.append("</providerLocation>");
+        try{
+             int providerLocationID = Integer.valueOf(request.getParameter("providerLocationID"));
+             GetServiceCatalogs gsc = new GetServiceCatalogs(providerLocationID);
+             List<ServiceCatalog> serviceCatalogs = gsc.getServiceCatalogs();
+         if (serviceCatalogs.size() > 0) {
+                for(ServiceCatalog serviceCatalog : serviceCatalogs){
+                    sb.append("<service>");
+                    ServiceType serviceType = gsc.getServiceType(serviceCatalog);
+                    sb.append("<id>" + serviceCatalog.getId() + "</id>");
+                    sb.append("<name>" + serviceType.getService() + "</name>");
+                    sb.append("<price>" + serviceCatalog.getPrice() + "</price>");
+                    sb.append("</service>");
+                }
             }
             response.setContentType("text/xml");
             response.setHeader("Cache-Control", "no-cache");
-            response.getWriter().write("<providerLocations>" + sb.toString() + "</providerLocations>");
+            response.getWriter().write("<services>" + sb.toString() + "</services>");
         } finally {
             out.close();
         }

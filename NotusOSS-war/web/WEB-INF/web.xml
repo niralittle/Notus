@@ -39,6 +39,10 @@
         <servlet-name>ReportTestServlet</servlet-name>
         <servlet-class>nc.notus.reports.ReportTestServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServicesServlet</servlet-name>
+        <servlet-class>nc.notus.maps.ServicesServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -74,6 +78,10 @@
     <servlet-mapping>
         <servlet-name>ReportTestServlet</servlet-name>
         <url-pattern>/getReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServicesServlet</servlet-name>
+        <url-pattern>/ServicesServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
