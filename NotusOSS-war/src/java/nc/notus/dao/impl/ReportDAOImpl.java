@@ -6,6 +6,7 @@
 package nc.notus.dao.impl;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dbmanager.DBManager;
@@ -87,7 +88,36 @@ public class ReportDAOImpl implements ReportDAO {
      */
     @Override
     public List<ServiceOrder> getNewServiceOrders(Date startDate, Date finishDate, int offset, int numberOfRecords) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
+        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
+                        "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
+                        "       so.scenarioid, so.userid, so.servicecatalogid, so.serviceinstanceid, so.servicelocation " +
+                        "FROM serviceorder so " +
+                        "LEFT JOIN scenario s ON so.scenarioid = s.id " +
+                        "WHERE so.serviceorderdate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
+                        "AND s.scenario = 'New' " +
+                        "ORDER BY so.serviceorderdate " +
+                        ") a where ROWNUM <= ? )" +
+                        "WHERE rnum  >= ?";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setString(1, startDate.toString());
+        statement.setString(2, finishDate.toString());
+        statement.setInt(3, numberOfRecords);
+        statement.setInt(4, offset);
+        ResultIterator ri = statement.executeQuery();
+        while (ri.next()){
+            ServiceOrder servOrder = new ServiceOrder();
+            servOrder.setId(ri.getInt("id"));
+            servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
+            servOrder.setServiceOrderStatusID(ri.getInt("serviceorderstatusid"));
+            servOrder.setScenarioID(ri.getInt("scenarioid"));
+            servOrder.setUserID(ri.getInt("userid"));
+            servOrder.setServiceCatalogID(ri.getInt("servicecatalogid"));
+            servOrder.setServiceInstanceID(ri.getInt("serviceinstanceid"));
+            servOrder.setServiceLocation(ri.getString("servicelocation"));
+            serviceOrders.add(servOrder);
+        }
+        return serviceOrders;
     }
 
     /**
