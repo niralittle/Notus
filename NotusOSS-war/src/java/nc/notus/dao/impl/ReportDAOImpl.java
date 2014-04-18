@@ -62,13 +62,13 @@ public class ReportDAOImpl implements ReportDAO {
                         "GROUP BY p.deviceid " +
                         "ORDER BY total DESC";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setDate(1, finishDate);
-        statement.setDate(2, startDate);
-        statement.setDate(3, finishDate);
-        statement.setDate(4, startDate);
-        statement.setDate(5, startDate);
-        statement.setDate(6, finishDate);
-        statement.setDate(7, startDate);
+        statement.setString(1, finishDate.toString());
+        statement.setString(2, startDate.toString());
+        statement.setString(3, finishDate.toString());
+        statement.setString(4, startDate.toString());
+        statement.setString(5, startDate.toString());
+        statement.setString(6, finishDate.toString());
+        statement.setString(7, startDate.toString());
         ResultIterator ri = statement.executeQuery();
         if (ri.next()){
             device.setId(ri.getInt("id"));
@@ -89,7 +89,7 @@ public class ReportDAOImpl implements ReportDAO {
     @Override
     public List<ServiceOrder> getNewServiceOrders(Date startDate, Date finishDate, int offset, int numberOfRecords) {
         List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
+        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                         "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
                         "       so.scenarioid, so.userid, so.servicecatalogid, so.serviceinstanceid, so.servicelocation " +
                         "FROM serviceorder so " +
@@ -97,7 +97,7 @@ public class ReportDAOImpl implements ReportDAO {
                         "WHERE so.serviceorderdate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
                         "AND s.scenario = 'New' " +
                         "ORDER BY so.serviceorderdate " +
-                        ") a where ROWNUM <= ? )" +
+                        ") a where ROWNUM <= ? ) " +
                         "WHERE rnum  >= ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setString(1, startDate.toString());
@@ -131,7 +131,7 @@ public class ReportDAOImpl implements ReportDAO {
     @Override
     public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate, Date finishDate, int offset, int numberOfRecords) {
         List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
+        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                         "SELECT si.id, si.serviceinstancedate, si.serviceinstancestatusid, " +
                         "       si.circuitid, si.portid " +
                         "FROM serviceinstance si " +
@@ -139,7 +139,7 @@ public class ReportDAOImpl implements ReportDAO {
                         "WHERE si.serviceinstancedate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
                         "AND sis.status = 'Disconnected' " +
                         "ORDER BY si.serviceinstancedate " +
-                        ") a where ROWNUM <= ? )" +
+                        ") a where ROWNUM <= ? ) " +
                         "WHERE rnum  >= ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setString(1, startDate.toString());
