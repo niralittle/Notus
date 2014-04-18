@@ -1,7 +1,7 @@
 <%--
     Document   : map
     Created on : Apr 11, 2014, 6:33:40 PM
-    Author     : Roman Martynyuk
+    Author     : Roman Martynyuk, Alina Vorobiova
 --%>
 
 
@@ -22,13 +22,15 @@
         <div id="spoiler_body" style="display:none;">
             You should zoom more
         </div>
-<%--
+
         <form action="GetLocationsServlet">
-            <input type="submit" value="getLocations" />
+            <input type="button" value="Calc min distance" onclick="getMinDistance()">
         </form>
---%>
-        <input type="button" value="Calc min distance" onclick="getMinDistance()">
+        
          <div id="outputDiv"></div>
+         <%-- is used for data exchanging between JS-files --%>
+         <div id="providerLocation"></div>
+         <%-- form for the table of services --%>
          <form id="form" name="getservices" action="ServisesServlet">
             <input type="button" value="See available services for my location" onclick="getAvailableServices()">
             <table>

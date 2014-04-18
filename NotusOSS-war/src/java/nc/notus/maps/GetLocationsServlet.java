@@ -17,7 +17,7 @@ import nc.notus.dbmanager.DBManager;
 
 /**
  *
- * @author Roman
+ * @author Roman, Alina
  */
 public class GetLocationsServlet extends HttpServlet {
 
@@ -30,12 +30,12 @@ public class GetLocationsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         StringBuffer sb = new StringBuffer();
         try {
             GetProviderLocations gpl = new GetProviderLocations();
             List<String> providerLocations = gpl.getLocations();
+            //forms the responseXML
             for(String providerLocation : providerLocations){
                 sb.append("<providerLocation>");
                 sb.append(providerLocation);

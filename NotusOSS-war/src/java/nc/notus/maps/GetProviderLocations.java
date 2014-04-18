@@ -12,13 +12,15 @@ import nc.notus.dbmanager.DBManager;
 import nc.notus.dao.impl.ProviderLocationDAOImpl;
 import nc.notus.entity.ProviderLocation;
 /**
- *
+ * Class for getting Provider Locations via DAO
  * @author Roman
  */
 public class GetProviderLocations {
 
     private List<String> addressesList;
-
+    /*
+     * Gets list of adresses of providerLocations via DAO
+     */
     private void getAddressesList(){
         DBManager dbManager = new DBManager();
         ProviderLocationDAO locDAO = new ProviderLocationDAOImpl(dbManager);

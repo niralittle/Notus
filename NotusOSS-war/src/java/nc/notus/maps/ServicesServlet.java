@@ -36,6 +36,7 @@ public class ServicesServlet extends HttpServlet {
              GetServiceCatalogs gsc = new GetServiceCatalogs(providerLocationID);
              List<ServiceCatalog> serviceCatalogs = gsc.getServiceCatalogs();
          if (serviceCatalogs.size() > 0) {
+             //forms the responseXML
                 for(ServiceCatalog serviceCatalog : serviceCatalogs){
                     sb.append("<service>");
                     ServiceType serviceType = gsc.getServiceType(serviceCatalog);

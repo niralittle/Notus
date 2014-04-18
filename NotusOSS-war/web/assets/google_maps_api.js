@@ -5,11 +5,8 @@ var objSel; //HTML <select> object for multiple addresses
 var destination = [];
 var minimumDistance;
 var minPosition = 0; // The nearest provider!!!!
+var req; //request to servlet
 
-//ADDRESSES OF PROVIDER LOCATIONS!!!
-destination[2] = '77-141 Park Row, New York, NY 10038, USA';
-destination[0] = '25 Craven Street, London WC2N, UK';
-destination[1] = 'Kiev, Ua';
 
 //Map initialization: map, marker and clock listener
 function initialize() {
@@ -125,9 +122,46 @@ function showZoomMessage(){
     },5000);
 }
 
+//makes request and implements the ajax
+function getMinDistance(){
+    var url = "GetLocationsServlet";
+    req = initRequest();
+    req.open("GET", url, true);
+    req.onreadystatechange = call;
+    req.send(null);
+}
+//initializes request
+function initRequest() {
+    if (window.ActiveXObject) {
+        isIE = true;
+        return new ActiveXObject("Microsoft.XMLHTTP");
+    } else{
+        return new XMLHttpRequest();
+    }
+}
+//callback function
+function call() {
+    if (req.readyState == 4) {
+        if (req.status == 200) {
+            parseMessage(req.responseXML);
+        }
+    }
+}
+//parses the responseXML and get neccessary data
+function parseMessage(responseXML) {
+    if (responseXML == null) {
+       return false;
+    } else {
+        var locations = responseXML.getElementsByTagName("providerLocation");
+        for (var I = 0 ; I < locations.length ; I++) {
+            destination[I] = locations[I].firstChild.nodeValue;
+        }
+        calcMinDistance();
+    }
+}
  var dis =10000000000;
 /*THIS function calculate distance*/
-function getMinDistance(){
+function calcMinDistance(){
     var k;
     for(k=0; k<destination.length;k++){
         geocoder.geocode( {'address': destination[k]}, function(results, status) {
@@ -144,11 +178,10 @@ function getMinDistance(){
             }
         });
     }
+    var pl = document.getElementById("providerLocation");
+    pl.setAttribute("name", minPosition);
 }
 
-function getMinDistancess(){
-    alert (minPosition);
-}
 function geocode(address){
     geocoder.geocode( {
         'address': address

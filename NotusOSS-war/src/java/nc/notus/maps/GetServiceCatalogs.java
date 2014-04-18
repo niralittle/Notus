@@ -13,7 +13,7 @@ import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceType;
 
 /**
- *
+ * Class for getting Service Catalogs via DAO
  * @author Alina
  */
 public class GetServiceCatalogs {
@@ -24,12 +24,18 @@ public class GetServiceCatalogs {
         this.providerLocationID = providerLocationID;
         dbManager = new DBManager();
     }
+    /*
+     * Gets serviceCatalogs by providerLocationID via DAO
+     */
     public List<ServiceCatalog> getServiceCatalogs(){
         ServiceCatalogDAOImpl catalogDAO = new ServiceCatalogDAOImpl(dbManager);
         List<ServiceCatalog> serviceCatalogs =
                 catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, 1, 20);
         return serviceCatalogs;
     }
+    /*
+     * Gets serviceType by serviceTypeID via DAO
+     */
     public ServiceType getServiceType(ServiceCatalog serviceCatalog){
         ServiceTypeDAOImpl type = new ServiceTypeDAOImpl(dbManager);
         ServiceType serviceType = type.find(serviceCatalog.getServiceTypeID());
