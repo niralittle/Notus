@@ -25,7 +25,7 @@ public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
     @Override
     public Port getFreePort() {                                           
         Port  port = null;
-        String query = "SELECT p.id, p.deviceID, p.portNumber, p.portStatus, p.cableID" +
+        String query = "SELECT p.id, p.deviceID, p.portNumber, p.portStatus, p.cableID " +
                        "FROM port p WHERE p.portStatus = 0 AND rownum <=1";// portStatus  - it's a flag with 0 as free and with 1 when connected
         Statement statement = dbManager.prepareStatement(query);
         ResultIterator ri = statement.executeQuery();

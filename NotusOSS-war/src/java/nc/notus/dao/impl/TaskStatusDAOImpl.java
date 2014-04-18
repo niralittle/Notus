@@ -5,6 +5,7 @@
 
 package nc.notus.dao.impl;
 
+import nc.notus.dao.DAOException;
 import nc.notus.dao.TaskStatusDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
@@ -25,18 +26,18 @@ public class TaskStatusDAOImpl extends GenericDAOImpl<TaskStatus> implements Tas
      * Method return id of our task
      * @param taskState
      * @return id of task
+     * @throws DAOException if task was not found
      */
     public int getTaskStatusID(TaskState taskState) {
-        int  id = 0;
-        String query = "SELECT ts.id, ts.status" +
+        String query = "SELECT ts.id, ts.status " +
                        "FROM taskstatus ts WHERE ts.status = ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setString(1, taskState.toString());
         ResultIterator ri = statement.executeQuery();
         if (ri.next()) {
             return ri.getInt("id");
+        } else {
+            throw new DAOException("Task status was not found");
         }
-        return id;
     }
-
 }

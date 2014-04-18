@@ -2,20 +2,15 @@ package nc.notus;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dao.ServiceOrderDAO;
-import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dbmanager.DBManager;
-import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.workflow.NewScenarioWorkflow;
-import nc.notus.workflow.Workflow;
 
 /**
  *
@@ -35,12 +30,18 @@ public class WorkflowTestServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
+            ServiceOrder so;
             DBManager dbManager = new DBManager();
-            ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
-            ServiceOrder so = soDAO.find(3);
-            dbManager.close();
-            Workflow wf = new NewScenarioWorkflow(so);
-            wf.proceedOrder();
+            try {
+                ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
+                so = soDAO.find(3);
+            } finally {
+                dbManager.close();
+            }
+            
+            NewScenarioWorkflow wf = new NewScenarioWorkflow(so);
+            //wf.proceedOrder();
+            wf.createRouter(60);
         } finally {
             out.close();
         }
