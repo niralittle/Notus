@@ -1,16 +1,17 @@
 package nc.notus.reports;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet that handles requests for report generation.
- * @author Andrey Ilin                                                                
+ *
+ * @author Andrey Ilin
  */
-public class GenerateReportServlet extends HttpServlet {
+public class ReportTestServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -21,15 +22,19 @@ public class GenerateReportServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment; filename=report.xls");
-        ExcelDocumentGenerator edg = new ExcelDocumentGenerator();
-        edg.createNewSheet("sheet1");
-        edg.generateReport(response.getOutputStream());
+        PrintWriter pw = response.getWriter();
+        response.setContentType("text/html;charset=UTF-8");
+        ReportGenerator rg = new ReportGenerator(ReportGenerator.ReportType.NEW_ORDERS_PER_PERIOD,
+                "2010-10-10", "2010-10-10");
+        request.setAttribute("table", rg.getReportHTML());
+        request.setAttribute("object", rg);
+        request.setAttribute("title", rg.getReportName());
+        request.getRequestDispatcher("/report.jsp").forward(request, response);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -42,7 +47,7 @@ public class GenerateReportServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -55,7 +60,7 @@ public class GenerateReportServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */

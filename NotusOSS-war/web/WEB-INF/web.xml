@@ -31,6 +31,14 @@
         <servlet-class>nc.notus.ValidationServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>DownloadReportServlet</servlet-name>
+        <servlet-class>nc.notus.reports.DownloadReportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReportTestServlet</servlet-name>
+        <servlet-class>nc.notus.reports.ReportTestServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -58,6 +66,14 @@
     <servlet-mapping>
         <servlet-name>GetLocationsServlet</servlet-name>
         <url-pattern>/GetLocationsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadReportServlet</servlet-name>
+        <url-pattern>/downloadReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReportTestServlet</servlet-name>
+        <url-pattern>/getReport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
