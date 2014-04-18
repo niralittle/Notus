@@ -29,15 +29,19 @@ public interface ReportDAO {
      * Method that return list of new ServiceOrders per period
      * @param startDate - start of period
      * @param finishDate - finish of period
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
      * @return list of new ServiceOrders per period
      */
-    public List<ServiceOrder> getNewServiceOrders(Date startDate, Date finishDate);
+    public List<ServiceOrder> getNewServiceOrders(Date startDate, Date finishDate, int offset, int numberOfRecords);
 
     /**
      * Method that return list of disconnected ServiceInstances per period
      * @param startDate - start of period
      * @param finishDate - finish of period
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
      * @return list list of disconnected ServiceInstances per period
      */
-    public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate, Date finishDate);
+    public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate, Date finishDate, int offset, int numberOfRecords);
 }
