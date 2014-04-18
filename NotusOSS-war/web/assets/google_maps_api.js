@@ -2,7 +2,14 @@ var map;
 var marker;
 var geocoder;
 var objSel; //HTML <select> object for multiple addresses
+var destination = [];
+var minimumDistance;
+var minLngLat;
 
+//ADDRESSES OF PROVIDER LOCATIONS!!!
+destination[0] = 'Stockholm+Sweden';
+destination[1] = '25 Craven Street, London WC2N, UK';
+destination[2] = 'Kiev, Ua';
 
 //Map initialization: map, marker and clock listener
 function initialize() {
@@ -69,13 +76,6 @@ function codeAddress() {
                         objSel.options[i] = new Option(results[i].formatted_address, results[i].geometry.location);
                     }
                 }
-                for(var j = 0; j<results.length;j++){
-                   for (var i=0; i<results[j].address_components.length; i++){
-                    if(results[j].address_components[i].types[0]=="country"){
-                        alert('country');
-                    }
-                }
-                }
                 
 
                 latlng = getLatLng(results[0].geometry.location);
@@ -120,7 +120,71 @@ function showZoomMessage(){
         document.getElementById("spoiler_body").style.display = "none";
     },5000);
 }
+/*
+ *Google api. DONT WORK IF points are lie across the ocean
+function calculateDistances() {
+  var service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix(
+    {
+      origins: [marker.getPosition()],
+      destinations: destination,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      avoidHighways: false,
+      avoidTolls: false
+    }, callback);
+}
 
+function callback(response, status) {
+  if (status != google.maps.DistanceMatrixStatus.OK) {
+    alert('Error was: ' + status);
+  } else {
+    var origins = response.originAddresses;
+    var destinations = response.destinationAddresses;
+    var outputDiv = document.getElementById('outputDiv');
+    outputDiv.innerHTML = '';
+    var min;
+    for (var i = 0; i < origins.length; i++) {
+      var results = response.rows[i].elements;
+      min = results[i].distance.text;
+      for (var j = 0; j < results.length; j++) {
+          if(results[j].distance.text<min){
+              min = results[j].distance.text;
+              minimumDistance = j;
+          }
+        outputDiv.innerHTML += origins[i] + ' to ' + destinations[j]
+            + ': ' + results[j].distance.text+ '<br>';
+
+      }
+       outputDiv.innerHTML += 'Minimal location: '+ destination[minimumDistance];
+    }
+  }
+}
+*/
+
+function getMinDistance(){
+    var dis = 100000;
+    for(var i=0; i<destination.length;i++){
+        geocode(destination[i]);
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(
+           getLatLng(marker.getPosition()),
+           minLngLat).toFixed(2);
+        if(distance<dis){
+            dis = i;
+        }
+    }
+    alert(dis);
+}
+
+
+function geocode(address){
+        geocoder.geocode( {'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                minLngLat = getLatLng(results[0].geometry.location);
+            } else {
+                alert('Wrong address. Please input another one');
+            }
+        });
+}
 
 
 google.maps.event.addDomListener(window, 'load', initialize);
