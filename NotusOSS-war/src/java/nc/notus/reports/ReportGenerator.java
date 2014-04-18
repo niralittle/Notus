@@ -7,7 +7,7 @@ import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.Device;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Andrey Ilin
  */
 public class ReportGenerator {
@@ -21,7 +21,7 @@ public class ReportGenerator {
     private Date startDate = null;
     private Date finishDate = null;
 
-    /* Report data stored here
+    /* Report data stored here                                                  // REVIEW: step bakc one line
      * Data is stored as strings that represents table rows
      * Columns in this rows are separated with COLUMN_SEPARATOR
      * First element is a row of column names
@@ -36,15 +36,15 @@ public class ReportGenerator {
         PROFITABILITY_BY_MONTH
     };
 
-    public String getReportName() {
+    public String getReportName() {                                             // REVIEW: documentation expected
         return this.reportName;
     }
 
-    public ReportType getReportType() {
+    public ReportType getReportType() {                                         // REVIEW: documentation expected
         return this.reportType;
     }
 
-    public ReportGenerator(ReportType type, String startDateString,
+    public ReportGenerator(ReportType type, String startDateString,             // REVIEW: documentation expected
             String finishDateString) {
 
         this.startDate = Date.valueOf(startDateString);
@@ -59,7 +59,7 @@ public class ReportGenerator {
 
     }
 
-    public String getReportHTML() {
+    public String getReportHTML() {                                             // REVIEW: documentation expected
         String HTMLString = null;
         StringBuilder HTMLReportBuilder = new StringBuilder();
         HTMLReportBuilder.append("<table border='1' width='50%' cellpadding='5'>");
@@ -83,7 +83,7 @@ public class ReportGenerator {
 
     private String[] getReportData(ReportType type) {
         String[] rows = null;
-        DBManager dbManager = new DBManager();
+        DBManager dbManager = new DBManager();                                  // REVIEW: try-finally block should be used
         ReportDAO rd = new ReportDAOImpl(dbManager);
         switch (type) {
             case MOST_PROFITABLE_ROUTER:

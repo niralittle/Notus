@@ -3,7 +3,7 @@ package nc.notus.entity;
 import java.sql.Date;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Vladimir Ermolenko
  */
 public class ServiceOrder {

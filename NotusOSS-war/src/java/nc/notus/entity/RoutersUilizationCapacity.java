@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.entity;
 
 /**
- * Contain object for NC.KYIV.2014.WIND.REP.3 report: Routers utilization and capacity %
+ * Contain object for NC.KYIV.2014.WIND.REP.3 report: Routers utilization and capacity %// REVIEW: FR shouldn't be here
  * @author Vladimir Ermolenko
  */
 

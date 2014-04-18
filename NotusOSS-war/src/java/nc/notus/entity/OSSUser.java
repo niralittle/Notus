@@ -3,7 +3,7 @@ package nc.notus.entity;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Vladimir Ermolenko
  */
 public class OSSUser {

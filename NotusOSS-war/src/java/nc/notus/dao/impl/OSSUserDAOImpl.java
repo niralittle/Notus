@@ -18,10 +18,10 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 
     /**
      * Implementation of method for block accounts in DB
-     * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O
+     * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O // REVIEW: FR shouldn't be here
      * @param user: our user of type OSSUser
      */
-
+                                                                                // REVIEW: @Override annotation
     public void blockUser(OSSUser user) {
         String query = "UPDATE OSSUser SET blocked = 1 WHERE id = ?";
         Statement statement = dbManager.prepareStatement(query);
@@ -37,10 +37,10 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @return true - if exist, false - otherwise
      * @throws NullPointerException if null reference passes
      */
-	@Override
+	@Override                                                               // REVIEW: tab formatting
 	public boolean isLoginDuplicate(String login) {
 		if (login == null) {
-    		throw new NullPointerException("Null reference invoke.");
+    		throw new NullPointerException("Null reference invoke.");       // REVIEW: only DAOException should be thrown here
     	}
     	String queryString = "SELECT login FROM OSSUSER WHERE login = ?";
 	    Statement statement = dbManager.prepareStatement(queryString);
@@ -59,11 +59,11 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @param email email to check
      * @return true - if exist, false - otherwise
      * @throws NullPointerException if null reference passes
-     */
+     */                                                                         // REVIEW: tab formatting
 	@Override
 	public boolean isEmailDuplicate(String email) {
 		if (email == null) {
-    		throw new NullPointerException("Null reference invoke.");
+    		throw new NullPointerException("Null reference invoke.");       // REVIEW: only DAOException should be thrown here
     	}
     	String queryString = "SELECT email FROM OSSUSER WHERE email = ?";
 	    Statement statement = dbManager.prepareStatement(queryString);

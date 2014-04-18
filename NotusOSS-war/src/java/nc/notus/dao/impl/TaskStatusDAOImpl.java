@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dao.impl;
 
 import nc.notus.dao.DAOException;
@@ -14,7 +9,7 @@ import nc.notus.entity.TaskStatus;
 import nc.notus.states.TaskState;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Igor Litvinenko & Vladimir Ermolenko
  */
 public class TaskStatusDAOImpl extends GenericDAOImpl<TaskStatus> implements TaskStatusDAO {
@@ -23,8 +18,8 @@ public class TaskStatusDAOImpl extends GenericDAOImpl<TaskStatus> implements Tas
         super(dbManager);
     }
      /**
-     * Method return id of our task
-     * @param taskState
+     * Method return id of our task                                             // REVIEW: out task?
+     * @param taskState                                                         // REVIEW: document params
      * @return id of task
      * @throws DAOException if task was not found
      */

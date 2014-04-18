@@ -4,7 +4,7 @@ import nc.notus.entity.ServiceInstanceStatus;
 import nc.notus.states.InstanceStatus;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Igor Litvinenko
  */
 public interface ServiceInstanceStatusDAO extends GenericDAO<ServiceInstanceStatus> {

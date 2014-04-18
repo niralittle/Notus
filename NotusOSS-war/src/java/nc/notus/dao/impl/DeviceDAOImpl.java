@@ -19,7 +19,7 @@ public class DeviceDAOImpl extends GenericDAOImpl<Device> implements DeviceDAO {
     }
 
     /**
-     * Gets a list of devices (routers) in system
+     * Gets a list of devices (routers) in system                               // REVIEW: delete this method - it is unnecessary. Also delete method from interface
      * @return list of Device objects
      */
     @Override

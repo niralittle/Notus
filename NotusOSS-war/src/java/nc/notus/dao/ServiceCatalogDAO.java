@@ -15,6 +15,6 @@ public interface ServiceCatalogDAO extends GenericDAO<ServiceCatalog> {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return ServiceCatalog list of objects
-     */
+     */                                                                         // REVIEW: watch the red line
     public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id, int offset, int numberOfRecords);
 }
