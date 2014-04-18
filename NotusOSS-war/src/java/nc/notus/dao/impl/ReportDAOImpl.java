@@ -39,7 +39,7 @@ public class ReportDAOImpl implements ReportDAO {
 
         // The query below needed in review with a lot of complex examples in table!
 
-        String query = "SELECT p.deviceid, sum(sc.price*(TO_DATE(?, 'DD-MM-YYYY')-TO_DATE(?, 'DD-MM-YYYY'))) total " +
+        String query = "SELECT p.deviceid, sum(sc.price*(? - ?)) total " +
                         "FROM serviceorder so " +
                         "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
                         "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
@@ -47,10 +47,10 @@ public class ReportDAOImpl implements ReportDAO {
                         "LEFT JOIN port p ON si.portid  = p.id " +
                         "LEFT JOIN device d ON p.deviceid = d.id " +
                         "WHERE sis.status = 'Active' " +
-                        "AND si.serviceinstancedate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
+                        "AND si.serviceinstancedate BETWEEN ? AND ? " +
                         "GROUP BY p.deviceid " +
                         "UNION ALL " +
-                        "SELECT p.deviceid, sum(sc.price*(si.serviceinstancedate -TO_DATE(?, 'DD-MM-YYYY'))) total " +
+                        "SELECT p.deviceid, sum(sc.price*(si.serviceinstancedate - ?)) total " +
                         "FROM serviceorder so " +
                         "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
                         "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
@@ -58,17 +58,17 @@ public class ReportDAOImpl implements ReportDAO {
                         "LEFT JOIN port p ON si.portid  = p.id " +
                         "LEFT JOIN device d ON p.deviceid = d.id " +
                         "WHERE sis.status = 'Disconnected' " +
-                        "AND si.serviceinstancedate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
+                        "AND si.serviceinstancedate BETWEEN ? AND ? " +
                         "GROUP BY p.deviceid " +
                         "ORDER BY total DESC";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, finishDate.toString());
-        statement.setString(2, startDate.toString());
-        statement.setString(3, finishDate.toString());
-        statement.setString(4, startDate.toString());
-        statement.setString(5, startDate.toString());
-        statement.setString(6, finishDate.toString());
-        statement.setString(7, startDate.toString());
+        statement.setDate(1, finishDate);
+        statement.setDate(2, startDate);
+        statement.setDate(3, finishDate);
+        statement.setDate(4, startDate);
+        statement.setDate(5, startDate);
+        statement.setDate(6, finishDate);
+        statement.setDate(7, startDate);
         ResultIterator ri = statement.executeQuery();
         if (ri.next()){
             device.setId(ri.getInt("id"));
@@ -94,14 +94,14 @@ public class ReportDAOImpl implements ReportDAO {
                         "       so.scenarioid, so.userid, so.servicecatalogid, so.serviceinstanceid, so.servicelocation " +
                         "FROM serviceorder so " +
                         "LEFT JOIN scenario s ON so.scenarioid = s.id " +
-                        "WHERE so.serviceorderdate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
+                        "WHERE so.serviceorderdate BETWEEN ? AND ? " +
                         "AND s.scenario = 'New' " +
                         "ORDER BY so.serviceorderdate " +
                         ") a where ROWNUM <= ? ) " +
                         "WHERE rnum  >= ?";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, startDate.toString());
-        statement.setString(2, finishDate.toString());
+        statement.setDate(1, startDate);
+        statement.setDate(2, finishDate);
         statement.setInt(3, numberOfRecords);
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
@@ -136,14 +136,14 @@ public class ReportDAOImpl implements ReportDAO {
                         "       si.circuitid, si.portid " +
                         "FROM serviceinstance si " +
                         "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                        "WHERE si.serviceinstancedate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
+                        "WHERE si.serviceinstancedate BETWEEN ? AND ? " +
                         "AND sis.status = 'Disconnected' " +
                         "ORDER BY si.serviceinstancedate " +
                         ") a where ROWNUM <= ? ) " +
                         "WHERE rnum  >= ?";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, startDate.toString());
-        statement.setString(2, finishDate.toString());
+        statement.setDate(1, startDate);
+        statement.setDate(2, finishDate);
         statement.setInt(3, numberOfRecords);
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
