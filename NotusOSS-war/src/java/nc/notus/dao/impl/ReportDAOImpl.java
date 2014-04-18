@@ -130,7 +130,33 @@ public class ReportDAOImpl implements ReportDAO {
      */
     @Override
     public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate, Date finishDate, int offset, int numberOfRecords) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
+        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
+                        "SELECT si.id, si.serviceinstancedate, si.serviceinstancestatusid, " +
+                        "       si.circuitid, si.portid " +
+                        "FROM serviceinstance si " +
+                        "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                        "WHERE si.serviceinstancedate BETWEEN TO_DATE(?, 'DD-MM-YYYY') AND TO_DATE(?, 'DD-MM-YYYY') " +
+                        "AND sis.status = 'Disconnected' " +
+                        "ORDER BY si.serviceinstancedate " +
+                        ") a where ROWNUM <= ? )" +
+                        "WHERE rnum  >= ?";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setString(1, startDate.toString());
+        statement.setString(2, finishDate.toString());
+        statement.setInt(3, numberOfRecords);
+        statement.setInt(4, offset);
+        ResultIterator ri = statement.executeQuery();
+        while (ri.next()){
+            ServiceInstance servInstance = new ServiceInstance();
+            servInstance.setId(ri.getInt("id"));
+            servInstance.setServiceInstanceDate(ri.getDate("serviceinstancedate"));
+            servInstance.setServiceInstanceStatusID(ri.getInt("serviceinstancestatusid"));
+            servInstance.setCircuitID(ri.getInt("circuitid"));
+            servInstance.setPortID(ri.getInt("portid"));
+            serviceInstances.add(servInstance);
+        }
+        return serviceInstances;
     }
 
     /**
