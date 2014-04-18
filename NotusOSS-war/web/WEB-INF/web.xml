@@ -9,12 +9,12 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>nc.notus.LogoutServlet</servlet-class>
     </servlet>
-     <servlet>
+    <servlet>
         <servlet-name>MailServlet</servlet-name>
         <servlet-class>nc.notus.email.MailServlet</servlet-class>
     </servlet>
     <servlet>
-    	<servlet-name>RegisterServlet</servlet-name>
+        <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>nc.notus.RegistrationServlet</servlet-class>
     </servlet>
     <servlet>
@@ -26,17 +26,18 @@
         <servlet-name>GetLocationsServlet</servlet-name>
         <servlet-class>nc.notus.maps.GetLocationsServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ValidationServlet</servlet-name>
+        <servlet-class>nc.notus.ValidationServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
     </servlet-mapping>
-    <servlet>
-	<servlet-name>ValidationServlet</servlet-name>
-	<servlet-class>nc.notus.ValidationServlet</servlet-class>
-	</servlet>
     <servlet-mapping>
-	<servlet-name>ValidationServlet</servlet-name>
-	<url-pattern>/Validate</url-pattern>
+        <servlet-name>ValidationServlet</servlet-name>
+        <url-pattern>/Validate</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
@@ -68,9 +69,9 @@
     </welcome-file-list>
     
     <error-page>
-		<error-code>403</error-code>
-		<location>/deniedResource.jsp</location>
-	</error-page>
+        <error-code>403</error-code>
+        <location>/deniedResource.jsp</location>
+    </error-page>
 
 
     <security-constraint>
@@ -95,18 +96,18 @@
     </login-config>
     
     <security-role>
-		<role-name>ADMINISTRATOR</role-name>
-	</security-role>
-	<security-role>
-		<role-name>SUPPORT_ENGINEER</role-name>
-	</security-role>
-	<security-role>
-		<role-name>PROVISION_ENGINEER</role-name>
-	</security-role>
-	<security-role>
-		<role-name>INSTALLATION_ENGINEER</role-name>
-	</security-role>
-	<security-role>
-		<role-name>CUSTOMER_USER</role-name>
-	</security-role>
+        <role-name>ADMINISTRATOR</role-name>
+    </security-role>
+    <security-role>
+        <role-name>SUPPORT_ENGINEER</role-name>
+    </security-role>
+    <security-role>
+        <role-name>PROVISION_ENGINEER</role-name>
+    </security-role>
+    <security-role>
+        <role-name>INSTALLATION_ENGINEER</role-name>
+    </security-role>
+    <security-role>
+        <role-name>CUSTOMER_USER</role-name>
+    </security-role>
 </web-app>
