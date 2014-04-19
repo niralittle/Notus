@@ -267,13 +267,13 @@ public class NewScenarioWorkflow extends Workflow {
 
     /**
      * Creates new Circuit Instance
-     * @param dbManager connection to DB class
+     * @param dbManager class representing connection to DB
      * @return ID of created Circuit instance
      */
     private int createCircuit(DBManager dbManager) {
         CircuitDAO circuitDAO = new CircuitDAOImpl(dbManager);
         Circuit circuit = new Circuit();
-        circuit.setCiruit("Circuit");
+        circuit.setCircuit("Circuit");
         int circuitID = (Integer)circuitDAO.add(circuit);
         return circuitID;
     }

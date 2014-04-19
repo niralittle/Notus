@@ -62,7 +62,7 @@ public abstract class Workflow {
 
             Task task = taskDAO.find(taskID);
             OSSUser user = userDAO.find(userID);
-            if(!isTaskValid(dbManager, taskID, user.getRoleID())) {
+            if (isTaskValid(dbManager, taskID, user.getRoleID())) {
                 task.setEmployeeID(userID);
                 taskDAO.update(task);
             } else {
@@ -97,9 +97,10 @@ public abstract class Workflow {
      * This method sets task status to "Completed".
      * Method is <code>protected</code> because it can only be invoked in
      * Workflow methods.
+     * @param dbManager connection to database encapsulated in DBManager class
      * @param taskID ID of task
      */
-    protected void completeTask(DBManager dbManager, int taskID) {              // TODO: check task here
+    protected void completeTask(DBManager dbManager, int taskID) {
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
@@ -124,7 +125,7 @@ public abstract class Workflow {
     }
 
     protected void changeServiceInstanceStatus(DBManager dbManager,
-                                                        InstanceStatus status) {
+            InstanceStatus status) {
         ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
         ServiceInstanceStatusDAO sisDAO = new ServiceInstanceStatusDAOImpl(dbManager);
 
@@ -157,13 +158,13 @@ public abstract class Workflow {
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
         Task task = taskDAO.find(taskID);
-        if(task.getServiceOrderID() != order.getId()) {
+        if (task.getServiceOrderID() != order.getId()) {
             return false;
-        } else if(task.getRoleID() != userRoleID) {
+        } else if (task.getRoleID() != userRoleID) {
             return false;
         } else {
             int activeStatusID = taskStatusDAO.getTaskStatusID(TaskState.ACTIVE);
-            if(task.getTaskStatusID() != activeStatusID) {
+            if (task.getTaskStatusID() != activeStatusID) {
                 return false;
             } else {
                 return true;
