@@ -91,5 +91,43 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         return deviceList;
     }
 
-
+    /**
+     * Method that returns list of ServiceOrders with selected scenario
+     * @param scenario for searching
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return list ServiceOrders with selected scenario
+     */
+    @Override
+    public List<ServiceOrder> getServiceOrdersByScenario(String scenario,
+                                        int offset, int numberOfRecords) {
+        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
+                        "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
+                        "so.scenarioid, so.userid, so.servicecatalogid, " +
+                        "so.serviceinstanceid, so.servicelocation " +
+                        "FROM serviceorder so " +
+                        "LEFT JOIN scenario s ON so.scenarioid = s.id " +
+                        "WHERE s.scenario = ? " +
+                        "ORDER BY so.serviceorderdate " +
+                        ") a where ROWNUM <= ? ) " +
+                        "WHERE rnum  >= ?";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setInt(1, numberOfRecords);
+        statement.setInt(2, offset);
+        ResultIterator ri = statement.executeQuery();
+        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
+        while (ri.next()){
+            ServiceOrder servOrder = new ServiceOrder();
+            servOrder.setId(ri.getInt("id"));
+            servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
+            servOrder.setServiceOrderStatusID(ri.getInt("serviceorderstatusid"));
+            servOrder.setScenarioID(ri.getInt("scenarioid"));
+            servOrder.setUserID(ri.getInt("userid"));
+            servOrder.setServiceCatalogID(ri.getInt("servicecatalogid"));
+            servOrder.setServiceInstanceID(ri.getInt("serviceinstanceid"));
+            servOrder.setServiceLocation(ri.getString("servicelocation"));
+            serviceOrders.add(servOrder);
+        }
+        return serviceOrders;
+    }
 }
