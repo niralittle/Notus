@@ -23,7 +23,7 @@ public class GetServiceCatalogs {
      * Gets serviceCatalogs by providerLocationID via DAO
      */
     public List<ServiceCatalog> getServiceCatalogs(){
-        ServiceCatalogDAOImpl catalogDAO = new ServiceCatalogDAOImpl(dbManager);
+        ServiceCatalogDAOImpl catalogDAO = new ServiceCatalogDAOImpl(dbManager);// REVIEW: DAO implementation used instead of interface
         List<ServiceCatalog> serviceCatalogs =
                 catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, 1, 20);// REVIEW: magic number found
         return serviceCatalogs;
@@ -32,7 +32,7 @@ public class GetServiceCatalogs {
      * Gets serviceType by serviceTypeID via DAO                                // REVIEW: documentation with /** and params description expected
      */
     public ServiceType getServiceType(ServiceCatalog serviceCatalog){
-        ServiceTypeDAOImpl type = new ServiceTypeDAOImpl(dbManager);
+        ServiceTypeDAOImpl type = new ServiceTypeDAOImpl(dbManager);            // REVIEW: DAO implementation used instead of interface
         ServiceType serviceType = type.find(serviceCatalog.getServiceTypeID());
         return serviceType;
     }

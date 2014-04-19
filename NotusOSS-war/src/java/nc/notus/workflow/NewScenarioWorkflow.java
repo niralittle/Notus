@@ -9,11 +9,13 @@ import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
 import java.util.Calendar;
 import nc.notus.dao.CableDAO;
+import nc.notus.dao.CircuitDAO;
 import nc.notus.dao.DeviceDAO;
 import nc.notus.dao.PortDAO;
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceInstanceStatusDAO;
 import nc.notus.dao.impl.CableDAOImpl;
+import nc.notus.dao.impl.CircuitDAOImpl;
 import nc.notus.dao.impl.DeviceDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
@@ -25,6 +27,7 @@ import nc.notus.states.PortState;
 import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.entity.Cable;
+import nc.notus.entity.Circuit;
 
 /**
  * This class provides functionality for "New" scenarion workflow
@@ -34,6 +37,7 @@ public class NewScenarioWorkflow extends Workflow {
 
     /**
      * This method creates NewScenarioWorkflow for given Order.
+     * It doesn't proceed Order to execution(See {@link Workflow#proceedOrder()})
      * @param order Order to create Workflow for
      * @throws Workflow exception if Order scenario doesn't match "New" scenario
      * workflow
@@ -111,11 +115,16 @@ public class NewScenarioWorkflow extends Workflow {
      * This method creates new Router in system. It also creates Ports
      * and links them with Router.
      * @param portQuantity amount of Ports that Router accommodates
-     * @param taskID ID of task for installation engineer                       // TODO: check if task ID is really necessary
+     * @param taskID ID of task for installation engineer                       
      */
-    public void createRouter(int taskID, int portQuantity) {                    // TODO: add task check
+    public void createRouter(int taskID, int portQuantity) {                    
         DBManager dbManager = new DBManager();
         try {
+            if(!isTaskValid(dbManager, taskID,
+                                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
             DeviceDAO deviceDAO = new DeviceDAOImpl(dbManager);
             PortDAO portDAO = new PortDAOImpl(dbManager);
 
@@ -140,12 +149,17 @@ public class NewScenarioWorkflow extends Workflow {
     }
 
     /**
-     * This method creates Cable entity and writes it to
-     * @param taskID ID of task for installation engineer                       // TODO: check if task ID is really necessary
+     * This method creates Cable entity
+     * @param taskID ID of task for installation engineer                       
      */
-    public void createCable(int taskID) {                                       // TODO: add task check
+    public void createCable(int taskID) {                                       
         DBManager dbManager = new DBManager();
         try {
+            if(!isTaskValid(dbManager, taskID,
+                                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
             CableDAO cableDAO = new CableDAOImpl(dbManager);
 
             Cable cable = new Cable();
@@ -166,15 +180,21 @@ public class NewScenarioWorkflow extends Workflow {
      * @param cableID ID of Cable to plug
      * @param portID ID of Port to plug Cable to
      */
-    public void plugCableToPort(int taskID, int cableID, int portID) {          // TODO: add task check
+    public void plugCableToPort(int taskID, int cableID, int portID) {          
         DBManager dbManager = new DBManager();
         try {
+            if(!isTaskValid(dbManager, taskID,
+                                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
             PortDAO portDAO = new PortDAOImpl(dbManager);
             Port port = portDAO.find(portID);
             if(port.getPortStatus() == PortState.BUSY.toInt()) {
                 throw new WorkflowException("Port is busy");
             }
             port.setCableID(cableID);
+            port.setPortStatus(PortState.BUSY.toInt());
             portDAO.update(port);
             
             this.completeTask(dbManager, taskID);
@@ -183,5 +203,78 @@ public class NewScenarioWorkflow extends Workflow {
         } finally {
             dbManager.close();
         }
+    }
+
+    /**
+     * This method assigns given Port to given Service Instance.
+     * It also creates Circuit and links it with SI as logical entity
+     * of provided service. It also sets status of given task to "Completed".
+     * After execution it automatically creates task to Customer Support
+     * Engineer group.
+     * @param taskID ID of task for Provisioning Engineer
+     * @param portID ID of port to link SI with
+     */
+    public void assignPortToServiceInstance(int taskID, int portID) {
+        DBManager dbManager = new DBManager();
+        try {
+            if(!isTaskValid(dbManager, taskID,
+                                        UserRole.PROVISION_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
+            ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+
+            int circuitID = createCircuit(dbManager);
+            ServiceInstance si = siDAO.find(order.getServiceInstanceID());
+            si.setCircuitID(circuitID);
+            if(si.getPortID() != null) {
+                throw new WorkflowException("Service Instance already linked " +
+                        "with Port");
+            }
+            si.setPortID(portID);
+            siDAO.update(si);
+
+            this.completeTask(dbManager, taskID);
+            this.createTask(dbManager, UserRole.SUPPORT_ENGINEER);
+            dbManager.commit();
+        } finally {
+            dbManager.close();
+        }
+    }
+
+    /**
+     * This method sends Bill to customer and automatically activates SI
+     * by changing it's status to "Active". It also changes Order status to
+     * "Completed"
+     * @param taskID ID of Task for Support Engineer
+     */
+    public void approveBill(int taskID) {
+        DBManager dbManager = new DBManager();
+        try {
+            if(!isTaskValid(dbManager, taskID, UserRole.SUPPORT_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
+            changeServiceInstanceStatus(dbManager, InstanceStatus.ACTIVE);
+            changeOrderStatus(dbManager, OrderStatus.COMPLETED);
+            this.completeTask(dbManager, taskID);
+            // TODO: send email here
+            dbManager.commit();
+        } finally {
+            dbManager.close();
+        }
+    }
+
+    /**
+     * Creates new Circuit Instance
+     * @param dbManager connection to DB class
+     * @return ID of created Circuit instance
+     */
+    private int createCircuit(DBManager dbManager) {
+        CircuitDAO circuitDAO = new CircuitDAOImpl(dbManager);
+        Circuit circuit = new Circuit();
+        circuit.setCiruit("Circuit");
+        int circuitID = (Integer)circuitDAO.add(circuit);
+        return circuitID;
     }
 }
