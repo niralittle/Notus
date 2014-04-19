@@ -2,12 +2,16 @@ package nc.notus.workflow;
 
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
+import nc.notus.dao.ServiceInstanceDAO;
+import nc.notus.dao.ServiceInstanceStatusDAO;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.ServiceOrderStatusDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.TaskStatusDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.ScenarioDAOImpl;
+import nc.notus.dao.impl.ServiceInstanceDAOImpl;
+import nc.notus.dao.impl.ServiceInstanceStatusDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
@@ -15,9 +19,11 @@ import nc.notus.dao.impl.TaskStatusDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Scenario;
+import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.ServiceOrderStatus;
 import nc.notus.entity.Task;
+import nc.notus.states.InstanceStatus;
 import nc.notus.states.OrderStatus;
 import nc.notus.states.TaskState;
 import nc.notus.states.UserRole;
@@ -115,6 +121,17 @@ public abstract class Workflow {
         int scenarioID = order.getScenarioID();
         Scenario scenario = scenarioDAO.find(scenarioID);
         return scenario.getScenario();
+    }
+
+    protected void changeServiceInstanceStatus(DBManager dbManager,
+                                                        InstanceStatus status) {
+        ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+        ServiceInstanceStatusDAO sisDAO = new ServiceInstanceStatusDAOImpl(dbManager);
+
+        int statusID = sisDAO.getServiceInstanceStatusID(status);
+        ServiceInstance si = siDAO.find(order.getServiceInstanceID());
+        si.setServiceInstanceStatusID(statusID);
+        siDAO.update(si);
     }
 
     protected void changeOrderStatus(DBManager dbManager, OrderStatus status) {

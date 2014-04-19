@@ -37,6 +37,7 @@ public class NewScenarioWorkflow extends Workflow {
 
     /**
      * This method creates NewScenarioWorkflow for given Order.
+     * It doesn't proceed Order to execution(See {@link Workflow#proceedOrder()})
      * @param order Order to create Workflow for
      * @throws Workflow exception if Order scenario doesn't match "New" scenario
      * workflow
@@ -212,10 +213,8 @@ public class NewScenarioWorkflow extends Workflow {
      * Engineer group.
      * @param taskID ID of task for Provisioning Engineer
      * @param portID ID of port to link SI with
-     * @param serviceInstanceID ID of SI to link with Port
      */
-    public void assignPortToServiceInstance(int taskID, int portID,
-                                                        int serviceInstanceID) {
+    public void assignPortToServiceInstance(int taskID, int portID) {
         DBManager dbManager = new DBManager();
         try {
             if(!isTaskValid(dbManager, taskID,
@@ -226,7 +225,7 @@ public class NewScenarioWorkflow extends Workflow {
             ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
 
             int circuitID = createCircuit(dbManager);
-            ServiceInstance si = siDAO.find(serviceInstanceID);
+            ServiceInstance si = siDAO.find(order.getServiceInstanceID());
             si.setCircuitID(circuitID);
             if(si.getPortID() != null) {
                 throw new WorkflowException("Service Instance already linked " +
@@ -237,6 +236,29 @@ public class NewScenarioWorkflow extends Workflow {
 
             this.completeTask(dbManager, taskID);
             this.createTask(dbManager, UserRole.SUPPORT_ENGINEER);
+            dbManager.commit();
+        } finally {
+            dbManager.close();
+        }
+    }
+
+    /**
+     * This method sends Bill to customer and automatically activates SI
+     * by changing it's status to "Active". It also changes Order status to
+     * "Completed"
+     * @param taskID ID of Task for Support Engineer
+     */
+    public void approveBill(int taskID) {
+        DBManager dbManager = new DBManager();
+        try {
+            if(!isTaskValid(dbManager, taskID, UserRole.SUPPORT_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
+            changeServiceInstanceStatus(dbManager, InstanceStatus.ACTIVE);
+            changeOrderStatus(dbManager, OrderStatus.COMPLETED);
+            this.completeTask(dbManager, taskID);
+            // TODO: send email here
             dbManager.commit();
         } finally {
             dbManager.close();
