@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dao;
 
 import java.sql.Date;
@@ -34,7 +29,7 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of new ServiceOrders per period
-     */
+     */                                                                         // REVIEW: watch the red line
     public List<ServiceOrder> getNewServiceOrders(Date startDate, Date finishDate, int offset, int numberOfRecords);
 
     /**
@@ -44,7 +39,7 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of disconnected ServiceInstances per period
-     */
+     */                                                                         // REVIEW: watch the red line
     public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate, Date finishDate, int offset, int numberOfRecords);
 
     /**
@@ -54,7 +49,7 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for routers utilization and capacity report
-     */
+     */                                                                         // REVIEW: watch the red line
     public List<RoutersUilizationCapacity> getRoutersUtilizationCapacityData(Date startDate, Date finishDate, int offset, int numberOfRecords);
 
     /**
@@ -64,7 +59,7 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for profitability by month report
-     */
+     */                                                                         // REVIEW: watch the red line
     public List<ProfitInMonth> getProfitByMonth(Date startDate, Date finishDate, int offset, int numberOfRecords);
 
 }

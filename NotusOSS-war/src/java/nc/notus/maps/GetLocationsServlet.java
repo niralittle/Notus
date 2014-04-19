@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.maps;
 
 import java.io.IOException;
@@ -12,12 +7,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+<<<<<<< HEAD
 import nc.notus.dao.impl.ProviderLocationDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.ProviderLocation;
+=======
+>>>>>>> e59e9accbe4781605a86ceb15c51193484989aa3
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Roman, Alina
  */
 public class GetLocationsServlet extends HttpServlet {

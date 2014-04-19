@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dao.impl;
 
 import java.sql.Date;
@@ -35,7 +30,7 @@ public class ReportDAOImpl implements ReportDAO {
      */
     @Override
     public Device getMostProfitableRouter(Date startDate, Date finishDate) {
-        Device device = new Device();
+        Device device = new Device();                                           // REVIEW: implementing too far from usage
 
         // The query below needed in review with a lot of complex examples in table!
 
@@ -86,11 +81,11 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of new ServiceOrders per period
      */
-    @Override
+    @Override                                                                   // REVIEW: watch red line
     public List<ServiceOrder> getNewServiceOrders(Date startDate, Date finishDate, int offset, int numberOfRecords) {
-        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
+        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();       // REVIEW: implementation too far from usage
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                        "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
+                        "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " + // REVIEW: watch red line
                         "       so.scenarioid, so.userid, so.servicecatalogid, so.serviceinstanceid, so.servicelocation " +
                         "FROM serviceorder so " +
                         "LEFT JOIN scenario s ON so.scenarioid = s.id " +
@@ -128,9 +123,9 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of disconnected ServiceInstances per period
      */
-    @Override
+    @Override                                                                   // REVIEW: watch red line
     public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate, Date finishDate, int offset, int numberOfRecords) {
-        List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
+        List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();// REVIEW: implementation too far from usage
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                         "SELECT si.id, si.serviceinstancedate, si.serviceinstancestatusid, " +
                         "       si.circuitid, si.portid " +
@@ -167,7 +162,7 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for routers utilization and capacity report
      */
-    @Override
+    @Override                                                                   // REVIEW: watch red line // REVIEW: typo: Uilization
     public List<RoutersUilizationCapacity> getRoutersUtilizationCapacityData(Date startDate, Date finishDate, int offset, int numberOfRecords) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -180,9 +175,9 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for profitability by month report
      */
-    @Override
+    @Override                                                                   // REVIEW: watch red line
     public List<ProfitInMonth> getProfitByMonth(Date startDate, Date finishDate, int offset, int numberOfRecords) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.");          // REVIEW: not implemented
     }
     
 }

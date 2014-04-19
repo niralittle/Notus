@@ -29,7 +29,7 @@ public class ServiceCatalogDAOImpl extends GenericDAOImpl<ServiceCatalog>
     @Override
     public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id, int offset, int numberOfRecords) {
         List<ServiceCatalog> serviceCatalogs = new ArrayList<ServiceCatalog>();
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
+        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +      // REVIEW: watch red line
                 "SELECT sc.id, sc.providerlocationid, sc.servicetypeid, sc.price FROM servicecatalog sc " +
                 "WHERE sc.providerlocationid = ?) a where ROWNUM <= ? )" +
                 "WHERE rnum  >= ?";

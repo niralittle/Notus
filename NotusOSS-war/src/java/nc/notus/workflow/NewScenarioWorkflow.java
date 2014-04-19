@@ -13,13 +13,11 @@ import nc.notus.dao.DeviceDAO;
 import nc.notus.dao.PortDAO;
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceInstanceStatusDAO;
-import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.dao.impl.DeviceDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceStatusDAOImpl;
-import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.entity.Device;
 import nc.notus.entity.Port;
 import nc.notus.states.InstanceStatus;
@@ -27,7 +25,6 @@ import nc.notus.states.PortState;
 import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.entity.Cable;
-import nc.notus.entity.Task;
 
 /**
  * This class provides functionality for "New" scenarion workflow

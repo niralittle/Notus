@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.entity;
 
 /**
- * Contain object for NC.KYIV.2014.WIND.REP.3 report: Profitability by month
+ * Contain object for NC.KYIV.2014.WIND.REP.3 report: Profitability by month    // REVIEW: FR shouldn't be here
  * @author Vladimir Ermolenko
  */
 public class ProfitInMonth {

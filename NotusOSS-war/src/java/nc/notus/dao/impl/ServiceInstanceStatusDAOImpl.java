@@ -9,7 +9,7 @@ import nc.notus.entity.ServiceInstanceStatus;
 import nc.notus.states.InstanceStatus;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Igor Litvinenko
  */
 public class ServiceInstanceStatusDAOImpl extends GenericDAOImpl<ServiceInstanceStatus> 
@@ -18,7 +18,7 @@ public class ServiceInstanceStatusDAOImpl extends GenericDAOImpl<ServiceInstance
     public ServiceInstanceStatusDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
-
+                                                                                // REVIEW: documentation expected
     @Override
     public int getServiceInstanceStatusID(InstanceStatus status) {
         String serviceInstanceStatusName = status.toString();

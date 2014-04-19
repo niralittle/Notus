@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.maps;
 
 import java.io.IOException;
@@ -16,7 +11,7 @@ import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceType;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Alina
  */
 public class ServicesServlet extends HttpServlet {

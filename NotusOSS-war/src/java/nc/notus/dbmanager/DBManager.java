@@ -4,15 +4,13 @@ import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
  * This class provides functionality of managing connection to DB.
- * It incapsulates <code>DataSource</code> and is responsible for obtaining and
+ * It encapsulates <code>DataSource</code> and is responsible for obtaining and
  * releasing DB connection.
  * @author Igor Litvinenko
  */
@@ -49,7 +47,7 @@ public class DBManager implements Closeable {
             throw new DBManagerException("SQL Exception", exc);
         }
     }
-
+                                                                                // REVIEW: documentation expected
     public void commit() {
         try {
             conn.commit();
@@ -57,7 +55,7 @@ public class DBManager implements Closeable {
             throw new DBManagerException("Cannot execute commit", exc);
         }
     }
-
+                                                                                // REVIEW: documentation expected
     public void rollback() {
         try {
             conn.rollback();

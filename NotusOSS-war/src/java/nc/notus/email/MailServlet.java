@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
                                                                                 
 /**
  *
- * @author Roman Martynuyk
+ * @author Roman Martynuyk                                                      // REVIEW: wrong documentation format(author should be at the end)
  * last changes 04.08.2014
  * MailServlet class is responsible for sending mail to user
  * or group of users
@@ -51,7 +51,7 @@ public class MailServlet extends HttpServlet {
         }
     }
 
-    /**
+    /**                                                                         // REVIEW: documentation expected
      * @param toEmail - email address of receiver
      * @param subject - subject of Email
      * @param text - the contents of the letter
@@ -67,7 +67,7 @@ public class MailServlet extends HttpServlet {
 
         /*Authentication to mail service */
         Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
+            protected PasswordAuthentication getPasswordAuthentication() {      // REVIEW: override annotation
                 return new PasswordAuthentication(username, password);
             }
         });
@@ -76,7 +76,7 @@ public class MailServlet extends HttpServlet {
         String[] s = toEmail.split(";");
         Address[] address = new Address[s.length];
 
-        for(int i = 0; i<s.length;i++){
+        for(int i = 0; i<s.length;i++){                                         // REVIEW: add spaces
             try {
                 address[i] = new InternetAddress(s[i].trim());
             } catch (AddressException ex) {

@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * Wraps ResultSet class to handle SQL exceptions
  * @author Igor Litvinenko
  */
-public class ResultIterator {
+public class ResultIterator {                                                   // REVIEW: documentation on every public function expected
     
     private ResultSet rs;
     

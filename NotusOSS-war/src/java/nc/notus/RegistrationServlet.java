@@ -23,7 +23,7 @@ import nc.notus.states.UserState;
 * @param request
 * @param response
 * @throws ServletException
-* @throws IOException
+* @throws IOException                                                           // REVIEW: no author specified
 */
 public class RegistrationServlet extends HttpServlet {
 
@@ -44,18 +44,18 @@ public class RegistrationServlet extends HttpServlet {
 		
 		// server-side validation for duplicating login and email
 		if (userDAO.isLoginDuplicate(login)) {
-			request.setAttribute("duplicateLogin",
+			request.setAttribute("duplicateLogin",                  // REVIEW: watch the red line
 					"User with specified login already exist. Choose other login.");
-			dbManager.close();
+			dbManager.close();                                      // REVIEW: try-finally block should be used
 			RequestDispatcher view = request.getRequestDispatcher("registration.jsp");
 			view.forward(request, response);
 		}
 
 		if (userDAO.isEmailDuplicate(email)) {
-			request.setAttribute("duplicateLogin",
+			request.setAttribute("duplicateLogin",                  // REVIEW: watch the red line
 					"User with specified email already exist in system. "
 					+ "Try write to administrator for restoring you account.");
-			dbManager.close();
+			dbManager.close();                                      // REVIEW: try-finally block should be used
 			RequestDispatcher view = request.getRequestDispatcher("registration.jsp");
 			view.forward(request, response);
 		}
@@ -74,12 +74,12 @@ public class RegistrationServlet extends HttpServlet {
 		userDAO.add(user);
                 
 		dbManager.commit();
-		dbManager.close();
+		dbManager.close();                                              // REVIEW: try-finally block should be used
 		
-		/*
+		/*                                                              // REVIEW: service Order creation undone
 		//create workflow with Scenario NEW
 		ServiceCatalogDAOImpl cat = new ServiceCatalogDAOImpl(dbManager);
-		
+                                                                                // REVIEW: watch the red line
 		int serviceCatalogID = Integer.parseInt(request.getParameter("serviceCatalogID"));
 		String serviceLocation = (String) request.getParameter("serviceLocation");
 		
@@ -99,7 +99,7 @@ public class RegistrationServlet extends HttpServlet {
 		*/
 
 		
-		//redirect to congratulation page
+		//redirect to congratulation page                               // REVIEW: watch the red line
 		RequestDispatcher view = request.getRequestDispatcher("orderRecieved.jsp");
 		view.forward(request, response);
 	}

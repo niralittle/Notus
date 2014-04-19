@@ -1,7 +1,7 @@
 package nc.notus.entity;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Vladimir Ermolenko
  */
 public class ServiceOrderStatus {

@@ -10,7 +10,7 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
 
     /**
      * Implementation of method for block accounts in DB
-     * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O
+     * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O // REVIEW: no FR should be specified in method documentation
      * @param user - our user of type OSSUser
      */
     void blockUser(OSSUser user);  
