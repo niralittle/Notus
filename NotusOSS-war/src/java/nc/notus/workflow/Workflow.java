@@ -42,6 +42,32 @@ public abstract class Workflow {
     public abstract void proceedOrder();
 
     /**
+     * This method assigns task to particular user of user group
+     * responsible for task execution
+     * @param taskID ID of task to assign user to
+     * @param userID ID of user to assign
+     */
+    public void assignTask(int taskID, int userID) {
+        DBManager dbManager = new DBManager();
+        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+        OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+
+        try {
+            Task task = taskDAO.find(taskID);
+            OSSUser user = userDAO.find(userID);
+            if (user.getRoleID() == task.getRoleID()) {
+                task.setEmployeeID(userID);
+                taskDAO.update(task);
+            } else {
+                throw new WorkflowException("User group isn't suitable for this task");
+            }
+            dbManager.commit();
+        } finally {
+            dbManager.close();
+        }
+    }
+
+    /**
      * This method is used to create tasks and assign it to user groups.
      * Method is <code>protected</code> because it can only be invoked in
      * Workflow methods.
@@ -76,32 +102,6 @@ public abstract class Workflow {
         taskDAO.update(task);
     }
 
-    /**
-     * This method assigns task to particular user of user group
-     * responsible for task execution
-     * @param taskID ID of task to assign user to
-     * @param userID ID of user to assign
-     */
-    public void assignTask(int taskID, int userID) {
-        DBManager dbManager = new DBManager();
-        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-        OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-
-        try {
-            Task task = taskDAO.find(taskID);
-            OSSUser user = userDAO.find(userID);
-            if (user.getRoleID() == task.getRoleID()) {
-                task.setEmployeeID(userID);
-                taskDAO.update(task);
-            } else {
-                throw new WorkflowException("User group isn't suitable for this task");
-            }
-            dbManager.commit();
-        } finally {
-            dbManager.close();
-        }
-    }
-
     protected String getOrderStatus(DBManager dbManager) {
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
         int statusID = order.getServiceOrderStatusID();
@@ -123,5 +123,29 @@ public abstract class Workflow {
         int statusID = orderStatusDAO.getServiceOrderStatusID(status);
         order.setServiceOrderStatusID(statusID);
         orderDAO.update(order);
+    }
+
+    /**
+     * This method checks whether given Task if active and connected with Order
+     * @param dbManager class representing the connection to DB
+     * @param taskID ID of Task to validate
+     * @return <code>true</code> if Task is valid for execution and
+     * <code>false</code> otherwise
+     */
+    protected boolean isTaskValid(DBManager dbManager, int taskID) {
+        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+        TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
+
+        Task task = taskDAO.find(taskID);
+        if(task.getServiceOrderID() != order.getId()) {
+            return false;
+        } else {
+            int activeStatusID = taskStatusDAO.getTaskStatusID(TaskState.ACTIVE);
+            if(task.getTaskStatusID() != activeStatusID) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 }
