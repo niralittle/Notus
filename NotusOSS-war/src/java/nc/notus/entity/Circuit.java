@@ -16,11 +16,11 @@ public class Circuit {
         this.circuit = circuit;
     }
 
-    public String getCiruit() {
+    public String getCircuit() {
         return circuit;
     }
 
-    public void setCiruit(String circuit) {
+    public void setCircuit(String circuit) {
         this.circuit = circuit;
     }
 
