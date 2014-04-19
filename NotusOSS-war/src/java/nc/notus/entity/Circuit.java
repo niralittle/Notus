@@ -6,22 +6,22 @@ package nc.notus.entity;
  */
 public class Circuit {
     private int id;
-    private String ciruit;
+    private String circuit;
 
     public Circuit() {
     }
 
-    public Circuit(int id, String ciruit) {
+    public Circuit(int id, String circuit) {
         this.id = id;
-        this.ciruit = ciruit;
+        this.circuit = circuit;
     }
 
     public String getCiruit() {
-        return ciruit;
+        return circuit;
     }
 
-    public void setCiruit(String ciruit) {
-        this.ciruit = ciruit;
+    public void setCiruit(String circuit) {
+        this.circuit = circuit;
     }
 
     public int getId() {
