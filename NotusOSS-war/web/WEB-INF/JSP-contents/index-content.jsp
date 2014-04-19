@@ -4,6 +4,24 @@
     Author     : Igor Lytvynenko
 --%>
 
+<%
+	if (request.getUserPrincipal() != null) {
+%>
+
+<h3>You logged in as, <%=request.getUserPrincipal()%></h3>
+
+<form method="GET" action="logout">
+	<input type="submit" value="Logout" />
+</form>
+
+<%
+	} else {
+%> 
+	<a href="login.jsp">Login</a> 
+<% } %>
+ 
+<a href='adminPage.jsp'>Admin page</a>
+
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac dolor nisi. Maecenas ut suscipit dui. Vivamus sagittis purus hendrerit metus lobortis congue. Nam imperdiet, tellus quis hendrerit ultrices, quam erat convallis magna, a rhoncus erat mi vel est. Etiam eleifend justo quis quam sodales pulvinar. Vivamus euismod purus lorem, elementum rutrum arcu tincidunt eu. Morbi volutpat, velit a consectetur aliquam, ipsum sem adipiscing nisi, in scelerisque risus dolor at lectus. Vivamus tempus vulputate mauris, et placerat libero laoreet ac. Nam euismod sagittis nibh, sed imperdiet nisi venenatis sed.
 
 Integer sagittis a purus quis consectetur. Proin nisi leo, dignissim et convallis ac, lobortis eu nibh. Phasellus auctor, arcu non suscipit tincidunt, ligula diam aliquam diam, ut imperdiet mauris justo sed nisi. Etiam vulputate dolor nec tellus dapibus euismod. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus scelerisque leo eget luctus pretium. In nec varius ipsum, id bibendum velit. Vestibulum erat erat, mollis eget iaculis et, vehicula ac est.

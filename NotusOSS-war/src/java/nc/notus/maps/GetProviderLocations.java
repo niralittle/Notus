@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.maps;
 
 import java.util.ArrayList;
@@ -12,30 +7,21 @@ import nc.notus.dbmanager.DBManager;
 import nc.notus.dao.impl.ProviderLocationDAOImpl;
 import nc.notus.entity.ProviderLocation;
 /**
- *
+ * Class for getting Provider Locations via DAO
  * @author Roman
  */
 public class GetProviderLocations {
-
-    private List<String> addressesList;
-
-    private void getAddressesList(){
-        DBManager dbManager = new DBManager();
+    /*                                                                          // REVIEW: documentation with /** expected
+     * Gets list of adresses of providerLocations via DAO
+     */
+    public List<ProviderLocation> getProviderLocations(){
+        DBManager dbManager = new DBManager();                                  // REVIEW: try-finally block should be used
         ProviderLocationDAO locDAO = new ProviderLocationDAOImpl(dbManager);
-        int start = 1;
+        int start = 1;                                                          // REVIEW: local variables as constants
         int lastRecord = 5;
         List<ProviderLocation> providerList = locDAO.getProviderLocations(start, lastRecord);
-        addressesList = new ArrayList<String>();
-        for(int i = 0; i<providerList.size();i++){
-            addressesList.add(providerList.get(i).getLocation());
-        }
         dbManager.close();
+        return providerList;
     }
-
-    public List<String> getLocations(){
-        getAddressesList();
-        return addressesList;
-    }
-
-
+                                                                                // REVIEW: documentation expected
 }

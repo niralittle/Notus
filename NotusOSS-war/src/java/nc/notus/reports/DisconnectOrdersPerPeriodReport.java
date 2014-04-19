@@ -1,11 +1,5 @@
 package nc.notus.reports;
-
-import java.util.ArrayList;
-import java.util.List;
-import nc.notus.dao.ServiceOrderDAO;
-import nc.notus.dao.impl.ServiceOrderDAOImpl;
-import nc.notus.dbmanager.DBManager;
-import nc.notus.entity.ServiceOrder;
+                                                                                // REVIEW: class should be deleted
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;

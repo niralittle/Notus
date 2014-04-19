@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Andrey Ilin
  */
 public class ReportTestServlet extends HttpServlet {

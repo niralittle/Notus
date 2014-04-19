@@ -1,15 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dao;
 
 import java.sql.Date;
 import java.util.List;
 import nc.notus.entity.Device;
 import nc.notus.entity.ProfitInMonth;
-import nc.notus.entity.RoutersUilizationCapacity;
+import nc.notus.entity.RoutersUtilizationCapacity;
 import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 
@@ -34,8 +29,9 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of new ServiceOrders per period
-     */
-    public List<ServiceOrder> getNewServiceOrders(Date startDate, Date finishDate, int offset, int numberOfRecords);
+     */                                                                         
+    public List<ServiceOrder> getNewServiceOrders(Date startDate,
+                            Date finishDate, int offset, int numberOfRecords);
 
     /**
      * Method that return list of disconnected ServiceInstances per period
@@ -44,8 +40,9 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of disconnected ServiceInstances per period
-     */
-    public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate, Date finishDate, int offset, int numberOfRecords);
+     */                                                                         
+    public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate,
+                                Date finishDate, int offset, int numberOfRecords);
 
     /**
      * Method that return list of objects for routers utilization and capacity report
@@ -54,8 +51,9 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for routers utilization and capacity report
-     */
-    public List<RoutersUilizationCapacity> getRoutersUtilizationCapacityData(Date startDate, Date finishDate, int offset, int numberOfRecords);
+     */                                                                         
+    public List<RoutersUtilizationCapacity> getRoutersUtilizationCapacityData(
+              Date startDate, Date finishDate, int offset, int numberOfRecords);
 
     /**
      * Method that return list of objects for profitability by month report
@@ -64,7 +62,8 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for profitability by month report
-     */
-    public List<ProfitInMonth> getProfitByMonth(Date startDate, Date finishDate, int offset, int numberOfRecords);
+     */                                                                         
+    public List<ProfitInMonth> getProfitByMonth(Date startDate,
+            Date finishDate, int offset, int numberOfRecords);
 
 }

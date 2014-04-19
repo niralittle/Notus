@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dao;
 
 import java.util.List;
@@ -15,7 +10,7 @@ import nc.notus.entity.ProviderLocation;
 public interface ProviderLocationDAO extends GenericDAO<ProviderLocation> {
 
     /**
-     * Method return list of all(numberOfRecords) provided locations with paging
+     * Method return list of numberOfRecords provided locations with paging 
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of providerLocations

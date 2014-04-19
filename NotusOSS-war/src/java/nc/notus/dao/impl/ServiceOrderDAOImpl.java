@@ -19,16 +19,16 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     public ServiceOrderDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
-
+                                                                                // REVIEW: documentation expected
     public List<ServiceOrder> getServiceOrdersByScenario(String scenario) {
-        List<ServiceOrder> deviceList = new ArrayList<ServiceOrder>();
+        List<ServiceOrder> deviceList = new ArrayList<ServiceOrder>();          // REVIEW: implementation too far from usage
         String queryString = "SELECT ServiceOrder.id, serviceOrderDate, " +
                 "serviceOrderStatusID, scenarioID, userID, serviceCatalogID, " +
                 "serviceInstanceID, serviceLocation " +
                 "FROM ServiceOrder " +
                 "INNER JOIN Scenario ON " +
                 "ScenarioID = Scenario.id " +
-                "WHERE scenario = '?'";
+                "WHERE scenario = '?'";                                         // REVIEW: maybe error: ? in brackets('?')
         Statement statement = dbManager.prepareStatement(queryString);
         statement.setString(1, scenario);
         ResultIterator ri = statement.executeQuery();
@@ -59,14 +59,14 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     @Override
     public List<ServiceOrder> getServiceOrdersByStatus(String serviceStatus) {
 
-        List<ServiceOrder> deviceList = new ArrayList<ServiceOrder>();
+        List<ServiceOrder> deviceList = new ArrayList<ServiceOrder>();          // REVIEW: implementation too far from usage
         String queryString = "SELECT ServiceOrder.id, serviceOrderDate," +
                 " serviceOrderStatusID, scenarioID, userID, serviceCatalogID, " +
                 "serviceInstanceID, serviceLocation " +
                 "FROM ServiceOrder " +
                 "INNER JOIN ServiceOrderStatus ON " +
                 "serviceOrderStatusID = ServiceOrderStatus.id" +
-                "WHERE status = '?'";
+                "WHERE status = '?'";                                           // REVIEW: maybe error: ? in brackets('?')
 
         Statement statement = dbManager.prepareStatement(queryString);
         statement.setString(1, serviceStatus);

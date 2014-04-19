@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dao.impl;
 
 import java.sql.Date;
@@ -14,7 +9,7 @@ import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.Device;
 import nc.notus.entity.ProfitInMonth;
-import nc.notus.entity.RoutersUilizationCapacity;
+import nc.notus.entity.RoutersUtilizationCapacity;
 import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 
@@ -35,7 +30,6 @@ public class ReportDAOImpl implements ReportDAO {
      */
     @Override
     public Device getMostProfitableRouter(Date startDate, Date finishDate) {
-        Device device = new Device();
 
         // The query below needed in review with a lot of complex examples in table!
 
@@ -70,6 +64,7 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setDate(6, finishDate);
         statement.setDate(7, startDate);
         ResultIterator ri = statement.executeQuery();
+        Device device = new Device();
         if (ri.next()){
             device.setId(ri.getInt("id"));
             device.setName(ri.getString("name"));
@@ -86,12 +81,13 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of new ServiceOrders per period
      */
-    @Override
-    public List<ServiceOrder> getNewServiceOrders(Date startDate, Date finishDate, int offset, int numberOfRecords) {
-        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
+    @Override                                                                   
+    public List<ServiceOrder> getNewServiceOrders(Date startDate,
+            Date finishDate, int offset, int numberOfRecords) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                        "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
-                        "       so.scenarioid, so.userid, so.servicecatalogid, so.serviceinstanceid, so.servicelocation " +
+                        "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " + 
+                        "       so.scenarioid, so.userid, so.servicecatalogid, " +
+                        "so.serviceinstanceid, so.servicelocation " +
                         "FROM serviceorder so " +
                         "LEFT JOIN scenario s ON so.scenarioid = s.id " +
                         "WHERE so.serviceorderdate BETWEEN ? AND ? " +
@@ -105,6 +101,7 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setInt(3, numberOfRecords);
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
+        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
         while (ri.next()){
             ServiceOrder servOrder = new ServiceOrder();
             servOrder.setId(ri.getInt("id"));
@@ -128,9 +125,9 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of disconnected ServiceInstances per period
      */
-    @Override
-    public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate, Date finishDate, int offset, int numberOfRecords) {
-        List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
+    @Override                                                                   
+    public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate,
+                                Date finishDate, int offset, int numberOfRecords) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                         "SELECT si.id, si.serviceinstancedate, si.serviceinstancestatusid, " +
                         "       si.circuitid, si.portid " +
@@ -147,6 +144,7 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setInt(3, numberOfRecords);
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
+        List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
         while (ri.next()){
             ServiceInstance servInstance = new ServiceInstance();
             servInstance.setId(ri.getInt("id"));
@@ -167,8 +165,9 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for routers utilization and capacity report
      */
-    @Override
-    public List<RoutersUilizationCapacity> getRoutersUtilizationCapacityData(Date startDate, Date finishDate, int offset, int numberOfRecords) {
+    @Override                                                                   
+    public List<RoutersUtilizationCapacity> getRoutersUtilizationCapacityData(
+            Date startDate, Date finishDate, int offset, int numberOfRecords) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -180,9 +179,10 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for profitability by month report
      */
-    @Override
-    public List<ProfitInMonth> getProfitByMonth(Date startDate, Date finishDate, int offset, int numberOfRecords) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override                                                                   
+    public List<ProfitInMonth> getProfitByMonth(Date startDate,
+            Date finishDate, int offset, int numberOfRecords) {
+        throw new UnsupportedOperationException("Not supported yet.");          
     }
     
 }

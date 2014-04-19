@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dao.impl;
 
 import nc.notus.dao.DAOException;
@@ -24,14 +19,17 @@ public class ServiceOrderStatusDAOImpl extends GenericDAOImpl<ServiceOrderStatus
     }
 
      /**
-     * Method return id of status of ServiceOrder
+     * Method returns id of status of ServiceOrder
      * @param ServiceOrderStatusName
+      * throws DAOException if id was not found
      * @return id of our ServiceOrder's ststus
      */
+
     @Override
     public int getServiceOrderStatusID(OrderStatus status) {
-        String serviceOrderStatusName = status.toString();
-    	String queryString = "SELECT sos.id, sos.status FROM serviceorderstatus sos WHERE sos.status = ?";
+        String serviceOrderStatusName = status.toString();                      
+    	String queryString = "SELECT sos.id, sos.status " +
+                             "FROM serviceorderstatus sos WHERE sos.status = ?";
 	Statement statement = dbManager.prepareStatement(queryString);
 	statement.setString(1, serviceOrderStatusName);
 	ResultIterator ri = statement.executeQuery();

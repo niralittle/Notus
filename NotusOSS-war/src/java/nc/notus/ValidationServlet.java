@@ -36,7 +36,7 @@ public class ValidationServlet extends HttpServlet {
 	 * Validate inputed data from user
 	 * Forward to {@link registratin.jsp} if at least one fields not correct.
 	 * 
-	 * @param request
+	 * @param request                                                       // REVIEW: documenting formatting non cannonical
 	 * 			must contained next attributes with names:<p>
 	 * 			login, password, password2, email, firstName, lastName
 	 * @param response
@@ -64,21 +64,21 @@ public class ValidationServlet extends HttpServlet {
 		matcher = pattern.matcher(login);
 
 		if (!matcher.matches()) {
-			isValid = false;
+			isValid = false;                                        // REVIEW: watch red line
 			errors.append("- Provide correct login. Spaces not allowed. Minimum length - 3 chars, maximum - 40.\n");
 							
 		}
 
 		matcher = pattern.matcher(lastName);
 		if (!matcher.matches()) {
-			isValid = false;
+			isValid = false;                                        // REVIEW: watch red line
 			errors.append("- Provide correct last name. Spaces not allowed\n");
 				
 		}
 
 		matcher = pattern.matcher(firstName);
 		if (!matcher.matches()) {
-			isValid = false;
+			isValid = false;                                        // REVIEW: watch red line
 			errors.append("- Provide correct first name. Spaces not allowed\n");	
 		}
 

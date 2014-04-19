@@ -4,17 +4,14 @@ import java.io.Closeable;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.RowId;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Wraps <code>PreparedStatement</code> class to handle SQL exceptions and
  * hide <code>Connection</code> from user.
  * @author Igor Litvinenko
  */
-public class Statement implements Closeable {
+public class Statement implements Closeable {                                   // REVIEW: documentation on every public function expected
 
     private PreparedStatement prStatement;
 

@@ -1,7 +1,7 @@
 package nc.notus.entity;
 
 /**
- *
+ * This class implements entity ServiceOrderStatus
  * @author Vladimir Ermolenko
  */
 public class ServiceOrderStatus {

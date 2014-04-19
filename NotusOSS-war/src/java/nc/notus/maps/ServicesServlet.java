@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.maps;
 
 import java.io.IOException;
@@ -16,7 +11,7 @@ import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceType;
 
 /**
- *
+ *                                                                              // REVIEW: documentation expected
  * @author Alina
  */
 public class ServicesServlet extends HttpServlet {
@@ -36,6 +31,7 @@ public class ServicesServlet extends HttpServlet {
              GetServiceCatalogs gsc = new GetServiceCatalogs(providerLocationID);
              List<ServiceCatalog> serviceCatalogs = gsc.getServiceCatalogs();
          if (serviceCatalogs.size() > 0) {
+             //forms the responseXML
                 for(ServiceCatalog serviceCatalog : serviceCatalogs){
                     sb.append("<service>");
                     ServiceType serviceType = gsc.getServiceType(serviceCatalog);

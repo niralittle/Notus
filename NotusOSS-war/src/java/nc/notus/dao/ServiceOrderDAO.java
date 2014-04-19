@@ -15,7 +15,7 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
      * @return List of ServiceOrder objects.
      */
     List<ServiceOrder> getServiceOrdersByStatus(String serviceStatus);
-    List<ServiceOrder> getServiceOrdersByScenario(String scenario);
+    List<ServiceOrder> getServiceOrdersByScenario(String scenario);             // REVIEW: documentation expected
 
 
 }

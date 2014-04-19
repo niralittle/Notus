@@ -1,16 +1,17 @@
-var req;
-var isIE;
-var contents;
+var req; //request to servlet
+var contents; //content of responseXML
 
-
+//makes request and implements the ajax
 function getAvailableServices(){
-        var location = escape(address.value);
+        var pl = document.getElementById("providerLocation");
+        var location = pl.getAttribute("name");
         var url = "ServicesServlet?providerLocationID="+location;
         req = initRequest();
         req.open("GET", url, true);
         req.onreadystatechange = callback;
         req.send(null);
 }
+//initializes request
 function initRequest() {
     if (window.ActiveXObject) {
         isIE = true;
@@ -19,19 +20,21 @@ function initRequest() {
         return new XMLHttpRequest();
     }
 }
+//callback function
 function callback() {
     if (req.readyState == 4) {
-        if (req.status == 200) {
+        if (req.status == 200) {//if request is ready
             clear();
             parseMessages(req.responseXML);
         }
     }
 }
-
+//clears the table of services
 function clear() {
     var servicesTable = document.getElementById("services");
     servicesTable.innerHTML = "";
 }
+//parses the responseXML and outputs the table of services
 function parseMessages(responseXML) {
     if (responseXML == null) {
        clear();
@@ -50,6 +53,7 @@ function parseMessages(responseXML) {
         }
     }
 }
+//forms the table of services
 function appendService(id,name,price) {
      var tr = document.createElement("tr");
      var td = document.createElement("td");
@@ -62,6 +66,7 @@ function appendService(id,name,price) {
      tr.appendChild(td);
      contents.appendChild(tr);
 }
+//forms the "Proceed the order" button
 function addButton() {
     var tr = document.createElement("tr");
     var td = document.createElement("td");
@@ -74,7 +79,8 @@ function addButton() {
     tr.appendChild(td);
     contents.appendChild(tr);
 }
-
+//redirects to the Registration
+//send the serviceLocationID and serviceCatalogID parameters
 function goToRegistration(){
     var selected = getSelected();
     var selectedID = selected.getAttribute("id");
@@ -85,7 +91,7 @@ function goToRegistration(){
     req.send(null);
     window.location = "registration.jsp";
 }
-
+//finds, which service is selected
 function getSelected(){
     var radios = document.getElementsByName("serv");
     for (var I = 0 ; I < radios.length ; I++) {

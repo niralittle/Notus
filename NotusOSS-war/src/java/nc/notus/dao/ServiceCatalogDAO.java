@@ -4,7 +4,7 @@ import java.util.List;
 import nc.notus.entity.ServiceCatalog;
 
 /**
- * Interface of DAO for entity ServiceCatalog.
+ * Interface of DAO for entity ServiceCatalog
  * @author Vladimir Ermolenko
  */
 public interface ServiceCatalogDAO extends GenericDAO<ServiceCatalog> {
@@ -15,6 +15,7 @@ public interface ServiceCatalogDAO extends GenericDAO<ServiceCatalog> {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return ServiceCatalog list of objects
-     */
-    public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id, int offset, int numberOfRecords);
+     */                                                                         
+    public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id,
+                                        int offset, int numberOfRecords);
 }

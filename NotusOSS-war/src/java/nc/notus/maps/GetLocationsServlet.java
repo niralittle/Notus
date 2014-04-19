@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.maps;
 
 import java.io.IOException;
@@ -12,12 +7,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.dao.impl.ProviderLocationDAOImpl;
-import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.ProviderLocation;
 
 /**
- *
- * @author Roman
+ *                                                                              // REVIEW: documentation expected
+ * @author Roman, Alina
  */
 public class GetLocationsServlet extends HttpServlet {
 
@@ -30,15 +24,16 @@ public class GetLocationsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         StringBuffer sb = new StringBuffer();
         try {
             GetProviderLocations gpl = new GetProviderLocations();
-            List<String> providerLocations = gpl.getLocations();
-            for(String providerLocation : providerLocations){
+            List<ProviderLocation> providerLocations = gpl.getProviderLocations();
+            //forms the responseXML
+            for(ProviderLocation providerLocation : providerLocations){
                 sb.append("<providerLocation>");
-                sb.append(providerLocation);
+                sb.append("<id>"+providerLocation.getId()+"</id>");
+                sb.append("<location>"+providerLocation.getLocation()+"</location>");
                 sb.append("</providerLocation>");
             }
             response.setContentType("text/xml");
