@@ -153,10 +153,13 @@ function parseMessage(responseXML) {
        return false;
     } else {
         var locations = responseXML.getElementsByTagName("providerLocation");
-        for (var I = 0 ; I < locations.length ; I++) {
-            destination[I] = locations[I].firstChild.nodeValue;
+        for(var k=0; k<locations.length;k++){
+            destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
         }
-        calcMinDistance();
+        var minPosition = calcMinDistance();
+//        var pl = document.getElementById("providerLocation");
+//        var minID = locations[minPosition].getElementsByTagName("id")[0].firstChild.nodeValue;
+//        pl.setAttribute("name", minID);
     }
 }
  var dis =10000000000;
@@ -178,8 +181,6 @@ function calcMinDistance(){
             }
         });
     }
-    var pl = document.getElementById("providerLocation");
-    pl.setAttribute("name", minPosition);
 }
 
 function geocode(address){

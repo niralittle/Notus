@@ -10,8 +10,9 @@ import nc.notus.states.OrderStatus;
 public interface ServiceOrderStatusDAO extends GenericDAO<ServiceOrderStatus>{
 
     /**
-     * Method return id of status of ServiceOrder                               // REVIEW: fix & update documentation
+     * Method returns id of status of ServiceOrder                              
      * @param ServiceOrderStatusName
+     * throws DAOException if id was not found
      * @return id of our ServiceOrder's ststus
      */
     public int getServiceOrderStatusID(OrderStatus status);

@@ -4,14 +4,27 @@
     Author     : Igor Lytvynenko
 --%>
 
-<h3><%=request.getUserPrincipal()%></h3>
-
-<p>
-    <a href="login.jsp">Login</a> | <a href="registration.jsp">Register</a>
-</p>
+<%
+	if (request.getUserPrincipal() != null) {
+%>
+<h3>You logged in as, <%=request.getUserPrincipal()%></h3>
 
 <form method="GET" action="logout">
-    <input type="submit" value="Logout" />
+	<input type="submit" value="Logout" />
 </form>
 
+<%
+	} else {
+%>
+
+<p>
+	<a href="login.jsp">Login</a> 
+</p>
+
+<% } %>
+
+<p>_____________________________________________________</p>
+
 <a href='adminPage.jsp'>Admin page</a>
+
+<a href='selectLocation.jsp'>Select location</a>

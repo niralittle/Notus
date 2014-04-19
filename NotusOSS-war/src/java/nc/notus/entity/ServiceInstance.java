@@ -3,7 +3,7 @@ package nc.notus.entity;
 import java.util.Date;
 
 /**
- *                                                                              // REVIEW: documentation expected
+ * This class implements entity ServiceInstance
  * @author Vladimir Ermolenko
  */
 public class ServiceInstance {

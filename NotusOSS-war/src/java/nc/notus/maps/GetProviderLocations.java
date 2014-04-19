@@ -11,28 +11,17 @@ import nc.notus.entity.ProviderLocation;
  * @author Roman
  */
 public class GetProviderLocations {
-
-    private List<String> addressesList;
     /*                                                                          // REVIEW: documentation with /** expected
      * Gets list of adresses of providerLocations via DAO
      */
-    private void getAddressesList(){
+    public List<ProviderLocation> getProviderLocations(){
         DBManager dbManager = new DBManager();                                  // REVIEW: try-finally block should be used
         ProviderLocationDAO locDAO = new ProviderLocationDAOImpl(dbManager);
         int start = 1;                                                          // REVIEW: local variables as constants
         int lastRecord = 5;
         List<ProviderLocation> providerList = locDAO.getProviderLocations(start, lastRecord);
-        addressesList = new ArrayList<String>();
-        for(int i = 0; i<providerList.size();i++){
-            addressesList.add(providerList.get(i).getLocation());
-        }
         dbManager.close();
+        return providerList;
     }
                                                                                 // REVIEW: documentation expected
-    public List<String> getLocations(){                                         // REVIEW: method for method? really?
-        getAddressesList();
-        return addressesList;
-    }
-
-
 }

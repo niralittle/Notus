@@ -1,7 +1,7 @@
 package nc.notus.entity;
 
 /**
- *                                                                              // REVIEW: documentation expected
+ * This class implements entity Cable
  * @author Vladimir Ermolenko
  */
 public class Cable {

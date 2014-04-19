@@ -1,5 +1,6 @@
 package nc.notus.dao.impl;
 
+import nc.notus.dao.DAOException;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
@@ -31,47 +32,70 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     
     
     /**
-     * Implementation of checking if user with specified login is already exist in system
-     * 
-     * @param login login to check
-     * @return true - if exist, false - otherwise
-     * @throws NullPointerException if null reference passes
-     */
-	@Override                                                               // REVIEW: tab formatting
+	 * Implementation of checking if user with specified login is already exist
+	 * in system.
+	 * 
+	 * @param login
+	 *            login to check
+	 * @return true - if exist, false - otherwise
+	 * @throws NullPointerException
+	 *             if null reference passes
+	 * @author Panchenko Dmytro
+	 */
+	@Override
 	public boolean isLoginDuplicate(String login) {
 		if (login == null) {
-    		throw new NullPointerException("Null reference invoke.");       // REVIEW: only DAOException should be thrown here
-    	}
-    	String queryString = "SELECT login FROM OSSUSER WHERE login = ?";
-	    Statement statement = dbManager.prepareStatement(queryString);
-	    statement.setString(1, login);
-	    ResultIterator ri = statement.executeQuery();
-	    if ( ri.next()) {
-	    	return true;
-	    }
-	    return false;
+			throw new DAOException("Null reference invoke.");
+		}
+		String queryString = "SELECT login FROM OSSUSER WHERE login = ?";
+
+		Statement statement = dbManager.prepareStatement(queryString);
+		statement.setString(1, login);
+
+		ResultIterator ri = statement.executeQuery();
+
+		// check if statement return any value
+		if (ri.next()) {
+
+			// login exist
+			return true;
+		}
+
+		// login not exist
+		return false;
 	}
 
-
-     /**
-     * Implementation of checking if specified email is already exist in system
-     * 
-     * @param email email to check
-     * @return true - if exist, false - otherwise
-     * @throws NullPointerException if null reference passes
-     */                                                                         // REVIEW: tab formatting
+	/**
+	 * Implementation of checking if specified email is already exist in system.
+	 * 
+	 * @param email
+	 *            email to check
+	 * @return true - if exist, false - otherwise
+	 * @throws NullPointerException
+	 *             if null reference passes
+	 * 
+	 * @author Panchenko Dmytro
+	 */
 	@Override
 	public boolean isEmailDuplicate(String email) {
 		if (email == null) {
-    		throw new NullPointerException("Null reference invoke.");       // REVIEW: only DAOException should be thrown here
-    	}
-    	String queryString = "SELECT email FROM OSSUSER WHERE email = ?";
-	    Statement statement = dbManager.prepareStatement(queryString);
-	    statement.setString(1, email);
-	    ResultIterator ri = statement.executeQuery();
-	    if ( ri.next()) {
-	    	return true;
-	    }
-	    return false;
+			throw new DAOException("Null reference invoke.");
+		}
+		String queryString = "SELECT email FROM OSSUSER WHERE email = ?";
+
+		Statement statement = dbManager.prepareStatement(queryString);
+		statement.setString(1, email);
+
+		ResultIterator ri = statement.executeQuery();
+
+		// check if statement return any value
+		if (ri.next()) {
+
+			// email exist
+			return true;
+		}
+
+		// email not exist
+		return false;
 	}
 }

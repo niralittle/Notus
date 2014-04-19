@@ -1,7 +1,7 @@
 package nc.notus.entity;
 
 /**
- * Contain object for NC.KYIV.2014.WIND.REP.3 report: Profitability by month    // REVIEW: FR shouldn't be here
+ * This class implements entity ProfitInMonth
  * @author Vladimir Ermolenko
  */
 public class ProfitInMonth {
