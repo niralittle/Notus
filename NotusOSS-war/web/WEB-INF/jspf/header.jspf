@@ -1,11 +1,37 @@
-<hr>
-
 <div id="top_menu">
-    <div id="pages_list">
+    <div id="auth"> <a href="admin.jsp">Control panel</a>
+
+        <div class="separator"></div> <a href="logout">Logout</a>
+
+        <div class="separator"></div> <a href="login.jsp">Login</a>
+
+        <div class="separator"></div> <a href="registration.jsp">Register</a>
+
     </div>
-    <div id="auth">
-       <a href="login.jsp">Login</a> | <a href="registration.jsp">Register</a>
+    <div id="pages_list">
+        <ul>
+            <li>
+                <div id="home"> <a href="index.jsp" id="home">
+                        <h1>NOTUS</h1>
+                    </a>
+                </div>
+            </li>
+            <li><a href="selectLocation.jsp">COVERAGE     </a>
+
+            </li>
+            <li><a href="#">SERVICES     </a>
+
+            </li>
+            <li><a href="#">MAKE AND ORDER</a>
+
+            </li>
+            <li><a href="#">PROMOTIONS   </a>
+
+            </li>
+            <li><a href="#">SOCIAL       </a>
+
+            </li>
+        </ul>
     </div>
 </div>
-
-<hr>
+ 

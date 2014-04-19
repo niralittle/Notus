@@ -6,5 +6,5 @@
 
 <jsp:include page="/WEB-INF/template.jsp">
 	<jsp:param name="content" value="registration-content"/>
-	<jsp:param name="title" value="Registration | Wind"/>
+	<jsp:param name="title" value="Registration"/>
 </jsp:include>

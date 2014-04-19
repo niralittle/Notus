@@ -1,9 +1,98 @@
 /* 
-    Document   : map.css
+    Document   : main
     Created on : 12 квіт 2014, 18:58:52
     Author     : Katya Atamanchuk
-    Description: Map canvas params
+    Description: css for web pages
 */
+html {
+    height: 100%;
+}
+body {
+    font: normal 13px 'Trebuchet MS', Arial, sans-serif;
+    padding: 0 0 0 0;
+    height: 100%;
+
+}
+
+hr {
+    border-top: 1px dotted #0099FF;
+    vertical-align: middle; 
+}
+
+footer
+{
+    background-color: #E9F2FF;
+    position: absolute;
+    bottom: 0;
+    height: 60px;
+    width: 100%;
+}
+#page_content
+{
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 100%;
+}
+#pages_list {
+    margin-right: auto;
+    margin-left: 30px;
+}
+
+#home {
+    margin-right: 40px;
+}
+
+#wrapper
+{
+    min-height: 100%;
+    position: relative;
+}
+
+#top_menu
+{
+    background: url(logo.jpg) no-repeat #E9F2FF;
+}
+
+#main
+{
+    margin-bottom: 60px;
+}
+#pages_list li {
+    display: inline-block;
+    margin: 20px 25px 0 0;
+    font-size: 20px;
+}
+#pages_list a {
+    text-decoration: none;
+    color: #000;
+    list-style: none;
+    margin: 0 0 45px 0px;
+    padding: 0 0 5px 0;
+}
+#pages_list a:hover {
+    color: #FFCC00;
+}
+#auth {
+    width: 280px;
+    margin-left: auto;
+    margin-right: 0;
+    vertical-align: top;
+}
+.separator {
+    width: 2px;
+    height: 25px;
+    display: inline-block;
+    border-right: 1px dotted #FFCC00;
+    vertical-align: middle;
+    line-height: 25px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+/* Map service stuff*/
 #map-canvas {
     height: 600px;
     width: 500px;

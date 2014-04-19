@@ -5,5 +5,5 @@
 --%>
 <jsp:include page="/WEB-INF/template.jsp">
 	<jsp:param name="content" value="/Dashboards/admin-content"/>
-	<jsp:param name="title" value="Admin page | Wind"/>
+	<jsp:param name="title" value="Admin page"/>
 </jsp:include>
