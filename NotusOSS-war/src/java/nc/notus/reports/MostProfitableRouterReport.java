@@ -57,7 +57,8 @@ public class MostProfitableRouterReport implements Report {
         PortDAO pdi = new PortDAOImpl(dbManager);
 
         /* List of service orders with status "Completed" */
-        ArrayList<ServiceOrder> serviceOrderList = (ArrayList<ServiceOrder>) sodi.getServiceOrdersByStatusceOrdersByStatus("Completed");
+        ArrayList<ServiceOrder> serviceOrderList =
+                (ArrayList<ServiceOrder>) sodi.getServiceOrdersByStatus("Completed", 1, 1000);
 
         /* Getting ports associated with prices */
         Port[] ports = new Port[serviceOrderList.size()];

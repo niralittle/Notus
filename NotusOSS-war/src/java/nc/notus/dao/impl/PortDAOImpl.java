@@ -17,16 +17,18 @@ public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
     }
 
     /**
-     * Return one free port in system for engineer                              // REVIEW: watch red line
-     * portStatus field in SQL select - it's a flag with 0 value as a free port and with 1 value when port is connected
+     * Return one free port in system for engineer                             
+     * portStatus field in SQL select - it's a flag with 0 value as a free port
+     * and with 1 value when port is connected
      * @return one free port or null if allthe ports are busy
      */
     
     @Override
     public Port getFreePort() {                                           
-        Port  port = null;                                                      // REVIEW: watch red line
+        Port  port = null;
+        // portStatus  - it's a flag with 0 as free and with 1 when connected
         String query = "SELECT p.id, p.deviceID, p.portNumber, p.portStatus, p.cableID " +
-                       "FROM port p WHERE p.portStatus = 0 AND rownum <=1";// portStatus  - it's a flag with 0 as free and with 1 when connected
+                       "FROM port p WHERE p.portStatus = 0 AND rownum <=1";
         Statement statement = dbManager.prepareStatement(query);
         ResultIterator ri = statement.executeQuery();
         if (ri.next()) {
