@@ -21,23 +21,13 @@ public class GetProviderLocations {
     /*
      * Gets list of adresses of providerLocations via DAO
      */
-    private void getAddressesList(){
+    public List<ProviderLocation> getProviderLocations(){
         DBManager dbManager = new DBManager();
         ProviderLocationDAO locDAO = new ProviderLocationDAOImpl(dbManager);
         int start = 1;
         int lastRecord = 5;
         List<ProviderLocation> providerList = locDAO.getProviderLocations(start, lastRecord);
-        addressesList = new ArrayList<String>();
-        for(int i = 0; i<providerList.size();i++){
-            addressesList.add(providerList.get(i).getLocation());
-        }
         dbManager.close();
+        return providerList;
     }
-
-    public List<String> getLocations(){
-        getAddressesList();
-        return addressesList;
-    }
-
-
 }

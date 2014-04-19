@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nc.notus.dao.impl.ProviderLocationDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.ProviderLocation;
 
 /**
  *
@@ -34,11 +35,12 @@ public class GetLocationsServlet extends HttpServlet {
         StringBuffer sb = new StringBuffer();
         try {
             GetProviderLocations gpl = new GetProviderLocations();
-            List<String> providerLocations = gpl.getLocations();
+            List<ProviderLocation> providerLocations = gpl.getProviderLocations();
             //forms the responseXML
-            for(String providerLocation : providerLocations){
+            for(ProviderLocation providerLocation : providerLocations){
                 sb.append("<providerLocation>");
-                sb.append(providerLocation);
+                sb.append("<id>"+providerLocation.getId()+"</id>");
+                sb.append("<location>"+providerLocation.getLocation()+"</location>");
                 sb.append("</providerLocation>");
             }
             response.setContentType("text/xml");
