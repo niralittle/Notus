@@ -46,20 +46,21 @@ public abstract class Workflow {
      * responsible for task execution
      * @param taskID ID of task to assign user to
      * @param userID ID of user to assign
+     * @throws WorkflowException if task is not valid
      */
     public void assignTask(int taskID, int userID) {
         DBManager dbManager = new DBManager();
-        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-        OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-
         try {
+            TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+
             Task task = taskDAO.find(taskID);
             OSSUser user = userDAO.find(userID);
-            if (user.getRoleID() == task.getRoleID()) {
+            if(!isTaskValid(dbManager, taskID, user.getRoleID())) {
                 task.setEmployeeID(userID);
                 taskDAO.update(task);
             } else {
-                throw new WorkflowException("User group isn't suitable for this task");
+                throw new WorkflowException("Given Task is not valid");
             }
             dbManager.commit();
         } finally {
@@ -92,7 +93,7 @@ public abstract class Workflow {
      * Workflow methods.
      * @param taskID ID of task
      */
-    protected void completeTask(DBManager dbManager, int taskID) {
+    protected void completeTask(DBManager dbManager, int taskID) {              // TODO: check task here
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
@@ -126,18 +127,22 @@ public abstract class Workflow {
     }
 
     /**
-     * This method checks whether given Task if active and connected with Order
+     * This method checks whether given Task is active, connected with
+     * current Order and was created for given User Role
      * @param dbManager class representing the connection to DB
      * @param taskID ID of Task to validate
+     * @param userRoleID ID of User Role the Task was created for
      * @return <code>true</code> if Task is valid for execution and
      * <code>false</code> otherwise
      */
-    protected boolean isTaskValid(DBManager dbManager, int taskID) {
+    protected boolean isTaskValid(DBManager dbManager, int taskID, int userRoleID) {
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
         Task task = taskDAO.find(taskID);
         if(task.getServiceOrderID() != order.getId()) {
+            return false;
+        } else if(task.getRoleID() != userRoleID) {
             return false;
         } else {
             int activeStatusID = taskStatusDAO.getTaskStatusID(TaskState.ACTIVE);

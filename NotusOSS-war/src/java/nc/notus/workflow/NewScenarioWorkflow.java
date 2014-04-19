@@ -114,11 +114,16 @@ public class NewScenarioWorkflow extends Workflow {
      * This method creates new Router in system. It also creates Ports
      * and links them with Router.
      * @param portQuantity amount of Ports that Router accommodates
-     * @param taskID ID of task for installation engineer                       // TODO: check if task ID is really necessary
+     * @param taskID ID of task for installation engineer                       
      */
-    public void createRouter(int taskID, int portQuantity) {                    // TODO: add task check
+    public void createRouter(int taskID, int portQuantity) {                    
         DBManager dbManager = new DBManager();
         try {
+            if(!isTaskValid(dbManager, taskID,
+                                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
             DeviceDAO deviceDAO = new DeviceDAOImpl(dbManager);
             PortDAO portDAO = new PortDAOImpl(dbManager);
 
@@ -143,12 +148,17 @@ public class NewScenarioWorkflow extends Workflow {
     }
 
     /**
-     * This method creates Cable entity and writes it to
-     * @param taskID ID of task for installation engineer                       // TODO: check if task ID is really necessary
+     * This method creates Cable entity
+     * @param taskID ID of task for installation engineer                       
      */
-    public void createCable(int taskID) {                                       // TODO: add task check
+    public void createCable(int taskID) {                                       
         DBManager dbManager = new DBManager();
         try {
+            if(!isTaskValid(dbManager, taskID,
+                                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
             CableDAO cableDAO = new CableDAOImpl(dbManager);
 
             Cable cable = new Cable();
@@ -169,9 +179,14 @@ public class NewScenarioWorkflow extends Workflow {
      * @param cableID ID of Cable to plug
      * @param portID ID of Port to plug Cable to
      */
-    public void plugCableToPort(int taskID, int cableID, int portID) {          // TODO: add task check
+    public void plugCableToPort(int taskID, int cableID, int portID) {          
         DBManager dbManager = new DBManager();
         try {
+            if(!isTaskValid(dbManager, taskID,
+                                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
             PortDAO portDAO = new PortDAOImpl(dbManager);
             Port port = portDAO.find(portID);
             if(port.getPortStatus() == PortState.BUSY.toInt()) {
@@ -203,6 +218,11 @@ public class NewScenarioWorkflow extends Workflow {
                                                         int serviceInstanceID) {
         DBManager dbManager = new DBManager();
         try {
+            if(!isTaskValid(dbManager, taskID,
+                                        UserRole.PROVISION_ENGINEER.toInt())) {
+                throw new WorkflowException("Given Task is not valid");
+            }
+
             ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
 
             int circuitID = createCircuit(dbManager);
@@ -224,7 +244,7 @@ public class NewScenarioWorkflow extends Workflow {
     }
 
     /**
-     * Creates Circuit in given connection
+     * Creates new Circuit Instance
      * @param dbManager connection to DB class
      * @return ID of created Circuit instance
      */
