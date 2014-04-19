@@ -23,7 +23,7 @@ public class ReportDAOImpl implements ReportDAO {
          this.dbManager = dbManager;
 }
      /**
-     * Method that return most profitable router in system
+     * Method that returns most profitable router in system
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @return device which is most profitable per period
@@ -74,7 +74,7 @@ public class ReportDAOImpl implements ReportDAO {
     }
 
     /**
-     * Method that return list of new ServiceOrders per period
+     * Method that returns list of new ServiceOrders per period
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @param offset - offset from start position in paging

@@ -19,10 +19,9 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 
     /**
      * Implementation of method for block accounts in DB
-     * NC.KYIV.2014.WIND.REG.4	Account blocking is performed by an Administrator O // REVIEW: FR shouldn't be here
      * @param user: our user of type OSSUser
      */
-                                                                                // REVIEW: @Override annotation
+    @Override                                                                          
     public void blockUser(OSSUser user) {
         String query = "UPDATE OSSUser SET blocked = 1 WHERE id = ?";
         Statement statement = dbManager.prepareStatement(query);

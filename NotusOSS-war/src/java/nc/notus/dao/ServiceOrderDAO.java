@@ -5,17 +5,29 @@ import nc.notus.entity.ServiceOrder;
 
 /**
  * Interface of DAO for entity ServiceOrder.
- * @author Andrey Ilin
+ * @author Vladimir Ermolenko
  */
 public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
 
     /**
-     * Gets a list of service orders in system with specific service status.
-     * @param serviceStatus service status used to return specific list.
-     * @return List of ServiceOrder objects.
+     * Method that returns list of ServiceOrders with selected status
+     * @param serviceOrderStatus for serching
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return list ServiceOrders with selected status
      */
-    List<ServiceOrder> getServiceOrdersByStatus(String serviceStatus);
-    List<ServiceOrder> getServiceOrdersByScenario(String scenario);             // REVIEW: documentation expected
+    List<ServiceOrder> getServiceOrdersByStatus(String serviceOrderStatus,
+                                        int offset, int numberOfRecords);
+
+    /**
+     * Method that returns list of ServiceOrders with selected scenario
+     * @param scenario for searching
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return list ServiceOrders with selected scenario
+     */
+    public List<ServiceOrder> getServiceOrdersByScenario(String scenario,
+                                        int offset, int numberOfRecords);
 
 
 }
