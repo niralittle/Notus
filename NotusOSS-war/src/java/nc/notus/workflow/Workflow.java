@@ -2,12 +2,16 @@ package nc.notus.workflow;
 
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
+import nc.notus.dao.ServiceInstanceDAO;
+import nc.notus.dao.ServiceInstanceStatusDAO;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.ServiceOrderStatusDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.TaskStatusDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.ScenarioDAOImpl;
+import nc.notus.dao.impl.ServiceInstanceDAOImpl;
+import nc.notus.dao.impl.ServiceInstanceStatusDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
@@ -15,9 +19,11 @@ import nc.notus.dao.impl.TaskStatusDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Scenario;
+import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.ServiceOrderStatus;
 import nc.notus.entity.Task;
+import nc.notus.states.InstanceStatus;
 import nc.notus.states.OrderStatus;
 import nc.notus.states.TaskState;
 import nc.notus.states.UserRole;
@@ -40,6 +46,33 @@ public abstract class Workflow {
      * corresponding user groups which take part in Order execution
      */
     public abstract void proceedOrder();
+
+    /**
+     * This method assigns task to particular user of user group
+     * responsible for task execution
+     * @param taskID ID of task to assign user to
+     * @param userID ID of user to assign
+     * @throws WorkflowException if task is not valid
+     */
+    public void assignTask(int taskID, int userID) {
+        DBManager dbManager = new DBManager();
+        try {
+            TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+
+            Task task = taskDAO.find(taskID);
+            OSSUser user = userDAO.find(userID);
+            if(!isTaskValid(dbManager, taskID, user.getRoleID())) {
+                task.setEmployeeID(userID);
+                taskDAO.update(task);
+            } else {
+                throw new WorkflowException("Given Task is not valid");
+            }
+            dbManager.commit();
+        } finally {
+            dbManager.close();
+        }
+    }
 
     /**
      * This method is used to create tasks and assign it to user groups.
@@ -66,7 +99,7 @@ public abstract class Workflow {
      * Workflow methods.
      * @param taskID ID of task
      */
-    protected void completeTask(DBManager dbManager, int taskID) {
+    protected void completeTask(DBManager dbManager, int taskID) {              // TODO: check task here
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
@@ -74,32 +107,6 @@ public abstract class Workflow {
         int taskStatusID = taskStatusDAO.getTaskStatusID(TaskState.COMPLETED);
         task.setTaskStatusID(taskStatusID);
         taskDAO.update(task);
-    }
-
-    /**
-     * This method assigns task to particular user of user group
-     * responsible for task execution
-     * @param taskID ID of task to assign user to
-     * @param userID ID of user to assign
-     */
-    public void assignTask(int taskID, int userID) {
-        DBManager dbManager = new DBManager();
-        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-        OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-
-        try {
-            Task task = taskDAO.find(taskID);
-            OSSUser user = userDAO.find(userID);
-            if (user.getRoleID() == task.getRoleID()) {
-                task.setEmployeeID(userID);
-                taskDAO.update(task);
-            } else {
-                throw new WorkflowException("User group isn't suitable for this task");
-            }
-            dbManager.commit();
-        } finally {
-            dbManager.close();
-        }
     }
 
     protected String getOrderStatus(DBManager dbManager) {
@@ -116,6 +123,17 @@ public abstract class Workflow {
         return scenario.getScenario();
     }
 
+    protected void changeServiceInstanceStatus(DBManager dbManager,
+                                                        InstanceStatus status) {
+        ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+        ServiceInstanceStatusDAO sisDAO = new ServiceInstanceStatusDAOImpl(dbManager);
+
+        int statusID = sisDAO.getServiceInstanceStatusID(status);
+        ServiceInstance si = siDAO.find(order.getServiceInstanceID());
+        si.setServiceInstanceStatusID(statusID);
+        siDAO.update(si);
+    }
+
     protected void changeOrderStatus(DBManager dbManager, OrderStatus status) {
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
@@ -123,5 +141,33 @@ public abstract class Workflow {
         int statusID = orderStatusDAO.getServiceOrderStatusID(status);
         order.setServiceOrderStatusID(statusID);
         orderDAO.update(order);
+    }
+
+    /**
+     * This method checks whether given Task is active, connected with
+     * current Order and was created for given User Role
+     * @param dbManager class representing the connection to DB
+     * @param taskID ID of Task to validate
+     * @param userRoleID ID of User Role the Task was created for
+     * @return <code>true</code> if Task is valid for execution and
+     * <code>false</code> otherwise
+     */
+    protected boolean isTaskValid(DBManager dbManager, int taskID, int userRoleID) {
+        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+        TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
+
+        Task task = taskDAO.find(taskID);
+        if(task.getServiceOrderID() != order.getId()) {
+            return false;
+        } else if(task.getRoleID() != userRoleID) {
+            return false;
+        } else {
+            int activeStatusID = taskStatusDAO.getTaskStatusID(TaskState.ACTIVE);
+            if(task.getTaskStatusID() != activeStatusID) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 }

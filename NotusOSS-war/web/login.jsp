@@ -6,6 +6,6 @@
 
 <jsp:include page="/WEB-INF/template.jsp">
 	<jsp:param name="content" value="login-content"/>
-	<jsp:param name="title" value="Login | Wind"/>
+	<jsp:param name="title" value="Login"/>
 </jsp:include>
 

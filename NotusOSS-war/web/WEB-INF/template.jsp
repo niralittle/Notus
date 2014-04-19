@@ -13,20 +13,29 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <meta name="description" content="Wind Internet provider"/>
-    <title><%=request.getParameter("title")%></title>
+    <meta name="description" content="Notus Internet provider"/>
+    <title><%=request.getParameter("title")%> | Notus</title>
     <link rel="icon" href="assets/favicon.ico"/>
     <link href='http://fonts.googleapis.com/css?family=PT+Sans+Caption' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="assets/main.css">
 </head>
 <body>
-	<jsp:include page="/WEB-INF/jspf/header.jspf"/>
+    <div id="page_content">
+        <div id="wrapper">
+            <div id="main">
+                <jsp:include page="/WEB-INF/jspf/header.jspf"/>
+                <h1 id="title"><%=request.getParameter("title")%></h1>
 
-	<h1 id="title"><%=request.getParameter("title")%></h1> 
-        
-        <% pageContext.include("/WEB-INF/JSP-contents/" + request.getParameter("content") + ".jsp");%>
-
-	<jsp:include page="/WEB-INF/jspf/footer.jspf"/>
+                <div id="main_content">
+                    <% pageContext.include("/WEB-INF/JSP-contents/" + request.getParameter("content") + ".jsp");%>
+                </div>
+            </div>
+            <footer>
+                Communications fast as wind. <br>
+                &copy; Notus 2014
+            </footer>
+        </div>
+    </div>
 
 </body>
 </html>

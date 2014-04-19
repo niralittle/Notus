@@ -6,7 +6,7 @@
 
 <jsp:include page="/WEB-INF/template.jsp">
 	<jsp:param name="content" value="loginError-content"/>
-	<jsp:param name="title" value="Login Error | Wind"/>
+	<jsp:param name="title" value="Login Error"/>
 </jsp:include>
 
 
