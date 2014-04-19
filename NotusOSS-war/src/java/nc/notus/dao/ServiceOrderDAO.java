@@ -4,7 +4,7 @@ import java.util.List;
 import nc.notus.entity.ServiceOrder;
 
 /**
- * Interface of DAO for entity ServiceOrder.
+ * Interface of DAO for entity ServiceOrder
  * @author Vladimir Ermolenko
  */
 public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {

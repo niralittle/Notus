@@ -3,7 +3,7 @@ package nc.notus.dao;
 import nc.notus.entity.Task;
 
 /**
- *                                                                              // REVIEW: documentation expected
+ * Interface of DAO for entity Task
  * @author Igor Litvinenko
  */
 public interface TaskDAO extends GenericDAO<Task> {

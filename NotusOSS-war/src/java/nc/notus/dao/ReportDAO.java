@@ -15,7 +15,7 @@ import nc.notus.entity.ServiceOrder;
 public interface ReportDAO {
 
     /**
-     * Method that return most profitable router in system
+     * Method that returns most profitable router in system
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @return device which is most profitable per period
@@ -23,7 +23,7 @@ public interface ReportDAO {
     public Device getMostProfitableRouter(Date startDate, Date finishDate);
 
     /**
-     * Method that return list of new ServiceOrders per period
+     * Method that returns list of new ServiceOrders per period
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @param offset - offset from start position in paging
@@ -34,7 +34,7 @@ public interface ReportDAO {
                             Date finishDate, int offset, int numberOfRecords);
 
     /**
-     * Method that return list of disconnected ServiceInstances per period
+     * Method that returns list of disconnected ServiceInstances per period
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @param offset - offset from start position in paging
@@ -45,7 +45,7 @@ public interface ReportDAO {
                                 Date finishDate, int offset, int numberOfRecords);
 
     /**
-     * Method that return list of objects for routers utilization and capacity report
+     * Method that returns list of objects for routers utilization and capacity report
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @param offset - offset from start position in paging
@@ -56,7 +56,7 @@ public interface ReportDAO {
               Date startDate, Date finishDate, int offset, int numberOfRecords);
 
     /**
-     * Method that return list of objects for profitability by month report
+     * Method that returns list of objects for profitability by month report
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @param offset - offset from start position in paging
