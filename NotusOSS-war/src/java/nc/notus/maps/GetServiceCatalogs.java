@@ -1,5 +1,6 @@
 package nc.notus.maps;
 
+import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
@@ -15,31 +16,35 @@ import nc.notus.entity.ServiceType;
 public class GetServiceCatalogs {
 
     private final int START = 1;
-    private final int LAST_RECORD = 20;
+    private final int NUMBER_OF_RECORDS = 20;
     private int providerLocationID;
 
     public GetServiceCatalogs(int providerLocationID) {
         this.providerLocationID = providerLocationID;
     }
+
     /**
      * Gets serviceCatalogs by providerLocationID via DAO
      * @return serviceCatalogs - list of service catalogs
      */
-
     public List<ServiceCatalog> getServiceCatalogs() {
         DBManager dbManager = new DBManager();
-        ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
-        List<ServiceCatalog> serviceCatalogs =
-                catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, START, LAST_RECORD);
-        dbManager.close();
+        List<ServiceCatalog> serviceCatalogs = new ArrayList<ServiceCatalog>();
+        try {
+            ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
+            serviceCatalogs =
+                    catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, START, NUMBER_OF_RECORDS);
+        } finally {
+            dbManager.close();
+        }
         return serviceCatalogs;
     }
+
     /**
      * Gets serviceType by serviceTypeID via DAO
      * @param serviceCatalog - service catalog
      * @return serviceType - type of service catalog
      */
-
     public ServiceType getServiceType(ServiceCatalog serviceCatalog) {
         DBManager dbManager = new DBManager();
         ServiceTypeDAOImpl type = new ServiceTypeDAOImpl(dbManager);

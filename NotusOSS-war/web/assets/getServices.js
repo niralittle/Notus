@@ -5,11 +5,15 @@ var contents; //content of responseXML
 function getAvailableServices(){
         var pl = document.getElementById("providerLocation");
         var location = pl.getAttribute("name");
-        var url = "ServicesServlet?providerLocationID="+location;
-        req = initRequest();
-        req.open("GET", url, true);
-        req.onreadystatechange = callback;
-        req.send(null);
+        if(location != null){
+            var url = "ServicesServlet?providerLocationID="+location;
+            req = initRequest();
+            req.open("POST", url, true);
+            req.onreadystatechange = callback;
+            req.send(null);
+        }else{
+            alert("Get min distance first");
+        }
 }
 //initializes request
 function initRequest() {
@@ -87,7 +91,7 @@ function goToRegistration(){
     var location = escape(address.value);
     var url = "Register?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
     req = initRequest();
-    req.open("GET", url, true);
+    req.open("POST", url, true);
     req.send(null);
     window.location = "registration.jsp";
 }

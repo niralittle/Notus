@@ -47,7 +47,7 @@ public class MostProfitableRouterReport implements Report {
      * class field, that is represented as String array.
      */
     private void retrieveReportData() {
-        
+
         /* DBManager and DAOImpl instances creation */
         DBManager dbManager = new DBManager();
         ServiceOrderDAO sodi = new ServiceOrderDAOImpl(dbManager);
@@ -57,8 +57,7 @@ public class MostProfitableRouterReport implements Report {
         PortDAO pdi = new PortDAOImpl(dbManager);
 
         /* List of service orders with status "Completed" */
-        ArrayList<ServiceOrder> serviceOrderList =
-                (ArrayList<ServiceOrder>) sodi.getServiceOrdersByStatus("Completed");
+        ArrayList<ServiceOrder> serviceOrderList = (ArrayList<ServiceOrder>) sodi.getServiceOrdersByStatusceOrdersByStatus("Completed");
 
         /* Getting ports associated with prices */
         Port[] ports = new Port[serviceOrderList.size()];
@@ -81,7 +80,7 @@ public class MostProfitableRouterReport implements Report {
                 devicePriceMap.put(device, prices[i]);
             }
         }
-        
+
         /* Getting most profitable device and storing it to entry */
         Iterator it = devicePriceMap.entrySet().iterator();
         int maxPrice = 0;

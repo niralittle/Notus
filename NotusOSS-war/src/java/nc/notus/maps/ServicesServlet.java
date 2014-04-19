@@ -17,6 +17,7 @@ import nc.notus.entity.ServiceType;
  * @author Alina
  */
 public class ServicesServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -25,16 +26,16 @@ public class ServicesServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         StringBuffer sb = new StringBuffer();
-        try{
-             int providerLocationID = Integer.valueOf(request.getParameter("providerLocationID"));
-             GetServiceCatalogs gsc = new GetServiceCatalogs(providerLocationID);
-             List<ServiceCatalog> serviceCatalogs = gsc.getServiceCatalogs();
-         if (serviceCatalogs.size() > 0) {
-             //forms the responseXML
-                for(ServiceCatalog serviceCatalog : serviceCatalogs){
+        try {
+            int providerLocationID = Integer.valueOf(request.getParameter("providerLocationID"));
+            GetServiceCatalogs gsc = new GetServiceCatalogs(providerLocationID);
+            List<ServiceCatalog> serviceCatalogs = gsc.getServiceCatalogs();
+            if (serviceCatalogs.size() > 0) {
+                //forms the responseXML
+                for (ServiceCatalog serviceCatalog : serviceCatalogs) {
                     sb.append("<service>");
                     ServiceType serviceType = gsc.getServiceType(serviceCatalog);
                     sb.append("<id>" + serviceCatalog.getId() + "</id>");
@@ -61,7 +62,7 @@ public class ServicesServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -74,7 +75,7 @@ public class ServicesServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -86,5 +87,4 @@ public class ServicesServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }
