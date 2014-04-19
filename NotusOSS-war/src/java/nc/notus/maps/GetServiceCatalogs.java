@@ -21,8 +21,9 @@ public class GetServiceCatalogs {
     public GetServiceCatalogs(int providerLocationID) {
         this.providerLocationID = providerLocationID;
     }
-    /*                                                                          // REVIEW: documentation with /** expected
+    /**
      * Gets serviceCatalogs by providerLocationID via DAO
+     * @return serviceCatalogs - list of service catalogs
      */
 
     public List<ServiceCatalog> getServiceCatalogs() {
@@ -33,8 +34,10 @@ public class GetServiceCatalogs {
         dbManager.close();
         return serviceCatalogs;
     }
-    /*
-     * Gets serviceType by serviceTypeID via DAO                                // REVIEW: documentation with /** and params description expected
+    /**
+     * Gets serviceType by serviceTypeID via DAO
+     * @param serviceCatalog - service catalog
+     * @return serviceType - type of service catalog
      */
 
     public ServiceType getServiceType(ServiceCatalog serviceCatalog) {

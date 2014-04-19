@@ -13,8 +13,9 @@ import nc.notus.entity.ProviderLocation;
 public class GetProviderLocations {
         private final int START = 1;                                                          
         private final int LAST_RECORD = 5;
-    /*                                                                          // REVIEW: documentation with /** expected
+    /**                                                                          
      * Gets list of adresses of providerLocations via DAO
+     * @return providerList - list of provider locations
      */
     public List<ProviderLocation> getProviderLocations(){
         DBManager dbManager = new DBManager();                                  // REVIEW: try-finally block should be used
@@ -23,5 +24,5 @@ public class GetProviderLocations {
         dbManager.close();
         return providerList;
     }
-                                                                                // REVIEW: documentation expected
+                                                                                
 }

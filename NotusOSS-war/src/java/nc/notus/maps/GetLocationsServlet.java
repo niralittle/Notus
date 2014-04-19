@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import nc.notus.entity.ProviderLocation;
 
 /**
- *                                                                              // REVIEW: documentation expected
+ * Servlet for calculating the nearest provider location
+ * Gets request from javaScript, gets all provider locations
+ * and forms responseXML to javaScript
  * @author Roman, Alina
  */
 public class GetLocationsServlet extends HttpServlet {
