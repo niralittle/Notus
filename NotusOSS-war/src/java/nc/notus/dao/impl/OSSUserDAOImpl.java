@@ -1,5 +1,6 @@
 package nc.notus.dao.impl;
 
+import nc.notus.dao.DAOException;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;

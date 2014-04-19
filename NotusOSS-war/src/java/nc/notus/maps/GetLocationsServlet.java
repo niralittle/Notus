@@ -7,12 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-<<<<<<< HEAD
-import nc.notus.dao.impl.ProviderLocationDAOImpl;
-import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.ProviderLocation;
-=======
->>>>>>> e59e9accbe4781605a86ceb15c51193484989aa3
 
 /**
  *                                                                              // REVIEW: documentation expected

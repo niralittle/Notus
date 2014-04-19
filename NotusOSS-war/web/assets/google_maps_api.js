@@ -156,16 +156,15 @@ function parseMessage(responseXML) {
         for(var k=0; k<locations.length;k++){
             destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
         }
-        var minPosition = calcMinDistance(locations);
-        var pl = document.getElementById("providerLocation");
-        var minID = locations[minPosition].getElementsByTagName("id")[0].firstChild.nodeValue;
-        pl.setAttribute("name", minID);
+        var minPosition = calcMinDistance();
+//        var pl = document.getElementById("providerLocation");
+//        var minID = locations[minPosition].getElementsByTagName("id")[0].firstChild.nodeValue;
+//        pl.setAttribute("name", minID);
     }
 }
  var dis =10000000000;
 /*THIS function calculate distance*/
 function calcMinDistance(){
-    var minID;
     var k;
     for(k=0; k<destination.length;k++){
         geocoder.geocode( {'address': destination[k]}, function(results, status) {
@@ -176,14 +175,12 @@ function calcMinDistance(){
                 if(distance<dis){
                     dis = distance;
                     minPosition = results[0].formatted_address;
-                    minID=k;
                 }
             } else {
                 alert('Wrong address. Please input another one');
             }
         });
     }
-    return minID;
 }
 
 function geocode(address){
