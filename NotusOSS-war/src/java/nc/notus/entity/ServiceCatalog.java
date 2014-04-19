@@ -1,7 +1,7 @@
 package nc.notus.entity;
 
 /**
- *                                                                              // REVIEW: documentation expected
+ * This class implements entity ServiceCatalog
  * @author Vladimir Ermolenko
  */
 public class ServiceCatalog {
