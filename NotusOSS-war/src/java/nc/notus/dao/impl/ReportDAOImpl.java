@@ -165,7 +165,7 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for routers utilization and capacity report
      */
-    @Override                                                                   
+    @Override
     public List<RoutersUtilizationCapacity> getRoutersUtilizationCapacityData(
             Date startDate, Date finishDate, int offset, int numberOfRecords) {
         throw new UnsupportedOperationException("Not supported yet.");

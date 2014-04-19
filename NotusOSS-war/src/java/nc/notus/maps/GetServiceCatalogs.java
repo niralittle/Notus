@@ -1,6 +1,7 @@
 package nc.notus.maps;
 
 import java.util.List;
+import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
@@ -12,29 +13,35 @@ import nc.notus.entity.ServiceType;
  * @author Alina
  */
 public class GetServiceCatalogs {
+
+    private final int START = 1;
+    private final int LAST_RECORD = 20;
     private int providerLocationID;
-    private DBManager dbManager;                                                // REVIEW: DBManager wasn't closed (!)
 
     public GetServiceCatalogs(int providerLocationID) {
         this.providerLocationID = providerLocationID;
-        dbManager = new DBManager();
     }
     /*                                                                          // REVIEW: documentation with /** expected
      * Gets serviceCatalogs by providerLocationID via DAO
      */
-    public List<ServiceCatalog> getServiceCatalogs(){
-        ServiceCatalogDAOImpl catalogDAO = new ServiceCatalogDAOImpl(dbManager);// REVIEW: DAO implementation used instead of interface
+
+    public List<ServiceCatalog> getServiceCatalogs() {
+        DBManager dbManager = new DBManager();
+        ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
         List<ServiceCatalog> serviceCatalogs =
-                catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, 1, 20);// REVIEW: magic number found
+                catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, START, LAST_RECORD);
+        dbManager.close();
         return serviceCatalogs;
     }
     /*
      * Gets serviceType by serviceTypeID via DAO                                // REVIEW: documentation with /** and params description expected
      */
-    public ServiceType getServiceType(ServiceCatalog serviceCatalog){
-        ServiceTypeDAOImpl type = new ServiceTypeDAOImpl(dbManager);            // REVIEW: DAO implementation used instead of interface
+
+    public ServiceType getServiceType(ServiceCatalog serviceCatalog) {
+        DBManager dbManager = new DBManager();
+        ServiceTypeDAOImpl type = new ServiceTypeDAOImpl(dbManager);
         ServiceType serviceType = type.find(serviceCatalog.getServiceTypeID());
+        dbManager.close();
         return serviceType;
     }
-
 }

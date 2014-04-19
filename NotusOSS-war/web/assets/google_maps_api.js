@@ -6,6 +6,7 @@ var destination = [];
 var minimumDistance;
 var minPosition = 0; // The nearest provider!!!!
 var req; //request to servlet
+var minK;
 
 
 //Map initialization: map, marker and clock listener
@@ -156,7 +157,8 @@ function parseMessage(responseXML) {
         for(var k=0; k<locations.length;k++){
             destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
         }
-        var minPosition = calcMinDistance();
+        calcMinDistance();
+        alert(minPosition);
 //        var pl = document.getElementById("providerLocation");
 //        var minID = locations[minPosition].getElementsByTagName("id")[0].firstChild.nodeValue;
 //        pl.setAttribute("name", minID);
