@@ -59,11 +59,8 @@ public interface ReportDAO {
      * Method that returns list of objects for profitability by month report
      * @param startDate - start of period
      * @param finishDate - finish of period
-     * @param offset - offset from start position in paging
-     * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for profitability by month report
      */                                                                         
-    public List<ProfitInMonth> getProfitByMonth(Date startDate,
-            Date finishDate, int offset, int numberOfRecords);
+    public List<ProfitInMonth> getProfitByMonth(Date startDate,Date finishDate);
 
 }
