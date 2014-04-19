@@ -26,3 +26,5 @@
 <p>_____________________________________________________</p>
 
 <a href='adminPage.jsp'>Admin page</a>
+
+<a href='selectLocation.jsp'>Select location</a>
