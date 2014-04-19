@@ -24,7 +24,7 @@
         </div>
 
         <form action="GetLocationsServlet">
-            <input type="button" value="Calc min distance" onclick="getMinDistance()">
+            <input type="button" value="Get min distrance" onclick="getMinDistance()">
         </form>
         
          <div id="outputDiv"></div>

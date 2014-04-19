@@ -6,7 +6,6 @@ var destination = [];
 var minimumDistance;
 var minPosition = 0; // The nearest provider!!!!
 var req; //request to servlet
-var minK;
 
 
 //Map initialization: map, marker and clock listener
@@ -125,11 +124,16 @@ function showZoomMessage(){
 
 //makes request and implements the ajax
 function getMinDistance(){
-    var url = "GetLocationsServlet";
-    req = initRequest();
-    req.open("GET", url, true);
-    req.onreadystatechange = call;
-    req.send(null);
+    var adr = escape(address.value);
+    if(adr.length > 0){
+        var url = "GetLocationsServlet";
+        req = initRequest();
+        req.open("GET", url, true);
+        req.onreadystatechange = call;
+        req.send(null);
+    }else{
+        alert("Put marker to choose location, please");
+    }
 }
 //initializes request
 function initRequest() {
@@ -158,15 +162,22 @@ function parseMessage(responseXML) {
             destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
         }
         calcMinDistance();
-        alert(minPosition);
-//        var pl = document.getElementById("providerLocation");
-//        var minID = locations[minPosition].getElementsByTagName("id")[0].firstChild.nodeValue;
-//        pl.setAttribute("name", minID);
+        window.setTimeout(function(){ 
+            var pl = document.getElementById("providerLocation");
+            var minID = getID(locations);
+            pl.setAttribute("name", minID);},500);
     }
+}
+function getID(locations){
+     for(var k=0; k<locations.length;k++){
+        if(minPosition == locations[k].getElementsByTagName("location")[0].firstChild.nodeValue){
+           return locations[k].getElementsByTagName("id")[0].firstChild.nodeValue;
+        }
+     }
 }
  var dis =10000000000;
 /*THIS function calculate distance*/
-function calcMinDistance(){
+function calcMinDistance(){   
     var k;
     for(k=0; k<destination.length;k++){
         geocoder.geocode( {'address': destination[k]}, function(results, status) {
@@ -174,7 +185,7 @@ function calcMinDistance(){
                 minLngLat = getLatLng(results[0].geometry.location);
                 var distance = google.maps.geometry.spherical.computeDistanceBetween(
                     getLatLng(marker.getPosition()),minLngLat).toFixed(2);
-                if(distance<dis){
+                if(parseFloat(distance)<parseFloat(dis)){
                     dis = distance;
                     minPosition = results[0].formatted_address;
                 }

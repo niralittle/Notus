@@ -25,17 +25,17 @@ public class GetLocationsServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         StringBuffer sb = new StringBuffer();
         try {
             GetProviderLocations gpl = new GetProviderLocations();
             List<ProviderLocation> providerLocations = gpl.getProviderLocations();
             //forms the responseXML
-            for(ProviderLocation providerLocation : providerLocations){
+            for (ProviderLocation providerLocation : providerLocations) {
                 sb.append("<providerLocation>");
-                sb.append("<id>"+providerLocation.getId()+"</id>");
-                sb.append("<location>"+providerLocation.getLocation()+"</location>");
+                sb.append("<id>" + providerLocation.getId() + "</id>");
+                sb.append("<location>" + providerLocation.getLocation() + "</location>");
                 sb.append("</providerLocation>");
             }
             response.setContentType("text/xml");
@@ -56,7 +56,7 @@ public class GetLocationsServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -69,7 +69,7 @@ public class GetLocationsServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -81,5 +81,4 @@ public class GetLocationsServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }
