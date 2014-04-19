@@ -1,6 +1,6 @@
 package nc.notus.entity;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * This class implements entity ServiceInstance
