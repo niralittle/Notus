@@ -33,7 +33,7 @@ public class GetServiceCatalogs {
         try {
             ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
             serviceCatalogs =
-                    catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, START, NUMBER_OF_RECORDS);
+                    catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, START, NUMBER_OF_RECORDS); // REVIEW: all services for given provider location should be obtained
         } finally {
             dbManager.close();
         }

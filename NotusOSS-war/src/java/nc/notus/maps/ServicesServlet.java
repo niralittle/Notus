@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceType;
 
-/**Servlet for getting service catalogs for the nearest provider location
+/**
+ * Servlet for getting service catalogs for the nearest provider location
  * Gets request from javaScript with providerLocationID,
  * gets all service catalogs for this provider location
  * and forms responseXML to javaScript
