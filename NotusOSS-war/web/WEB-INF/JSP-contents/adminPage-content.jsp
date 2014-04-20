@@ -5,8 +5,8 @@
 <form method="get" action="logout">
     <input type="submit" value="Logout"/>
 </form>
-<form method="get" action="getReport">
-    <input type="submit" value="View report"/>
+<form method="get" action="getReport" target="_blank">
+    <input type="submit" value="View report" />
 </form>
 <p>Email</p>
 <form name="Email" action="MailServlet">

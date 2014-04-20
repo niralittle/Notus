@@ -1,10 +1,14 @@
 package nc.notus.reports;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import nc.notus.reports.ReportGenerator;
 
 /**
  * Handles report download request
@@ -21,9 +25,28 @@ public class DownloadReportServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String reportObjName = request.getParameter("object");
-        ReportGenerator rg = (ReportGenerator)request.getAttribute(reportObjName);
-        response.getWriter().write(reportObjName);
+        String reportGenId = request.getParameter("object");
+        Enumeration enm = request.getSession().getAttributeNames();
+//        while (enm.hasMoreElements()) {
+//            pw.write(enm.nextElement().toString());
+//        }
+        Object a = request.getSession().getAttribute(enm.nextElement().toString());
+        ReportGenerator rg = (ReportGenerator) a;
+         
+        
+//        if (rg == null) {
+//            pw.write("NULL DAMN");
+//        }
+        
+        if (request.getParameter("type").equals("xls")) {            
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment; filename=" +
+                    rg.getReportName() + ".xls");
+            OutputStream os = response.getOutputStream();
+            rg.getReportXLS(os);
+        }
+
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

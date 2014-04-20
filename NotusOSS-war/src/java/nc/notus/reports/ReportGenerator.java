@@ -1,86 +1,53 @@
 package nc.notus.reports;
 
-import nc.notus.dao.ReportDAO;
-import nc.notus.dao.impl.ReportDAOImpl;
-import java.sql.Date;
-import java.util.ArrayList;
-import nc.notus.dbmanager.DBManager;
-import nc.notus.entity.Device;
-import nc.notus.entity.ProfitInMonth;
-import nc.notus.entity.ServiceOrder;
-import nc.notus.entity.RoutersUtilizationCapacity;
-import nc.notus.entity.ServiceInstance;
+import java.io.IOException;
+import java.io.OutputStream;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.util.WorkbookUtil;
 
 /**
- * This class is an abstract representation of system                           // REVIEW: abstract representation of system? really?
+ * This class is an abstract representation of system                           
  * @author Andrey Ilin
  */
 public class ReportGenerator {
 
-    /* Report name */
-    private String reportName;
-
     /* Separates columns in reportData row strings */
     private final String COLUMN_SEPARATOR = "#";
 
-    /* Dates for report request */
-    private Date startDate = null;
-    private Date finishDate = null;
-
     /*
-     * Report data stored here                                                  // JCC block-comments // REVIEW: so what?
+     * Report data stored here                                                  
      * Data is stored as strings that represents table rows
      * Columns in this rows are separated with COLUMN_SEPARATOR
      * First element is a row of column names
      */
-    private String[] reportData;
-    private ReportType reportType;
-    private int recordsPerPage;
-    private int pageNumber; // numbered from 0
-
-    public static enum ReportType {
-                                                                                // REVIEW: empty line
-        MOST_PROFITABLE_ROUTER, DISCONNECT_ORDERS_PER_PERIOD,
-        NEW_ORDERS_PER_PERIOD, ROUTERS_UTILIZATION_CAPACITY,
-        PROFITABILITY_BY_MONTH
-    };
+    private String[] reportData = null;
+    private String reportName = null;
+    private HSSFWorkbook workBook = new HSSFWorkbook();
 
     /**
-     * Returns name of current report
-     * @return name of current report
-     */
-    public String getReportName() {
-        return this.reportName;
-    }
-
-    /**
-     * Returns a report type specified in ReportType enum.
-     * @return report type
-     */
-    public ReportType getReportType() {
-        return this.reportType;
-    }
-
-    /**
-     * Creates a new instance of ReportGenerator for specific report type for
-     * specified date term
+     * Creates a new instance of ReportGenerator for specific report 
      * @param type report's type
      * @param startDateString  date report term starts with
      * @param finishDateString date report term ends with
      */
-    public ReportGenerator(ReportType type, String startDateString,
-            String finishDateString) {
+    public ReportGenerator(Report report) {
+        this.reportData = report.getReportData();
+        this.reportName = report.getReportName();
+    }
 
-        this.startDate = Date.valueOf(startDateString);
-        this.finishDate = Date.valueOf(finishDateString);
-        this.reportType = type;
-        this.recordsPerPage = 10;
-        String[] test = {"id#name#quant", "1#hello world#10"}; //TEST
-        reportData = test; //TEST
-        this.reportName = "Most profitable router"; //TEST
-
-        //reportData = getReportData(type); UNCOMMENT WHEN FINISH               // REVIEW: private method writes data to private variable. how to obtain report?
-
+    /**
+     * Returns name of the report to be generated
+     * @return name of the report to be generated
+     */
+    public String getReportName() {
+        return this.reportName;
     }
 
     /**
@@ -88,120 +55,129 @@ public class ReportGenerator {
      * @return html format string
      */
     public String getReportHTML() {
-        String HTMLString = null;                                               // REVIEW: implementation too far from usage
         StringBuilder HTMLReportBuilder = new StringBuilder();
-        HTMLReportBuilder.append("<table border='1' width='50%' cellpadding='5'>");
-        for (String row : reportData) {
-            String[] columns = row.split(COLUMN_SEPARATOR);
-            HTMLReportBuilder.append("<tr>");
-            for (int i = 0; i < columns.length; i++) {
-                HTMLReportBuilder.append("<td>");
-                HTMLReportBuilder.append(columns[i]);
-                HTMLReportBuilder.append("</td>");
+        HTMLReportBuilder.append("<table border='1' width='50%' cellpadding='10'>");
+        if (reportData != null) {
+            for (String row : reportData) {
+                String[] columns = row.split(COLUMN_SEPARATOR);
+                HTMLReportBuilder.append("<tr>");
+                for (int i = 0; i < columns.length; i++) {
+                    HTMLReportBuilder.append("<td>");
+                    HTMLReportBuilder.append(columns[i]);
+                    HTMLReportBuilder.append("</td>");
+                }
+                HTMLReportBuilder.append("</tr>");
             }
-            HTMLReportBuilder.append("</tr>");
+            HTMLReportBuilder.append("</table>");
         }
-        HTMLReportBuilder.append("</table>");
-        HTMLString = HTMLReportBuilder.toString();
-        return HTMLString.toString();
+        return HTMLReportBuilder.toString();
+    }
+
+    public void getReportXLS(OutputStream streamToWrite) throws IOException {
+        createNewSheet();
+        workBook.write(streamToWrite);
     }
 
     /**
-     * Retrieve data for specified report type from database
-     * @param type report type
-     * @return specially formatted string array with report data
+     * Creates a new excel sheet in work book. This sheet will have name given
+     * by the user and cell styles specified in initStyles method.
      */
-    private String[] getReportData(ReportType type) {                           // REVIEW: All reports are generated in one method. do you really certain about that?
-        ArrayList<ServiceOrder> orders = null;                                  // REVIEW: List<> could and should be used
-        ArrayList<ServiceInstance> instances = null;                            // REVIEW: implementation too far from usage
-        ArrayList<RoutersUtilizationCapacity> routersUtilCap = null;            // REVIEW: implementation too far from usage
-        ArrayList<ProfitInMonth> profit = null;                                 // REVIEW: implementation too far from usage
-        String[] rows = null;
-        DBManager dbManager = new DBManager();
-        try {
-            ReportDAO rd = new ReportDAOImpl(dbManager);                        // REVIEW: reportDAO, not "rd"
-            switch (type) {                                                     // REVIEW: switch usage is bad style. use methods or derived classes instead
-                case MOST_PROFITABLE_ROUTER:
-                    this.reportName = "Most profitable router";
+    public void createNewSheet() {
+        int styleIndex = 0;
+        HSSFSheet sheet = workBook.createSheet(WorkbookUtil.createSafeSheetName(
+                reportName));
+        /*
+         * 0 - bold, left-aligned
+         * 1 - bold, center-aligned
+         * 2 - normal, left-aligned
+         * 3 - normal, center-aligned
+         * Use styleIndex to specify style
+         */
+        CellStyle[] cellStyle = initStyles();
+        HSSFRow tempRow = sheet.createRow(0);
+        HSSFCell tempCell = null;
+        String[] dataRow = null;
+        String[] columnNames = reportData[0].split(COLUMN_SEPARATOR);
+        int columnNumber = columnNames.length;
+        int rowNumber = reportData.length;
+        styleIndex = 1; //Style for headers
 
-                    /* 1. Column headers 2. Device data */
-                    rows = new String[2];
+        /* Creating data rows, cells with specific cell style */
+        int columnWidthInChars = 50 * 256;
 
-                    /* Column headers */
-                    rows[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
-                            COLUMN_SEPARATOR + "Port quantity";
+        /* Column headers */
+        for (int i = 0; i < columnNumber; i++) {
+            tempCell = tempRow.createCell(i, HSSFCell.CELL_TYPE_STRING);
+            tempCell.setCellStyle(cellStyle[styleIndex]);
+            tempCell.setCellValue(columnNames[i]);
 
-                    /* Data */
-                    Device dev = rd.getMostProfitableRouter(startDate, finishDate);
-                    rows[1] = dev.getId() + COLUMN_SEPARATOR + dev.getName() +
-                            COLUMN_SEPARATOR + dev.getPortQuantity();
-                    break;
-                case DISCONNECT_ORDERS_PER_PERIOD:
-                    this.reportName = "Disconnect orders per period";
-                    instances = (ArrayList<ServiceInstance>) rd.getDisconnectedServiceInstances(    // REVIEW: cast operator is redundant. use List<> instead of ArrayList<>
-                            startDate, finishDate, pageNumber * recordsPerPage, recordsPerPage);
-                    rows = new String[orders.size() + 1]; // +1 for column headers
-
-                    /* Column headers */
-                    rows[0] = "Order ID" + COLUMN_SEPARATOR + "Order date";
-
-                    /* Data */
-                    for (int i = 1; i < rows.length; i++) {
-                        rows[i] = instances.get(i).getId() + COLUMN_SEPARATOR +
-                                instances.get(i).getServiceInstanceDate();
-                    }
-                case NEW_ORDERS_PER_PERIOD:
-                    this.reportName = "New orders per period";
-                    orders = (ArrayList<ServiceOrder>) rd.getNewServiceOrders(  // REVIEW: cast operator is redundant. use List<> instead of ArrayList<>
-                            startDate, finishDate, pageNumber * recordsPerPage, pageNumber);
-                    rows = new String[orders.size() + 1]; // +1 for column headers
-
-                    /* Column headers */
-                    rows[0] = "Order ID" + COLUMN_SEPARATOR + "Order date";
-
-                    /* Data */
-                    for (int i = 1; i < rows.length; i++) {
-                        rows[i] = orders.get(i).getId() + COLUMN_SEPARATOR +
-                                orders.get(i).getServiceOrderDate();
-                    }
-                    break;
-                case ROUTERS_UTILIZATION_CAPACITY:
-                    this.reportName = "Routers utilization and capacity";
-                    routersUtilCap = (ArrayList<RoutersUtilizationCapacity>) rd.getRoutersUtilizationCapacityData(// REVIEW: cast operator is redundant. use List<> instead of ArrayList<>
-                            startDate, finishDate, pageNumber * recordsPerPage, pageNumber);
-                    rows = rows = new String[orders.size() + 1]; // +1 for column headers
-
-                    /* Column headers */
-                    rows[0] = "Router name" + COLUMN_SEPARATOR + "Utilization" +
-                            COLUMN_SEPARATOR + "Capacity";
-
-                    /* Data */
-                    for (int i = 1; i < rows.length; i++) {
-                        rows[i] = routersUtilCap.get(i).getDeviceName() +
-                                COLUMN_SEPARATOR + routersUtilCap.get(i).getUtilization() +
-                                COLUMN_SEPARATOR + routersUtilCap.get(i).getCapacity();
-                    }
-                    break;
-                case PROFITABILITY_BY_MONTH:
-                    this.reportName = "Profitability by month";
-                    profit = (ArrayList<ProfitInMonth>) rd.getProfitByMonth(startDate,  // REVIEW: cast operator is redundant. use List<> instead of ArrayList<>
-                            finishDate);
-                    rows = rows = new String[orders.size() + 1];
-
-                    /* Column headers */
-                    rows[0] = "Month" + COLUMN_SEPARATOR + "Profit";
-
-                    /* Data */
-                    for (int i = 1; i < rows.length; i++) {
-                        rows[i] = profit.get(i).getMonth() +
-                                COLUMN_SEPARATOR + profit.get(i).getProfit();
-                    }
-                    break;
-
-            }
-        } finally {
-            dbManager.close();
         }
-        return rows;
+        for (int i = 1; i < rowNumber; i++) {
+            tempRow = sheet.createRow(i);
+            dataRow = reportData[i].split(COLUMN_SEPARATOR);
+            for (int j = 0; j < columnNumber; j++) {
+                tempCell = tempRow.createCell(j);
+                if (j == 0) {
+                    styleIndex = 3;
+                    tempCell.setCellStyle(cellStyle[styleIndex]);
+                    tempCell.setCellValue(dataRow[j]);
+                } else {
+                    styleIndex = 2;
+                    tempCell.setCellStyle(cellStyle[styleIndex]);
+                    tempCell.setCellValue(dataRow[j]);
+                }
+            }
+            for (int k = 0; k < columnNumber; k++) {
+                sheet.setColumnWidth(i, columnWidthInChars);
+            }
+        }
+
+    }
+
+    private CellStyle[] initStyles() {
+        int counter = 0;
+        Font boldFont = workBook.createFont();
+        Font defaultFont = workBook.createFont();
+        defaultFont.setBoldweight(Font.BOLDWEIGHT_NORMAL);
+        boldFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        CellStyle[] cs = new CellStyle[4]; //number of styles in table
+
+        //creating header left-aligned cell style
+        CellStyle headerLeftCS = workBook.createCellStyle();
+        headerLeftCS.setAlignment(CellStyle.ALIGN_LEFT);
+        headerLeftCS.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        headerLeftCS.setFillForegroundColor(new HSSFColor.GREY_25_PERCENT().getIndex());
+        headerLeftCS.setFont(boldFont);
+        headerLeftCS.setWrapText(false);
+        cs[counter] = headerLeftCS;
+        counter++;
+        //creating header center cell style
+        CellStyle headerCenterCS = workBook.createCellStyle();
+        headerCenterCS.setAlignment(CellStyle.ALIGN_CENTER);
+        headerCenterCS.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        headerCenterCS.setFillForegroundColor(new HSSFColor.GREY_25_PERCENT().getIndex());
+        headerCenterCS.setFont(boldFont);
+        headerCenterCS.setWrapText(false);
+        cs[counter] = headerCenterCS;
+        counter++;
+        //creating left-aligned cell style
+        CellStyle leftAlignedCS = workBook.createCellStyle();
+        leftAlignedCS.setAlignment(CellStyle.ALIGN_LEFT);
+        leftAlignedCS.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        leftAlignedCS.setFillForegroundColor(new HSSFColor.WHITE().getIndex());
+        leftAlignedCS.setFont(boldFont);
+        leftAlignedCS.setWrapText(true);
+        cs[counter] = leftAlignedCS;
+        counter++;
+        //creating center-aligned cell style
+        CellStyle centerAlignedCS = workBook.createCellStyle();
+        centerAlignedCS.setAlignment(CellStyle.ALIGN_CENTER);
+        centerAlignedCS.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        centerAlignedCS.setFillForegroundColor(new HSSFColor.WHITE().getIndex());
+        centerAlignedCS.setFont(defaultFont);
+        centerAlignedCS.setWrapText(true);
+        cs[counter] = centerAlignedCS;
+        counter++;
+        return cs;
     }
 }

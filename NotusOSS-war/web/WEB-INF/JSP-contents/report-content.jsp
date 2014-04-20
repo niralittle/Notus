@@ -4,11 +4,11 @@
     Author     : Andrey Ilin
 --%>
 
-<%=request.getAttribute("table")%>
+<%=request.getSession().getAttribute("table")%>
 <form method="post" action="downloadReport">
     <input type="submit" value="Download as XLS"/>
     <input type="hidden" name="object"
-           value="<%=request.getAttribute("object")%>"/>
+           value="<%=request.getSession().getAttribute("object")%>"/>
     <input type="hidden" name="type" value="xls"/>
 </form>
 <form method="post" action="downloadReport">
@@ -17,4 +17,3 @@
            value="<%=request.getAttribute("object")%>"/>
     <input type="hidden" name="type" value="csv"/>
 </form>
-

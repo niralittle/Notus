@@ -2,6 +2,7 @@ package nc.notus.reports;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,14 +23,19 @@ public class ReportTestServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PrintWriter pw = response.getWriter();
+//        PrintWriter pw = response.getWriter();
         response.setContentType("text/html;charset=UTF-8");
-        ReportGenerator rg = new ReportGenerator(ReportGenerator.ReportType.NEW_ORDERS_PER_PERIOD,
-                "2010-10-10", "2010-10-10");
-        request.setAttribute("table", rg.getReportHTML());
-        request.setAttribute("object", rg);
-        request.setAttribute("title", rg.getReportName());
-        request.getRequestDispatcher("/report.jsp").forward(request, response);
+
+        Report testReport = new MostProfitableRouterReport("Most profitable report");
+        ReportGenerator testReportGenerator = new ReportGenerator(testReport);
+
+        request.getSession().setAttribute("table", testReportGenerator.getReportHTML());
+        String objectId = UUID.randomUUID().toString();
+        request.getSession().setAttribute(objectId, (Object) testReportGenerator);
+        request.setAttribute("object", objectId);
+        request.getSession().setAttribute("title", testReport.getReportName());
+
+        request.getRequestDispatcher("report.jsp").forward(request, response);
 
     }
 
