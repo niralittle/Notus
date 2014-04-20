@@ -13,7 +13,7 @@ import nc.notus.states.WorkflowScenario;
 public class ModifyScenarioWorkflow extends Workflow {
     
     /**
-     * This method creates NewScenarioWorkflow for given Order.
+     * This method creates ModifyScenarioWorkflow for given Order.
      * It doesn't proceed Order to execution(See {@link Workflow#proceedOrder()})
      * @param order Order to create Workflow for
      * @throws Workflow exception if Order scenario doesn't match "Modify" scenario

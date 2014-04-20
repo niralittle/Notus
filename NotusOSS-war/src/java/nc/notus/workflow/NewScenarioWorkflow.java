@@ -114,20 +114,20 @@ public class NewScenarioWorkflow extends Workflow {
      * @param portQuantity amount of Ports that Router accommodates
      * @param taskID ID of task for installation engineer                       
      */
-    public void createRouter(int taskID, int portQuantity) {                    
+    public void createRouter(int taskID, int portQuantity) {
         DBManager dbManager = new DBManager();
         try {
-            if(!isTaskValid(dbManager, taskID,
-                                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+            if (!isTaskValid(dbManager, taskID,
+                    UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
 
             DeviceDAO deviceDAO = new DeviceDAOImpl(dbManager);
             PortDAO portDAO = new PortDAOImpl(dbManager);
 
-            if(portDAO.getFreePort() != null) {
+            if (portDAO.getFreePort() != null) {
                 throw new WorkflowException("Router creation is not allowed: " +
-                                                        "free ports available");
+                        "free ports available");
             }
 
             Device device = new Device();
@@ -154,11 +154,11 @@ public class NewScenarioWorkflow extends Workflow {
      * This method creates Cable entity
      * @param taskID ID of task for installation engineer                       
      */
-    public void createCable(int taskID) {                                       
+    public void createCable(int taskID) {
         DBManager dbManager = new DBManager();
         try {
-            if(!isTaskValid(dbManager, taskID,
-                                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+            if (!isTaskValid(dbManager, taskID,
+                    UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
 
@@ -182,23 +182,23 @@ public class NewScenarioWorkflow extends Workflow {
      * @param cableID ID of Cable to plug
      * @param portID ID of Port to plug Cable to
      */
-    public void plugCableToPort(int taskID, int cableID, int portID) {          
+    public void plugCableToPort(int taskID, int cableID, int portID) {
         DBManager dbManager = new DBManager();
         try {
-            if(!isTaskValid(dbManager, taskID,
-                                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+            if (!isTaskValid(dbManager, taskID,
+                    UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
 
             PortDAO portDAO = new PortDAOImpl(dbManager);
             Port port = portDAO.find(portID);
-            if(port.getPortStatus() == PortState.BUSY.toInt()) {
+            if (port.getPortStatus() == PortState.BUSY.toInt()) {
                 throw new WorkflowException("Port is busy");
             }
             port.setCableID(cableID);
             port.setPortStatus(PortState.BUSY.toInt());
             portDAO.update(port);
-            
+
             this.completeTask(dbManager, taskID);
             this.createTask(dbManager, UserRole.PROVISION_ENGINEER);
             dbManager.commit();
@@ -215,21 +215,27 @@ public class NewScenarioWorkflow extends Workflow {
      * Engineer group.
      * @param taskID ID of task for Provisioning Engineer
      * @param portID ID of port to link SI with
+     * @param serviceInstanceID ID of SI to link with port
      */
-    public void assignPortToServiceInstance(int taskID, int portID) {
+    public void assignPort(int taskID, int portID, int serviceInstanceID) {
+        if (order.getServiceInstanceID() != serviceInstanceID) {
+            throw new WorkflowException("Given SI is not connected " +
+                    "with current Order");
+        }
+
         DBManager dbManager = new DBManager();
         try {
-            if(!isTaskValid(dbManager, taskID,
-                                        UserRole.PROVISION_ENGINEER.toInt())) {
+            if (!isTaskValid(dbManager, taskID,
+                    UserRole.PROVISION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
-
             ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
 
             int circuitID = createCircuit(dbManager);
-            ServiceInstance si = siDAO.find(order.getServiceInstanceID());
+            ServiceInstance si = siDAO.find(serviceInstanceID);
             si.setCircuitID(circuitID);
-            if(si.getPortID() != null) {
+
+            if (si.getPortID() != null) {
                 throw new WorkflowException("Service Instance already linked " +
                         "with Port");
             }
@@ -253,7 +259,7 @@ public class NewScenarioWorkflow extends Workflow {
     public void approveBill(int taskID) {
         DBManager dbManager = new DBManager();
         try {
-            if(!isTaskValid(dbManager, taskID, UserRole.SUPPORT_ENGINEER.toInt())) {
+            if (!isTaskValid(dbManager, taskID, UserRole.SUPPORT_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
 
@@ -276,7 +282,7 @@ public class NewScenarioWorkflow extends Workflow {
         CircuitDAO circuitDAO = new CircuitDAOImpl(dbManager);
         Circuit circuit = new Circuit();
         circuit.setCircuit("Circuit");
-        int circuitID = (Integer)circuitDAO.add(circuit);
+        int circuitID = (Integer) circuitDAO.add(circuit);
         return circuitID;
     }
 }
