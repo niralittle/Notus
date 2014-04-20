@@ -58,11 +58,11 @@ public class ReportDAOImpl implements ReportDAO {
         Statement statement = dbManager.prepareStatement(query);
         statement.setDate(1, finishDate);
         statement.setDate(2, startDate);
-        statement.setDate(3, finishDate);
-        statement.setDate(4, startDate);
+        statement.setDate(3, startDate);
+        statement.setDate(4, finishDate);
         statement.setDate(5, startDate);
-        statement.setDate(6, finishDate);
-        statement.setDate(7, startDate);
+        statement.setDate(6, startDate);
+        statement.setDate(7, finishDate);
         ResultIterator ri = statement.executeQuery();
         Device device = new Device();
         if (ri.next()){
@@ -175,14 +175,52 @@ public class ReportDAOImpl implements ReportDAO {
      * Method that return list of objects for profitability by month report
      * @param startDate - start of period
      * @param finishDate - finish of period
-     * @param offset - offset from start position in paging
-     * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for profitability by month report
      */
     @Override                                                                   
     public List<ProfitInMonth> getProfitByMonth(Date startDate,
-            Date finishDate, int offset, int numberOfRecords) {
-        throw new UnsupportedOperationException("Not supported yet.");          
+            Date finishDate) {
+
+        // The query below needed in review with a lot of complex examples in table!
+
+        String query = "SELECT months, SUM(incom) profit FROM ( " +
+                            "SELECT TO_CHAR(si.serviceinstancedate, 'Month') as months, " +
+                            "sc.price*(? - ?) incom " +
+                            "FROM serviceinstance si " +
+                            "LEFT JOIN serviceorder so ON so.serviceinstanceid = si.id " +
+                            "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                            "LEFT JOIN serviceinstancestatus sis ON " +
+                            "si.serviceinstancestatusid = sis.id " +
+                            "WHERE sis.status = 'Active' " +
+                            "AND si.serviceinstancedate BETWEEN ? AND ? " +
+                            "UNION ALL " +
+                            "SELECT TO_CHAR(si.serviceinstancedate, 'Month') as months, " +
+                            "sc.price*(si.serviceinstancedate - ? ) incom " +
+                            "FROM serviceinstance si " +
+                            "LEFT JOIN serviceorder so ON so.serviceinstanceid = si.id " +
+                            "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                            "LEFT JOIN serviceinstancestatus sis ON " +
+                            "si.serviceinstancestatusid = sis.id " +
+                            "WHERE sis.status = 'Disconnected' " +
+                            "AND si.serviceinstancedate BETWEEN ? AND ? " +
+                            " ) GROUP BY months";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setDate(1, finishDate);
+        statement.setDate(2, startDate);
+        statement.setDate(3, startDate);
+        statement.setDate(4, finishDate);
+        statement.setDate(5, startDate);
+        statement.setDate(6, startDate);
+        statement.setDate(7, finishDate);
+        ResultIterator ri = statement.executeQuery();
+        List<ProfitInMonth> profitByMonths = new ArrayList<ProfitInMonth>();
+        while (ri.next()){
+            ProfitInMonth profInMonth = new ProfitInMonth();
+            profInMonth.setProfit(ri.getInt("profit"));
+            profInMonth.setMonth(ri.getString("months"));
+            profitByMonths.add(profInMonth);
+        }
+        return profitByMonths;
     }
     
 }

@@ -34,14 +34,20 @@ public class WorkflowTestServlet extends HttpServlet {
             DBManager dbManager = new DBManager();
             try {
                 ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
-                so = soDAO.find(3);
+                so = soDAO.find(4);
             } finally {
                 dbManager.close();
             }
             
             NewScenarioWorkflow wf = new NewScenarioWorkflow(so);
             //wf.proceedOrder();
-            //wf.createRouter(60);
+            //wf.assignTask(6, 4);
+            //wf.createRouter(6, 2);
+            //wf.createCable(6);
+            //wf.plugCableToPort(6, 2, 61);
+            //wf.assignTask(7, 3);
+            //wf.assignPortToServiceInstance(7, 61);
+            wf.approveBill(8);
         } finally {
             out.close();
         }

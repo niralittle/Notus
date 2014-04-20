@@ -3,11 +3,11 @@
 
 <div id="content">
     <ul class="tabs">
-        <li><a href="javascript:tabSwitch('tab_1', 'admin-left');" id="tab_1" class="active">Create Employee Account</a></li>
-        <li><a href="javascript:tabSwitch('tab_2', 'admin-center');" id="tab_2">Reassign task</a></li>
-        <li><a href="javascript:tabSwitch('tab_3', 'admin-right');" id="tab_3">Block Account</a></li>
+        <li><a href="javascript:tabSwitch('tab_1', 'dash-left');" id="tab_1" class="active">Create Employee Account</a></li>
+        <li><a href="javascript:tabSwitch('tab_2', 'dash-center');" id="tab_2">Reassign task</a></li>
+        <li><a href="javascript:tabSwitch('tab_3', 'dash-right');" id="tab_3">Block Account</a></li>
     </ul>
-    <div id="admin-left" class="content">
+    <div id="dash-left" class="content">
         <div id="container-header"><span>Create Employee Account</span>        </div>  
         <script type="text/javascript" src="assets/registerValidator.js"></script>
   <%--      <form name="Register" method="post" onsubmit="return validate()" action="Register">--%>
@@ -52,24 +52,30 @@
                     </td>
                 </tr>
             </table>
-            <div id="admin-buttons">
+            <div id="dash-buttons">
                 <input type="submit" value="Register" />
-
-                <a href="index.jsp"><input type="button" value="Home" name="submit"/> </a>
             </div>
 
 
     <%--     </form> --%>
     </div>
-    <div id="admin-center" class="content">
+    <div id="dash-center" class="content">
         <div id="container-header"><span>Reassign</span></div>
         <table>
+            <tr>
+                <td>
+                    Service Order Location:
+                </td>
+                <td>
+                    <select name="serviceOrderLocation"></select>
+                </td>
+            </tr>
             <tr>
                 <td>
                     Service Order:
                 </td>
                 <td>
-                    <input type="text" name="blockAcc" value="" />
+                    <select name="serviceOrder"></select>
                 </td>
             </tr>
             <tr>
@@ -77,7 +83,7 @@
                     New Employee:
                 </td>
                 <td>
-                    <input type="text" name="NewEmployee" value="" />
+                    <select name="newEmployee"></select>
                 </td>
             </tr>
             <tr>
@@ -90,13 +96,13 @@
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="Block" name="Block" />
+                    <input type="submit" value="Reassign" name="Reassign" />
                 </td>
             </tr>
         </table>
     </div>
 
-    <div id="admin-right" class="content">
+    <div id="dash-right" class="content">
         <div id="container-header"><span>Block Account</span>          </div>
         <table>
             <tr>
