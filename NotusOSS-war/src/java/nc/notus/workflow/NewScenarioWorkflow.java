@@ -69,7 +69,6 @@ public class NewScenarioWorkflow extends Workflow {
             }
 
             ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
-            PortDAO portDAO = new PortDAOImpl(dbManager);
 
             changeOrderStatus(dbManager, OrderStatus.PROCESSING);
             ServiceInstance serviceInstance = createServiceInstance(dbManager);
@@ -126,6 +125,11 @@ public class NewScenarioWorkflow extends Workflow {
 
             DeviceDAO deviceDAO = new DeviceDAOImpl(dbManager);
             PortDAO portDAO = new PortDAOImpl(dbManager);
+
+            if(portDAO.getFreePort() != null) {
+                throw new WorkflowException("Router creation is not allowed: " +
+                                                        "free ports available");
+            }
 
             Device device = new Device();
             device.setName("Cisco 7606");
