@@ -30,7 +30,7 @@ import nc.notus.entity.Cable;
 import nc.notus.entity.Circuit;
 
 /**
- * This class provides functionality for "New" scenarion workflow
+ * This class provides functionality for "New" scenario workflow
  * @author Igor Litvinenko
  */
 public class NewScenarioWorkflow extends Workflow {
@@ -52,7 +52,6 @@ public class NewScenarioWorkflow extends Workflow {
         } finally {
             dbManager.close();
         }
-
     }
 
     /**
@@ -246,7 +245,7 @@ public class NewScenarioWorkflow extends Workflow {
     }
 
     /**
-     * This method sends Bill to customer and automatically activates SI
+     * This method approves and sends Bill to customer and automatically activates SI
      * by changing it's status to "Active". It also changes Order status to
      * "Completed"
      * @param taskID ID of Task for Support Engineer
@@ -258,9 +257,9 @@ public class NewScenarioWorkflow extends Workflow {
                 throw new WorkflowException("Given Task is not valid");
             }
 
+            completeTask(dbManager, taskID);
             changeServiceInstanceStatus(dbManager, InstanceStatus.ACTIVE);
             changeOrderStatus(dbManager, OrderStatus.COMPLETED);
-            this.completeTask(dbManager, taskID);
             // TODO: send email here
             dbManager.commit();
         } finally {
