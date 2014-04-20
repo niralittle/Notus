@@ -4,7 +4,6 @@ var geocoder;
 var objSel; //HTML <select> object for multiple addresses
 var destination = [];
 var minPosition = 0; // The nearest provider!!!!
-var req; //request to servlet
 
 //Map initialization: map, marker and clock listener
 function initialize() {
@@ -21,7 +20,6 @@ function initialize() {
     });
     google.maps.event.addListener(map, 'click', function(event) {
         addMarker(event.latLng);
-        window.setTimeout(getMinDistance(),1000);
     });
 }
 
@@ -109,7 +107,7 @@ function getLatLng(loc){
 
 //remove marker froma map
 function removePointer(){
-    clean();
+    clear();
     marker.setMap(null);
     document.getElementById("address").value = "";
 //    objSel.style.display = "none";
@@ -127,81 +125,12 @@ function showFarMessage(){
         document.getElementById("far").style.display = "none";
     },5000);
 }
-//makes request and implements the ajax
-function getMinDistance(){
-    addLoad();
-    var url = "GetLocationsServlet";
-    req = initRequest();
-    req.open("GET", url, true);
-    req.onreadystatechange = call;
-    req.send(null);
-}
-function addLoad(){
-    document.getElementById("loader").style.display = "block";
-}
-function removeLoad(){
-    document.getElementById("loader").style.display = "none";
-}
-//initializes request
-function initRequest() {
-    if (window.ActiveXObject) {
-        return new ActiveXObject("Microsoft.XMLHTTP");
-    } else{
-        return new XMLHttpRequest();
-    }
-}
-//callback function
-function call() {
-    clean();
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            parseMessage(req.responseXML);
-        }
-    }
-}
-function clean() {
-    clear();
-    var id = document.getElementById("providerLocation");
-    id.removeAttribute("name");
-}
-var dis;
-var flag = false;
-//parses the responseXML and get neccessary data
-function parseMessage(responseXML) {
-    if (responseXML == null) {
-       clean();
-    } else {
-        var locations = responseXML.getElementsByTagName("providerLocation");
-        for(var k=0; k<locations.length;k++){
-            destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
-        }
-        dis = 10000000000;
-        calcMinDistance();
-        
-        window.setTimeout(function(){
-            calcMinDistance();
-            if(parseFloat(dis) < 50000){
-                var pl = document.getElementById("providerLocation");
-                var minID = getID(locations);
-                pl.setAttribute("name", minID);
-            }else{
-                showFarMessage();
-            }
-            removeLoad();
-        },10000);
-       
-    }
-}
-function getID(locations){
-     for(var k=0; k<locations.length;k++){
-        if(minPosition == locations[k].getElementsByTagName("location")[0].firstChild.nodeValue){
-           return locations[k].getElementsByTagName("id")[0].firstChild.nodeValue;
-        }
-     }
-}
+
 /*THIS function calculate distance*/
 function calcMinDistance(){
     var k;
+    var minPos;
+    var dis = 10000000000;
     for(k=0; k<destination.length;k++){
         geocoder.geocode( {'address': destination[k]}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
@@ -210,14 +139,14 @@ function calcMinDistance(){
                     getLatLng(marker.getPosition()),minLngLat).toFixed(2);
                 if(parseFloat(distance)<parseFloat(dis)){
                     dis = distance;
-                    minPosition = results[0].formatted_address;
-                    flag = true;
+                    minPos = results[0].formatted_address;
                 }
             } else {
                 alert('Wrong address. Please input another one');
             }
         });
     }
+    return minPos;
 }
 
 function geocode(address){

@@ -1,34 +1,48 @@
 var req; //request to servlet
 var contents; //content of responseXML
+var locations;
+var minPos;
 
 //makes request and implements the ajax
 function getServices(){
     addLoad();
-    window.setTimeout(function(){getAvailableServices();removeLoad();},500);
+    getMinDistance();
+    if(minPos != undefined){
+        var minID = getID();
+        getAvailableServices(minID);
+        var head = document.getElementById("header");
+        head.appendChild(document.createTextNode(minPos));
+    }else{
+        showFarMessage();
+    }
+    removeLoad();
 }
-function getAvailableServices(){
-        var pl = document.getElementById("providerLocation");
-        var location = pl.getAttribute("name");
-        if(location != undefined){
-            var url = "ServicesServlet?providerLocationID="+location;
-            req = initRequest();
-            req.open("POST", url, true);
-            req.onreadystatechange = callback;
-            req.send(null);
-        }else{
-            alert("Choose location, please");
-        }
+function getAvailableServices(minID){
+    if(minID != undefined){
+        var url = "ServicesServlet?providerLocationID="+minID;
+        req = initRequest();
+        req.open("POST", url, true);
+        req.onreadystatechange = callback;
+        req.send(null);
+    }else{
+        alert("Choose location, please");
+    }
 }
 //initializes request
 function initRequest() {
     if (window.ActiveXObject) {
-        isIE = true;
         return new ActiveXObject("Microsoft.XMLHTTP");
     } else{
         return new XMLHttpRequest();
     }
 }
-
+function getID(){
+    for(var k=0; k<locations.length;k++){
+        if(minPos == locations[k].getElementsByTagName("location")[0].firstChild.nodeValue){
+            return locations[k].getElementsByTagName("id")[0].firstChild.nodeValue;
+        }
+    }
+}
 //callback function
 function callback() {
     if (req.readyState == 4) {
@@ -38,6 +52,38 @@ function callback() {
         }
     }
 }
+//makes request and implements the ajax
+function getMinDistance(){
+    var url = "GetLocationsServlet";
+    req = initRequest();
+    req.open("GET", url, true);
+    req.onreadystatechange = call;
+    req.send(null);
+}
+
+//callback function
+function call() {
+    clear();
+    if (req.readyState == 4) {
+        if (req.status == 200) {
+            parseMessage(req.responseXML);
+        }
+    }
+}
+//parses the responseXML and get neccessary data
+function parseMessage(responseXML) {
+    if (responseXML == null) {
+       clear();
+    } else {
+        locations = responseXML.getElementsByTagName("providerLocation");
+        for(var k=0; k<locations.length;k++){
+            destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
+        }
+
+        minPos = calcMinDistance();
+    }
+}
+
 //clears the table of services
 function clear() {
     var servicesTable = document.getElementById("services");
@@ -46,10 +92,10 @@ function clear() {
 //parses the responseXML and outputs the table of services
 function parseMessages(responseXML) {
     if (responseXML == null) {
-       clear();
+        clear();
     } else {
-    var services = responseXML.getElementsByTagName("service");
-    contents = document.getElementById("services");
+        var services = responseXML.getElementsByTagName("service");
+        contents = document.getElementById("services");
         for (var I = 0 ; I < services.length ; I++) {
             var service = services[I];
             var id = service.getElementsByTagName("id")[0].firstChild.nodeValue;
@@ -64,16 +110,16 @@ function parseMessages(responseXML) {
 }
 //forms the table of services
 function appendService(id,name,price) {
-     var tr = document.createElement("tr");
-     var td = document.createElement("td");
-     var radio = document.createElement("input");
-     radio.setAttribute("id", id);
-     radio.setAttribute("type", "radio");
-     radio.setAttribute("name", "serv");
-     td.appendChild(radio);
-     td.appendChild(document.createTextNode(name+" "+price));
-     tr.appendChild(td);
-     contents.appendChild(tr);
+    var tr = document.createElement("tr");
+    var td = document.createElement("td");
+    var radio = document.createElement("input");
+    radio.setAttribute("id", id);
+    radio.setAttribute("type", "radio");
+    radio.setAttribute("name", "serv");
+    td.appendChild(radio);
+    td.appendChild(document.createTextNode(name+" "+price));
+    tr.appendChild(td);
+    contents.appendChild(tr);
 }
 //forms the "Proceed the order" button
 function addButton() {
@@ -109,4 +155,10 @@ function getSelected(){
         }
     }
     return false;
+}
+function addLoad(){
+    document.getElementById("loader").style.display = "block";
+}
+function removeLoad(){
+    document.getElementById("loader").style.display = "none";
 }
