@@ -30,8 +30,11 @@ public class ServicesServlet extends HttpServlet {
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         StringBuffer sb = new StringBuffer();
+        int providerLocationID = 0;
         try {
-            int providerLocationID = Integer.valueOf(request.getParameter("providerLocationID"));
+            if(!request.getParameter("providerLocationID").equals("undefined")){
+                providerLocationID = Integer.valueOf(request.getParameter("providerLocationID"));
+            }
             GetServiceCatalogs gsc = new GetServiceCatalogs(providerLocationID);
             List<ServiceCatalog> serviceCatalogs = gsc.getServiceCatalogs();
             if (serviceCatalogs.size() > 0) {

@@ -2,17 +2,21 @@ var req; //request to servlet
 var contents; //content of responseXML
 
 //makes request and implements the ajax
+function getServices(){
+    addLoad();
+    window.setTimeout(function(){getAvailableServices();removeLoad();},500);
+}
 function getAvailableServices(){
         var pl = document.getElementById("providerLocation");
         var location = pl.getAttribute("name");
-        if(location != null){
+        if(location != undefined){
             var url = "ServicesServlet?providerLocationID="+location;
             req = initRequest();
             req.open("POST", url, true);
             req.onreadystatechange = callback;
             req.send(null);
         }else{
-            alert("Get min distance first");
+            alert("Choose location, please");
         }
 }
 //initializes request
@@ -24,6 +28,7 @@ function initRequest() {
         return new XMLHttpRequest();
     }
 }
+
 //callback function
 function callback() {
     if (req.readyState == 4) {

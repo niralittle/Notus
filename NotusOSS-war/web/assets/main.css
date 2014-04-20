@@ -126,10 +126,15 @@ footer
     width:500px;
     display: table-cell;
     position: absolute;
+<<<<<<< HEAD
+    top: 225px;
+    left: 600px;
+=======
     right: -60px;
 }
 #address{
     width:400px;
+>>>>>>> 6ac3b60f1cb25ba82042a32b62a0b9b56d21b0bd
 }
 #addressSelect{
     margin-left: 0px;
