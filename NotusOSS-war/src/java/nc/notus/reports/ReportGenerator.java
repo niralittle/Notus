@@ -12,7 +12,7 @@ import nc.notus.entity.RoutersUtilizationCapacity;
 import nc.notus.entity.ServiceInstance;
 
 /**
- * This class is a abstract representation of system 
+ * This class is an abstract representation of system                           // REVIEW: abstract representation of system? really?
  * @author Andrey Ilin
  */
 public class ReportGenerator {
@@ -28,7 +28,7 @@ public class ReportGenerator {
     private Date finishDate = null;
 
     /*
-     * Report data stored here                                                  // JCC block-comments
+     * Report data stored here                                                  // JCC block-comments // REVIEW: so what?
      * Data is stored as strings that represents table rows
      * Columns in this rows are separated with COLUMN_SEPARATOR
      * First element is a row of column names
@@ -39,7 +39,7 @@ public class ReportGenerator {
     private int pageNumber; // numbered from 0
 
     public static enum ReportType {
-
+                                                                                // REVIEW: empty line
         MOST_PROFITABLE_ROUTER, DISCONNECT_ORDERS_PER_PERIOD,
         NEW_ORDERS_PER_PERIOD, ROUTERS_UTILIZATION_CAPACITY,
         PROFITABILITY_BY_MONTH
@@ -79,7 +79,7 @@ public class ReportGenerator {
         reportData = test; //TEST
         this.reportName = "Most profitable router"; //TEST
 
-        //reportData = getReportData(type); UNCOMMENT WHEN FINISH
+        //reportData = getReportData(type); UNCOMMENT WHEN FINISH               // REVIEW: private method writes data to private variable. how to obtain report?
 
     }
 
@@ -88,7 +88,7 @@ public class ReportGenerator {
      * @return html format string
      */
     public String getReportHTML() {
-        String HTMLString = null;
+        String HTMLString = null;                                               // REVIEW: implementation too far from usage
         StringBuilder HTMLReportBuilder = new StringBuilder();
         HTMLReportBuilder.append("<table border='1' width='50%' cellpadding='5'>");
         for (String row : reportData) {
@@ -111,16 +111,16 @@ public class ReportGenerator {
      * @param type report type
      * @return specially formatted string array with report data
      */
-    private String[] getReportData(ReportType type) {
-        ArrayList<ServiceOrder> orders = null;
-        ArrayList<ServiceInstance> instances = null;
-        ArrayList<RoutersUtilizationCapacity> routersUtilCap = null;
-        ArrayList<ProfitInMonth> profit = null;
+    private String[] getReportData(ReportType type) {                           // REVIEW: All reports are generated in one method. do you really certain about that?
+        ArrayList<ServiceOrder> orders = null;                                  // REVIEW: List<> could and should be used
+        ArrayList<ServiceInstance> instances = null;                            // REVIEW: implementation too far from usage
+        ArrayList<RoutersUtilizationCapacity> routersUtilCap = null;            // REVIEW: implementation too far from usage
+        ArrayList<ProfitInMonth> profit = null;                                 // REVIEW: implementation too far from usage
         String[] rows = null;
         DBManager dbManager = new DBManager();
         try {
-            ReportDAO rd = new ReportDAOImpl(dbManager);
-            switch (type) {
+            ReportDAO rd = new ReportDAOImpl(dbManager);                        // REVIEW: reportDAO, not "rd"
+            switch (type) {                                                     // REVIEW: switch usage is bad style. use methods or derived classes instead
                 case MOST_PROFITABLE_ROUTER:
                     this.reportName = "Most profitable router";
 
@@ -138,7 +138,7 @@ public class ReportGenerator {
                     break;
                 case DISCONNECT_ORDERS_PER_PERIOD:
                     this.reportName = "Disconnect orders per period";
-                    instances = (ArrayList<ServiceInstance>) rd.getDisconnectedServiceInstances(
+                    instances = (ArrayList<ServiceInstance>) rd.getDisconnectedServiceInstances(    // REVIEW: cast operator is redundant. use List<> instead of ArrayList<>
                             startDate, finishDate, pageNumber * recordsPerPage, recordsPerPage);
                     rows = new String[orders.size() + 1]; // +1 for column headers
 
@@ -152,7 +152,7 @@ public class ReportGenerator {
                     }
                 case NEW_ORDERS_PER_PERIOD:
                     this.reportName = "New orders per period";
-                    orders = (ArrayList<ServiceOrder>) rd.getNewServiceOrders(
+                    orders = (ArrayList<ServiceOrder>) rd.getNewServiceOrders(  // REVIEW: cast operator is redundant. use List<> instead of ArrayList<>
                             startDate, finishDate, pageNumber * recordsPerPage, pageNumber);
                     rows = new String[orders.size() + 1]; // +1 for column headers
 
@@ -167,7 +167,7 @@ public class ReportGenerator {
                     break;
                 case ROUTERS_UTILIZATION_CAPACITY:
                     this.reportName = "Routers utilization and capacity";
-                    routersUtilCap = (ArrayList<RoutersUtilizationCapacity>) rd.getRoutersUtilizationCapacityData(
+                    routersUtilCap = (ArrayList<RoutersUtilizationCapacity>) rd.getRoutersUtilizationCapacityData(// REVIEW: cast operator is redundant. use List<> instead of ArrayList<>
                             startDate, finishDate, pageNumber * recordsPerPage, pageNumber);
                     rows = rows = new String[orders.size() + 1]; // +1 for column headers
 
@@ -184,7 +184,7 @@ public class ReportGenerator {
                     break;
                 case PROFITABILITY_BY_MONTH:
                     this.reportName = "Profitability by month";
-                    profit = (ArrayList<ProfitInMonth>) rd.getProfitByMonth(startDate,
+                    profit = (ArrayList<ProfitInMonth>) rd.getProfitByMonth(startDate,  // REVIEW: cast operator is redundant. use List<> instead of ArrayList<>
                             finishDate);
                     rows = rows = new String[orders.size() + 1];
 
