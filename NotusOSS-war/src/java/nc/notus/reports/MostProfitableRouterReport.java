@@ -38,7 +38,8 @@ public class MostProfitableRouterReport implements Report {
         this.reportName = reportName;
         //getDataFromDatabase(); FULL FUNCTIONAL
         this.reportData = new String[]{
-            "1#ROUTER1#1","1#ROUTER1#1","1#ROUTER1#1","1#ROUTER1#1"}; //TEST
+                    "Router ID#Router name#Port Quantity", "1#ROUTER1#1",
+                    "1#ROUTER1#1", "1#ROUTER1#1", "1#ROUTER1#1"}; //TEST
     }
 
     private void getDataFromDatabase() {
