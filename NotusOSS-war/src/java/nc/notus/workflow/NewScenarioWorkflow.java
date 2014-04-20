@@ -78,13 +78,12 @@ public class NewScenarioWorkflow extends Workflow {
             order.setServiceInstanceID(serviceInstance.getId());
             orderDAO.update(order);
 
-            // Find free port
-            Port port = portDAO.getFreePort();
-            if (port == null) {
-                createTask(dbManager, UserRole.INSTALLATION_ENGINEER);
-            } else {
-                createTask(dbManager, UserRole.PROVISION_ENGINEER);
-            }
+            /*
+             * task for IE is created, whether or not we have free ports,
+             * because physical link to customer is always absent for "new"
+             * scenario, so we have to create it mannualy
+             */
+            createTask(dbManager, UserRole.INSTALLATION_ENGINEER);
 
             dbManager.commit();
         } finally {
