@@ -22,17 +22,18 @@
         <div id="spoiler_body" style="display:none;">
             You should zoom more
         </div>
+        <div id="far" style="display:none;">
+            You are too far
+        </div>
 
-        <form action="GetLocationsServlet">
-            <input type="button" value="Get min distrance" onclick="getMinDistance()">
-        </form>
         
-         <div id="outputDiv"></div>
+        
          <%-- is used for data exchanging between JS-files --%>
          <div id="providerLocation"></div>
          <%-- form for the table of services --%>
          <form id="form" name="getservices" action="ServisesServlet">
-            <input type="button" value="See available services for my location" onclick="getAvailableServices()">
+            <input type="button" value="See available services for my location" onclick="getServices()">
+            <img id="loader" src="assets/ajax-loader.gif" alt="Loading, Loading!" style="display:none;"/>
             <table>
                 <thead><tr><th></th></tr></thead>
                 <tbody id ="services"><tr><td></td></tr></tbody>

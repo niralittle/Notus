@@ -3,10 +3,8 @@ var marker;
 var geocoder;
 var objSel; //HTML <select> object for multiple addresses
 var destination = [];
-var minimumDistance;
 var minPosition = 0; // The nearest provider!!!!
 var req; //request to servlet
-
 
 //Map initialization: map, marker and clock listener
 function initialize() {
@@ -23,6 +21,7 @@ function initialize() {
     });
     google.maps.event.addListener(map, 'click', function(event) {
         addMarker(event.latLng);
+        window.setTimeout(getMinDistance(),1000);
     });
 }
 
@@ -110,9 +109,10 @@ function getLatLng(loc){
 
 //remove marker froma map
 function removePointer(){
+    clean();
     marker.setMap(null);
     document.getElementById("address").value = "";
-    objSel.style.display = "none";
+//    objSel.style.display = "none";
 }
 
 function showZoomMessage(){
@@ -121,24 +121,30 @@ function showZoomMessage(){
         document.getElementById("spoiler_body").style.display = "none";
     },5000);
 }
-
+function showFarMessage(){
+    document.getElementById("far").style.display = "block";
+    window.setTimeout(function(){
+        document.getElementById("far").style.display = "none";
+    },5000);
+}
 //makes request and implements the ajax
 function getMinDistance(){
-    var adr = escape(address.value);
-    if(adr.length > 0){
-        var url = "GetLocationsServlet";
-        req = initRequest();
-        req.open("GET", url, true);
-        req.onreadystatechange = call;
-        req.send(null);
-    }else{
-        alert("Put marker to choose location, please");
-    }
+    addLoad();
+    var url = "GetLocationsServlet";
+    req = initRequest();
+    req.open("GET", url, true);
+    req.onreadystatechange = call;
+    req.send(null);
+}
+function addLoad(){
+    document.getElementById("loader").style.display = "block";
+}
+function removeLoad(){
+    document.getElementById("loader").style.display = "none";
 }
 //initializes request
 function initRequest() {
     if (window.ActiveXObject) {
-        isIE = true;
         return new ActiveXObject("Microsoft.XMLHTTP");
     } else{
         return new XMLHttpRequest();
@@ -146,26 +152,44 @@ function initRequest() {
 }
 //callback function
 function call() {
+    clean();
     if (req.readyState == 4) {
         if (req.status == 200) {
             parseMessage(req.responseXML);
         }
     }
 }
+function clean() {
+    clear();
+    var id = document.getElementById("providerLocation");
+    id.removeAttribute("name");
+}
+var dis;
+var flag = false;
 //parses the responseXML and get neccessary data
 function parseMessage(responseXML) {
     if (responseXML == null) {
-       return false;
+       clean();
     } else {
         var locations = responseXML.getElementsByTagName("providerLocation");
         for(var k=0; k<locations.length;k++){
             destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
         }
+        dis = 10000000000;
         calcMinDistance();
-        window.setTimeout(function(){ 
-            var pl = document.getElementById("providerLocation");
-            var minID = getID(locations);
-            pl.setAttribute("name", minID);},500);
+        
+        window.setTimeout(function(){
+            calcMinDistance();
+            if(parseFloat(dis) < 50000){
+                var pl = document.getElementById("providerLocation");
+                var minID = getID(locations);
+                pl.setAttribute("name", minID);
+            }else{
+                showFarMessage();
+            }
+            removeLoad();
+        },10000);
+       
     }
 }
 function getID(locations){
@@ -175,9 +199,8 @@ function getID(locations){
         }
      }
 }
- var dis =10000000000;
 /*THIS function calculate distance*/
-function calcMinDistance(){   
+function calcMinDistance(){
     var k;
     for(k=0; k<destination.length;k++){
         geocoder.geocode( {'address': destination[k]}, function(results, status) {
@@ -188,6 +211,7 @@ function calcMinDistance(){
                 if(parseFloat(distance)<parseFloat(dis)){
                     dis = distance;
                     minPosition = results[0].formatted_address;
+                    flag = true;
                 }
             } else {
                 alert('Wrong address. Please input another one');
@@ -208,6 +232,5 @@ function geocode(address){
         }
     });
 }
-
-
 google.maps.event.addDomListener(window, 'load', initialize);
+
