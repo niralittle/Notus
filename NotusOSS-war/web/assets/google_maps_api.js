@@ -129,24 +129,28 @@ function showFarMessage(){
 /*THIS function calculate distance*/
 function calcMinDistance(){
     var k;
-    var minPos;
+    var minPosition;
     var dis = 10000000000;
     for(k=0; k<destination.length;k++){
-        geocoder.geocode( {'address': destination[k]}, function(results, status) {
+        geocoder.geocode({'address': destination[k]}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 minLngLat = getLatLng(results[0].geometry.location);
                 var distance = google.maps.geometry.spherical.computeDistanceBetween(
                     getLatLng(marker.getPosition()),minLngLat).toFixed(2);
                 if(parseFloat(distance)<parseFloat(dis)){
                     dis = distance;
-                    minPos = results[0].formatted_address;
+                    minPosition = results[0].formatted_address;
                 }
-            } else {
+            }else{
                 alert('Wrong address. Please input another one');
             }
         });
     }
-    return minPos;
+    window.setTimeout(function(){
+        if(parseFloat(dis) < 50000){
+            minPos = minPosition;
+        }
+    },500);
 }
 
 function geocode(address){

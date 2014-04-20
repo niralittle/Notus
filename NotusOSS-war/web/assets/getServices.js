@@ -5,17 +5,18 @@ var minPos;
 
 //makes request and implements the ajax
 function getServices(){
+    minPos = undefined;
     addLoad();
     getMinDistance();
+    window.setTimeout(function(){
     if(minPos != undefined){
         var minID = getID();
         getAvailableServices(minID);
-        var head = document.getElementById("header");
-        head.appendChild(document.createTextNode(minPos));
     }else{
         showFarMessage();
     }
     removeLoad();
+    }, 1000)
 }
 function getAvailableServices(minID){
     if(minID != undefined){
@@ -79,8 +80,7 @@ function parseMessage(responseXML) {
         for(var k=0; k<locations.length;k++){
             destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
         }
-
-        minPos = calcMinDistance();
+        calcMinDistance();
     }
 }
 
