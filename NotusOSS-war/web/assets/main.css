@@ -209,3 +209,27 @@ ul.tabs li a.active {
 #dash-buttons{
     float: left;
 }
+
+/*installEng*/
+#IEtask{
+    display:table;
+    width: 100%;
+}
+#tasks{
+    display:table-cell;
+}
+#newTasks{
+    display:table-cell;
+}
+#instEngContent{
+    display:none;
+}
+#anotherTask{
+    position:absolute;
+    bottom:65px;
+    display:none;
+}
+
+#cableText{
+    display:none;
+}

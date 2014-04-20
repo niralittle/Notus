@@ -2,77 +2,48 @@
 
 
 <div id="content">
-    <ul class="tabs">
-        <li><a href="javascript:tabSwitch('tab_1', 'dash-left');" id="tab_1" class="active">Create Router</a></li>
-        <li><a href="javascript:tabSwitch('tab_2', 'dash-center');" id="tab_2">Create Table</a></li>
-        <li><a href="javascript:tabSwitch('tab_3', 'dash-right');" id="tab_3">Delete Table</a></li>
-    </ul>
-    <div id="dash-left" class="content">
-        <div id="container-header"><span>Create Router</span>        </div>
-        <script type="text/javascript" src="assets/registerValidator.js"></script>
-
-            <table border="0" cellpadding="5">
-                <tr>
-                    <td>Router Name:</td>
-                    <td><input type="text" name="routerName" value="" /></td>
-                </tr>
-                
-                <tr>
-                    <td>Port Quantity: </td>
-                    <td><input type="text" name="portQuantity" value="" /></td>
-                </tr>
-            </table>
-            <div id="dash-buttons">
-                <input type="submit" value="Create" />
-            </div>
-
-
+    <div id="IEtask">
+        <div id ="tasks">
+            <p>Your tasks</p>
+            <select name="IEtasks">
+                <option>1</option>
+                <option>2</option>
+            </select>
+            <input type="submit" value="Choose" onclick="" />
+        </div>
+        <div id ="newTasks">
+            <p>Choose Task</p>
+            <select name="task">
+                <option>1</option
+            </select>
+            <input type="submit" value="ChooseNewTask" onclick="showInstEngTask()" />
+        </div>
     </div>
-    <div id="dash-center" class="content">
-        <div id="container-header"><span>Create Cable</span></div>
+
+    <div id ="instEngContent">
+        <p style="font-size:18px;font-weight:bold;">Create Router</p>
         <table>
             <tr>
                 <td>
-                    Cable Specification:
+                    Input Port Quantity:
                 </td>
                 <td>
-                    <select name="cableSpecification:">
-                        <option>UTP</option>
-                    </select>
+                    <input type="text" name="portQountity" value="" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="Create" name="createCable" />
+                    <input type="submit" value="Create Router" />
                 </td>
             </tr>
         </table>
+        <p style="font-size:18px;font-weight:bold;">Create Cable</p>
+        <input type="submit" value="CreateCable" onclick="showCableText()"/> <br>
+        <div id="cableText">Cable was created</div><br>
+        <input type="submit" value="Connect Cable to Port" />
     </div>
 
-    <div id="dash-right" class="content">
-        <div id="container-header"><span>Delete Cable</span>          </div>
-        <table>
-            <tr>
-                <td>
-                    Cable Specification:
-                </td>
-                <td>
-                    <input type="text" name="cableSpecification" value="" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Reason:
-                </td>
-                <td>
-                    <input type="text" name="reasonDelete" value="" style="width:200px;height:200px;" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" value="Block" name="Block" />
-                </td>
-            </tr>
-        </table>
+    <div id ="anotherTask">
+        <input type="submit" value="Choose Another Task" onclick="showInstAllTasks()"/>
     </div>
 </div>
