@@ -42,21 +42,24 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     @Override
     public long countAll(Map<String, Object> params) {
         // form SQL query
-        String queryString = "SELECT COUNT(*) FROM " + type.getSimpleName();
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(*) FROM " + type.getSimpleName());
+
         if (params != null && !params.isEmpty()) {
-            queryString += " WHERE ";
+            query.append(" WHERE ");
+            boolean notFirst = false; //not adding " AND " before the first param
             for (Map.Entry<String, Object> entry : params.entrySet()) {
+                if (notFirst) query.append(" AND ");
                 if (entry.getValue() != null) {
-                    queryString += entry.getKey() + " = ?";
+                    query.append(entry.getKey() + " = ?");
                 } else {
-                    queryString += entry.getKey() + " IS NULL";
+                    query.append(entry.getKey() + " IS NULL");
                 }
-                queryString += " AND ";
+                notFirst = true;
             }
-            queryString = queryString.substring(0, queryString.length() - 5); // delete last " AND "
         }
 
-        Statement statement = dbManager.prepareStatement(queryString);
+        Statement statement = dbManager.prepareStatement(query.toString());
         // fill in statement
         int paramIndex = 1;
         for (Object value : params.values()) {
@@ -67,7 +70,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
 
         ResultIterator ri = statement.executeQuery();
         ri.next();
-        return ri.getLong(1);
+        return ri.getLong(1);  // element at position (1,1)
     }
 
     /**
@@ -77,25 +80,26 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      */
     @Override
     public Object add(T t) {
-        String queryString = "INSERT INTO " + type.getSimpleName() + "(";
+        StringBuilder query = new StringBuilder();
+        query.append("INSERT INTO ").append(type.getSimpleName()).append('(');
         Map<String, Object> fields = getFieldsList(t);
         for (String fieldName : fields.keySet()) {
-            queryString += fieldName + ", ";
+            query.append(fieldName).append(", ");
         }
-        queryString = queryString.substring(0, queryString.length() - 2); // trim last ", "
-        queryString += ") VALUES (";
+        query.delete(query.length()-2, query.length()); // trim last ", "
+        query.append(") VALUES (");
         for (Object value : fields.values()) {
             if (value != null) {
-                queryString += "?";
+                query.append('?');
             } else {
-                queryString += "NULL";
+                query.append("NULL");
             }
-            queryString += ", ";
+            query.append(", ");
         }
-        queryString = queryString.substring(0, queryString.length() - 2); // trim last ", "
-        queryString += ")";
+        query.delete(query.length()-2, query.length()); // trim last ", "
+        query.append(')');
 
-        Statement statement = dbManager.prepareStatement(queryString);
+        Statement statement = dbManager.prepareStatement(query.toString());
         // fill in statement
         int paramIndex = 1;
         for (Object value : fields.values()) {
@@ -211,20 +215,22 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         }
 
         // form SQL query
-        String queryString = "UPDATE " + type.getSimpleName() + " SET ";
+        StringBuilder query = new StringBuilder();
+        query.append("UPDATE " + type.getSimpleName() + " SET ");
         Map<String, Object> fieldsList = getFieldsList(t);
+        boolean notFirst = false;
         for (Map.Entry<String, Object> entry : fieldsList.entrySet()) {
+            if (notFirst) query.append(", ");
             if (entry.getValue() != null) {
-                queryString += entry.getKey() + " = ?";
+                query.append(entry.getKey()).append(" = ?");
             } else {
-                queryString += entry.getKey() + " = NULL";
+                query.append(entry.getKey()).append(" = NULL");
             }
-            queryString += ", ";
+            notFirst = true;
         }
-        queryString = queryString.substring(0, queryString.length() - 2); // delete last ", "
-        queryString += " WHERE id = ?";
+        query.append(" WHERE id = ?");
 
-        Statement statement = dbManager.prepareStatement(queryString);
+        Statement statement = dbManager.prepareStatement(query.toString());
         // fill in statement
         int paramIndex = 1;
         for (Object value : fieldsList.values()) {

@@ -239,6 +239,7 @@ public class RegistrationServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Registers user in the system, creates a new order " +
+                "and executes it ('New' scenario workflow).";
     }// </editor-fold>
 }
