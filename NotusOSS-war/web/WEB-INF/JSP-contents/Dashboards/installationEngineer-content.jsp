@@ -17,7 +17,6 @@
         <title>Installation Engineer page</title>
     </head>
     <body>
-        <h2>Installation Engineer dashboard</h2>
         <%List<Task> tasksEng = (List) request.getAttribute("tasksEng");%>
         <table border="1" id="tablename1">
             <tbody>
@@ -26,17 +25,20 @@
                         Task Number
                     </td>
                     <td>
-                        Servic Order ID
+                        Service Order ID
+                    </td>
+                    <td>
+                        Action
                     </td>
                 </tr>
                 <%for (Task task : tasksEng) {%>
                 <form action="SubmitTask" method="POST">
                     <tr>
                         <td>
-                            <input type="text" name="taskid" value="<%=task.getId()%>"/>
+                            <input type="text" name="taskid" value="<%=task.getId()%>" readonly="readonly"/>
                         </td>
                         <td>
-                            <input type="text" name="serviceorderid" value="<%=task.getServiceOrderID()%>"/>
+                            <input type="text" name="serviceorderid" value="<%=task.getServiceOrderID()%>" readonly="readonly"/>
                         </td>
                         <td>
                             <input type="hidden" name="username" value="<%=request.getUserPrincipal().getName()%>"/>
