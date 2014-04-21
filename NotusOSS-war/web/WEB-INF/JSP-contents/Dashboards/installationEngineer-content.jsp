@@ -1,55 +1,53 @@
-<script type="text/javascript" src="assets/dashboard.js"></script>
+<%--
+    Document   : installationEngineer-content.jsp
+    Created on : Apr 21, 2014, 6:48:00 PM
+    Author     : Roman Martyniuk & Vladimir Ermolenko
+--%>
 
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="nc.notus.entity.Task"%>
 
-<div id="content">
-    <div id="IEtask">
-        <div id ="tasks">
-            <p>Your tasks</p>
-            <select name="IEtasks">
-                <option>1</option>
-                <option>2</option>
-            </select>
-            <input type="submit" value="Choose" onclick="" />
-        </div>
-        <div id ="newTasks">
-            <p>Choose Task</p>
-            <select name="task">
-                <option>1</option
-            </select>
-            <input type="submit" value="ChooseNewTask" onclick="showInstEngTask()" />
-        </div>
-    </div>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
 
-    <input type="submit" value="CheckAvailablePorts" onclick="checkAvailablePorts(2)"/>
-    <p id="somePortsAreAvailable">Port is available</p>
-
-    <div id ="instEngContent">
-        <div id="createRouter">
-            <p style="font-size:18px;font-weight:bold;">Create Router</p>
-            <table>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Installation Engineer page</title>
+    </head>
+    <body>
+        <h2>Installation Engineer dashboard</h2>
+        <%List<Task> tasksEng = (List) request.getAttribute("tasksEng");%>
+        <table border="1" id="tablename1">
+            <tbody>
                 <tr>
                     <td>
-                        Input Port Quantity:
+                        Task Number
                     </td>
                     <td>
-                        <input type="text" name="portQountity" value="" />
+                        Servic Order ID
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <input type="submit" value="Create Router" />
-                    </td>
-                </tr>
+                <%for (Task task : tasksEng) {%>
+                <form action="SubmitTask" method="POST">
+                    <tr>
+                        <td>
+                            <input type="text" name="first_name" value="<%=task.getId()%>"/>
+                        </td>
+                        <td>
+                            <input type="text" name="last_name" value="<%=task.getServiceOrderID()%>"/>
+                        </td>
+                        <td>
+                            <input type="hidden" name="taskid" value="<%=task.getId()%>"/>
+                            <input type="hidden" name="username" value="<%=request.getUserPrincipal().getName()%>"/>
+                            <input type="submit" name="action" value="Submit" />
+                        </td>
+                    </tr>
+                    </form>
+                    <% } %>
+                </tbody>
             </table>
-        </div>
 
-        <p style="font-size:18px;font-weight:bold;">Create Cable</p>
-        <input type="submit" value="CreateCable" onclick="showCableText()"/> <br>
-        <div id="cableText">Cable was created</div><br>
-        <input type="submit" value="Connect Cable to Port" />
-    </div>
-
-    <div id ="anotherTask">
-        <input type="submit" value="Choose Another Task" onclick="showInstAllTasks()"/>
-    </div>
-</div>
+    </body>
+</html>
