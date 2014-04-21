@@ -25,7 +25,6 @@ public class ProviderLocationDAOImpl extends GenericDAOImpl<ProviderLocation> im
      */
     @Override
     public List<ProviderLocation> getProviderLocations(int offset, int numberOfRecords) {
-        List<ProviderLocation> providerLocations = new ArrayList<ProviderLocation>();
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                 "SELECT pl.id, pl.name, pl.location FROM providerlocation pl" +
                 ") a where ROWNUM <= ? )" +
@@ -34,6 +33,7 @@ public class ProviderLocationDAOImpl extends GenericDAOImpl<ProviderLocation> im
         statement.setInt(1, numberOfRecords);
         statement.setInt(2, offset);
         ResultIterator ri = statement.executeQuery();
+        List<ProviderLocation> providerLocations = new ArrayList<ProviderLocation>();
         while (ri.next()){
             ProviderLocation provLoc = new ProviderLocation();
             provLoc.setId(ri.getInt("id"));
