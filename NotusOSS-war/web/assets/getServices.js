@@ -140,11 +140,7 @@ function goToRegistration(){
     var selected = getSelected();
     var selectedID = selected.getAttribute("id");
     var location = escape(address.value);
-    var url = "Register?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
-    req = initRequest();
-    req.open("POST", url, true);
-    req.send(null);
-    window.location = "registration.jsp";
+    window.location = "registration.jsp?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
 }
 //finds, which service is selected
 function getSelected(){
