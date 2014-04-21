@@ -19,15 +19,11 @@ function getServices(){
     }
 }
 function getAvailableServices(minID){
-    if(minID != undefined){
-        var url = "ServicesServlet?providerLocationID="+minID;
-        req = initRequest();
-        req.open("POST", url, true);
-        req.onreadystatechange = callback;
-        req.send(null);
-    }else{
-        showErrorMessage("Choose location, please");
-    }
+    var url = "ServicesServlet?providerLocationID="+minID;
+    req = initRequest();
+    req.open("POST", url, true);
+    req.onreadystatechange = callback;
+    req.send(null);
 }
 //initializes request
 function initRequest() {

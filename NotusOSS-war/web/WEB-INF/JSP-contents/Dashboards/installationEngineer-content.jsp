@@ -33,13 +33,12 @@
                 <form action="SubmitTask" method="POST">
                     <tr>
                         <td>
-                            <input type="text" name="first_name" value="<%=task.getId()%>"/>
+                            <input type="text" name="taskid" value="<%=task.getId()%>"/>
                         </td>
                         <td>
-                            <input type="text" name="last_name" value="<%=task.getServiceOrderID()%>"/>
+                            <input type="text" name="serviceorderid" value="<%=task.getServiceOrderID()%>"/>
                         </td>
                         <td>
-                            <input type="hidden" name="taskid" value="<%=task.getId()%>"/>
                             <input type="hidden" name="username" value="<%=request.getUserPrincipal().getName()%>"/>
                             <input type="submit" name="action" value="Submit" />
                         </td>
