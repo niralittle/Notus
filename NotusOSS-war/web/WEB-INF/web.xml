@@ -47,6 +47,10 @@
         <servlet-name>InstallationEngineerTasks</servlet-name>
         <servlet-class>nc.notus.dashboards.InstallationEngineerTasks</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SubmitTask</servlet-name>
+        <servlet-class>nc.notus.dashboards.SubmitTask</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -90,6 +94,10 @@
     <servlet-mapping>
         <servlet-name>InstallationEngineerTasks</servlet-name>
         <url-pattern>/InstallationEngineerTasks</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubmitTask</servlet-name>
+        <url-pattern>/SubmitTask</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
