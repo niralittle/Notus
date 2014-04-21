@@ -57,7 +57,7 @@ function parseMessage(responseXML) {
 }
 // Add a marker to the map if ZOOM is more than 15
 function addMarker(location) {
-    if (marker.getMap()==null){
+    if (marker == null){
         marker = new google.maps.Marker({
             map: map
         });
@@ -77,13 +77,13 @@ function codeLatLng(input) {
                     marker.setPosition(input);
                     document.getElementById('address').value = results[0].formatted_address;
                 }else{
-                    showZoomMessage();
+                    showErrorMessage("You should zoom more");
                 }
             } else {
-                alert('No results found');
+                showErrorMessage('No results found');
             }
         } else {
-            alert('Wrong place. Please choose another one');
+            showErrorMessage('Wrong place. Please choose another one');
         }
     });
 }
@@ -91,7 +91,7 @@ function codeLatLng(input) {
 //geocode from address to coordinates
 function codeAddress() {
     if(document.getElementById('address').value==""){
-        alert('Please, input the address');
+        showErrorMessage('Please, input the address');
     }else{
         var address = document.getElementById('address').value;
         objSel = document.getElementById("addressSelect");
@@ -113,7 +113,7 @@ function codeAddress() {
                 document.getElementById('address').value = results[0].formatted_address;
                 map.setZoom(16);
             } else {
-                alert('Wrong address. Please input another one');
+                showErrorMessage('Wrong address. Please input another one');
             }
         });
     }
@@ -141,21 +141,9 @@ function getLatLng(loc){
 function removePointer(){
     clear();
     marker.setMap(null);
+    marker = null;
     document.getElementById("address").value = "";
 //    objSel.style.display = "none";
-}
-
-function showZoomMessage(){
-    document.getElementById("spoiler_body").style.display = "block";
-    window.setTimeout(function(){
-        document.getElementById("spoiler_body").style.display = "none";
-    },5000);
-}
-function showFarMessage(){
-    document.getElementById("far").style.display = "block";
-    window.setTimeout(function(){
-        document.getElementById("far").style.display = "none";
-    },5000);
 }
 
 /*THIS function calculate distance*/
@@ -174,13 +162,15 @@ function calcMinDistance(){
                     minPosition = results[0].formatted_address;
                 }
             }else{
-                alert('Wrong address. Please input another one');
+                showErrorMessage('Wrong address. Please input another one');
             }
         });
     }
     window.setTimeout(function(){
         if(parseFloat(dis) < 50000){
             minPos = minPosition;
+        }else{
+            showErrorMessage("You are too far");
         }
     },500);
 }
@@ -191,9 +181,9 @@ function geocode(address){
     }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             this.minLngLat = getLatLng(results[0].geometry.location);
-            alert(minLngLat);
+            showErrorMessage(minLngLat);
         } else {
-            alert('Wrong address. Please input another one');
+            showErrorMessage('Wrong address. Please input another one');
         }
     });
 }
@@ -208,7 +198,7 @@ function getProviderMarkers(){
             });
             marker.setMap(map);
         } else {
-            alert('Wrong address. Please input another one');
+            showErrorMessage('Wrong address. Please input another one');
         }
     });
     }

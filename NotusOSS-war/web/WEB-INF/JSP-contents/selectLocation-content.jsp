@@ -19,17 +19,12 @@
         <select id="addressSelect" name="mySelect" onchange="selectFunction()" style="display:none;"/>
         <input type="button" value="Geocode" onclick="codeAddress()">
         <input type="button" value="Remove Pointer" onclick="removePointer()">
-        <div id="spoiler_body" style="display:none;">
-            You should zoom more
-        </div>
-        <div id="far" style="display:none;">
-            You are too far
-        </div>
         
          <%-- form for the table of services --%>
          <form id="form" name="getservices" action="ServisesServlet">
              <input id="see" type="button" value="See available services for my location" onclick="getServices()"/>
              <img id="loader" src="assets/ajax-loader.gif" alt="Loading, Loading!" style="display:none;"/>
+             <div id="errorPanel"></div>
             <table>
                 <thead><tr><th id="header"></th></tr></thead>
                 <tbody id ="services"><tr><td></td></tr></tbody>
