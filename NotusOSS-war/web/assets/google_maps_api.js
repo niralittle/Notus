@@ -7,11 +7,11 @@ var minPosition = 0; // The nearest provider!!!!
 
 //Map initialization: map, marker and clock listener
 function initialize() {
-    var haightAshbury = new google.maps.LatLng(37.7699298, 0.4469157);
+    var startPosition = new google.maps.LatLng(37.7699298, 0.4469157);
     geocoder = new google.maps.Geocoder();
     var mapOptions = {
         zoom: 3,
-        center: haightAshbury,
+        center: startPosition,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
@@ -19,6 +19,9 @@ function initialize() {
         map: map
     });
     getProviderLocations();
+    window.setTimeout(function(){
+        getProviderMarkers();
+    },500);
     google.maps.event.addListener(map, 'click', function(event) {
         addMarker(event.latLng);
     });
@@ -194,5 +197,22 @@ function geocode(address){
         }
     });
 }
+
+function getProviderMarkers(){
+    for(var i=0;i<destination.length;i++){
+        geocoder.geocode( {'address': destination[i]}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            var marker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                map: map
+            });
+            marker.setMap(map);
+        } else {
+            alert('Wrong address. Please input another one');
+        }
+    });
+    }
+}
+
 google.maps.event.addDomListener(window, 'load', initialize);
 
