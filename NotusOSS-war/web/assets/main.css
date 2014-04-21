@@ -235,3 +235,12 @@ ul.tabs li a.active {
 #cableText{
     display:none;
 }
+
+#createRouter{
+    display: none;
+}
+
+#somePortsAreAvailable{
+    display:none;
+    font:14px;
+}

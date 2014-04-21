@@ -20,23 +20,29 @@
         </div>
     </div>
 
+    <input type="submit" value="CheckAvailablePorts" onclick="checkAvailablePorts(2)"/>
+    <p id="somePortsAreAvailable">Port is available</p>
+
     <div id ="instEngContent">
-        <p style="font-size:18px;font-weight:bold;">Create Router</p>
-        <table>
-            <tr>
-                <td>
-                    Input Port Quantity:
-                </td>
-                <td>
-                    <input type="text" name="portQountity" value="" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" value="Create Router" />
-                </td>
-            </tr>
-        </table>
+        <div id="createRouter">
+            <p style="font-size:18px;font-weight:bold;">Create Router</p>
+            <table>
+                <tr>
+                    <td>
+                        Input Port Quantity:
+                    </td>
+                    <td>
+                        <input type="text" name="portQountity" value="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Create Router" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+
         <p style="font-size:18px;font-weight:bold;">Create Cable</p>
         <input type="submit" value="CreateCable" onclick="showCableText()"/> <br>
         <div id="cableText">Cable was created</div><br>
