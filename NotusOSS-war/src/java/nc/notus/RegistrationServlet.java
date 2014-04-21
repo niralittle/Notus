@@ -1,15 +1,7 @@
 package nc.notus;
 
-import java.io.IOException;
-
 import java.sql.Date;
 import java.util.Calendar;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceOrderDAO;
@@ -27,6 +19,14 @@ import nc.notus.states.UserState;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.NewScenarioWorkflow;
 import nc.notus.workflow.Workflow;
+import java.io.IOException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Provides registration in system for new user and creates new scenario workflow
@@ -37,6 +37,7 @@ public class RegistrationServlet extends HttpServlet {
 
     private String login;
     private String password;
+    private String passwordConf;
     private String email;
     private String firstName;
     private String lastName;
@@ -46,53 +47,124 @@ public class RegistrationServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
-        this.parseParams(request);
+        parseParams(request);
+        StringBuilder errMessage = new StringBuilder();
+
 
         DBManager dbManager = new DBManager();
-        ServiceOrder newOrder;
+        ServiceOrder newOrder = null;
+        boolean paramsValid = false;
         try {
-            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-            if (userDAO.isLoginDuplicate(login)) {
-                request.setAttribute("duplicateLogin", "User with specified " +
-                        "login already exist. Choose other login.");
-                RequestDispatcher view = request.getRequestDispatcher("registration.jsp");
-                view.forward(request, response);
-                return;
+            paramsValid = validateParams(dbManager, errMessage);
+            if (paramsValid) {
+                int userID = createUser(dbManager);
+                newOrder = createOrder(dbManager, userID);
+                dbManager.commit();
             }
-
-            if (userDAO.isEmailDuplicate(email)) {
-                request.setAttribute("duplicateLogin", "User with specified " +
-                        "email already exist in system. Try write to " +
-                        "administrator for restoring you account.");
-                RequestDispatcher view = request.getRequestDispatcher("registration.jsp");
-                view.forward(request, response);
-                return;
-            }
-
-            int userID = createUser(dbManager);
-            newOrder = createOrder(dbManager, userID);
-
-            dbManager.commit();
         } finally {
             dbManager.close();
         }
 
-        Workflow wf = new NewScenarioWorkflow(newOrder);
-        wf.proceedOrder();
+        if (paramsValid) {
+            Workflow wf = new NewScenarioWorkflow(newOrder);
+            wf.proceedOrder();
 
-        //redirect to congratulation page
-        RequestDispatcher view = request.getRequestDispatcher("orderRecieved.jsp");
-        view.forward(request, response);
+            //redirect to congratulation page
+            RequestDispatcher view = request.getRequestDispatcher("orderRecieved.jsp");
+            view.forward(request, response);
+        } else {
+            request.setAttribute("errMessage", errMessage.toString());
+            RequestDispatcher view = request.getRequestDispatcher("registration.jsp");
+            view.forward(request, response);
+        }
+    }
+
+    private boolean validateParams(DBManager dbManager, StringBuilder errMessage) {
+        final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+                "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        // no spaces allowed. Minimum lenght - 3 chars, maximum - 40
+        final String LOGIN_PATTERN = "^[A-Za-z0-9_-]{3,40}$";
+        // no spaces allowed and special signs. Minimum lenght - 6 chars, maximum - 40
+        final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
+
+        Pattern pattern;
+        Matcher matcher;
+
+        boolean isValid = true;
+
+        pattern = Pattern.compile(LOGIN_PATTERN);
+        matcher = pattern.matcher(login);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct login. Spaces not allowed. " +
+                    "Minimum length - 3 chars, maximum - 40.<br />");
+        }
+
+        matcher = pattern.matcher(lastName);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct last name. Spaces are not allowed.<br />");
+
+        }
+
+        matcher = pattern.matcher(firstName);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct first name. Spaces not allowed.<br />");
+        }
+
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = pattern.matcher(email);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct email.<br />");
+        }
+
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct password. Minimum length - 6 chars.<br />");
+        }
+
+        if (!password.equals(passwordConf)) {
+            isValid = false;
+            errMessage.append("- Password doesn't match confirmation.<br />");
+        }
+
+        OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+        if (userDAO.isLoginDuplicate(login)) {
+            errMessage.append("- User with specified login already exist. " +
+                    "Choose other login.<br />");
+            isValid = false;
+        }
+
+        if (userDAO.isEmailDuplicate(email)) {
+            errMessage.append("- User with specified email already exist " +
+                    "in system. Try write to administrator for " +
+                    "restoring you account.<br />");
+            isValid = false;
+        }
+
+        try {
+            serviceLocation = java.net.URLDecoder.decode(serviceLocation, "UTF-8");
+        } catch (Exception exc) {
+            isValid = false;
+            errMessage.append("- Wrong location specified.<br />");
+        }
+
+        return isValid;
     }
 
     private void parseParams(HttpServletRequest request) {
-        login = (String) request.getParameter("login");
-        password = (String) request.getParameter("password");
-        email = (String) request.getParameter("email");
-        firstName = (String) request.getParameter("firstName");
-        lastName = (String) request.getParameter("lastName");
+        login = request.getParameter("login");
+        password = request.getParameter("password");
+        passwordConf = request.getParameter("passwordConf");
+        email = request.getParameter("email");
+        firstName = request.getParameter("firstName");
+        lastName = request.getParameter("lastName");
         catalogID = Integer.parseInt(request.getParameter("serviceCatalogID"));
-        serviceLocation = (String) request.getParameter("serviceLocationID");
+        serviceLocation = request.getParameter("serviceLocationID");
     }
 
     private int createUser(DBManager dbManager) {
@@ -131,7 +203,7 @@ public class RegistrationServlet extends HttpServlet {
         Date date = new Date(cal.getTimeInMillis());
         so.setServiceOrderDate(date);
 
-        int orderID = (Integer)orderDAO.add(so);
+        int orderID = (Integer) orderDAO.add(so);
         so.setId(orderID);
         return so;
     }
