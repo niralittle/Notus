@@ -12,8 +12,8 @@ public interface ServiceOrderStatusDAO extends GenericDAO<ServiceOrderStatus>{
     /**
      * Method returns id of status of ServiceOrder                              
      * @param ServiceOrderStatusName
-     * throws DAOException if id was not found
-     * @return id of our ServiceOrder's ststus
+     * @return id of our ServiceOrder's status
+     * @throws DAOException if id was not found
      */
     public int getServiceOrderStatusID(OrderStatus status);
 
