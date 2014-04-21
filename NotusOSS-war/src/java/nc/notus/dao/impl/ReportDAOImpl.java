@@ -118,7 +118,7 @@ public class ReportDAOImpl implements ReportDAO {
     }
 
     /**
-     * Method that return list of disconnected ServiceInstances per period
+     * Method that returns list of disconnected ServiceInstances per period
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @param offset - offset from start position in paging
@@ -158,7 +158,7 @@ public class ReportDAOImpl implements ReportDAO {
     }
 
     /**
-     * Method that return list of objects for routers utilization and capacity report
+     * Method that returns list of objects for routers utilization and capacity report
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @param offset - offset from start position in paging
@@ -168,11 +168,42 @@ public class ReportDAOImpl implements ReportDAO {
     @Override
     public List<RoutersUtilizationCapacity> getRoutersUtilizationCapacityData(
             Date startDate, Date finishDate, int offset, int numberOfRecords) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        // The query below needed in review with a lot of complex examples in table!
+
+        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
+                        "SELECT d.name, (d.portquantity - COUNT(p.portnumber))/d.portquantity*100 " +
+                        "AS utilization, d.portquantity " +
+                        "FROM port p " +
+                        "LEFT JOIN device d ON p.deviceid = d.id " +
+                        "LEFT JOIN serviceinstance si ON si.portid = p.id " +
+                        "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                        "WHERE sis.status = 'Active' " +
+                        "AND si.serviceinstancedate BETWEEN ? AND ? " +
+                        "GROUP BY d.name, d.portquantity " +
+                        "ORDER BY d.name " +
+                        ") a where ROWNUM <= ? ) " +
+                        "WHERE rnum  >= ?";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setDate(1, startDate);
+        statement.setDate(2, finishDate);
+        statement.setInt(3, numberOfRecords);
+        statement.setInt(4, offset);
+        ResultIterator ri = statement.executeQuery();
+        List<RoutersUtilizationCapacity> routersUtilizationCapacity =
+                                    new ArrayList<RoutersUtilizationCapacity>();
+        while (ri.next()){
+            RoutersUtilizationCapacity routUtCap = new RoutersUtilizationCapacity();
+            routUtCap.setDeviceName(ri.getString("name"));
+            routUtCap.setCapacity(ri.getInt("portquantity"));
+            routUtCap.setUtilization(ri.getInt("utilization"));
+            routersUtilizationCapacity.add(routUtCap);
+        }
+        return routersUtilizationCapacity;
     }
 
     /**
-     * Method that return list of objects for profitability by month report
+     * Method that returns list of objects for profitability by month report
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @return list of objects for profitability by month report
