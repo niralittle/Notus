@@ -48,8 +48,12 @@ public class GetServiceCatalogs {
     public ServiceType getServiceType(ServiceCatalog serviceCatalog) {
         DBManager dbManager = new DBManager();
         ServiceTypeDAOImpl type = new ServiceTypeDAOImpl(dbManager);
-        ServiceType serviceType = type.find(serviceCatalog.getServiceTypeID());
-        dbManager.close();
+        ServiceType serviceType = new ServiceType();
+        try {
+            serviceType = type.find(serviceCatalog.getServiceTypeID());
+        } finally{
+            dbManager.close();
+        }
         return serviceType;
     }
 }

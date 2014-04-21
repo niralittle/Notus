@@ -49,6 +49,7 @@ public class RegistrationServlet extends HttpServlet {
         this.parseParams(request);
 
         DBManager dbManager = new DBManager();
+        ServiceOrder newOrder;
         try {
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
             if (userDAO.isLoginDuplicate(login)) {
@@ -69,13 +70,15 @@ public class RegistrationServlet extends HttpServlet {
             }
 
             int userID = createUser(dbManager);
-            ServiceOrder so = createOrder(dbManager, userID);
-            createNewWorkflow(so);
+            newOrder = createOrder(dbManager, userID);
 
             dbManager.commit();
         } finally {
             dbManager.close();
         }
+
+        Workflow wf = new NewScenarioWorkflow(newOrder);
+        wf.proceedOrder();
 
         //redirect to congratulation page
         RequestDispatcher view = request.getRequestDispatcher("orderRecieved.jsp");
@@ -131,11 +134,6 @@ public class RegistrationServlet extends HttpServlet {
         int orderID = (Integer)orderDAO.add(so);
         so.setId(orderID);
         return so;
-    }
-
-    private void createNewWorkflow(ServiceOrder order) {
-        Workflow wf = new NewScenarioWorkflow(order);
-        wf.proceedOrder();
     }
 
     @Override

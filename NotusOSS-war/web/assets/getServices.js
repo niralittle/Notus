@@ -6,17 +6,17 @@ var minPos;
 //makes request and implements the ajax
 function getServices(){
     minPos = undefined;
-    addLoad();
-    calcMinDistance();
-    window.setTimeout(function(){
-    if(minPos != undefined){
-        var minID = getID();
-        getAvailableServices(minID);
+    if(marker != null){
+        addLoad();
+        calcMinDistance();
+        window.setTimeout(function(){
+            var minID = getID();
+            getAvailableServices(minID);
+            removeLoad();
+        }, 1000);
     }else{
-        showFarMessage();
+        showErrorMessage("Choose location, please");
     }
-    removeLoad();
-    }, 1000)
 }
 function getAvailableServices(minID){
     if(minID != undefined){
@@ -26,7 +26,7 @@ function getAvailableServices(minID){
         req.onreadystatechange = callback;
         req.send(null);
     }else{
-        alert("Choose location, please");
+        showErrorMessage("Choose location, please");
     }
 }
 //initializes request
@@ -59,6 +59,7 @@ function callback() {
 function clear() {
     var servicesTable = document.getElementById("services");
     servicesTable.innerHTML = "";
+    removeHeader();
 }
 //parses the responseXML and outputs the table of services
 function parseMessages(responseXML) {
@@ -75,9 +76,18 @@ function parseMessages(responseXML) {
             appendService(id,name,price);
         }
         if(services.length>0){
+            addHeader();
             addButton();
         }
     }
+}
+function addHeader(){
+    var head = document.getElementById("header");
+    head.appendChild(document.createTextNode(minPos));
+}
+function removeHeader(){
+    var head = document.getElementById("header");
+    head.innerHTML = "";
 }
 //forms the table of services
 function appendService(id,name,price) {
@@ -111,8 +121,28 @@ function goToRegistration(){
     var selected = getSelected();
     var selectedID = selected.getAttribute("id");
     var location = escape(address.value);
-    window.location = "registration.jsp?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
+//    window.location = "registration.jsp?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
+//$.ajax({
+//        "type" : "POST",
+//        "url" : "registration.jsp",
+//        "data" : {
+//            "serviceLocationID" : location,
+//            "serviceCatalogID" : selectedID
+//        },
+//        "success" : function(){
+//            window.location = "registration.jsp";
+//        }
+//        });
+        form_send(location, selectedID);
 }
+function form_send(location, selectedID){
+   var f=document.getElementById('postForm');
+   if(f){
+        document.getElementById("serviceLocationID").setAttribute("value", location);
+        document.getElementById("serviceCatalogID").setAttribute("value", selectedID);
+        f.submit();
+     }
+   }
 //finds, which service is selected
 function getSelected(){
     var radios = document.getElementsByName("serv");
@@ -132,4 +162,15 @@ function removeLoad(){
     document.getElementById("loader").style.display = "none";
     var button = document.getElementById("see");
     button.removeAttribute("disabled");
+}
+function showErrorMessage(message){
+    clear();
+    removeErrorMessage();
+    var errorPanel = document.getElementById("errorPanel");
+    errorPanel.appendChild(document.createTextNode(message));
+    window.setTimeout(function(){removeErrorMessage();}, 2000);
+}
+function removeErrorMessage(){
+    var errorPanel = document.getElementById("errorPanel");
+    errorPanel.innerHTML = "";
 }
