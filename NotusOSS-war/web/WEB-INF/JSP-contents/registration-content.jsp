@@ -5,7 +5,7 @@
 --%>
 
 <script type="text/javascript" src="assets/registerValidator.js"></script>
-<form name="Register" method="post" onsubmit="return validate()" action="Validate">
+<form name="Register" method="post" onsubmit="return validate()" action="Register?serviceLocationID=<%= request.getParameter("serviceLocationID") %>&serviceCatalogID=<%= request.getParameter("serviceCatalogID") %>">
 
     <h4>To join our happy customers, please, fill in the form below: </h4>
     

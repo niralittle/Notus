@@ -7,7 +7,7 @@ var minPos;
 function getServices(){
     minPos = undefined;
     addLoad();
-    getMinDistance();
+    calcMinDistance();
     window.setTimeout(function(){
     if(minPos != undefined){
         var minID = getID();
@@ -53,36 +53,7 @@ function callback() {
         }
     }
 }
-//makes request and implements the ajax
-function getMinDistance(){
-    var url = "GetLocationsServlet";
-    req = initRequest();
-    req.open("GET", url, true);
-    req.onreadystatechange = call;
-    req.send(null);
-}
 
-//callback function
-function call() {
-    clear();
-    if (req.readyState == 4) {
-        if (req.status == 200) {
-            parseMessage(req.responseXML);
-        }
-    }
-}
-//parses the responseXML and get neccessary data
-function parseMessage(responseXML) {
-    if (responseXML == null) {
-       clear();
-    } else {
-        locations = responseXML.getElementsByTagName("providerLocation");
-        for(var k=0; k<locations.length;k++){
-            destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
-        }
-        calcMinDistance();
-    }
-}
 
 //clears the table of services
 function clear() {
@@ -117,7 +88,7 @@ function appendService(id,name,price) {
     radio.setAttribute("type", "radio");
     radio.setAttribute("name", "serv");
     td.appendChild(radio);
-    td.appendChild(document.createTextNode(name+" "+price));
+    td.appendChild(document.createTextNode(name+", $"+price+"/month"));
     tr.appendChild(td);
     contents.appendChild(tr);
 }
@@ -140,11 +111,7 @@ function goToRegistration(){
     var selected = getSelected();
     var selectedID = selected.getAttribute("id");
     var location = escape(address.value);
-    var url = "Register?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
-    req = initRequest();
-    req.open("POST", url, true);
-    req.send(null);
-    window.location = "registration.jsp";
+    window.location = "registration.jsp?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
 }
 //finds, which service is selected
 function getSelected(){
@@ -158,7 +125,11 @@ function getSelected(){
 }
 function addLoad(){
     document.getElementById("loader").style.display = "block";
+    var button = document.getElementById("see");
+    button.setAttribute("disabled", "true");
 }
 function removeLoad(){
     document.getElementById("loader").style.display = "none";
+    var button = document.getElementById("see");
+    button.removeAttribute("disabled");
 }

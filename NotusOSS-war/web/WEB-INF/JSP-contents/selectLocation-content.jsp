@@ -28,8 +28,8 @@
         
          <%-- form for the table of services --%>
          <form id="form" name="getservices" action="ServisesServlet">
-            <input type="button" value="See available services for my location" onclick="getServices()">
-            <img id="loader" src="assets/ajax-loader.gif" alt="Loading, Loading!" style="display:none;"/>
+             <input id="see" type="button" value="See available services for my location" onclick="getServices()"/>
+             <img id="loader" src="assets/ajax-loader.gif" alt="Loading, Loading!" style="display:none;"/>
             <table>
                 <thead><tr><th id="header"></th></tr></thead>
                 <tbody id ="services"><tr><td></td></tr></tbody>

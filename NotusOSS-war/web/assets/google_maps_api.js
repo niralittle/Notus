@@ -7,22 +7,54 @@ var minPosition = 0; // The nearest provider!!!!
 
 //Map initialization: map, marker and clock listener
 function initialize() {
-    var haightAshbury = new google.maps.LatLng(37.7699298, 0.4469157);
+    var startPosition = new google.maps.LatLng(37.7699298, 0.4469157);
     geocoder = new google.maps.Geocoder();
     var mapOptions = {
         zoom: 3,
-        center: haightAshbury,
+        center: startPosition,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
     marker = new google.maps.Marker({
         map: map
     });
+    getProviderLocations();
+    window.setTimeout(function(){
+        getProviderMarkers();
+    },500);
     google.maps.event.addListener(map, 'click', function(event) {
         addMarker(event.latLng);
     });
 }
+//makes request and implements the ajax
+function getProviderLocations(){
+    var url = "GetLocationsServlet";
+    req = initRequest();
+    req.open("GET", url, true);
+    req.onreadystatechange = call;
+    req.send(null);
+}
 
+//callback function
+function call() {
+    clear();
+    if (req.readyState == 4) {
+        if (req.status == 200) {
+            parseMessage(req.responseXML);
+        }
+    }
+}
+//parses the responseXML and get neccessary data
+function parseMessage(responseXML) {
+    if (responseXML == null) {
+       clear();
+    } else {
+        locations = responseXML.getElementsByTagName("providerLocation");
+        for(var k=0; k<locations.length;k++){
+            destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
+        }
+    }
+}
 // Add a marker to the map if ZOOM is more than 15
 function addMarker(location) {
     if (marker.getMap()==null){
@@ -165,5 +197,22 @@ function geocode(address){
         }
     });
 }
+
+function getProviderMarkers(){
+    for(var i=0;i<destination.length;i++){
+        geocoder.geocode( {'address': destination[i]}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            var marker = new google.maps.Marker({
+                position: results[0].geometry.location,
+                map: map
+            });
+            marker.setMap(map);
+        } else {
+            alert('Wrong address. Please input another one');
+        }
+    });
+    }
+}
+
 google.maps.event.addDomListener(window, 'load', initialize);
 

@@ -28,3 +28,12 @@ function showInstAllTasks(){
 function showCableText(){
     document.getElementById('cableText').style.display = "block";
 }
+
+function checkAvailablePorts(num){
+    if(num>1){
+       document.getElementById('somePortsAreAvailable').style.display = "block";
+    }else{
+       document.getElementById('createRouter').style.display = "block";
+    }
+
+}
