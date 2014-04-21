@@ -7,10 +7,10 @@ var minPosition = 0; // The nearest provider!!!!
 
 //Map initialization: map, marker and clock listener
 function initialize() {
-    var startPosition = new google.maps.LatLng(37.7699298, 0.4469157);
+    var startPosition = new google.maps.LatLng(50.464580, 30.523078);
     geocoder = new google.maps.Geocoder();
     var mapOptions = {
-        zoom: 3,
+        zoom: 10,
         center: startPosition,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };

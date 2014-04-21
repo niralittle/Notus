@@ -17,7 +17,7 @@
     <div id ="rigtblock">
         <input type="text" id="address" name="address" value="" style="width: 500px;"/>
         <select id="addressSelect" name="mySelect" onchange="selectFunction()" style="display:none;"/>
-        <input type="button" value="Geocode" onclick="codeAddress()">
+        <input type="button" value="Show on the map" onclick="codeAddress()">
         <input type="button" value="Remove Pointer" onclick="removePointer()">
         
          <%-- form for the table of services --%>
@@ -30,6 +30,11 @@
                 <tbody id ="services"><tr><td></td></tr></tbody>
             </table>
         </form>
+         <form method='post' action='registration.jsp' id='the_form'>
+            <input id="serviceLocationID" name="serviceLocationID" type='hidden'>
+            <input id="serviceCatalogID" name="serviceCatalogID" type='hidden'>
+         </form>
+
     </div>
 </div>
 
