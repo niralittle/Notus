@@ -48,7 +48,7 @@ public class InstallationEngineerTasks extends HttpServlet {
             List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.INSTALLATION_ENGINEER.toInt());
             dbManager.commit();
             request.setAttribute("tasksEng", tasksEng);
-            request.getRequestDispatcher("/WEB-INF/installationEngineer.jsp").forward(request, response);
+            request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
         } finally {
             dbManager.close();
         }
