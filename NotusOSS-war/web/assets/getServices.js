@@ -136,7 +136,7 @@ function goToRegistration(){
         form_send(location, selectedID);
 }
 function form_send(location, selectedID){
-   var f=document.getElementById('the_form');
+   var f=document.getElementById('postForm');
    if(f){
         document.getElementById("serviceLocationID").setAttribute("value", location);
         document.getElementById("serviceCatalogID").setAttribute("value", selectedID);
@@ -164,6 +164,7 @@ function removeLoad(){
     button.removeAttribute("disabled");
 }
 function showErrorMessage(message){
+    clear();
     removeErrorMessage();
     var errorPanel = document.getElementById("errorPanel");
     errorPanel.appendChild(document.createTextNode(message));

@@ -21,7 +21,7 @@
         <input type="button" value="Remove Pointer" onclick="removePointer()">
         
          <%-- form for the table of services --%>
-         <form id="form" name="getservices" action="ServisesServlet">
+         <form id="servicesForm" name="getservices" action="ServisesServlet">
              <input id="see" type="button" value="See available services for my location" onclick="getServices()"/>
              <img id="loader" src="assets/ajax-loader.gif" alt="Loading, Loading!" style="display:none;"/>
              <div id="errorPanel"></div>
@@ -30,7 +30,7 @@
                 <tbody id ="services"><tr><td></td></tr></tbody>
             </table>
         </form>
-         <form method='post' action='registration.jsp' id='the_form'>
+         <form id='postForm' method='post' action='registration.jsp'>
             <input id="serviceLocationID" name="serviceLocationID" type='hidden'>
             <input id="serviceCatalogID" name="serviceCatalogID" type='hidden'>
          </form>
