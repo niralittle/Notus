@@ -13,8 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Validate date inputed by customer user during registration.
- * Perform only regex-cheking of specified fields.
+ * Validates data input by customer user during registration.
+ * Performs only regex-checking of specified fields.
  * 
  * @author Panchenko Dmytro
  *
@@ -33,12 +33,12 @@ public class ValidationServlet extends HttpServlet {
 	private final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
 	
 	/**
-	 * Validate inputed data from user
-	 * Forward to {@link registratin.jsp} if at least one fields not correct.
+	 * Validates data input by user
+	 * Forward to {@link registration.jsp} if at least one field is incorrect.
 	 * 
-	 * @param request                                                       // REVIEW: documenting formatting non cannonical
-	 * 			must contained next attributes with names:<p>
-	 * 			login, password, password2, email, firstName, lastName
+	 * @param request
+	 * 	must contain attributes with names:<br/>
+	 * 	login, password, password2, email, firstName, lastName
 	 * @param response
 	 * @throws ServletException
 	 * @throws IOException
@@ -64,22 +64,26 @@ public class ValidationServlet extends HttpServlet {
 		matcher = pattern.matcher(login);
 
 		if (!matcher.matches()) {
-			isValid = false;                                        // REVIEW: watch red line
-			errors.append("- Provide correct login. Spaces not allowed. Minimum length - 3 chars, maximum - 40.\n");
+			isValid = false;                                       
+			errors.append("- Provide correct login. " +
+                                "Spaces not allowed. Minimum length - " +
+                                "3 chars, maximum - 40.\n");
 							
 		}
 
 		matcher = pattern.matcher(lastName);
 		if (!matcher.matches()) {
-			isValid = false;                                        // REVIEW: watch red line
-			errors.append("- Provide correct last name. Spaces not allowed\n");
+			isValid = false;                                        
+			errors.append("- Provide correct last name. " +
+                                "Spaces not allowed\n");
 				
 		}
 
 		matcher = pattern.matcher(firstName);
 		if (!matcher.matches()) {
-			isValid = false;                                        // REVIEW: watch red line
-			errors.append("- Provide correct first name. Spaces not allowed\n");	
+			isValid = false;                                        
+			errors.append("- Provide correct first name. " +
+                                "Spaces not allowed\n");
 		}
 
 		pattern = Pattern.compile(EMAIL_PATTERN);
@@ -93,7 +97,8 @@ public class ValidationServlet extends HttpServlet {
 		matcher = pattern.matcher(password);
 		if (!matcher.matches()) {
 			isValid = false;
-			errors.append("- Provide correct password. Minimum length - 6 chars.\n");
+			errors.append("- Provide correct password. " +
+                                "Minimum length - 6 chars.\n");
 		}
 
 		if (!password.equals(password2)) {
@@ -143,7 +148,7 @@ public class ValidationServlet extends HttpServlet {
 	 */
 	@Override
 	public String getServletInfo() {
-		return "Short description";
+		return "Validates input data in the registration form.";
 	}// </editor-fold>
 
 }

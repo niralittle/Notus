@@ -18,7 +18,7 @@ public class ProviderLocationDAOImpl extends GenericDAOImpl<ProviderLocation> im
         super(dbManager);
     }
     /**
-     * Method return list of all(numberOfRecords) provided locations with paging
+     * Method returns list of all (numberOfRecords) provided locations with paging
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of providerLocations

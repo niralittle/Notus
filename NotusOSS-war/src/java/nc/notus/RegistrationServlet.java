@@ -61,8 +61,8 @@ public class RegistrationServlet extends HttpServlet {
 
             if (userDAO.isEmailDuplicate(email)) {
                 request.setAttribute("duplicateLogin", "User with specified " +
-                        "email already exist in system. Try write to " +
-                        "administrator for restoring you account.");
+                        "email already exist in system. Contact an " +
+                        "administrator to help restore you account.");
                 RequestDispatcher view = request.getRequestDispatcher("registration.jsp");
                 view.forward(request, response);
                 return;
@@ -169,6 +169,7 @@ public class RegistrationServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Registers user in the system, creates a new order " +
+                "and executes it ('New' scenario workflow).";
     }// </editor-fold>
 }

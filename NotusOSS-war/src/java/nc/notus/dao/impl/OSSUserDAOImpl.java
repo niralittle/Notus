@@ -18,8 +18,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     }
 
     /**
-     * Implementation of method for block accounts in DB
-     * @param user: our user of type OSSUser
+     * Blocking user procedure (update of db)
+     * @param user user to be blocked
      */
     @Override                                                                          
     public void blockUser(OSSUser user) {
@@ -31,7 +31,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     
     
     /**
-	 * Implementation of checking if user with specified login is already exist
+	 * Implementation of checking if user with specified login already exists
 	 * in system.
 	 * 
 	 * @param login
@@ -53,19 +53,17 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 
 		ResultIterator ri = statement.executeQuery();
 
-		// check if statement return any value
+		// check if statement returned any value
 		if (ri.next()) {
-
-			// login exist
+			// login exists
 			return true;
 		}
-
-		// login not exist
+		// login is unique
 		return false;
 	}
 
 	/**
-	 * Implementation of checking if specified email is already exist in system.
+	 * Implementation of checking if specified email already exists in system.
 	 * 
 	 * @param email
 	 *            email to check
@@ -87,14 +85,12 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 
 		ResultIterator ri = statement.executeQuery();
 
-		// check if statement return any value
+		// check if statement returned any value
 		if (ri.next()) {
-
-			// email exist
+			// email exists
 			return true;
 		}
-
-		// email not exist
+		// email is unique
 		return false;
 	}
 }

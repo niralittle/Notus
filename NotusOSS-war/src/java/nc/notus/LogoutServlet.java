@@ -12,8 +12,9 @@ public class LogoutServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+	protected void processRequest(HttpServletRequest request,
+                HttpServletResponse response)
+                throws ServletException, IOException {
 			request.getSession().invalidate();
 			response.sendRedirect("index.jsp");  
     }
@@ -21,21 +22,24 @@ public class LogoutServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response)
+                        throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
 	
 	@Override
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response)
+                        throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
 	
 	@Override
 	public String getServletInfo() {
-		return "Short description";
+		return "LogoutServlet invalidates current session " +
+                        "and logs the user out.";
 	}
 
 }
