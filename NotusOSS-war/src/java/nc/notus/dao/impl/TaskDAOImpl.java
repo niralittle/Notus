@@ -30,7 +30,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                 "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid " +
                 "FROM task t " +
-                "JOIN taskstatus ts r ON t.taskstatusid = ts.id " +
+                "JOIN taskstatus ts ON t.taskstatusid = ts.id " +
                 "WHERE t.roleid = ? " +
                 "AND ts.status = 'Active' " +
                 "ORDER BY t.id " +

@@ -19,15 +19,11 @@ function getServices(){
     }
 }
 function getAvailableServices(minID){
-    if(minID != undefined){
-        var url = "ServicesServlet?providerLocationID="+minID;
-        req = initRequest();
-        req.open("POST", url, true);
-        req.onreadystatechange = callback;
-        req.send(null);
-    }else{
-        showErrorMessage("Choose location, please");
-    }
+    var url = "ServicesServlet?providerLocationID="+minID;
+    req = initRequest();
+    req.open("POST", url, true);
+    req.onreadystatechange = callback;
+    req.send(null);
 }
 //initializes request
 function initRequest() {
@@ -121,8 +117,28 @@ function goToRegistration(){
     var selected = getSelected();
     var selectedID = selected.getAttribute("id");
     var location = escape(address.value);
-    window.location = "registration.jsp?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
+//    window.location = "registration.jsp?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
+//$.ajax({
+//        "type" : "POST",
+//        "url" : "registration.jsp",
+//        "data" : {
+//            "serviceLocationID" : location,
+//            "serviceCatalogID" : selectedID
+//        },
+//        "success" : function(){
+//            window.location = "registration.jsp";
+//        }
+//        });
+        form_send(location, selectedID);
 }
+function form_send(location, selectedID){
+   var f=document.getElementById('postForm');
+   if(f){
+        document.getElementById("serviceLocationID").setAttribute("value", location);
+        document.getElementById("serviceCatalogID").setAttribute("value", selectedID);
+        f.submit();
+     }
+   }
 //finds, which service is selected
 function getSelected(){
     var radios = document.getElementsByName("serv");
@@ -144,6 +160,7 @@ function removeLoad(){
     button.removeAttribute("disabled");
 }
 function showErrorMessage(message){
+    clear();
     removeErrorMessage();
     var errorPanel = document.getElementById("errorPanel");
     errorPanel.appendChild(document.createTextNode(message));
