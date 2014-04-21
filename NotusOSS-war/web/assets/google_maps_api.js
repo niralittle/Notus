@@ -18,11 +18,40 @@ function initialize() {
     marker = new google.maps.Marker({
         map: map
     });
+    getProviderLocations();
     google.maps.event.addListener(map, 'click', function(event) {
         addMarker(event.latLng);
     });
 }
+//makes request and implements the ajax
+function getProviderLocations(){
+    var url = "GetLocationsServlet";
+    req = initRequest();
+    req.open("GET", url, true);
+    req.onreadystatechange = call;
+    req.send(null);
+}
 
+//callback function
+function call() {
+    clear();
+    if (req.readyState == 4) {
+        if (req.status == 200) {
+            parseMessage(req.responseXML);
+        }
+    }
+}
+//parses the responseXML and get neccessary data
+function parseMessage(responseXML) {
+    if (responseXML == null) {
+       clear();
+    } else {
+        locations = responseXML.getElementsByTagName("providerLocation");
+        for(var k=0; k<locations.length;k++){
+            destination[k] = locations[k].getElementsByTagName("location")[0].firstChild.nodeValue;
+        }
+    }
+}
 // Add a marker to the map if ZOOM is more than 15
 function addMarker(location) {
     if (marker.getMap()==null){
