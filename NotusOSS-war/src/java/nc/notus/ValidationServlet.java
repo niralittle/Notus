@@ -23,8 +23,9 @@ public class ValidationServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+" +
+                "(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+" +
+                "(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	
 	//no spaces allowed. Minimum lenght - 3 chars, maximum - 40
 	private final String LOGIN_PATTERN = "^[A-Za-z0-9_-]{3,40}$";
@@ -44,7 +45,8 @@ public class ValidationServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	protected void processRequest(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response)
+                        throws ServletException, IOException {
 		
 		String login = (String) request.getParameter("login");
 		String password = (String) request.getParameter("password");
@@ -65,25 +67,25 @@ public class ValidationServlet extends HttpServlet {
 
 		if (!matcher.matches()) {
 			isValid = false;                                       
-			errors.append("- Provide correct login. " +
-                                "Spaces not allowed. Minimum length - " +
-                                "3 chars, maximum - 40.\n");
+			errors.append("- Provide correct login. ")
+                              .append("Spaces not allowed. Minimum length - ")
+                              .append("3 chars, maximum - 40.\n");
 							
 		}
 
 		matcher = pattern.matcher(lastName);
 		if (!matcher.matches()) {
 			isValid = false;                                        
-			errors.append("- Provide correct last name. " +
-                                "Spaces not allowed\n");
+			errors.append("- Provide correct last name. ")
+                              .append("Spaces not allowed\n");
 				
 		}
 
 		matcher = pattern.matcher(firstName);
 		if (!matcher.matches()) {
 			isValid = false;                                        
-			errors.append("- Provide correct first name. " +
-                                "Spaces not allowed\n");
+			errors.append("- Provide correct first name. ")
+                              .append("Spaces not allowed\n");
 		}
 
 		pattern = Pattern.compile(EMAIL_PATTERN);
@@ -107,18 +109,21 @@ public class ValidationServlet extends HttpServlet {
 		}
 		
 		if (isValid) {
-			RequestDispatcher view = request.getRequestDispatcher("/Register");
+			RequestDispatcher view = request
+                                .getRequestDispatcher("/Register");
 			view.forward(request, response);
 		} else {
 			request.setAttribute("errors", errors.toString());
-			RequestDispatcher view = request.getRequestDispatcher("registration.jsp");
+			RequestDispatcher view = request
+                                .getRequestDispatcher("registration.jsp");
 			view.forward(request, response);
 		}			
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, 
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response)
+                        throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
@@ -137,7 +142,8 @@ public class ValidationServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response)
+                        throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
