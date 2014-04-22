@@ -47,7 +47,7 @@ public class Mail {
      * @param userID - ID of the recipient
      * @param mail - text of the letter
      */
-    public void sendEmail(int userID, EMail mail) {
+    public void sendEmail(int userID, Email mail) {
 
         DBManager dbManager = new DBManager();
         OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
@@ -74,8 +74,8 @@ public class Mail {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipient(Message.RecipientType.BCC, address);
-            message.setSubject(mail.getTitle());
-            message.setContent(mail.getBody(), "text/html");
+            message.setSubject(mail.getSubject());
+            message.setContent(mail.getMessage(), "text/html");
             Transport.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
@@ -84,7 +84,7 @@ public class Mail {
 
     }
 
-    public void sendEmail(UserRole role, EMail mail) {
+    public void sendEmail(UserRole role, Email mail) {
 
         DBManager dbManager = new DBManager();
         OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
@@ -115,8 +115,8 @@ public class Mail {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.BCC, address);
-            message.setSubject(mail.getTitle());
-            message.setContent(mail.getBody(), "text/html");
+            message.setSubject(mail.getSubject());
+            message.setContent(mail.getMessage(), "text/html");
             Transport.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
