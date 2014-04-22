@@ -152,9 +152,10 @@ public class NewScenarioWorkflow extends Workflow {
 
     /**
      * This method creates Cable entity
-     * @param taskID ID of task for installation engineer                       
+     * @param taskID ID of task for installation engineer
+     * @return created cable
      */
-    public void createCable(int taskID) {
+    public Cable createCable(int taskID) {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,
@@ -169,6 +170,7 @@ public class NewScenarioWorkflow extends Workflow {
             cableDAO.add(cable);
 
             dbManager.commit();
+            return cable;
         } finally {
             dbManager.close();
         }
