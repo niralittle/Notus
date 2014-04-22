@@ -6,7 +6,6 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,17 +38,28 @@ public class SubmitTask extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         DBManager dbManager = new DBManager();
         int portQuantity = 60;
-        Cable cable = null;
-        int taskID = 1;
-        int soID = 1;
+        Cable cable;
+        int taskID;
+        int soID;
         try {
             if (request.getParameter("taskid") != null){
                 taskID  = Integer.parseInt(request.getParameter("taskid"));
             }
+            else {
+                taskID = 0;
+            }
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
             }
-            
+            else {
+                soID = 0;
+            }
+            if (request.getParameter("cable") != null){
+                cable  = (Cable) (request.getAttribute("serviceorderid"));
+            }
+            else {
+                cable = new Cable();
+            }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);
             PortDAO portDAO = new PortDAOImpl(dbManager);
@@ -76,7 +86,7 @@ public class SubmitTask extends HttpServlet {
             request.setAttribute("port", port);
             request.setAttribute("cable", cable);
             request.setAttribute("taskid", taskID);
-            request.setAttribute("so", so);
+            request.setAttribute("soid", soID);
             request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
         } finally {
                 dbManager.close();

@@ -41,7 +41,7 @@
                             <input type="text" name="serviceorderid" value="<%=task.getServiceOrderID()%>" readonly="readonly"/>
                         </td>
                         <td>
-                            <input type="hidden" name="username" value="<%=request.getUserPrincipal().getName()%>"/>
+                            <input type="hidden" name="username" value="<%=request.getUserPrincipal().getName()%>"/> 
                             <input type="submit" name="action" value="Submit" />
                         </td>
                     </tr>
