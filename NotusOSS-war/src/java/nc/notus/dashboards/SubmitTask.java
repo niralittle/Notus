@@ -75,7 +75,7 @@ public class SubmitTask extends HttpServlet {
 
             //Action "Create Cable"
             if (request.getParameter("action").equals("Create Cable")){
-                cable = nwf.createCable(taskID);
+                nwf.createCable(taskID, "UTP Cable");
             }
 
             //Action "Connect Cable to Port"
