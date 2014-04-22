@@ -40,10 +40,18 @@ public class SubmitTask extends HttpServlet {
         DBManager dbManager = new DBManager();
         int portQuantity = 60;
         Cable cable = null;
+        int taskID = 1;
+        int soID = 1;
         try {
-            int taskID  = Integer.parseInt(request.getParameter("taskid"));
+            if (request.getParameter("taskid") != null){
+                taskID  = Integer.parseInt(request.getParameter("taskid"));
+            }
+            if (request.getParameter("serviceorderid") != null){
+                soID  = Integer.parseInt(request.getParameter("serviceorderid"));
+            }
+            
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
-            ServiceOrder so = soDAO.find(Integer.parseInt(request.getParameter("serviceorderid")));
+            ServiceOrder so = soDAO.find(soID);
             PortDAO portDAO = new PortDAOImpl(dbManager);
             Port port = portDAO.getFreePort();
             NewScenarioWorkflow nwf = new NewScenarioWorkflow(so);
