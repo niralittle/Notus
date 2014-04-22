@@ -1,3 +1,6 @@
+
+/*!!!!!!!!!!!!!SHOULD BE DELETED!!!!!!!!!!!!!!!!!!*/
+/*ofc if no one need it. Use Mail.java*/
 package nc.notus.email;
 
 import java.io.IOException;
