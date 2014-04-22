@@ -96,9 +96,7 @@ public class NewScenarioWorkflow extends Workflow {
         ServiceInstance serviceInstance = new ServiceInstance();
         serviceInstance.setCircuitID(null);
         serviceInstance.setPortID(null);
-        Calendar cal = java.util.Calendar.getInstance();
-        Date date = new Date(cal.getTimeInMillis());
-        serviceInstance.setServiceInstanceDate(date);
+        serviceInstance.setServiceInstanceDate(null); // date is not set because SI wasn't activated yet
         int statusID = sisDAO.getServiceInstanceStatusID(InstanceStatus.PLANNED);
         serviceInstance.setServiceInstanceStatusID(statusID);
 
@@ -112,7 +110,7 @@ public class NewScenarioWorkflow extends Workflow {
      * This method creates new Router in system. It also creates Ports
      * and links them with Router.
      * @param portQuantity amount of Ports that Router accommodates
-     * @param taskID ID of task for installation engineer                       
+     * @param taskID ID of task for installation engineer                  
      */
     public void createRouter(int taskID, int portQuantity) {
         DBManager dbManager = new DBManager();
@@ -153,9 +151,8 @@ public class NewScenarioWorkflow extends Workflow {
     /**
      * This method creates Cable entity
      * @param taskID ID of task for installation engineer
-     * @return created cable
      */
-    public Cable createCable(int taskID) {
+    public void createCable(int taskID, String cableType) {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,
@@ -166,11 +163,10 @@ public class NewScenarioWorkflow extends Workflow {
             CableDAO cableDAO = new CableDAOImpl(dbManager);
 
             Cable cable = new Cable();
-            cable.setCable("UTP cable");
+            cable.setCable(cableType);
             cableDAO.add(cable);
 
             dbManager.commit();
-            return cable;
         } finally {
             dbManager.close();
         }
@@ -191,8 +187,8 @@ public class NewScenarioWorkflow extends Workflow {
                     UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
-
             PortDAO portDAO = new PortDAOImpl(dbManager);
+
             Port port = portDAO.find(portID);
             if (port.getPortStatus() == PortState.BUSY.toInt()) {
                 throw new WorkflowException("Port is busy");
@@ -219,7 +215,7 @@ public class NewScenarioWorkflow extends Workflow {
      * @param portID ID of port to link SI with
      * @param serviceInstanceID ID of SI to link with port
      */
-    public void assignPort(int taskID, int portID, int serviceInstanceID) {
+    public void assignPortToSI(int taskID, int portID, int serviceInstanceID) {
         if (order.getServiceInstanceID() != serviceInstanceID) {
             throw new WorkflowException("Given SI is not connected " +
                     "with current Order");
@@ -266,6 +262,8 @@ public class NewScenarioWorkflow extends Workflow {
             }
 
             completeTask(dbManager, taskID);
+
+            updateServiceInstanceDate(dbManager, order.getServiceInstanceID());
             changeServiceInstanceStatus(dbManager, InstanceStatus.ACTIVE);
             changeOrderStatus(dbManager, OrderStatus.COMPLETED);
             // TODO: send email here
@@ -273,6 +271,20 @@ public class NewScenarioWorkflow extends Workflow {
         } finally {
             dbManager.close();
         }
+    }
+
+    /**
+     * Sets SI creation date with current date
+     * @param dbManager class that represents connection to DB
+     * @param serviceInstanceID ID of SI
+     */
+    private void updateServiceInstanceDate(DBManager dbManager, int serviceInstanceID) {
+        ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+        Calendar cal = java.util.Calendar.getInstance();
+        Date date = new Date(cal.getTimeInMillis());
+        ServiceInstance si = siDAO.find(serviceInstanceID);
+        si.setServiceInstanceDate(date);
+        siDAO.update(si);
     }
 
     /**
