@@ -9,8 +9,6 @@ package nc.notus.email;
  * @author Igor Litvinenko
  */
 public interface Email {
-
+    String getSubject();
     String getMessage();
-
-    String getTitle();
 }
