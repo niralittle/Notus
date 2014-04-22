@@ -26,10 +26,6 @@
         <servlet-name>GetLocationsServlet</servlet-name>
         <servlet-class>nc.notus.maps.GetLocationsServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>ValidationServlet</servlet-name>
-        <servlet-class>nc.notus.ValidationServlet</servlet-class>
-    </servlet>
 
     <servlet>
         <servlet-name>DownloadReportServlet</servlet-name>
@@ -54,10 +50,6 @@
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ValidationServlet</servlet-name>
-        <url-pattern>/Validate</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
