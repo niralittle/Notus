@@ -6,18 +6,23 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nc.notus.dao.PortDAO;
 import nc.notus.dao.ServiceOrderDAO;
+import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
+import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.Cable;
 import nc.notus.entity.Port;
 import nc.notus.entity.ServiceOrder;
+import nc.notus.entity.Task;
+import nc.notus.states.UserRole;
 import nc.notus.workflow.NewScenarioWorkflow;
 
 /**
@@ -80,7 +85,14 @@ public class SubmitTask extends HttpServlet {
 
             //Action "Connect Cable to Port"
             if (request.getParameter("action").equals("Connect Cable to Port")){
-                nwf.plugCableToPort(taskID, cable.getId(), port.getId());
+                nwf.plugCableToPort(taskID, 1, port.getId());
+                TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+                int startpage = 1;
+                int numbOfRecords = 10;
+                List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.INSTALLATION_ENGINEER.toInt());
+                dbManager.commit();
+                request.setAttribute("tasksEng", tasksEng);
+                request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
             }
 
             request.setAttribute("port", port);
