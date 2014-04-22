@@ -167,10 +167,15 @@ function calcMinDistance(){
         });
     }
     window.setTimeout(function(){
-        if(parseFloat(dis) < 50000){
-            minPos = minPosition;
+        var m = marker.getPosition();
+        if(m != undefined){
+            if(parseFloat(dis) < 50000){
+                minPos = minPosition;
+            }else{
+                showErrorMessage("You are too far");
+            }
         }else{
-            showErrorMessage("You are too far");
+            showErrorMessage("Choose location, please");
         }
     },500);
 }
