@@ -115,30 +115,18 @@ function addButton() {
 //send the serviceLocationID and serviceCatalogID parameters
 function goToRegistration(){
     var selected = getSelected();
-    var selectedID = selected.getAttribute("id");
-    var location = escape(address.value);
-//    window.location = "registration.jsp?serviceLocationID="+location+"&serviceCatalogID="+selectedID;
-//$.ajax({
-//        "type" : "POST",
-//        "url" : "registration.jsp",
-//        "data" : {
-//            "serviceLocationID" : location,
-//            "serviceCatalogID" : selectedID
-//        },
-//        "success" : function(){
-//            window.location = "registration.jsp";
-//        }
-//        });
-        form_send(location, selectedID);
-}
-function form_send(location, selectedID){
-   var f=document.getElementById('postForm');
-   if(f){
+    if(selected != false){
+        var selectedID = selected.getAttribute("id");
+        var location = escape(address.value);
+        var postForm=document.getElementById('postForm');
         document.getElementById("serviceLocationID").setAttribute("value", location);
         document.getElementById("serviceCatalogID").setAttribute("value", selectedID);
-        f.submit();
-     }
-   }
+        postForm.submit();
+    }else{
+        addErrorMessage("Choose service, please");
+    }
+}
+
 //finds, which service is selected
 function getSelected(){
     var radios = document.getElementsByName("serv");
@@ -161,6 +149,9 @@ function removeLoad(){
 }
 function showErrorMessage(message){
     clear();
+    addErrorMessage(message);
+}
+function addErrorMessage(message){
     removeErrorMessage();
     var errorPanel = document.getElementById("errorPanel");
     errorPanel.appendChild(document.createTextNode(message));
