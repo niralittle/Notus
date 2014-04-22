@@ -127,9 +127,6 @@ public class DisconnectScenarioWorkflow extends Workflow {
             port.setPortStatus(PortState.FREE.toInt());
             portDAO.update(port);
 
-            CableDAO cableDAO = new CableDAOImpl(dbManager);
-            cableDAO.delete(cableID);
-
             completeTask(dbManager, taskID);
             changeOrderStatus(dbManager, OrderStatus.COMPLETED);
             // TODO: send email here
