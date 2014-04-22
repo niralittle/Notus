@@ -68,13 +68,12 @@ public class DisconnectScenarioWorkflow extends Workflow {
      * This method unassigns given Port from given Service Instance.
      * It also unlinks Circuit from SI and deletes the Circuit.
      * It sets status of given task to "Completed".
-     * After execution it automatically creates task to Customer Support
-     * Engineer group.
+     * After execution it automatically creates task for Installation Engineer group.
      * @param taskID ID of task for Provisioning Engineer
      * @param portID ID of port to unlink SI from
      * @param serviceInstanceID ID of SI to unlink from port
      */
-    public void unassignPort(int taskID, int portID, int serviceInstanceID) {
+    public void unassignPortFromSI(int taskID, int portID, int serviceInstanceID) {
         if (order.getServiceInstanceID() != serviceInstanceID) {
             throw new WorkflowException("Given SI is not connected " +
                     "with current Order");
@@ -98,6 +97,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
             circuitDAO.delete(circuitID);
 
             this.completeTask(dbManager, taskID);
+            changeServiceInstanceStatus(dbManager, InstanceStatus.DISCONNECTED);
             this.createTask(dbManager, UserRole.INSTALLATION_ENGINEER);
             dbManager.commit();
         } finally {
@@ -109,7 +109,6 @@ public class DisconnectScenarioWorkflow extends Workflow {
      * This method unplugs Cable from specified Port.
      * It sets Port status to "Free" and changes status of Task
      * to "Completed" after execution.
-     * After it's done method automatically creates task for Provisioning Engineer
      * @param taskID taskID ID of task for installation engineer
      * @param cableID ID of Cable to unplug
      * @param portID ID of Port to unplug Cable from
@@ -132,7 +131,6 @@ public class DisconnectScenarioWorkflow extends Workflow {
             cableDAO.delete(cableID);
 
             completeTask(dbManager, taskID);
-            changeServiceInstanceStatus(dbManager, InstanceStatus.DISCONNECTED);
             changeOrderStatus(dbManager, OrderStatus.COMPLETED);
             // TODO: send email here
             dbManager.commit();

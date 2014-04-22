@@ -1,4 +1,4 @@
-package nc.notus;
+package nc.notus.dashboards;
 
 import nc.notus.dao.ServiceOrderDAO;
 
