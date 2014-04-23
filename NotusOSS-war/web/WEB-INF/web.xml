@@ -70,6 +70,14 @@
         <servlet-name>CreateCircuit</servlet-name>
         <servlet-class>nc.notus.dashboards.CreateCircuit</servlet-class>
     </servlet>
+    <servlet>
+	<servlet-name>SupportEngeenierServlet</servlet-name>
+	<servlet-class>nc.notus.dashboards.SupportEngeenierServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+	<servlet-name>SupportEngeenierServlet</servlet-name>
+	<url-pattern>/Support</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
