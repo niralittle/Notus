@@ -65,7 +65,10 @@
         <servlet-name>EmailTestServlet</servlet-name>
         <servlet-class>nc.notus.EmailTestServlet</servlet-class>
     </servlet>
-    <servlet><servlet-name>ProvisionEngineerTasksServlet</servlet-name><servlet-class>nc.notus.dashboards.ProvisionEngineerTasksServlet</servlet-class></servlet>
+    <servlet>
+    <servlet-name>ProvisionEngineerTasksServlet</servlet-name>
+    <servlet-class>nc.notus.dashboards.ProvisionEngineerTasksServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>CreateCircuit</servlet-name>
         <servlet-class>nc.notus.dashboards.CreateCircuit</servlet-class>
