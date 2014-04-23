@@ -5,13 +5,13 @@
     <a href="login.jsp">Login</a>
     
     <p>
-		<a href="/NOTUS-0/InstallationEngineerTasks">Installation Engineer Page</a>
+		<a href="/NotusOSS-war/InstallationEngineerTasks">Installation Engineer Page</a>
 	</p>
 	<p>
-		<a href="/NOTUS-0/ProvisionEngineerTasksServlet">Provisioning Engineer Page</a>
+		<a href="/NotusOSS-war/ProvisionEngineerTasksServlet">Provisioning Engineer Page</a>
 	</p>
 	<p>
-		<a href="/NOTUS-0/Support">Support Engineer Page</a>
+		<a href="/NotusOSS-war/Support">Support Engineer Page</a>
 	</p>
 
 
