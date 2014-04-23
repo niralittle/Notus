@@ -3,6 +3,17 @@
     <a href="logout">Logout</a>
     <div class="separator"></div>
     <a href="login.jsp">Login</a>
+    
+    <p>
+		<a href="/NOTUS-0/InstallationEngineerTasks">Installation Engineer Page</a>
+	</p>
+	<p>
+		<a href="/NOTUS-0/ProvisionEngineerTasksServlet">Provisioning Engineer Page</a>
+	</p>
+	<p>
+		<a href="/NOTUS-0/Support">Support Engineer Page</a>
+	</p>
+
 
     <div id="pages_list">
         <ul>
