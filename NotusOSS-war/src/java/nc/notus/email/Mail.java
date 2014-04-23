@@ -88,7 +88,7 @@ public class Mail {
 
         DBManager dbManager = new DBManager();
         OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-        List<String> addressList = getGroupEmails(role);
+        List<String> addressList = userDAO.getGroupEmails(role);
         Address[] address = new Address[addressList.size()];
 
         /*Authentication to mail service */
