@@ -34,8 +34,5 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
     boolean isEmailDuplicate(String email);
 
     // TODO: documentation
-    String getUserEmail(int userID);
-
-    // TODO: documentation
     List<String> getGroupEmails(UserRole role);
 }

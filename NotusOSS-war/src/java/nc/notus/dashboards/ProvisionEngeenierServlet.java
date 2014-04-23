@@ -56,7 +56,7 @@ public class ProvisionEngeenierServlet extends HttpServlet {
 
 		// create workflow instance and assign received port to SI
 		NewScenarioWorkflow wf = new NewScenarioWorkflow(so);
-		wf.assignPortToSI(taskID, portID, serviceInstanceID);
+		//wf.assignPortToSI(taskID, portID, serviceInstanceID);
 
 		request.setAttribute("success", "Port successfully assigned!");
 		

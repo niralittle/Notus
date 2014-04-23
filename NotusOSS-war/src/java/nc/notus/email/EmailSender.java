@@ -17,6 +17,7 @@ import javax.mail.internet.MimeMessage;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.OSSUser;
 import nc.notus.states.UserRole;
 
 /**
@@ -26,7 +27,7 @@ import nc.notus.states.UserRole;
  * Need SMTP properties from email host and login/password of email author
  * @author Roman Martynuyk
  */
-public class Mail {
+public class EmailSender {
 
     private final String username = "notus.noreply@gmail.com";
     private final String password = "notusnotus";
@@ -50,16 +51,22 @@ public class Mail {
     public void sendEmail(int userID, Email mail) {
 
         DBManager dbManager = new DBManager();
-        OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+        String userEmail;
+        try {
+            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+            OSSUser user = userDAO.find(userID);
+            userEmail = user.getEmail();
+        } finally {
+            dbManager.close();
+        }
 
         /*Get the address of user*/
         Address address = null;
         try {
-            address = new InternetAddress(userDAO.getUserEmail(userID));
+            address = new InternetAddress(userEmail);
         } catch (AddressException ex) {
-            Logger.getLogger(Mail.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         /*Authentication to mail service */
         Session session = Session.getInstance(props, new Authenticator() {
 
@@ -80,15 +87,18 @@ public class Mail {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-        dbManager.close();
-
     }
 
     public void sendEmail(UserRole role, Email mail) {
 
         DBManager dbManager = new DBManager();
-        OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-        List<String> addressList = userDAO.getGroupEmails(role);
+        List<String> addressList;
+        try {
+            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+            addressList = userDAO.getGroupEmails(role);
+        } finally {
+            dbManager.close();
+        }
         Address[] address = new Address[addressList.size()];
 
         /*Authentication to mail service */
@@ -105,7 +115,7 @@ public class Mail {
             try {
                 address[i] = new InternetAddress(addressList.get(i));
             } catch (AddressException ex) {
-                Logger.getLogger(MailServlet.class.getName()).log(Level.SEVERE,
+                Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE,
                         null, ex);
             }
         }
@@ -121,6 +131,5 @@ public class Mail {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-        dbManager.close();
     }
 }

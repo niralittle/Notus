@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
  *
  * @author Katya Atamanchuk <nira@niralittle.name>
  */
-public class RegistrationSuccessfulNotification implements Email {
+public class RegistrationSuccessfulNotification { //implements Email {
 
     String message;
     String subject;
@@ -18,7 +18,7 @@ public class RegistrationSuccessfulNotification implements Email {
             String connectionDate, String login, String password)
             throws FileNotFoundException, IOException {
         buildTemplate();
-        subject = String.format("Congratulation, %s, you are registred!", firstName);
+        
         message = String.format(message, firstName, connectionDate, login, password);
     }
 

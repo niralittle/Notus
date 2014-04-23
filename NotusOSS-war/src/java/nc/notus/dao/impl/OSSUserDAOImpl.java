@@ -1,5 +1,6 @@
 package nc.notus.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.DAOException;
 import nc.notus.dao.OSSUserDAO;
@@ -95,13 +96,19 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
         return false;
     }
 
+    // TODO: documentation
     @Override
     public List<String> getGroupEmails(UserRole role) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getUserEmail(int userID) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String query = "SELECT u.email " +
+                       "FROM OSSUser u " +
+                       "WHERE u.roleID = ?";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setInt(1, role.toInt());
+        ResultIterator ri = statement.executeQuery();
+        List<String> emailList = new ArrayList<String>();
+        while (ri.next()) {
+            emailList.add(ri.getString("email"));
+        }
+        return emailList;
     }
 }
