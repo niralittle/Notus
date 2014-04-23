@@ -6,22 +6,17 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-import java.util.List;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.dao.TaskDAO;
-import nc.notus.dao.impl.TaskDAOImpl;
-import nc.notus.dbmanager.DBManager;
-import nc.notus.entity.Task;
-import nc.notus.states.UserRole;
 
 /**
  * Implements part of Installation Engineer dashboard
  * @author Vladimir Ermolenko
  */
-public class ProvisionEngineerTasksServlet extends HttpServlet {
+public class CreateCircuit extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -33,22 +28,20 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int startpage = 1;
-        int numbOfRecords = 10;
-        DBManager dbManager = new DBManager();
+        PrintWriter out = response.getWriter();
         try {
-            if (request.getParameter("startpage") != null) {
-                startpage = Integer.parseInt(request.getParameter("startpage"));
-            }
-            if (request.getParameter("numbOfRecords") != null) {
-                numbOfRecords = Integer.parseInt(request.getParameter("numbOfRecords"));
-            }
-            TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-            List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.PROVISION_ENGINEER.toInt());
-            request.setAttribute("tasksEng", tasksEng);
-            request.getRequestDispatcher("provisionEngineer.jsp").forward(request, response);
-        } finally {
-            dbManager.close();
+            /* TODO output your page here
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet CreateCircuit</title>");  
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet CreateCircuit at " + request.getContextPath () + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+            */
+        } finally { 
+            out.close();
         }
     } 
 
