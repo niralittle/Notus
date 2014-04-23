@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import nc.notus.email.EmailSender;
+import nc.notus.email.RegistrationSuccessfulEmail;
 
 /**
  * Provides registration in system for new user and creates new scenario workflow
@@ -53,11 +55,12 @@ public class RegistrationServlet extends HttpServlet {
 
         DBManager dbManager = new DBManager();
         ServiceOrder newOrder = null;
+        Integer userID = null;
         boolean paramsValid = false;
         try {
             paramsValid = validateParams(dbManager, errMessage);
             if (paramsValid) {
-                int userID = createUser(dbManager);
+                userID = createUser(dbManager);
                 newOrder = createOrder(dbManager, userID);
                 dbManager.commit();
             }
@@ -66,10 +69,17 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         if (paramsValid) {
+            // send email to user
+            RegistrationSuccessfulEmail notificationEmail =
+                    new RegistrationSuccessfulEmail(firstName, "24.04.2014", login, password);
+            EmailSender emailSender = new EmailSender();
+            emailSender.sendEmail(userID, notificationEmail);
+
+            // proceed Order
             Workflow wf = new NewScenarioWorkflow(newOrder);
             wf.proceedOrder();
 
-            //redirect to congratulation page
+            // redirect to congratulation page
             RequestDispatcher view = request.getRequestDispatcher("orderRecieved.jsp");
             view.forward(request, response);
         } else {

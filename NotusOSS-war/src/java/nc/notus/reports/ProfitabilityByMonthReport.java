@@ -57,8 +57,8 @@ public class ProfitabilityByMonthReport implements Report {
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = profit.get(i).getMonth() +
-                        COLUMN_SEPARATOR + profit.get(i).getProfit();
+                this.reportData[i] = profit.get(i - 1).getMonth() +
+                        COLUMN_SEPARATOR + profit.get(i - 1).getProfit();
             }
         } finally {
             dbManager.close();

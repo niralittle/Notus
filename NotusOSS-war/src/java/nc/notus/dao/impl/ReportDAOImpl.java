@@ -172,7 +172,7 @@ public class ReportDAOImpl implements ReportDAO {
         // The query below needed in review with a lot of complex examples in table!
 
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                        "SELECT d.name, (d.portquantity - COUNT(p.portnumber))/d.portquantity*100 " +
+                        "SELECT d.name, COUNT(p.portnumber)/d.portquantity*100 " +
                         "AS utilization, d.portquantity " +
                         "FROM port p " +
                         "LEFT JOIN device d ON p.deviceid = d.id " +

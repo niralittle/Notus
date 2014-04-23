@@ -51,7 +51,7 @@ public class NewOrdersPerPeriodReport implements Report {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             this.reportName = "New orders per period";
             List<ServiceOrder> orders = reportDAO.getNewServiceOrders(
-                    startDate, finishDate, pageNumber * recordsPerPage, pageNumber);
+                    startDate, finishDate, pageNumber * recordsPerPage, recordsPerPage);
             this.reportData = new String[orders.size() + 1]; // +1 for column headers
 
             /* Column headers */
@@ -59,8 +59,8 @@ public class NewOrdersPerPeriodReport implements Report {
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = orders.get(i).getId() + COLUMN_SEPARATOR +
-                        orders.get(i).getServiceOrderDate();
+                this.reportData[i] = orders.get(i - 1).getId() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getServiceOrderDate();
             }
         } finally {
             dbManager.close();

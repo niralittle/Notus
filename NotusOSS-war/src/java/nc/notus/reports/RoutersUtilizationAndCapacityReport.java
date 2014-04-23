@@ -52,7 +52,7 @@ public class RoutersUtilizationAndCapacityReport implements Report {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             List<RoutersUtilizationCapacity> routersUtilCap =
                     reportDAO.getRoutersUtilizationCapacityData(startDate,
-                    finishDate, pageNumber * recordsPerPage, pageNumber);
+                    finishDate, pageNumber * recordsPerPage, recordsPerPage);
             this.reportData = new String[routersUtilCap.size() + 1]; // +1 for column headers
 
             /* Column headers */
@@ -61,9 +61,9 @@ public class RoutersUtilizationAndCapacityReport implements Report {
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = routersUtilCap.get(i).getDeviceName() +
-                        COLUMN_SEPARATOR + routersUtilCap.get(i).getUtilization() +
-                        COLUMN_SEPARATOR + routersUtilCap.get(i).getCapacity();
+                this.reportData[i] = routersUtilCap.get(i - 1).getDeviceName() +
+                        COLUMN_SEPARATOR + routersUtilCap.get(i - 1).getUtilization() +
+                        COLUMN_SEPARATOR + routersUtilCap.get(i - 1).getCapacity();
             }
         } finally {
             dbManager.close();
