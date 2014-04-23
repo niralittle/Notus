@@ -39,4 +39,25 @@ public class CableDAOImpl extends GenericDAOImpl<Cable> implements CableDAO {
         return freeCables;
     }
 
+    /**
+     * Method returns first unused in Port cable
+     * @return cable wich is unused in Port cable
+     */
+    @Override
+    public Cable getFreeCable() {
+        String query  = "SELECT c.id, c.cable " +
+                        "FROM cable c " +
+                        "LEFT JOIN port p ON c.id = p.cableid " +
+                        "WHERE p.cableid IS NULL " +
+                        "AND rownum =1";
+        Statement statement = dbManager.prepareStatement(query);
+        ResultIterator ri = statement.executeQuery();
+        Cable freeCable = new Cable();
+        if (ri.next()){
+            freeCable.setId(ri.getInt("id"));
+            freeCable.setCable(ri.getString("cable"));
+        }
+        return freeCable;
+    }
+
 }
