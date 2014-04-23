@@ -70,14 +70,14 @@
         <servlet-class>nc.notus.dashboards.ProvisionEngineerTasksServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CreateCircuit</servlet-name>
-        <servlet-class>nc.notus.dashboards.CreateCircuit</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <servlet-class>nc.notus.dashboards.SupportEngineerServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>CreateCircuit</servlet-name>
+        <servlet-class>nc.notus.dashboards.CreateCircuit</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
@@ -130,11 +130,11 @@
         <servlet-name>ProvisionEngineerTasksServlet</servlet-name>
         <url-pattern>/ProvisionEngineerTasksServlet</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>CreateCircuit</servlet-name>
         <url-pattern>/CreateCircuit</url-pattern>
     </servlet-mapping>
-
     <session-config>
         <session-timeout>
             30

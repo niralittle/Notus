@@ -19,10 +19,6 @@
     </head>
     <body>
         <% Integer taskID = (Integer) request.getAttribute("taskid");
-           Port port = new Port();
-           if (request.getAttribute("port") != null) {
-                port = (Port) request.getAttribute("port");
-           }
            Integer soID = (Integer) request.getAttribute("soid");%>
            <form action="ProvisioningEngineerTasksServlet" method="POST">
                <input type="submit" name="action" value="Back to Tasks" />
