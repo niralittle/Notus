@@ -62,10 +62,6 @@
         <servlet-class>nc.notus.dashboards.SubmitTask</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>DataDemoForReportsServlet</servlet-name>
-        <servlet-class>nc.notus.DataDemoForReportsServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>EmailTestServlet</servlet-name>
         <servlet-class>nc.notus.EmailTestServlet</servlet-class>
     </servlet>
@@ -115,10 +111,6 @@
         <url-pattern>/SubmitTask</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>DataDemoForReportsServlet</servlet-name>
-        <url-pattern>/getData</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>EmailTestServlet</servlet-name>
         <url-pattern>/EmailTestServlet</url-pattern>
     </servlet-mapping>
@@ -138,7 +130,7 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-    
+
     <error-page>
         <error-code>403</error-code>
         <location>/deniedResource.jsp</location>
@@ -165,7 +157,7 @@
             <form-error-page>/loginError.jsp</form-error-page>
         </form-login-config>
     </login-config>
-    
+
     <security-role>
         <role-name>ADMINISTRATOR</role-name>
     </security-role>
@@ -181,4 +173,4 @@
     <security-role>
         <role-name>CUSTOMER_USER</role-name>
     </security-role>
-</web-app>
+<servlet-name>EmailTestServlet</servlet-name><url-pattern>/EmailTestServlet</url-pattern></web-app>
