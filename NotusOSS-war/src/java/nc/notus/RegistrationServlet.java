@@ -69,15 +69,15 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         if (paramsValid) {
+            // proceed Order
+            Workflow wf = new NewScenarioWorkflow(newOrder);
+            wf.proceedOrder();
+
             // send email to user
             RegistrationSuccessfulEmail notificationEmail =
                     new RegistrationSuccessfulEmail(firstName, "24.04.2014", login, password);
             EmailSender emailSender = new EmailSender();
             emailSender.sendEmail(userID, notificationEmail);
-
-            // proceed Order
-            Workflow wf = new NewScenarioWorkflow(newOrder);
-            wf.proceedOrder();
 
             // redirect to congratulation page
             RequestDispatcher view = request.getRequestDispatcher("orderRecieved.jsp");

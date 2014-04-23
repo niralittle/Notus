@@ -23,6 +23,7 @@
            <form action="ProvisioningEngineerTasksServlet" method="POST">
                <input type="submit" name="action" value="Back to Tasks" />
            </form>
+           <form action="CreateCircuit" method="POST">
            <table border="1" id="tablename1">
             <tbody>
                 <tr>
@@ -44,15 +45,14 @@
                         <%=soID%>
                     </td>
                     <td>
-                        <input type="text" name="ciruit"/>
+                        <input type="text" name="circuit"/>
                     </td>
                 </tr>
             </tbody>
            </table>
-        <form action="CreateCircuit" method="POST">
+        
             <input type="hidden" name="taskid" value="<%=taskID%>"/>
             <input type="hidden" name="serviceorderid" value="<%=soID%>"/>
-            <input type="hidden" name="circuit" />
             <input type="submit" name="action" value="Create Circuit" />
         </form>
     </body>
