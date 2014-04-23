@@ -17,7 +17,7 @@ import nc.notus.entity.Task;
 import nc.notus.states.UserRole;
 import nc.notus.workflow.NewScenarioWorkflow;
 
-public class SupportEngeenierServlet extends HttpServlet {
+public class SupportEngineerServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,7 +49,7 @@ public class SupportEngeenierServlet extends HttpServlet {
 						"No tasks finded! You are free at this moment!");
 			}
 
-			RequestDispatcher view = request.getRequestDispatcher("supportEngeenier.jsp");
+			RequestDispatcher view = request.getRequestDispatcher("supportEngineer.jsp");
 			view.forward(request, response);
 
 		} finally {
