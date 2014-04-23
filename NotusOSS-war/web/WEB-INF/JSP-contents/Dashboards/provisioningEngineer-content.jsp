@@ -32,7 +32,7 @@
                     </td>
                 </tr>
                 <%for (Task task : tasksEng) {%>
-                <form action="SubmitTask" method="POST">
+                <form action="CreateCiruit" method="POST">
                     <tr>
                         <td>
                             <input type="text" name="taskid" value="<%=task.getId()%>" readonly="readonly"/>
