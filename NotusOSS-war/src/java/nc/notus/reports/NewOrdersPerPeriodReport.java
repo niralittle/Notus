@@ -37,7 +37,10 @@ public class NewOrdersPerPeriodReport implements Report {
      * Creates a report instance with given name
      * @param reportName report name
      */
-    public NewOrdersPerPeriodReport(String reportName) {
+    public NewOrdersPerPeriodReport(String reportName, String startDate,
+            String finishDate) {
+        this.startDate = Date.valueOf(startDate);
+        this.finishDate = Date.valueOf(finishDate);
         this.reportName = reportName;
         getDataFromDatabase();
     }

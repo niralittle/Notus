@@ -1,7 +1,6 @@
 package nc.notus.reports;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,15 +24,41 @@ public class ReportTestServlet extends HttpServlet {
             throws ServletException, IOException {
 //        PrintWriter pw = response.getWriter();
         response.setContentType("text/html;charset=UTF-8");
+        int reportTypeValue = Integer.parseInt(request.getParameter("report"));
+        String startDate = request.getParameter("fromdate");
+        String finishDate = request.getParameter("todate");
+        Report currentReport = null;
+        switch (reportTypeValue) {
+            case 0:
+                currentReport = new MostProfitableRouterReport("Most profitable router",
+                        startDate, finishDate);
+                break;
+            case 1:
+                currentReport = new NewOrdersPerPeriodReport("New orders per period",
+                        startDate, finishDate);
+                break;
+            case 2:
+                currentReport = new DisconnectOrdersPerPeriodReport("Disconnect orders per period",
+                        startDate, finishDate);
+                break;
+            case 3:
+                currentReport = new RoutersUtilizationAndCapacityReport("Routers utilization and capacity",
+                        startDate, finishDate);
+                break;
+            case 4:
+                currentReport = new ProfitabilityByMonthReport("Profitability by month",
+                        startDate, finishDate);
+                break;
 
-        Report testReport = new MostProfitableRouterReport("Most profitable report");
-        ReportGenerator testReportGenerator = new ReportGenerator(testReport);
+        }
+        ReportGenerator reportGenerator = new ReportGenerator(currentReport);
 
-        request.getSession().setAttribute("table", testReportGenerator.getReportHTML());
+        request.getSession().setAttribute("table", reportGenerator.getReportHTML());
         String objectId = UUID.randomUUID().toString();
-        request.getSession().setAttribute(objectId, (Object) testReportGenerator);
-        request.setAttribute("object", objectId);
-        request.getSession().setAttribute("title", testReport.getReportName());
+
+        request.getSession().setAttribute("objectId", objectId);
+        request.getSession().setAttribute(objectId, (Object) reportGenerator);
+        request.getSession().setAttribute("title", currentReport.getReportName());
 
         request.getRequestDispatcher("report.jsp").forward(request, response);
 

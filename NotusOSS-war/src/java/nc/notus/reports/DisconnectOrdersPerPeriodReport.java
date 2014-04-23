@@ -37,7 +37,10 @@ public class DisconnectOrdersPerPeriodReport implements Report {
      * Creates a report instance with given name
      * @param reportName
      */
-    public DisconnectOrdersPerPeriodReport(String reportName) {
+    public DisconnectOrdersPerPeriodReport(String reportName, String startDate,
+            String finishDate) {
+        this.startDate = Date.valueOf(startDate);
+        this.finishDate = Date.valueOf(finishDate);
         this.reportName = reportName;
         getDataFromDatabase();
     }

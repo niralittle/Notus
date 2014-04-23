@@ -4,7 +4,7 @@
     Author     : Andrey Ilin
 --%>
 <jsp:include page="/WEB-INF/template.jsp">
-	<jsp:param name="content" value="/report-content"/>
+	<jsp:param name="content" value="report-content"/>
         <jsp:param name="title" value='<%=request.getSession().getAttribute("title")%>'/>
 </jsp:include>
 

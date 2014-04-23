@@ -34,12 +34,12 @@ public class MostProfitableRouterReport implements Report {
      * Creates a report instance with given name
      * @param reportName
      */
-    public MostProfitableRouterReport(String reportName) {
+    public MostProfitableRouterReport(String reportName, String startDate,
+            String finishDate) {
         this.reportName = reportName;
-        //getDataFromDatabase(); FULL FUNCTIONAL
-        this.reportData = new String[]{
-                    "Router ID#Router name#Port Quantity", "1#ROUTER1#1",
-                    "1#ROUTER1#1", "1#ROUTER1#1", "1#ROUTER1#1"}; //TEST
+        this.startDate = Date.valueOf(startDate);
+        this.finishDate = Date.valueOf(finishDate);
+        getDataFromDatabase();
     }
 
     private void getDataFromDatabase() {
