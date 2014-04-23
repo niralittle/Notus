@@ -1,6 +1,8 @@
 package nc.notus.dao;
 
+import java.util.List;
 import nc.notus.entity.OSSUser;
+import nc.notus.states.UserRole;
 
 /**
  * Interface of DAO for entity OSSUser
@@ -30,4 +32,10 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * @return true - if exist, false - otherwise
      */
     boolean isEmailDuplicate(String email);
+
+    // TODO: documentation
+    String getUserEmail(int userID);
+
+    // TODO: documentation
+    List<String> getGroupEmails(UserRole role);
 }

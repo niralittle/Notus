@@ -25,20 +25,11 @@ public class DownloadReportServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String reportGenId = request.getParameter("object");
-        Enumeration enm = request.getSession().getAttributeNames();
-//        while (enm.hasMoreElements()) {
-//            pw.write(enm.nextElement().toString());
-//        }
-        Object a = request.getSession().getAttribute(enm.nextElement().toString());
+        String reportGenId = request.getParameter("objectId");
+        Object a = request.getSession().getAttribute(reportGenId.toString());
         ReportGenerator rg = (ReportGenerator) a;
-         
-        
-//        if (rg == null) {
-//            pw.write("NULL DAMN");
-//        }
-        
-        if (request.getParameter("type").equals("xls")) {            
+
+        if (request.getParameter("type").equals("xls")) {
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment; filename=" +
                     rg.getReportName() + ".xls");

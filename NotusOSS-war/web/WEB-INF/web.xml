@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
+	<filter>
+		<filter-name>Registration</filter-name>
+		<filter-class>nc.notus.filters.RegistrationFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>InstallationEngeenier</filter-name>
+		<filter-class>nc.notus.filters.InstallationEngeenierFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>Registration</filter-name>
+		<url-pattern>/registration.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>InstallationEngeenier</filter-name>
+		<url-pattern>/installationEngineer.jsp</url-pattern>
+	</filter-mapping>
+
     <servlet>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
         <servlet-class>nc.notus.TestConnectionPoolServlet</servlet-class>
