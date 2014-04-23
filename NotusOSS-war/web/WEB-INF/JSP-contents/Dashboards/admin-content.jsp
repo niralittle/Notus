@@ -138,13 +138,13 @@
             <input type="radio" name="report" value="2"/> Disconnect orders per period<br>
             <input type="radio" name="report" value="3"/> Routers utilization and capacity<br>
             <input type="radio" name="report" value="4"/> Profitability by month<br>
-
+            Date format yyyy-mm-dd<br>
             From:
             <input type="text" required maxlength="10" id="fromdate" name="fromdate"
-                   onblur="checkFormat('fromdate')" onkeyup="checkDate('fromdate')"/>
+                   onblur="checkFormat('fromdate')"/>
             To:
             <input type="text" required maxlength="10" id="todate" name="todate"
-                   onblur="checkFormat('todate')" onkeyup="checkDate('todate')"/>
+                   onblur="checkFormat('todate')"/>
             <input type="submit" value="View report" id="viewreport"/><br>
             <div id="tip" style="display:none"></div>
 

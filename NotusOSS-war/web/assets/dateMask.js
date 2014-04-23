@@ -1,12 +1,3 @@
-function checkDate(id){
-    var textfield = document.getElementById(id);
-    var v = textfield.value;
-    if (v.match(/^\d{4}$/) !== null) {
-        textfield.value = v + '-';
-    } else if (v.match(/^\d{4}\-\d{2}$/) !== null) {
-        textfield.value = v + '-';
-    }
-}
 function checkFormat(id) {
     var checkdate = true;
     var textfield = document.getElementById(id);

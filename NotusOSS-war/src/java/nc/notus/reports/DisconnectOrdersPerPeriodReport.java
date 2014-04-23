@@ -59,8 +59,8 @@ public class DisconnectOrdersPerPeriodReport implements Report {
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = instances.get(i).getId() + COLUMN_SEPARATOR +
-                        instances.get(i).getServiceInstanceDate();
+                this.reportData[i] = instances.get(i - 1).getId() + COLUMN_SEPARATOR +
+                        instances.get(i - 1).getServiceInstanceDate();
             }
         } finally {
             dbManager.close();
