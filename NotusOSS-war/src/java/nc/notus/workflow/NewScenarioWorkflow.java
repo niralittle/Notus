@@ -197,6 +197,11 @@ public class NewScenarioWorkflow extends Workflow {
             port.setPortStatus(PortState.BUSY.toInt());
             portDAO.update(port);
 
+            ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+            ServiceInstance si = siDAO.find(order.getServiceInstanceID());
+            si.setPortID(portID);
+            siDAO.update(si);
+
             this.completeTask(dbManager, taskID);
             this.createTask(dbManager, UserRole.PROVISION_ENGINEER);
             dbManager.commit();
@@ -206,38 +211,27 @@ public class NewScenarioWorkflow extends Workflow {
     }
 
     /**
-     * This method assigns given Port to given Service Instance.
-     * It also creates Circuit and links it with SI as logical entity
-     * of provided service. It also sets status of given task to "Completed".
-     * After execution it automatically creates task to Customer Support
-     * Engineer group.
-     * @param taskID ID of task for Provisioning Engineer
-     * @param portID ID of port to link SI with
-     * @param serviceInstanceID ID of SI to link with port
+     * Creates new Circuit Instance
+     * @param dbManager class representing connection to DB                     // TODO: update documentation
+     * @return ID of created Circuit instance
      */
-    public void assignPortToSI(int taskID, int portID, int serviceInstanceID) {
-        if (order.getServiceInstanceID() != serviceInstanceID) {
-            throw new WorkflowException("Given SI is not connected " +
-                    "with current Order");
-        }
-
+    public void createCircuit(int taskID, String circuitConfig) {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,
                     UserRole.PROVISION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
+            CircuitDAO circuitDAO = new CircuitDAOImpl(dbManager);
             ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
 
-            int circuitID = createCircuit(dbManager);
-            ServiceInstance si = siDAO.find(serviceInstanceID);
-            si.setCircuitID(circuitID);
+            Circuit circuit = new Circuit();
+            circuit.setCircuit(circuitConfig);
+            int circuitID = (Integer) circuitDAO.add(circuit);
 
-            if (si.getPortID() != null) {
-                throw new WorkflowException("Service Instance already linked " +
-                        "with Port");
-            }
-            si.setPortID(portID);
+            // link Circuit with SI
+            ServiceInstance si = siDAO.find(order.getServiceInstanceID());
+            si.setCircuitID(circuitID);
             siDAO.update(si);
 
             this.completeTask(dbManager, taskID);
@@ -285,18 +279,5 @@ public class NewScenarioWorkflow extends Workflow {
         ServiceInstance si = siDAO.find(serviceInstanceID);
         si.setServiceInstanceDate(date);
         siDAO.update(si);
-    }
-
-    /**
-     * Creates new Circuit Instance
-     * @param dbManager class representing connection to DB
-     * @return ID of created Circuit instance
-     */
-    private int createCircuit(DBManager dbManager) {
-        CircuitDAO circuitDAO = new CircuitDAOImpl(dbManager);
-        Circuit circuit = new Circuit();
-        circuit.setCircuit("Circuit");
-        int circuitID = (Integer) circuitDAO.add(circuit);
-        return circuitID;
     }
 }
