@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *                                                                              // REVIEW: documentation expected
+ * Handles requests for report view                                                                       
  * @author Andrey Ilin
  */
-public class ReportTestServlet extends HttpServlet {
+public class ReportViewServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -28,9 +28,6 @@ public class ReportTestServlet extends HttpServlet {
         int reportTypeValue = Integer.parseInt(request.getParameter("report"));
         String startDate = request.getParameter("fromdate");
         String finishDate = request.getParameter("todate");
-//        PrintWriter pw = response.getWriter();
-//        pw.write(startDate);
-//        pw.write(finishDate);
         Report currentReport = null;
         switch (reportTypeValue) {
             case 0:

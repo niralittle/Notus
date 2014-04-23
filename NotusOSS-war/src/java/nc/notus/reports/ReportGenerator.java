@@ -73,11 +73,28 @@ public class ReportGenerator {
         return HTMLReportBuilder.toString();
     }
 
+    /**
+     * Writes report to the OutputStream as xls documnet
+     * @param streamToWrite stream to write
+     * @throws IOException
+     */
     public void getReportXLS(OutputStream streamToWrite) throws IOException {
         createNewSheet();
         workBook.write(streamToWrite);
     }
-
+    public String getReportCSV() {
+        StringBuilder CSVReportBuilder = new StringBuilder();
+        CSVReportBuilder.append("sep=#\n");
+        CSVReportBuilder.append(reportName);
+        CSVReportBuilder.append("\n");
+        if (reportData != null) {
+            for(String row: reportData) {
+                CSVReportBuilder.append(row);
+                CSVReportBuilder.append("\n");
+            }
+        }
+        return CSVReportBuilder.toString();
+    }
     /**
      * Creates a new excel sheet in work book. This sheet will have name given
      * by the user and cell styles specified in initStyles method.
@@ -134,6 +151,10 @@ public class ReportGenerator {
 
     }
 
+    /**
+     * Init different styles for cells
+     * @return array of styles
+     */
     private CellStyle[] initStyles() {
         int counter = 0;
         Font boldFont = workBook.createFont();

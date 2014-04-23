@@ -47,7 +47,7 @@
     </servlet>
     <servlet>
         <servlet-name>ReportTestServlet</servlet-name>
-        <servlet-class>nc.notus.reports.ReportTestServlet</servlet-class>
+        <servlet-class>nc.notus.reports.ReportViewServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ServicesServlet</servlet-name>
