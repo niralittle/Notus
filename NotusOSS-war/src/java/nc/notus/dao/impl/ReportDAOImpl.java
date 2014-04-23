@@ -64,13 +64,16 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setDate(6, startDate);
         statement.setDate(7, finishDate);
         ResultIterator ri = statement.executeQuery();
-        Device device = new Device();
+        
         if (ri.next()){
-            device.setId(ri.getInt("id"));
-            device.setName(ri.getString("name"));
-            device.setPortQuantity(ri.getInt("portQuantity"));
+            Device device = new Device();
+            device.setId(ri.getInt("deviceid"));
+            device.setName("Cisco 7606");                                       // TODO: hardcode
+            device.setPortQuantity(60);                                         // TODO: hardcode
+            return device;
+        } else {
+            return null;
         }
-        return device;
     }
 
     /**

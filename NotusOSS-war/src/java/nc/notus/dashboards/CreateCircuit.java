@@ -6,14 +6,23 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import nc.notus.dao.ServiceOrderDAO;
+import nc.notus.dao.TaskDAO;
+import nc.notus.dao.impl.ServiceOrderDAOImpl;
+import nc.notus.dao.impl.TaskDAOImpl;
+import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.ServiceOrder;
+import nc.notus.entity.Task;
+import nc.notus.states.UserRole;
+import nc.notus.workflow.NewScenarioWorkflow;
 
 /**
- * Implements part of Installation Engineer dashboard
+ * Implements part of Provisioning Engineer dashboard
  * @author Vladimir Ermolenko
  */
 public class CreateCircuit extends HttpServlet {
@@ -28,20 +37,50 @@ public class CreateCircuit extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+        DBManager dbManager = new DBManager();
+        int taskID;
+        int soID;
+        String circuitConf;
         try {
-            /* TODO output your page here
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet CreateCircuit</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet CreateCircuit at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-            */
-        } finally { 
-            out.close();
+            if (request.getParameter("taskid") != null){
+                taskID  = Integer.parseInt(request.getParameter("taskid"));
+            }
+            else {
+                taskID = 0;
+            }
+            if (request.getParameter("serviceorderid") != null){
+                soID  = Integer.parseInt(request.getParameter("serviceorderid"));
+            }
+            else {
+                soID = 0;
+            }
+            if (request.getParameter("circuit") != null){
+                circuitConf  = request.getParameter("circuit");
+            }
+            else {
+                circuitConf = "";
+            }
+            ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
+            ServiceOrder so = soDAO.find(soID);
+            NewScenarioWorkflow nwf = new NewScenarioWorkflow(so);
+
+            //Action "Create Circuit"
+            if (request.getParameter("action").equals("Create Circuit")){
+                nwf.createCircuit(taskID, circuitConf);
+                TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+                int startpage = 1;
+                int numbOfRecords = 10;
+                List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.PROVISION_ENGINEER.toInt());
+                request.setAttribute("tasksEng", tasksEng);
+                request.getRequestDispatcher("provisioningEngineer.jsp").forward(request, response);
+            }
+            request.setAttribute("taskid", taskID);
+            request.setAttribute("soid", soID);
+            request.setAttribute("circuit", circuitConf);
+            request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
+
+        } finally {
+                dbManager.close();
         }
     } 
 
