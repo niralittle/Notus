@@ -132,8 +132,8 @@
     <div id="dash-report" class="content">
         <div id="container-header"><span>Reports</span> </div>
         <script type="text/javascript" src="assets/dateMask.js"></script>
-        <form method="post" action="getReport">
-            <input type="radio" name="report" value="0"/> Most profitable router<br>
+        <form method="post" action="getReport" target="_blank">
+            <input type="radio" name="report" value="0" checked/> Most profitable router<br>
             <input type="radio" name="report" value="1"/> New orders per period<br>
             <input type="radio" name="report" value="2"/> Disconnect orders per period<br>
             <input type="radio" name="report" value="3"/> Routers utilization and capacity<br>
@@ -143,7 +143,7 @@
             <input type="text" required maxlength="10" id="fromdate" name="fromdate"
                    onblur="checkFormat('fromdate')" onkeyup="checkDate('fromdate')"/>
             To:
-            <input type="text" required maxlength="10" id="todate" name="todate "
+            <input type="text" required maxlength="10" id="todate" name="todate"
                    onblur="checkFormat('todate')" onkeyup="checkDate('todate')"/>
             <input type="submit" value="View report" id="viewreport"/><br>
             <div id="tip" style="display:none"></div>
