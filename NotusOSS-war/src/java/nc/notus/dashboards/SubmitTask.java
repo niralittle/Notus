@@ -11,9 +11,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import nc.notus.dao.CableDAO;
 import nc.notus.dao.PortDAO;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
+import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
@@ -44,6 +46,7 @@ public class SubmitTask extends HttpServlet {
         DBManager dbManager = new DBManager();
         int portQuantity = 60;
         Cable cable;
+        Port port;
         int taskID;
         int soID;
         try {
@@ -60,15 +63,23 @@ public class SubmitTask extends HttpServlet {
                 soID = 0;
             }
             if (request.getParameter("cable") != null){
-                cable  = (Cable) (request.getAttribute("serviceorderid"));
+                cable  = (Cable) (request.getAttribute("cable"));
             }
             else {
                 cable = new Cable();
             }
+            if (request.getParameter("port") != null){
+                port  = (Port) (request.getAttribute("port"));
+            }
+            else {
+                port = new Port();
+            }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);
             PortDAO portDAO = new PortDAOImpl(dbManager);
-            Port port = portDAO.getFreePort();
+            port = portDAO.getFreePort();
+            CableDAO cabDAO = new CableDAOImpl(dbManager);
+            cable = cabDAO.getFreeCable();
             NewScenarioWorkflow nwf = new NewScenarioWorkflow(so);
 
             //Action "Create Router"
@@ -80,17 +91,18 @@ public class SubmitTask extends HttpServlet {
 
             //Action "Create Cable"
             if (request.getParameter("action").equals("Create Cable")){
-                nwf.createCable(taskID, "UTP Cable");
+                if (cable == null){
+                    nwf.createCable(taskID, "UTP Cable");
+                }
             }
 
             //Action "Connect Cable to Port"
             if (request.getParameter("action").equals("Connect Cable to Port")){
-                nwf.plugCableToPort(taskID, 1, port.getId());
+                nwf.plugCableToPort(taskID, cable.getId(), port.getId());
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int startpage = 1;
                 int numbOfRecords = 10;
                 List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.INSTALLATION_ENGINEER.toInt());
-                dbManager.commit();
                 request.setAttribute("tasksEng", tasksEng);
                 request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
             }

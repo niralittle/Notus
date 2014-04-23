@@ -28,10 +28,6 @@
         <servlet-class>nc.notus.LogoutServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>MailServlet</servlet-name>
-        <servlet-class>nc.notus.email.MailServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>nc.notus.RegistrationServlet</servlet-class>
     </servlet>
@@ -69,6 +65,10 @@
         <servlet-name>DataDemoForReportsServlet</servlet-name>
         <servlet-class>nc.notus.DataDemoForReportsServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EmailTestServlet</servlet-name>
+        <servlet-class>nc.notus.EmailTestServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -80,10 +80,6 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>MailServlet</servlet-name>
-        <url-pattern>/MailServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>WorkflowTestServlet</servlet-name>
@@ -116,6 +112,10 @@
     <servlet-mapping>
         <servlet-name>DataDemoForReportsServlet</servlet-name>
         <url-pattern>/getData</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmailTestServlet</servlet-name>
+        <url-pattern>/EmailTestServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
