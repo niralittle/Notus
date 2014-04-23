@@ -62,6 +62,10 @@
         <servlet-class>nc.notus.dashboards.SubmitTask</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>DataDemoForReportsServlet</servlet-name>
+        <servlet-class>nc.notus.DataDemoForReportsServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>EmailTestServlet</servlet-name>
         <servlet-class>nc.notus.EmailTestServlet</servlet-class>
     </servlet>
@@ -104,6 +108,10 @@
     <servlet-mapping>
         <servlet-name>SubmitTask</servlet-name>
         <url-pattern>/SubmitTask</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DataDemoForReportsServlet</servlet-name>
+        <url-pattern>/getData</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EmailTestServlet</servlet-name>
