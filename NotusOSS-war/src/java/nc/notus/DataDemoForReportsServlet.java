@@ -35,8 +35,8 @@ import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.NewScenarioWorkflow;
 
 /**
- *
- * @author Druce
+ * Test fill of database.
+ * @author Andrey Ilin
  */
 public class DataDemoForReportsServlet extends HttpServlet {
 
@@ -65,21 +65,21 @@ public class DataDemoForReportsServlet extends HttpServlet {
                 PortDAO portDAO = new PortDAOImpl(dbManager);
                 OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
                 ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
-//
-//                userDAO.add(new OSSUser("Ivan", "Drago", "ivan@mail.ru", "ivdrago",
-//                        "1010", UserState.ACTIVE.toInt(), UserRole.CUSTOMER_USER.toInt()));
-//                userDAO.add(new OSSUser("Bender", "Rodriguez", "bender@gmail.com", "thebender",
-//                        "0101", UserState.ACTIVE.toInt(), UserRole.CUSTOMER_USER.toInt()));
-//                userDAO.add(new OSSUser("Antony", "Soprano", "soprano@i.ua", "fattony",
-//                        "1100", UserState.ACTIVE.toInt(), UserRole.CUSTOMER_USER.toInt()));
-//
-//                dbManager.commit();
-//                pw.write("USERS ADDED");
+
+                userDAO.add(new OSSUser("Ivan", "Drago", "ivan@mail.ru", "ivdrago",
+                        "1010", UserState.ACTIVE.toInt(), UserRole.CUSTOMER_USER.toInt()));
+                userDAO.add(new OSSUser("Bender", "Rodriguez", "bender@gmail.com", "thebender",
+                        "0101", UserState.ACTIVE.toInt(), UserRole.CUSTOMER_USER.toInt()));
+                userDAO.add(new OSSUser("Antony", "Soprano", "soprano@i.ua", "fattony",
+                        "1100", UserState.ACTIVE.toInt(), UserRole.CUSTOMER_USER.toInt()));
+
+                dbManager.commit();
+                pw.write("USERS ADDED");
                 int counter = 0;
                 while (counter < 3) {
                     employeeId = 4;
                     soDAO.add(new ServiceOrder(serviceOrderId, Date.valueOf("2014-01-01"), 1, 1,
-                            userId, servCatId, null, "location" + Integer.toString(userId)));
+                            userId, servCatId, serviceInstanceId, "location" + Integer.toString(userId)));
                     dbManager.commit();
                     pw.write("ORDER CREATED");
                     NewScenarioWorkflow nsw = new NewScenarioWorkflow(soDAO.find(serviceOrderId));
@@ -94,7 +94,7 @@ public class DataDemoForReportsServlet extends HttpServlet {
                     taskId++;
                     employeeId--;
                     nsw.assignTask(taskId, employeeId);
-                    nsw.assignPortToSI(taskId, portId, serviceInstanceId);
+                    nsw.createCircuit(portId, "config" + employeeId);
                     taskId++;
                     employeeId--;
                     nsw.assignTask(taskId, employeeId);

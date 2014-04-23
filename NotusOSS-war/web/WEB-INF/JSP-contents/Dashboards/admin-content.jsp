@@ -138,6 +138,7 @@
             <input type="radio" name="report" value="2"/> Disconnect orders per period<br>
             <input type="radio" name="report" value="3"/> Routers utilization and capacity<br>
             <input type="radio" name="report" value="4"/> Profitability by month<br>
+            <br>
             Date format yyyy-mm-dd<br>
             From:
             <input type="text" required maxlength="10" id="fromdate" name="fromdate"
