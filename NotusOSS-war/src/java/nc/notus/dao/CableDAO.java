@@ -12,6 +12,8 @@ public interface CableDAO extends GenericDAO<Cable> {
     /**
      * Method returns a list of unique type(names) of unused in Port cables
      * @return list of unique type(names) of unused in Port cables
+     * or NULL
+     * if there is no available one
      */
     public List<String> getUniqueTypeFreeCables();
     
