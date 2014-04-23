@@ -17,6 +17,7 @@ import javax.mail.internet.MimeMessage;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.OSSUser;
 import nc.notus.states.UserRole;
 
 /**
@@ -53,7 +54,8 @@ public class EmailSender {
         String userEmail;
         try {
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-            userEmail = userDAO.getUserEmail(userID);
+            OSSUser user = userDAO.find(userID);
+            userEmail = user.getEmail();
         } finally {
             dbManager.close();
         }

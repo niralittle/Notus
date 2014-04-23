@@ -20,6 +20,7 @@ public abstract class Email {
             String line = br.readLine();
             while(line != null) {
                 message += line;
+                line = br.readLine();
             }
             br.close();
         } catch (Exception exc) {
