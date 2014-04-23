@@ -36,6 +36,14 @@ public class DownloadReportServlet extends HttpServlet {
             OutputStream os = response.getOutputStream();
             rg.getReportXLS(os);
         }
+        if (request.getParameter("type").equals("csv")) {
+            PrintWriter pw = response.getWriter();
+            response.setContentType("Content-type: text/csv");
+            response.setHeader("Content-Disposition", "attachment; filename=" +
+                    rg.getReportName() + ".csv");
+            pw.write(rg.getReportCSV());
+//            pw.write(rg.toString());
+        }
 
 
     }

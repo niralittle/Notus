@@ -13,7 +13,7 @@
 </form>
 <form method="post" action="downloadReport">
     <input type="submit" value="Download as CSV"/>
-    <input type="hidden" name="object"
-           value="<%=request.getAttribute("object")%>"/>
+    <input type="hidden" name="objectId"
+           value="<%=request.getSession().getAttribute("objectId")%>"/>
     <input type="hidden" name="type" value="csv"/>
 </form>
