@@ -65,7 +65,7 @@
         <servlet-name>EmailTestServlet</servlet-name>
         <servlet-class>nc.notus.EmailTestServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
+    <servlet><servlet-name>ProvisionEngineerTasksServlet</servlet-name><servlet-class>nc.notus.dashboards.ProvisionEngineerTasksServlet</servlet-class></servlet><servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
     </servlet-mapping>
@@ -108,6 +108,10 @@
     <servlet-mapping>
         <servlet-name>EmailTestServlet</servlet-name>
         <url-pattern>/EmailTestServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProvisionEngineerTasksServlet</servlet-name>
+        <url-pattern>/ProvisionEngineerTasksServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
