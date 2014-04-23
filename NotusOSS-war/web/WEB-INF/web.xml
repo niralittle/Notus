@@ -154,7 +154,7 @@
         <web-resource-collection>
             <web-resource-name>Admin Page</web-resource-name>
             <description/>
-            <url-pattern>/adminPage.jsp</url-pattern>
+            <url-pattern>/admin.jsp</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
