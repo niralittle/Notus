@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
-	<filter>
-		<filter-name>Registration</filter-name>
-		<filter-class>nc.notus.filters.RegistrationFilter</filter-class>
-	</filter>
-	<filter>
-		<filter-name>InstallationEngeenier</filter-name>
-		<filter-class>nc.notus.filters.InstallationEngeenierFilter</filter-class>
-	</filter>
+    <filter>
+        <filter-name>Registration</filter-name>
+        <filter-class>nc.notus.filters.RegistrationFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>InstallationEngeenier</filter-name>
+        <filter-class>nc.notus.filters.InstallationEngeenierFilter</filter-class>
+    </filter>
 
-	<filter-mapping>
-		<filter-name>Registration</filter-name>
-		<url-pattern>/registration.jsp</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>InstallationEngeenier</filter-name>
-		<url-pattern>/installationEngineer.jsp</url-pattern>
-	</filter-mapping>
+    <filter-mapping>
+        <filter-name>Registration</filter-name>
+        <url-pattern>/registration.jsp</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>InstallationEngeenier</filter-name>
+        <url-pattern>/installationEngineer.jsp</url-pattern>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>TestConnectionPoolServlet</servlet-name>
@@ -65,18 +65,22 @@
         <servlet-name>EmailTestServlet</servlet-name>
         <servlet-class>nc.notus.EmailTestServlet</servlet-class>
     </servlet>
-    <servlet><servlet-name>ProvisionEngineerTasksServlet</servlet-name><servlet-class>nc.notus.dashboards.ProvisionEngineerTasksServlet</servlet-class></servlet>
+    <servlet>
+        <servlet-name>ProvisionEngineerTasksServlet</servlet-name>
+        <servlet-class>nc.notus.dashboards.ProvisionEngineerTasksServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>CreateCircuit</servlet-name>
         <servlet-class>nc.notus.dashboards.CreateCircuit</servlet-class>
     </servlet>
     <servlet>
-	<servlet-name>SupportEngineerServlet</servlet-name>
-	<servlet-class>nc.notus.dashboards.SupportEngineerServlet</servlet-class>
+        <servlet-name>SupportEngineerServlet</servlet-name>
+        <servlet-class>nc.notus.dashboards.SupportEngineerServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
-	<servlet-name>SupportEngineerServlet</servlet-name>
-	<url-pattern>/Support</url-pattern>
+        <servlet-name>SupportEngineerServlet</servlet-name>
+        <url-pattern>/Support</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
@@ -130,6 +134,7 @@
         <servlet-name>CreateCircuit</servlet-name>
         <url-pattern>/CreateCircuit</url-pattern>
     </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30
@@ -181,4 +186,4 @@
     <security-role>
         <role-name>CUSTOMER_USER</role-name>
     </security-role>
-<servlet-name>EmailTestServlet</servlet-name><url-pattern>/EmailTestServlet</url-pattern></web-app>
+</web-app>
