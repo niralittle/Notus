@@ -1,19 +1,18 @@
 <div id="top_menu">
 
-    <a href="logout">Logout</a>
-    <div class="separator"></div>
-    <a href="login.jsp">Login</a>
-    
-    <p>
-		<a href="/NotusOSS-war/InstallationEngineerTasks">Installation Engineer Page</a>
-	</p>
-	<p>
-		<a href="/NotusOSS-war/ProvisionEngineerTasksServlet">Provisioning Engineer Page</a>
-	</p>
-	<p>
-		<a href="/NotusOSS-war/Support">Support Engineer Page</a>
-	</p>
-
+    <div class="dashboard_links_etc" width="610px" align="right" style="padding: 6px; margin-right: 3px;">
+        <a href="logout">Logout</a>
+            <div class="separator"></div>
+        <a href="login.jsp">Login</a>
+            <div class="separator"></div>
+        <a href="/NotusOSS-war/InstallationEngineerTasks">Installation Engineer Page</a>
+            <div class="separator"></div>
+        <a href="/NotusOSS-war/ProvisionEngineerTasksServlet">Provisioning Engineer Page</a>
+            <div class="separator"></div>
+        <a href="/NotusOSS-war/Support">Support Engineer Page</a>
+            <div class="separator"></div>
+        <a href="admin.jsp">Admin page</a>
+    </div>
 
     <div id="pages_list">
         <ul>
@@ -24,9 +23,9 @@
                     </a>
                 </div>
             </li>
-            <li><a href="selectLocation.jsp">COVERAGE</a></li>
-            <li><a href="#">SERVICES</a> </li>
-            <li><a href="#">MAKE AND ORDER</a></li>
+            <li><a href="selectLocation.jsp">SELECT SERVICE</a></li>
+            <li><a href="#">COVERAGE</a> </li>
+            <li><a href="#">OUR TEAM</a></li>
             <li><a href="#">PROMOTIONS</a></li>
             <li><a href="#">SOCIAL</a></li>
         </ul>

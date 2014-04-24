@@ -52,6 +52,7 @@ footer
 
 #top_menu
 {
+    -webkit-border-radius:6px 6px 0px 0px;
     background: url(logo.jpg) no-repeat #E9F2FF;
 }
 
@@ -61,25 +62,20 @@ footer
 }
 #pages_list li {
     display: inline-block;
-    margin: 20px 25px 0 0;
+    margin: 10px 35px 0 0;
     font-size: 20px;
 }
 #pages_list a {
     text-decoration: none;
     color: #000;
     list-style: none;
-    margin: 0 0 45px 0px;
+    margin: 0 0 29px 0px;
     padding: 0 0 5px 0;
 }
 #pages_list a:hover {
     color: #FFCC00;
 }
-#auth {
-    width: 280px;
-    margin-left: auto;
-    margin-right: 0;
-    vertical-align: top;
-}
+
 .separator {
     width: 2px;
     height: 25px;
@@ -97,6 +93,12 @@ footer
     width: 500px;
     margin: 0px;
     padding: 0px
+}
+/* REVIEW: why the fuck iS #map-canvas doubled? */
+#map-canvas{
+    width:500px;
+    position:fixed;
+    display: table-cell;
 }
 
 #panel {
@@ -116,11 +118,7 @@ footer
     display:table;
 }
 
-#map-canvas{
-    width:500px;
-    position:fixed;
-    display: table-cell;
-}
+
 
 #rigtblock{
     width:500px;
