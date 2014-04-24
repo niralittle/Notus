@@ -14,7 +14,23 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * Implementation of method for block accounts in DB
      * @param user - our user of type OSSUser
      */
-    void blockUser(OSSUser user);  
+    void blockUser(OSSUser user);
+
+    /**
+     * Method returns list of users with similar login with paging
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return list of users with similar login
+     */
+    public List<OSSUser> getUsersByLogin(String login, int offset, int numberOfRecords);
+
+    /**
+     * Method returns list of users with similar email with paging
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return list of users with similar email
+     */
+    public List<OSSUser> getUsersByEmail(String Email, int offset, int numberOfRecords);
     
     /**
      * Check if user with specified login is already exist in system
