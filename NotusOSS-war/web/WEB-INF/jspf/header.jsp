@@ -1,9 +1,17 @@
 <div id="top_menu">
 
     <div class="dashboard_links_etc" width="610px" align="right" style="padding: 6px; margin-right: 3px;">
-        <a href="logout">Logout</a>
-            <div class="separator"></div>
-        <a href="login.jsp">Login</a>
+       	<%
+			if (request.getUserPrincipal() == null) {
+		%>
+		        <a href="login.jsp">Login</a>
+		<%
+			} else {
+		%>
+		        <a href="logout">Logout</a>
+		<%
+			}
+		%>
             <div class="separator"></div>
         <a href="/NotusOSS-war/InstallationEngineerTasks">Installation Engineer Page</a>
             <div class="separator"></div>
