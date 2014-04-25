@@ -45,7 +45,7 @@ public class SubmitTask extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         DBManager dbManager = new DBManager();
         int portQuantity = 60;
-        Cable cable;
+        Cable cable = null;
         Port port;
         int taskID;
         int soID;
@@ -66,7 +66,7 @@ public class SubmitTask extends HttpServlet {
                 cable  = (Cable) (request.getAttribute("cable"));
             }
             else {
-                cable = new Cable();
+                //cable = new Cable();
             }
             if (request.getParameter("port") != null){
                 port  = (Port) (request.getAttribute("port"));
@@ -78,8 +78,8 @@ public class SubmitTask extends HttpServlet {
             ServiceOrder so = soDAO.find(soID);
             PortDAO portDAO = new PortDAOImpl(dbManager);
             port = portDAO.getFreePort();
-            CableDAO cabDAO = new CableDAOImpl(dbManager);
-            cable = cabDAO.getFreeCable();
+            CableDAO cableDAO = new CableDAOImpl(dbManager);
+            cable = cableDAO.getFreeCable();
             NewScenarioWorkflow nwf = new NewScenarioWorkflow(so);
 
             //Action "Create Router"
@@ -99,7 +99,7 @@ public class SubmitTask extends HttpServlet {
             if (request.getParameter("action").equals("Create Cable")){
                 if (cable == null){
                     nwf.createCable(taskID, "UTP Cable");
-                    cable = cabDAO.getFreeCable();
+                    cable = cableDAO.getFreeCable();
                     request.setAttribute("port", port);
                     request.setAttribute("cable", cable);
                     request.setAttribute("taskid", taskID);
@@ -120,9 +120,8 @@ public class SubmitTask extends HttpServlet {
                 request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
                 return;
             }
-
-            request.setAttribute("port", port);
             request.setAttribute("cable", cable);
+            request.setAttribute("port", port);
             request.setAttribute("taskid", taskID);
             request.setAttribute("soid", soID);
             request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);

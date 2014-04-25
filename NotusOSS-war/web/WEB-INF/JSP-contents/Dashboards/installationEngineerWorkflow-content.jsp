@@ -18,7 +18,7 @@
     </head>
     <body>
         <% Port port;
-            Cable cable;
+           Cable cable;
            Integer soID;
            Integer taskID;
 
@@ -34,7 +34,7 @@
                port = new Port();
            }
 
-           if (request.getParameter("cable") != null) {
+           if (request.getAttribute("cable") != null) {
                 cable = (Cable) request.getAttribute("cable");
            } else {
                cable = new Cable();
