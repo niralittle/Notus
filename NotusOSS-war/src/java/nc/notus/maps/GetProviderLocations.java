@@ -25,7 +25,7 @@ public class GetProviderLocations {
         List<ProviderLocation> providerList = new ArrayList<ProviderLocation>();
         try {                                         
             ProviderLocationDAO locDAO = new ProviderLocationDAOImpl(dbManager);
-            providerList = locDAO.getProviderLocations(START, NUMBER_OF_RECORDS); // REVIEW: all provider locations should be obtained to choose minimal one
+            providerList = locDAO.getProviderLocations(START, NUMBER_OF_RECORDS);
         } finally {
             dbManager.close();
         }

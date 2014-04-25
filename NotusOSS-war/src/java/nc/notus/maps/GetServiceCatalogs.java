@@ -3,6 +3,7 @@ package nc.notus.maps;
 import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.ServiceCatalogDAO;
+import nc.notus.dao.ServiceTypeDAO;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
@@ -33,7 +34,7 @@ public class GetServiceCatalogs {
         try {
             ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
             serviceCatalogs =
-                    catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, START, NUMBER_OF_RECORDS); // REVIEW: all services for given provider location should be obtained
+                    catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, START, NUMBER_OF_RECORDS);
         } finally {
             dbManager.close();
         }
@@ -47,7 +48,7 @@ public class GetServiceCatalogs {
      */
     public ServiceType getServiceType(ServiceCatalog serviceCatalog) {
         DBManager dbManager = new DBManager();
-        ServiceTypeDAOImpl type = new ServiceTypeDAOImpl(dbManager);
+        ServiceTypeDAO type = new ServiceTypeDAOImpl(dbManager);
         ServiceType serviceType = new ServiceType();
         try {
             serviceType = type.find(serviceCatalog.getServiceTypeID());
