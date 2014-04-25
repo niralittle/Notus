@@ -78,7 +78,7 @@
         <servlet-name>CreateCircuit</servlet-name>
         <servlet-class>nc.notus.dashboards.CreateCircuit</servlet-class>
     </servlet>
-    <servlet-mapping>
+    <servlet><servlet-name>ChangeUserPassword</servlet-name><servlet-class>nc.notus.dashboards.ChangeUserPassword</servlet-class></servlet><servlet><servlet-name>GetingUsersInfo</servlet-name><servlet-class>nc.notus.dashboards.GetingUsersInfo</servlet-class></servlet><servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
     </servlet-mapping>
@@ -134,6 +134,14 @@
     <servlet-mapping>
         <servlet-name>CreateCircuit</servlet-name>
         <url-pattern>/CreateCircuit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangeUserPassword</servlet-name>
+        <url-pattern>/ChangeUserPassword</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetingUsersInfo</servlet-name>
+        <url-pattern>/GetUsers</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
