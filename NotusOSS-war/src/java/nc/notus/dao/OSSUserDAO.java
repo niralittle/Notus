@@ -20,14 +20,24 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * Method returns list of users with similar login with paging
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
+     * @param login of user
      * @return list of users with similar login
      */
     public List<OSSUser> getUsersByLogin(String login, int offset, int numberOfRecords);
 
     /**
+     * Method returns users with specific login
+     * @param login - login
+     * @return users with specific login
+     * or NULL if not found
+     */
+    public OSSUser getUserByLogin(String login);
+
+    /**
      * Method returns list of users with similar email with paging
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
+     * @param email of user
      * @return list of users with similar email
      */
     public List<OSSUser> getUsersByEmail(String Email, int offset, int numberOfRecords);
@@ -36,10 +46,11 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * Method returns list of users with similar lastname with paging
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
+     * @param lastname of user
      * @return list of users with similar login
      */
 
-    public List<OSSUser> getUsersByLastname(String lastname, int offset, int numberOfRecords);
+    public List<OSSUser> getUsersByLastName(String lastname, int offset, int numberOfRecords);
     
     /**
      * Check if user with specified login is already exist in system

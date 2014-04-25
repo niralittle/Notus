@@ -36,6 +36,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * Method returns list of users with similar login with paging
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
+     * @param login of user
      * @return list of users with similar login
      */
     @Override
@@ -78,7 +79,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      */
 
     @Override
-    public List<OSSUser> getUsersByLastname(String lastname, int offset, int numberOfRecords) {
+    public List<OSSUser> getUsersByLastName(String lastname, int offset, int numberOfRecords) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                         "SELECT u.id, u.firstname, u.lastname, u.email, u.login, " +
                         "u.password, u.blocked, u.roleid " +
@@ -194,6 +195,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * Method returns list of users with similar email with paging
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
+     * @param email of user
      * @return list of users with similar email
      */
     public List<OSSUser> getUsersByEmail(String email, int offset, int numberOfRecords) {
@@ -226,5 +228,35 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
             users.add(us);
         }
         return users;
+    }
+
+    /**
+     * Method returns users with specific login
+     * @param login - login
+     * @return users with specific login
+     * or NULL if not found
+     */
+    @Override
+    public OSSUser getUserByLogin(String login) {
+        String query  =  "SELECT u.id, u.firstname, u.lastname, u.email, u.login, " +
+                         "u.password, u.blocked, u.roleid " +
+                         "FROM ossuser u " +
+                         "WHERE u.login = ? ";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setString(1, (login));
+        ResultIterator ri = statement.executeQuery();
+        OSSUser user = null;
+        if (ri.next()){
+            user = new OSSUser();
+            user.setId(ri.getInt("id"));
+            user.setFirstName(ri.getString("firstname"));
+            user.setLastName(ri.getString("lastname"));
+            user.setEmail(ri.getString("email"));
+            user.setLogin(ri.getString("login"));
+            user.setPassword(ri.getString("password"));
+            user.setBlocked(ri.getInt("blocked"));
+            user.setRoleID(ri.getInt("roleid"));
+        }
+        return user;
     }
 }
