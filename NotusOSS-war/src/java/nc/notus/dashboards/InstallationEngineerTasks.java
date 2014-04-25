@@ -14,8 +14,12 @@ import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import java.util.List;
+import nc.notus.dao.ServiceOrderDAO;
+import nc.notus.dao.impl.ServiceOrderDAOImpl;
+import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
 import nc.notus.states.UserRole;
+import nc.notus.workflow.NewScenarioWorkflow;
 
 /**
  * Implements part of Installation Engineer dashboard
@@ -79,6 +83,61 @@ public class InstallationEngineerTasks extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
+                DBManager dbManager = new DBManager();
+        int taskID;
+        int soID;
+        try {
+            if (request.getParameter("taskid") != null){
+                taskID  = Integer.parseInt(request.getParameter("taskid"));
+            }
+            else {
+                taskID = 0;
+            }
+            if (request.getParameter("serviceorderid") != null){
+                soID  = Integer.parseInt(request.getParameter("serviceorderid"));
+            }
+            else {
+                soID = 0;
+            }
+
+            ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
+            ServiceOrder so = soDAO.find(soID);
+            NewScenarioWorkflow nwf = new NewScenarioWorkflow(so);
+
+            //Action "Assign Task"
+//            if (request.getParameter("action").equals("Assign")){
+//                nwf.assignTask(taskID, user.getId());
+//                TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+//                int startpage = 1;
+//                int numbOfRecords = 10;
+//                List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.INSTALLATION_ENGINEER.toInt());
+//                request.setAttribute("tasksEng", tasksEng);
+//                request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
+//                return;
+//                }
+//
+//
+//            //Action "Submit Task"
+//            if (request.getParameter("action").equals("Submit")){
+//                    request.setAttribute("port", port);
+//                    request.setAttribute("cable", cable);
+//                    request.setAttribute("taskid", taskID);
+//                    request.setAttribute("soid", soID);
+//                    request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+//                    return;
+//                }
+//
+//
+//
+//            request.setAttribute("cable", cable);
+//            request.setAttribute("port", port);
+//            request.setAttribute("taskid", taskID);
+//            request.setAttribute("soid", soID);
+//            request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+        } finally {
+                dbManager.close();
+        }
+
     }
 
     /** 

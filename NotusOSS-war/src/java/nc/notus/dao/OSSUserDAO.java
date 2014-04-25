@@ -31,6 +31,15 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * @return list of users with similar email
      */
     public List<OSSUser> getUsersByEmail(String Email, int offset, int numberOfRecords);
+
+    /**
+     * Method returns list of users with similar lastname with paging
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return list of users with similar login
+     */
+
+    public List<OSSUser> getUsersByLastname(String lastname, int offset, int numberOfRecords);
     
     /**
      * Check if user with specified login is already exist in system

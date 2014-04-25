@@ -32,7 +32,7 @@
                     </td>
                 </tr>
                 <%for (Task task : tasksEng) {%>
-                <form action="SubmitTask" method="POST">
+                <form action="InstallationEngineerTasks" method="POST">
                     <tr>
                         <td>
                             <input type="text" name="taskid" value="<%=task.getId()%>" readonly="readonly"/>
@@ -43,6 +43,7 @@
                         <td>
                             <input type="hidden" name="username" value="<%=request.getUserPrincipal().getName()%>"/> 
                             <input type="submit" name="action" value="Submit" />
+                            <input type="submit" name="action" value="Assign" />
                         </td>
                     </tr>
                     </form>
