@@ -73,6 +73,7 @@ public class CreateCircuit extends HttpServlet {
                 List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.PROVISION_ENGINEER.toInt());
                 request.setAttribute("tasksEng", tasksEng);
                 request.getRequestDispatcher("provisioningEngineer.jsp").forward(request, response);
+                return;
             }
             request.setAttribute("taskid", taskID);
             request.setAttribute("soid", soID);
