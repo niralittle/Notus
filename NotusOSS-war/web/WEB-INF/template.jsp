@@ -23,7 +23,7 @@
     <div id="page_content">
         <div id="wrapper">
             <div id="main">
-                <jsp:include page="/WEB-INF/jspf/header.jspf"/>
+                <jsp:include page="/WEB-INF/jspf/header.jsp"/>
                 <h1 id="title"><%=request.getParameter("title")%></h1>
 
                 <div id="main_content">
