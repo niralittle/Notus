@@ -1,6 +1,8 @@
 <%@page import="java.util.List"%>
 <%@page import="nc.notus.entity.Task"%>
 
+<a href="passwordChanging.jsp">Change user password</a> 
+
 <%
 	if (request.getAttribute("success") != null) {
 		out.print(request.getAttribute("success") + "\n\n");
