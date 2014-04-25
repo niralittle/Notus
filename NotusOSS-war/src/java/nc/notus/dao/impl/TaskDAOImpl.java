@@ -33,6 +33,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
                 "JOIN taskstatus ts ON t.taskstatusid = ts.id " +
                 "WHERE t.roleid = ? " +
                 "AND ts.status = 'Active' " +
+                "AND t.employeeid IS NULL " +
                 "ORDER BY t.id " +
                 ") a where ROWNUM <= ? )" +
                 "WHERE rnum  >= ?";
