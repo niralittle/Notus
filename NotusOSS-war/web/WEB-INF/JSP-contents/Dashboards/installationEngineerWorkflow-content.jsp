@@ -17,18 +17,35 @@
         <title>Installation Engineer Workflow</title>
     </head>
     <body>
-        <% Integer taskID = (Integer) request.getAttribute("taskid");
-           Port port = new Port();
+        <% Port port;
+            Cable cable;
+           Integer soID;
+           Integer taskID;
+
+            if (request.getAttribute("taskid") != null) {
+		taskID = (Integer) request.getAttribute("taskid");
+            } else {
+               taskID = 0;
+            }
+
            if (request.getAttribute("port") != null) {
                 port = (Port) request.getAttribute("port");
+           } else {
+               port = new Port();
            }
-           Cable cable;
+
            if (request.getParameter("cable") != null) {
                 cable = (Cable) request.getAttribute("cable");
            } else {
                cable = new Cable();
            }
-           Integer soID = (Integer) request.getAttribute("soid");%>
+
+           if (request.getAttribute("soid") != null) {
+		soID = (Integer) request.getAttribute("soid");
+            } else {
+               soID = 0;
+            }
+        %>
            <form action="InstallationEngineerTasks" method="POST">
                <input type="submit" name="action" value="Back to Tasks" />
            </form>

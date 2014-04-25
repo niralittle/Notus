@@ -86,6 +86,12 @@ public class SubmitTask extends HttpServlet {
             if (request.getParameter("action").equals("Create Router")){
                 if (port == null){
                 nwf.createRouter(taskID, portQuantity);
+                request.setAttribute("port", port);
+                request.setAttribute("cable", cable);
+                request.setAttribute("taskid", taskID);
+                request.setAttribute("soid", soID);
+                request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+                return;
                 }
             }
 
@@ -93,6 +99,13 @@ public class SubmitTask extends HttpServlet {
             if (request.getParameter("action").equals("Create Cable")){
                 if (cable == null){
                     nwf.createCable(taskID, "UTP Cable");
+                    cable = cabDAO.getFreeCable();
+                    request.setAttribute("port", port);
+                    request.setAttribute("cable", cable);
+                    request.setAttribute("taskid", taskID);
+                    request.setAttribute("soid", soID);
+                    request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+                    return;
                 }
             }
 
@@ -105,6 +118,7 @@ public class SubmitTask extends HttpServlet {
                 List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.INSTALLATION_ENGINEER.toInt());
                 request.setAttribute("tasksEng", tasksEng);
                 request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
+                return;
             }
 
             request.setAttribute("port", port);
