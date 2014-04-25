@@ -51,7 +51,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         " ) a where ROWNUM <= ? )" +
                         "WHERE rnum  >= ?";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, login);
+        statement.setString(1, ("%" + login + "%"));
         statement.setInt(2, numberOfRecords);
         statement.setInt(3, offset);
         ResultIterator ri = statement.executeQuery();
@@ -169,7 +169,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         " ) a where ROWNUM <= ? )" +
                         "WHERE rnum  >= ?";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, email);
+        statement.setString(1, ("%" + email + "%"));
         statement.setInt(2, numberOfRecords);
         statement.setInt(3, offset);
         ResultIterator ri = statement.executeQuery();
