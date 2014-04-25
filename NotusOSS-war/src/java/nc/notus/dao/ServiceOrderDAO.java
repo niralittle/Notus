@@ -20,6 +20,19 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
                                         int offset, int numberOfRecords);
 
     /**
+     * Method that returns list of ServiceOrders with selected status
+     * not not connected to any Service Instance
+     * @param userID
+     * @param serviceOrderStatus for searching
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return list ServiceOrders with selected status
+     * not not connected to any Service Instance
+     */
+    List<ServiceOrder> getSOByStatusWoSI(int userID, String serviceOrderStatus,
+                                        int offset, int numberOfRecords);
+
+    /**
      * Method that returns list of ServiceOrders with selected scenario
      * @param scenario for searching
      * @param offset - offset from start position in paging
