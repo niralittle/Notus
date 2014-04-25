@@ -62,7 +62,7 @@ public class GetingUsersInfo extends HttpServlet {
 
 			// search user for one criteria only:
 			if(!lastName.isEmpty()) {
-				users = userDAO.getUsersByLastname(lastName, startPage, numberOfRecords);
+				users = userDAO.getUsersByLastName(lastName, startPage, numberOfRecords);
 			} else if (!login.isEmpty()) {
 				users = userDAO.getUsersByLogin(login, startPage, numberOfRecords);	
 			} else {
