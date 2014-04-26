@@ -49,12 +49,19 @@ public class SubmitTask extends HttpServlet {
         Port port;
         int taskID;
         int soID;
+        int userID;
         try {
             if (request.getParameter("taskid") != null){
                 taskID  = Integer.parseInt(request.getParameter("taskid"));
             }
             else {
                 taskID = 0;
+            }
+            if (request.getParameter("userid") != null){
+                userID  = Integer.parseInt(request.getParameter("userid"));
+            }
+            else {
+                userID = 0;
             }
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
@@ -66,7 +73,7 @@ public class SubmitTask extends HttpServlet {
                 cable  = (Cable) (request.getAttribute("cable"));
             }
             else {
-                //cable = new Cable();
+                cable = new Cable();
             }
             if (request.getParameter("port") != null){
                 port  = (Port) (request.getAttribute("port"));
@@ -115,8 +122,8 @@ public class SubmitTask extends HttpServlet {
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int startpage = 1;
                 int numbOfRecords = 10;
-                List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.INSTALLATION_ENGINEER.toInt());
-                request.setAttribute("tasksEng", tasksEng);
+                List<Task> tasks = taskDAO.getTasksByID(startpage, numbOfRecords, userID);
+                request.setAttribute("tasks", tasks);
                 request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
                 return;
             }
