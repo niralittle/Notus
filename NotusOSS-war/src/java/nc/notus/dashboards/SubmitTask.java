@@ -24,7 +24,6 @@ import nc.notus.entity.Cable;
 import nc.notus.entity.Port;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
-import nc.notus.states.UserRole;
 import nc.notus.workflow.NewScenarioWorkflow;
 
 /**
@@ -97,6 +96,7 @@ public class SubmitTask extends HttpServlet {
                 request.setAttribute("cable", cable);
                 request.setAttribute("taskid", taskID);
                 request.setAttribute("soid", soID);
+                request.setAttribute("userid", userID);
                 request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
                 return;
                 }
@@ -111,6 +111,7 @@ public class SubmitTask extends HttpServlet {
                     request.setAttribute("cable", cable);
                     request.setAttribute("taskid", taskID);
                     request.setAttribute("soid", soID);
+                    request.setAttribute("userid", userID);
                     request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
                     return;
                 }
@@ -123,6 +124,7 @@ public class SubmitTask extends HttpServlet {
                 int startpage = 1;
                 int numbOfRecords = 10;
                 List<Task> tasks = taskDAO.getTasksByID(startpage, numbOfRecords, userID);
+                request.setAttribute("userid", userID);
                 request.setAttribute("tasks", tasks);
                 request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
                 return;
@@ -131,6 +133,7 @@ public class SubmitTask extends HttpServlet {
             request.setAttribute("port", port);
             request.setAttribute("taskid", taskID);
             request.setAttribute("soid", soID);
+            request.setAttribute("userid", userID);
             request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
         } finally {
                 dbManager.close();
