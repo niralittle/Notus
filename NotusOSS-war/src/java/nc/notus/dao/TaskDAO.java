@@ -17,4 +17,13 @@ public interface TaskDAO extends GenericDAO<Task> {
      * @return list of tasks
      */
     public List<Task> getEngTasks(int offset, int numberOfRecords, int roleID);
+
+    /**
+     * Method returns list of numberOfRecords choosen userID tasks with paging
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @param userID - user ID
+     * @return list of tasks
+     */
+    public List<Task> getTasksByID(int offset, int numberOfRecords, int userID);
 }
