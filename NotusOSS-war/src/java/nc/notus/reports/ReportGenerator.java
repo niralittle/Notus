@@ -27,8 +27,7 @@ public class ReportGenerator {
      * Columns in this rows are separated with COLUMN_SEPARATOR
      * First element is a row of column names
      */
-    private String[] reportData = null;
-    private String reportName = null;
+    private AbstractReport reportRef = null;
     private HSSFWorkbook workBook = new HSSFWorkbook();
 
     /**
@@ -37,9 +36,16 @@ public class ReportGenerator {
      * @param startDateString  date report term starts with
      * @param finishDateString date report term ends with
      */
-    public ReportGenerator(Report report) {
-        this.reportData = report.getReportData();
-        this.reportName = report.getReportName();
+    public ReportGenerator(AbstractReport report) {
+        this.reportRef = report;
+    }
+
+    /**
+     * Returns report associated with a report generator
+     * @return report object
+     */
+    public AbstractReport getReport() {
+        return this.reportRef;
     }
 
     /**
@@ -47,7 +53,7 @@ public class ReportGenerator {
      * @return name of the report to be generated
      */
     public String getReportName() {
-        return this.reportName;
+        return reportRef.getReportName();
     }
 
     /**
@@ -57,8 +63,8 @@ public class ReportGenerator {
     public String getReportHTML() {
         StringBuilder HTMLReportBuilder = new StringBuilder();
         HTMLReportBuilder.append("<table border='1' width='50%' cellpadding='10'>");
-        if (reportData != null) {
-            for (String row : reportData) {
+        if (reportRef.getReportData() != null) {
+            for (String row : reportRef.getReportData()) {
                 String[] columns = row.split(COLUMN_SEPARATOR);
                 HTMLReportBuilder.append("<tr>");
                 for (int i = 0; i < columns.length; i++) {
@@ -82,27 +88,30 @@ public class ReportGenerator {
         createNewSheet();
         workBook.write(streamToWrite);
     }
+
     public String getReportCSV() {
         StringBuilder CSVReportBuilder = new StringBuilder();
         CSVReportBuilder.append("sep=#\n");
-        CSVReportBuilder.append(reportName);
+        CSVReportBuilder.append(reportRef.getReportName());
         CSVReportBuilder.append("\n");
-        if (reportData != null) {
-            for(String row: reportData) {
+        if (reportRef.getReportData() != null) {
+            for (String row : reportRef.getReportData()) {
                 CSVReportBuilder.append(row);
                 CSVReportBuilder.append("\n");
             }
         }
         return CSVReportBuilder.toString();
     }
+
     /**
      * Creates a new excel sheet in work book. This sheet will have name given
      * by the user and cell styles specified in initStyles method.
      */
     public void createNewSheet() {
+        String[] reportData = reportRef.getReportData();
         int styleIndex = 0;
         HSSFSheet sheet = workBook.createSheet(WorkbookUtil.createSafeSheetName(
-                reportName));
+                reportRef.getReportName()));
         /*
          * 0 - bold, left-aligned
          * 1 - bold, center-aligned

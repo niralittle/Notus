@@ -10,7 +10,7 @@ import nc.notus.entity.Device;
  * Represents report of most profitable router.
  * @author Andrey Ilin
  */
-public class MostProfitableRouterReport implements Report {
+public class MostProfitableRouterReport extends AbstractReport {
 
     /* Report name */
     private String reportName;
@@ -81,10 +81,5 @@ public class MostProfitableRouterReport implements Report {
     @Override
     public String getReportName() {
         return this.reportName;
-    }
-
-    @Override
-    public String[] getNextDataPage() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
