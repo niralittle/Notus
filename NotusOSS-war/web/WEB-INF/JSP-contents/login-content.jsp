@@ -22,4 +22,6 @@
             <td><input type="submit" value="Login"></td>
         </tr>
     </table>
+    <input id="serviceLocationID" name="serviceLocationID" type='hidden' value ="<%=request.getParameter("serviceLocationID") == null ? "" : request.getParameter("serviceLocationID")%>">
+    <input id="serviceCatalogID" name="serviceCatalogID" type='hidden' value ="<%=request.getParameter("serviceCatalogID") == null ? "" : request.getParameter("serviceCatalogID")%>">
 </form>
