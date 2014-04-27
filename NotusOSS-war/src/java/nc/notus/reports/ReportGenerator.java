@@ -42,7 +42,7 @@ public class ReportGenerator {
 
     /**
      * Returns report associated with a report generator
-     * @return report object
+     * @return report object inherited from AbstractReport
      */
     public AbstractReport getReport() {
         return this.reportRef;
@@ -85,21 +85,35 @@ public class ReportGenerator {
      * @throws IOException
      */
     public void getReportXLS(OutputStream streamToWrite) throws IOException {
-        createNewSheet();
+        if (workBook.getSheet(reportRef.getReportName()) == null) {
+            createNewSheet();
+        }
         workBook.write(streamToWrite);
     }
 
+    /**
+     * Returns a string that represents CSV report with separator specified
+     * in COLUMN_SEPARATOR field
+     * @return string that represents CSV report
+     */
     public String getReportCSV() {
         StringBuilder CSVReportBuilder = new StringBuilder();
-        CSVReportBuilder.append("sep=#\n");
+        CSVReportBuilder.append("sep=");
+        CSVReportBuilder.append(COLUMN_SEPARATOR);
+        CSVReportBuilder.append("\n");
         CSVReportBuilder.append(reportRef.getReportName());
         CSVReportBuilder.append("\n");
-        if (reportRef.getReportData() != null) {
-            for (String row : reportRef.getReportData()) {
-                CSVReportBuilder.append(row);
+        int pageIndexHolder = reportRef.getCurrentPageIndex();
+        CSVReportBuilder.append(reportRef.getReportData()[0]);
+        CSVReportBuilder.append("\n");
+        reportRef.setCurrentPageIndex(-1);
+        while (reportRef.getNextDataPage()) {
+            for (int i = 1; i < reportRef.getReportData().length; i++) {
+                CSVReportBuilder.append(reportRef.getReportData()[i]);
                 CSVReportBuilder.append("\n");
             }
         }
+        reportRef.setCurrentPageIndex(pageIndexHolder);
         return CSVReportBuilder.toString();
     }
 
@@ -108,6 +122,8 @@ public class ReportGenerator {
      * by the user and cell styles specified in initStyles method.
      */
     public void createNewSheet() {
+        int pageIndexHolder = reportRef.getCurrentPageIndex();
+        reportRef.setCurrentPageIndex(-1);
         String[] reportData = reportRef.getReportData();
         int styleIndex = 0;
         HSSFSheet sheet = workBook.createSheet(WorkbookUtil.createSafeSheetName(
@@ -126,6 +142,7 @@ public class ReportGenerator {
         String[] columnNames = reportData[0].split(COLUMN_SEPARATOR);
         int columnNumber = columnNames.length;
         int rowNumber = reportData.length;
+        int rowCounter = 0;
         styleIndex = 1; //Style for headers
 
         /* Creating data rows, cells with specific cell style */
@@ -138,8 +155,33 @@ public class ReportGenerator {
             tempCell.setCellValue(columnNames[i]);
 
         }
+        while (reportRef.getNextDataPage()) {
+            reportData = reportRef.getReportData();
+            rowNumber = reportData.length;
+            for (int i = 1; i < rowNumber; i++) {
+                tempRow = sheet.createRow(++rowCounter);
+                dataRow = reportData[i].split(COLUMN_SEPARATOR);
+                for (int j = 0; j < columnNumber; j++) {
+                    tempCell = tempRow.createCell(j);
+                    if (j == 0) {
+                        styleIndex = 3;
+                        tempCell.setCellStyle(cellStyle[styleIndex]);
+                        tempCell.setCellValue(dataRow[j]);
+                    } else {
+                        styleIndex = 2;
+                        tempCell.setCellStyle(cellStyle[styleIndex]);
+                        tempCell.setCellValue(dataRow[j]);
+                    }
+                }
+                for (int k = 0; k < columnNumber; k++) {
+                    sheet.setColumnWidth(i, columnWidthInChars);
+                }
+            }
+        }
+        reportData = reportRef.getReportData();
+        rowNumber = reportData.length;
         for (int i = 1; i < rowNumber; i++) {
-            tempRow = sheet.createRow(i);
+            tempRow = sheet.createRow(++rowCounter);
             dataRow = reportData[i].split(COLUMN_SEPARATOR);
             for (int j = 0; j < columnNumber; j++) {
                 tempCell = tempRow.createCell(j);
@@ -157,7 +199,7 @@ public class ReportGenerator {
                 sheet.setColumnWidth(i, columnWidthInChars);
             }
         }
-
+        reportRef.setCurrentPageIndex(pageIndexHolder);
     }
 
     /**

@@ -88,17 +88,59 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
         return this.reportName;
     }
 
+    /**
+     * Gets a next data page for report
+     * @return true - if this page is complete with specified number of records
+     * and false - if not.
+     */
     @Override
-    public void getNextDataPage() {
+    public boolean getNextDataPage() {
         pageNumber++;
         getDataFromDatabase();
+        if (reportData.length > 1 && reportData.length == recordsPerPage + 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
+    /**
+     * Gets a previous data page for report
+     * @return true - if this page isn't last and false - if not.
+     */
     @Override
-    public void getPreviousDataPage() {
+    public boolean getPreviousDataPage() {
         if (pageNumber > 0) {
             pageNumber--;
             getDataFromDatabase();
+            if (pageNumber == 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
         }
+    }
+
+    /**
+     * Sets a current page of report selected
+     * @param pageIndex page to select
+     */
+    @Override
+    public void setCurrentPageIndex(int pageIndex) {
+        this.pageNumber = pageIndex;
+        if (pageIndex > 0) {
+            getDataFromDatabase();
+        }
+    }
+
+    /**
+     * Gets a currently selected page index
+     * @return index of selected page
+     */
+    @Override
+    public int getCurrentPageIndex() {
+        return this.pageNumber;
     }
 }

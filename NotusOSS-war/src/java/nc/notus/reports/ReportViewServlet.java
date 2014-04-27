@@ -56,7 +56,7 @@ public class ReportViewServlet extends HttpServlet {
 
         request.getSession().setAttribute("table", reportGenerator.getReportHTML());
         String objectId = UUID.randomUUID().toString();
-
+        request.setAttribute("prevpage", "disabled");
         request.getSession().setAttribute("objectId", objectId);
         request.getSession().setAttribute(objectId, (Object) reportGenerator);
         request.getSession().setAttribute("title", currentReport.getReportName());

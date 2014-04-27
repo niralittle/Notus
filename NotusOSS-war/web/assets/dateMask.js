@@ -31,6 +31,7 @@ function checkFormat(id) {
             checkdate = false;
         }
     }
+
     if (checkdate == false) {
         tip.innerHTML = "Incorrect date";
         tip.style.display = '';
@@ -38,5 +39,6 @@ function checkFormat(id) {
         tip.style.color = 'red';
         textfield.focus();
     }
+    
 }
 

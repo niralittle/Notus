@@ -97,11 +97,11 @@ public class ReportDAOImpl implements ReportDAO {
                         "AND s.scenario = 'New' " +
                         "ORDER BY so.serviceorderdate " +
                         ") a where ROWNUM <= ? ) " +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setDate(1, startDate);
         statement.setDate(2, finishDate);
-        statement.setInt(3, numberOfRecords);
+        statement.setInt(3, offset + numberOfRecords);
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
         List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
@@ -140,11 +140,11 @@ public class ReportDAOImpl implements ReportDAO {
                         "AND sis.status = 'Disconnected' " +
                         "ORDER BY si.serviceinstancedate " +
                         ") a where ROWNUM <= ? ) " +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setDate(1, startDate);
         statement.setDate(2, finishDate);
-        statement.setInt(3, numberOfRecords);
+        statement.setInt(3, offset + numberOfRecords);
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
         List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
@@ -186,11 +186,11 @@ public class ReportDAOImpl implements ReportDAO {
                         "GROUP BY d.name, d.portquantity " +
                         "ORDER BY d.name " +
                         ") a where ROWNUM <= ? ) " +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setDate(1, startDate);
         statement.setDate(2, finishDate);
-        statement.setInt(3, numberOfRecords);
+        statement.setInt(3, offset + numberOfRecords);
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
         List<RoutersUtilizationCapacity> routersUtilizationCapacity =

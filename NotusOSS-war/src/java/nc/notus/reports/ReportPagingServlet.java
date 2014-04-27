@@ -5,6 +5,7 @@
 package nc.notus.reports;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,16 +28,24 @@ public class ReportPagingServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-//        PrintWriter out = response.getWriter();
         String reportGenId = request.getParameter("objectId");
         if (reportGenId != null) {
             Object a = request.getSession().getAttribute(reportGenId.toString());
             ReportGenerator rg = (ReportGenerator) a;
             if (request.getParameter("nextpage") != null) {
-                rg.getReport().getNextDataPage();
-            } else if (request.getParameter("prevpage") != null){
-                rg.getReport().getPreviousDataPage();
+                if (!rg.getReport().getNextDataPage()) {
+                    request.setAttribute("nextpage", "disabled");
+                } else {
+                    request.setAttribute("nextpage", "enabled");
+                }
+            } else if (request.getParameter("prevpage") != null) {
+                if (!rg.getReport().getPreviousDataPage()) {
+                    request.setAttribute("prevpage", "disabled");
+                } else {
+                    request.setAttribute("prevpage", "enabled");
+                }
             }
+
             request.getSession().setAttribute("table", rg.getReportHTML());
             String objectId = UUID.randomUUID().toString();
 

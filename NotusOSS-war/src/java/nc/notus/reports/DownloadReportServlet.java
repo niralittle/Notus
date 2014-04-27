@@ -3,12 +3,10 @@ package nc.notus.reports;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.reports.ReportGenerator;
 
 /**
  * Handles report download request
@@ -42,7 +40,6 @@ public class DownloadReportServlet extends HttpServlet {
             response.setHeader("Content-Disposition", "attachment; filename=" +
                     rg.getReportName() + ".csv");
             pw.write(rg.getReportCSV());
-//            pw.write(rg.toString());
         }
 
 

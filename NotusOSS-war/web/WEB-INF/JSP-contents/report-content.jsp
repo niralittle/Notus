@@ -6,11 +6,10 @@
 
 <%=request.getSession().getAttribute("table")%>
 <form method="post" action="reportPaging" style="display:inline">
-    <input type="submit" name="nextpage" value="<< Previous"/>
-    <input type="submit" name="prevpage" value="Next >>"/>
+    <input type="submit" name="prevpage" value="<< Previous" <%=request.getAttribute("prevpage")%>/>
+    <input type="submit" name="nextpage" value="Next >>" <%=request.getAttribute("nextpage")%>/>
     <input type="hidden" name="objectId"
            value="<%=request.getSession().getAttribute("objectId")%>"/>
-    <input type="hidden" name="type" value="xls"/>
 </form>
 <br>
 <form method="post" action="downloadReport">
