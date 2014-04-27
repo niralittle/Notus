@@ -1,27 +1,29 @@
 <div id="top_menu">
 
     <div class="dashboard_links_etc" width="610px" align="right" style="padding: 6px; margin-right: 3px;">
-       	<%
-			if (request.getUserPrincipal() == null) {
-		%>
+
+                <%  if (request.isUserInRole("CUSTOMER_USER")) { %>
+		        <a href="CustomerUser">Go to Cabinet</a>
+                            <div class="separator"></div>
+		<%  } else { %>
+                        <a href="TasksAssignment">Tasks Assignment</a>
+                            <div class="separator"></div>
+                        <a href="InstallationEngineerTasks">Installation Engineer Page</a>
+                            <div class="separator"></div>
+                        <a href="ProvisionEngineerTasksServlet">Provisioning Engineer Page</a>
+                            <div class="separator"></div>
+                        <a href="Support">Support Engineer Page</a>
+                            <div class="separator"></div>
+                        <a href="admin.jsp">Admin page</a> 
+                            <div class="separator"></div>
+		<%  } %>
+
+                <%  if (request.getUserPrincipal() == null) { %>
 		        <a href="login.jsp">Login</a>
-		<%
-			} else {
-		%>
+		<%  } else { %>
 		        <a href="logout">Logout</a>
-		<%
-			}
-		%>
-            <div class="separator"></div>
-            <a href="/NotusOSS-war/TasksAssignment">Tasks Assignment</a>
-            <div class="separator"></div>
-        <a href="/NotusOSS-war/InstallationEngineerTasks">Installation Engineer Page</a>
-            <div class="separator"></div>
-        <a href="/NotusOSS-war/ProvisionEngineerTasksServlet">Provisioning Engineer Page</a>
-            <div class="separator"></div>
-        <a href="/NotusOSS-war/Support">Support Engineer Page</a>
-            <div class="separator"></div>
-        <a href="admin.jsp">Admin page</a>
+		<%  } %>
+
     </div>
 
     <div id="pages_list">
