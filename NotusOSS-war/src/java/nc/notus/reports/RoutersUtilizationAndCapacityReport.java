@@ -11,7 +11,7 @@ import nc.notus.entity.RoutersUtilizationCapacity;
  * Represents utilization and capacity report.
  * @author Ilin Andrey
  */
-public class RoutersUtilizationAndCapacityReport implements Report {
+public class RoutersUtilizationAndCapacityReport extends AbstractReport {
     /* Report name */
 
     private String reportName;
@@ -89,7 +89,16 @@ public class RoutersUtilizationAndCapacityReport implements Report {
     }
 
     @Override
-    public String[] getNextDataPage() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void getNextDataPage() {
+        pageNumber++;
+        getDataFromDatabase();
+    }
+
+    @Override
+    public void getPreviousDataPage() {
+        if (pageNumber > 0) {
+            pageNumber--;
+            getDataFromDatabase();
+        }
     }
 }

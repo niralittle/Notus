@@ -1,7 +1,10 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package nc.notus.reports;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,12 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Handles requests for report view                                                                       
+ *
  * @author Andrey Ilin
  */
-public class ReportViewServlet extends HttpServlet {
+public class ReportPagingServlet extends HttpServlet {
 
-    /**
+    /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -23,50 +26,32 @@ public class ReportViewServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        PrintWriter pw = response.getWriter();
         response.setContentType("text/html;charset=UTF-8");
-        int reportTypeValue = Integer.parseInt(request.getParameter("report"));
-        String startDate = request.getParameter("fromdate");
-        String finishDate = request.getParameter("todate");
-        AbstractReport currentReport = null;
-        switch (reportTypeValue) {
-            case 0:
-                currentReport = new MostProfitableRouterReport("Most profitable router",
-                        startDate, finishDate);
-                break;
-            case 1:
-                currentReport = new NewOrdersPerPeriodReport("New orders per period",
-                        startDate, finishDate);
-                break;
-            case 2:
-                currentReport = new DisconnectOrdersPerPeriodReport("Disconnect orders per period",
-                        startDate, finishDate);
-                break;
-            case 3:
-                currentReport = new RoutersUtilizationAndCapacityReport("Routers utilization and capacity",
-                        startDate, finishDate);
-                break;
-            case 4:
-                currentReport = new ProfitabilityByMonthReport("Profitability by month",
-                        startDate, finishDate);
-                break;
+//        PrintWriter out = response.getWriter();
+        String reportGenId = request.getParameter("objectId");
+        if (reportGenId != null) {
+            Object a = request.getSession().getAttribute(reportGenId.toString());
+            ReportGenerator rg = (ReportGenerator) a;
+            if (request.getParameter("nextpage") != null) {
+                rg.getReport().getNextDataPage();
+            } else if (request.getParameter("prevpage") != null){
+                rg.getReport().getPreviousDataPage();
+            }
+            request.getSession().setAttribute("table", rg.getReportHTML());
+            String objectId = UUID.randomUUID().toString();
 
+            request.getSession().setAttribute(objectId, request);
+            request.getSession().setAttribute("objectId", objectId);
+            request.getSession().setAttribute(objectId, (Object) rg);
+            request.getSession().setAttribute("title", rg.getReportName());
+
+            request.getRequestDispatcher("report.jsp").forward(request, response);
         }
-        ReportGenerator reportGenerator = new ReportGenerator(currentReport);
-
-        request.getSession().setAttribute("table", reportGenerator.getReportHTML());
-        String objectId = UUID.randomUUID().toString();
-
-        request.getSession().setAttribute("objectId", objectId);
-        request.getSession().setAttribute(objectId, (Object) reportGenerator);
-        request.getSession().setAttribute("title", currentReport.getReportName());
-
-        request.getRequestDispatcher("report.jsp").forward(request, response);
 
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -79,7 +64,7 @@ public class ReportViewServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -92,7 +77,7 @@ public class ReportViewServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */

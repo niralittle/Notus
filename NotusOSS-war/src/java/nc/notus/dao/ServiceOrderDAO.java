@@ -41,6 +41,17 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
      */
     public List<ServiceOrder> getServiceOrdersByScenario(String scenario,
                                         int offset, int numberOfRecords);
+                                        
+   /**
+    * Return service order by specified SI id.
+    * 
+    * @param serviceInstanceId - passes SI id
+    * @return instance of SO or null if not found
+    * 
+    * @author Panchenko Dmytro
+    */
+    public ServiceOrder gerServiceOrderBySIId(int serviceInstanceId);
+
 
 
 }

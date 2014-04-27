@@ -11,7 +11,7 @@ import nc.notus.entity.ServiceOrder;
  * Represents report of new orders per period
  * @author Andrey Ilin
  */
-public class NewOrdersPerPeriodReport implements Report {
+public class NewOrdersPerPeriodReport extends AbstractReport {
 
     /* Report name */
     private String reportName;
@@ -86,8 +86,17 @@ public class NewOrdersPerPeriodReport implements Report {
     }
 
     @Override
-    public String[] getNextDataPage() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void getNextDataPage() {
+        pageNumber++;
+        getDataFromDatabase();
+    }
+
+    @Override
+    public void getPreviousDataPage() {
+        if (pageNumber > 0) {
+            pageNumber--;
+            getDataFromDatabase();
+        }
     }
 }
 

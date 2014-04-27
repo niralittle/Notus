@@ -94,6 +94,10 @@
         <servlet-class>nc.notus.dashboards.GetingUsersInfo</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>ReportPagingServlet</servlet-name>
+        <servlet-class>nc.notus.reports.ReportPagingServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
@@ -162,6 +166,10 @@
     <servlet-mapping>
         <servlet-name>GetingUsersInfo</servlet-name>
         <url-pattern>/GetUsers</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReportPagingServlet</servlet-name>
+        <url-pattern>/reportPaging</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

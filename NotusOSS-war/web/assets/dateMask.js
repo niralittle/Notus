@@ -12,7 +12,7 @@ function checkFormat(id) {
     } else {
         tip.style.display = 'none';
     }
-    var array = v.split(".", 3);
+    var array = v.split("-", 3);
     var day = parseInt(array[2], 10);
     var month = parseInt(array[1], 10);
     var year = parseInt(array[0], 10);

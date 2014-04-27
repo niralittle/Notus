@@ -11,7 +11,7 @@ import nc.notus.entity.ServiceInstance;
  * Represents report of most disconnecte orders per period
  * @author Andrey Ilin
  */
-public class DisconnectOrdersPerPeriodReport implements Report {
+public class DisconnectOrdersPerPeriodReport extends AbstractReport {
 
     /* Report name */
     private String reportName;
@@ -23,7 +23,7 @@ public class DisconnectOrdersPerPeriodReport implements Report {
     private Date startDate = null;
     private Date finishDate = null;
     private int pageNumber = 0;
-    private int recordsPerPage = 10;
+    private int recordsPerPage = 15;
 
     /*
      * Report data stored here
@@ -86,7 +86,16 @@ public class DisconnectOrdersPerPeriodReport implements Report {
     }
 
     @Override
-    public String[] getNextDataPage() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void getNextDataPage() {
+        pageNumber++;
+        getDataFromDatabase();
+    }
+
+    @Override
+    public void getPreviousDataPage() {
+        if (pageNumber > 0) {
+            pageNumber--;
+            getDataFromDatabase();
+        }
     }
 }

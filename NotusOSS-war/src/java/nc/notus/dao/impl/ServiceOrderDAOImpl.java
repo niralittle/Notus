@@ -147,4 +147,42 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         }
         return serviceOrders;
     }
+    
+     /**
+     * Return service order by specified SI id.
+     * 
+     * @param serviceInstanceId - passes SI id
+     * @return instance of SO or null if not found
+     * 
+     * @author Panchenko Dmytro
+     */
+    @Override
+    public ServiceOrder gerServiceOrderBySIId(int serviceInstanceId) {
+    	ServiceOrder serviceOrder = null;
+    	
+    	StringBuilder query = new StringBuilder();
+    	query.append("SELECT so.id, so.serviceOrderDate, so.scenarioID, ");
+    	query.append("so.userId, so.serviceCatalogId, so.serviceLocation, ");
+    	query.append("so.serviceOrderStatusId ");
+    	query.append("FROM SERVICEORDER so");
+    	query.append("WHERE so.serviceInstanceId = ?");
+    	
+        Statement statement = dbManager.prepareStatement(query.toString());
+        statement.setInt(1, serviceInstanceId);
+        ResultIterator ri = statement.executeQuery();
+        while(ri.next()) {
+        	serviceOrder = new ServiceOrder();
+        	
+        	serviceOrder.setId(ri.getInt("id"));
+        	serviceOrder.setServiceOrderDate(ri.getDate("serviceOrderDate"));
+        	serviceOrder.setScenarioID(ri.getInt("scenarioID"));
+        	serviceOrder.setServiceOrderStatusID(ri.getInt("serviceOrderStatusId"));
+        	serviceOrder.setUserID(ri.getInt("userId"));
+        	serviceOrder.setServiceCatalogID(ri.getInt("serviceCatalogID"));
+        	serviceOrder.setServiceLocation(ri.getString("serviceLocation"));
+        	serviceOrder.setServiceInstanceID(serviceInstanceId);  	
+        }
+        return serviceOrder;
+    }
+
 }

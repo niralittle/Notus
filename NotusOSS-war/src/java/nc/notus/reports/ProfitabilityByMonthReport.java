@@ -11,7 +11,7 @@ import nc.notus.entity.ProfitInMonth;
  * Represents profitability by month report.
  * @author Andrey Ilin
  */
-public class ProfitabilityByMonthReport implements Report {
+public class ProfitabilityByMonthReport extends AbstractReport {
 
     /* Report name */
     private String reportName;
@@ -81,10 +81,5 @@ public class ProfitabilityByMonthReport implements Report {
     @Override
     public String getReportName() {
         return this.reportName;
-    }
-
-    @Override
-    public String[] getNextDataPage() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
