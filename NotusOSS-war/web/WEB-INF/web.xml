@@ -98,7 +98,17 @@
         <servlet-name>ReportPagingServlet</servlet-name>
         <servlet-class>nc.notus.reports.ReportPagingServlet</servlet-class>
     </servlet>
-    <servlet><servlet-name>TasksAssignment</servlet-name><servlet-class>nc.notus.dashboards.TasksAssignment</servlet-class></servlet><servlet-mapping>
+    <servlet>
+        <servlet-name>TasksAssignment</servlet-name>
+        <servlet-class>nc.notus.dashboards.TasksAssignment</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>CustomerUserServlet</servlet-name>
+        <servlet-class>nc.notus.dashboards.CustomerUserServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
     </servlet-mapping>
@@ -167,6 +177,7 @@
         <servlet-name>GetingUsersInfo</servlet-name>
         <url-pattern>/GetUsers</url-pattern>
     </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>ReportPagingServlet</servlet-name>
         <url-pattern>/reportPaging</url-pattern>
@@ -175,6 +186,17 @@
         <servlet-name>TasksAssignment</servlet-name>
         <url-pattern>/TasksAssignment</url-pattern>
     </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>CustomerUserServlet</servlet-name>
+        <url-pattern>/CustomerUserServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerUserServlet</servlet-name>
+        <url-pattern>/CustomerUser</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30
@@ -202,6 +224,41 @@
             <role-name>ADMINISTRATOR</role-name>
         </auth-constraint>
     </security-constraint>
+
+    <security-constraint>
+        <display-name>Customer Dashboard</display-name>
+        <web-resource-collection>
+            <web-resource-name>Customer Dashboard</web-resource-name>
+            <description/>
+            <url-pattern>/CustomerUser</url-pattern>
+            <url-pattern>/CustomerUserServlet</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Dashboard JSP Page</web-resource-name>
+            <description/>
+            <url-pattern>/user.jsp</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+
+        <auth-constraint>
+            <description/>
+            <role-name>CUSTOMER_USER</role-name>
+        </auth-constraint>
+    </security-constraint>
+
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>jdbcNotusRealm</realm-name>
@@ -226,4 +283,5 @@
     <security-role>
         <role-name>CUSTOMER_USER</role-name>
     </security-role>
+
 </web-app>
