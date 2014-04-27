@@ -16,13 +16,15 @@ import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.OSSUser;
 import nc.notus.entity.Task;
 
 /**
- * Implements part of Installation Engineer dashboard
+ * Implements tasks assignment from role tasks to personal task for
+ * all types of engineers
  * @author Vladimir Ermolenko
  */
-public class ProvisionEngineerTasksServlet extends HttpServlet {
+public class TasksAssignment extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -36,9 +38,10 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         int startpage = 1;
         int numbOfRecords = 10;
-        String login = "";
-        int userID = 0;
         DBManager dbManager = new DBManager();
+        String login = "";
+        OSSUser user = null;
+        Task task = null;
         try {
             if (request.getParameter("startpage") != null) {
                 startpage = Integer.parseInt(request.getParameter("startpage"));
@@ -46,15 +49,34 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
             if (request.getParameter("numbOfRecords") != null) {
                 numbOfRecords = Integer.parseInt(request.getParameter("numbOfRecords"));
             }
+
+            login = request.getUserPrincipal().getName();
+
+            if (request.getParameter("task") != null) {
+                task  = (Task) (request.getAttribute("task"));
+            }
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
             if (userDAO.getUserByLogin(login) != null){
-                userID = userDAO.getUserByLogin(login).getId();
+                user = userDAO.getUserByLogin(login);
             }
+
+            //Action "Assign" tasks
+            if (request.getParameter("action") != null && request.getParameter("action").equals("Assign")){
+                
+                //There will be some code to implement task  assignment
+                TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+                List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
+                request.setAttribute("tasksEng", tasksEng);
+                request.setAttribute("user", user);
+                request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
+                return;
+            }
+
             TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-            List<Task> tasks = taskDAO.getTasksByID(startpage, numbOfRecords, userID);
-            request.setAttribute("tasks", tasks);
-            request.setAttribute("userid", userID);
-            request.getRequestDispatcher("provisioningEngineer.jsp").forward(request, response);
+            List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
+            request.setAttribute("tasksEng", tasksEng);
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
         } finally {
             dbManager.close();
         }

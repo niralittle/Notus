@@ -13,6 +13,8 @@
 			}
 		%>
             <div class="separator"></div>
+            <a href="/NotusOSS-war/TasksAssignment">Tasks Assignment</a>
+            <div class="separator"></div>
         <a href="/NotusOSS-war/InstallationEngineerTasks">Installation Engineer Page</a>
             <div class="separator"></div>
         <a href="/NotusOSS-war/ProvisionEngineerTasksServlet">Provisioning Engineer Page</a>

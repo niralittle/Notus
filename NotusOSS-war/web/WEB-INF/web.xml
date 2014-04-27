@@ -98,7 +98,7 @@
         <servlet-name>ReportPagingServlet</servlet-name>
         <servlet-class>nc.notus.reports.ReportPagingServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
+    <servlet><servlet-name>TasksAssignment</servlet-name><servlet-class>nc.notus.dashboards.TasksAssignment</servlet-class></servlet><servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
     </servlet-mapping>
@@ -170,6 +170,10 @@
     <servlet-mapping>
         <servlet-name>ReportPagingServlet</servlet-name>
         <url-pattern>/reportPaging</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TasksAssignment</servlet-name>
+        <url-pattern>/TasksAssignment</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
