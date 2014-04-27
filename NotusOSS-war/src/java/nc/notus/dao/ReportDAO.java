@@ -29,9 +29,9 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of new ServiceOrders per period
-     */                                                                         
+     */
     public List<ServiceOrder> getNewServiceOrders(Date startDate,
-                            Date finishDate, int offset, int numberOfRecords);
+            Date finishDate, int offset, int numberOfRecords);
 
     /**
      * Method that returns list of disconnected ServiceInstances per period
@@ -40,9 +40,9 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of disconnected ServiceInstances per period
-     */                                                                         
+     */
     public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate,
-                                Date finishDate, int offset, int numberOfRecords);
+            Date finishDate, int offset, int numberOfRecords);
 
     /**
      * Method that returns list of objects for routers utilization and capacity report
@@ -51,16 +51,15 @@ public interface ReportDAO {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of objects for routers utilization and capacity report
-     */                                                                         
+     */
     public List<RoutersUtilizationCapacity> getRoutersUtilizationCapacityData(
-              Date startDate, Date finishDate, int offset, int numberOfRecords);
+            Date startDate, Date finishDate, int offset, int numberOfRecords);
 
     /**
      * Method that returns list of objects for profitability by month report
      * @param startDate - start of period
      * @param finishDate - finish of period
      * @return list of objects for profitability by month report
-     */                                                                         
-    public List<ProfitInMonth> getProfitByMonth(Date startDate,Date finishDate);
-
+     */
+    public List<ProfitInMonth> getProfitByMonth(Date startDate, Date finishDate);
 }

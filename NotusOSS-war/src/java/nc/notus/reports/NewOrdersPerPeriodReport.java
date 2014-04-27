@@ -22,6 +22,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
     /* Dates for report request */
     private Date startDate = null;
     private Date finishDate = null;
+    private int totalRowNumber = 0;
     private int pageNumber = 0;
     private int recordsPerPage = 1; //FOR DEMONSTRATION
 
@@ -50,7 +51,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             this.reportName = "New orders per period";
-
+//            this.totalRowNumber = 
             List<ServiceOrder> orders = reportDAO.getNewServiceOrders(
                     startDate, finishDate, pageNumber * recordsPerPage, recordsPerPage);
             this.reportData = new String[orders.size() + 1]; // +1 for column headers

@@ -1,7 +1,6 @@
 package nc.notus.reports;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,7 +22,6 @@ public class ReportViewServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        PrintWriter pw = response.getWriter();
         response.setContentType("text/html;charset=UTF-8");
         int reportTypeValue = Integer.parseInt(request.getParameter("report"));
         String startDate = request.getParameter("fromdate");

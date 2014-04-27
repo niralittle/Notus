@@ -18,11 +18,14 @@ import nc.notus.entity.ServiceOrder;
  * @author Vladimir Ermolenko
  */
 public class ReportDAOImpl implements ReportDAO {
+
     private DBManager dbManager;
+
     public ReportDAOImpl(DBManager dbManager) {
-         this.dbManager = dbManager;
-}
-     /**
+        this.dbManager = dbManager;
+    }
+
+    /**
      * Method that returns most profitable router in system
      * @param startDate - start of period
      * @param finishDate - finish of period
@@ -34,27 +37,27 @@ public class ReportDAOImpl implements ReportDAO {
         // The query below needed in review with a lot of complex examples in table!
 
         String query = "SELECT p.deviceid, sum(sc.price*(? - ?)) total " +
-                        "FROM serviceorder so " +
-                        "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
-                        "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
-                        "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                        "LEFT JOIN port p ON si.portid  = p.id " +
-                        "LEFT JOIN device d ON p.deviceid = d.id " +
-                        "WHERE sis.status = 'Active' " +
-                        "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                        "GROUP BY p.deviceid " +
-                        "UNION ALL " +
-                        "SELECT p.deviceid, sum(sc.price*(si.serviceinstancedate - ?)) total " +
-                        "FROM serviceorder so " +
-                        "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
-                        "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
-                        "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                        "LEFT JOIN port p ON si.portid  = p.id " +
-                        "LEFT JOIN device d ON p.deviceid = d.id " +
-                        "WHERE sis.status = 'Disconnected' " +
-                        "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                        "GROUP BY p.deviceid " +
-                        "ORDER BY total DESC";
+                "FROM serviceorder so " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
+                "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                "LEFT JOIN port p ON si.portid  = p.id " +
+                "LEFT JOIN device d ON p.deviceid = d.id " +
+                "WHERE sis.status = 'Active' " +
+                "AND si.serviceinstancedate BETWEEN ? AND ? " +
+                "GROUP BY p.deviceid " +
+                "UNION ALL " +
+                "SELECT p.deviceid, sum(sc.price*(si.serviceinstancedate - ?)) total " +
+                "FROM serviceorder so " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
+                "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                "LEFT JOIN port p ON si.portid  = p.id " +
+                "LEFT JOIN device d ON p.deviceid = d.id " +
+                "WHERE sis.status = 'Disconnected' " +
+                "AND si.serviceinstancedate BETWEEN ? AND ? " +
+                "GROUP BY p.deviceid " +
+                "ORDER BY total DESC";
         Statement statement = dbManager.prepareStatement(query);
         statement.setDate(1, finishDate);
         statement.setDate(2, startDate);
@@ -64,8 +67,8 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setDate(6, startDate);
         statement.setDate(7, finishDate);
         ResultIterator ri = statement.executeQuery();
-        
-        if (ri.next()){
+
+        if (ri.next()) {
             Device device = new Device();
             device.setId(ri.getInt("deviceid"));
             device.setName("Cisco 7606");                                       // TODO: hardcode
@@ -84,20 +87,20 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of new ServiceOrders per period
      */
-    @Override                                                                   
+    @Override
     public List<ServiceOrder> getNewServiceOrders(Date startDate,
             Date finishDate, int offset, int numberOfRecords) {
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                        "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " + 
-                        "       so.scenarioid, so.userid, so.servicecatalogid, " +
-                        "so.serviceinstanceid, so.servicelocation " +
-                        "FROM serviceorder so " +
-                        "LEFT JOIN scenario s ON so.scenarioid = s.id " +
-                        "WHERE so.serviceorderdate BETWEEN ? AND ? " +
-                        "AND s.scenario = 'New' " +
-                        "ORDER BY so.serviceorderdate " +
-                        ") a where ROWNUM <= ? ) " +
-                        "WHERE rnum  > ?";
+        String query = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
+                "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
+                "       so.scenarioid, so.userid, so.servicecatalogid, " +
+                "so.serviceinstanceid, so.servicelocation " +
+                "FROM serviceorder so " +
+                "LEFT JOIN scenario s ON so.scenarioid = s.id " +
+                "WHERE so.serviceorderdate BETWEEN ? AND ? " +
+                "AND s.scenario = 'New' " +
+                "ORDER BY so.serviceorderdate " +
+                ") a where ROWNUM <= ? ) " +
+                "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setDate(1, startDate);
         statement.setDate(2, finishDate);
@@ -105,7 +108,7 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
         List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
-        while (ri.next()){
+        while (ri.next()) {
             ServiceOrder servOrder = new ServiceOrder();
             servOrder.setId(ri.getInt("id"));
             servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
@@ -128,19 +131,19 @@ public class ReportDAOImpl implements ReportDAO {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of disconnected ServiceInstances per period
      */
-    @Override                                                                   
+    @Override
     public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate,
-                                Date finishDate, int offset, int numberOfRecords) {
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                        "SELECT si.id, si.serviceinstancedate, si.serviceinstancestatusid, " +
-                        "       si.circuitid, si.portid " +
-                        "FROM serviceinstance si " +
-                        "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                        "WHERE si.serviceinstancedate BETWEEN ? AND ? " +
-                        "AND sis.status = 'Disconnected' " +
-                        "ORDER BY si.serviceinstancedate " +
-                        ") a where ROWNUM <= ? ) " +
-                        "WHERE rnum  > ?";
+            Date finishDate, int offset, int numberOfRecords) {
+        String query = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
+                "SELECT si.id, si.serviceinstancedate, si.serviceinstancestatusid, " +
+                "       si.circuitid, si.portid " +
+                "FROM serviceinstance si " +
+                "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                "WHERE si.serviceinstancedate BETWEEN ? AND ? " +
+                "AND sis.status = 'Disconnected' " +
+                "ORDER BY si.serviceinstancedate " +
+                ") a where ROWNUM <= ? ) " +
+                "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setDate(1, startDate);
         statement.setDate(2, finishDate);
@@ -148,7 +151,7 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
         List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
-        while (ri.next()){
+        while (ri.next()) {
             ServiceInstance servInstance = new ServiceInstance();
             servInstance.setId(ri.getInt("id"));
             servInstance.setServiceInstanceDate(ri.getDate("serviceinstancedate"));
@@ -174,19 +177,19 @@ public class ReportDAOImpl implements ReportDAO {
 
         // The query below needed in review with a lot of complex examples in table!
 
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                        "SELECT d.name, COUNT(p.portnumber)/d.portquantity*100 " +
-                        "AS utilization, d.portquantity " +
-                        "FROM port p " +
-                        "LEFT JOIN device d ON p.deviceid = d.id " +
-                        "LEFT JOIN serviceinstance si ON si.portid = p.id " +
-                        "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                        "WHERE sis.status = 'Active' " +
-                        "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                        "GROUP BY d.name, d.portquantity " +
-                        "ORDER BY d.name " +
-                        ") a where ROWNUM <= ? ) " +
-                        "WHERE rnum  > ?";
+        String query = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
+                "SELECT d.name, COUNT(p.portnumber)/d.portquantity*100 " +
+                "AS utilization, d.portquantity " +
+                "FROM port p " +
+                "LEFT JOIN device d ON p.deviceid = d.id " +
+                "LEFT JOIN serviceinstance si ON si.portid = p.id " +
+                "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                "WHERE sis.status = 'Active' " +
+                "AND si.serviceinstancedate BETWEEN ? AND ? " +
+                "GROUP BY d.name, d.portquantity " +
+                "ORDER BY d.name " +
+                ") a where ROWNUM <= ? ) " +
+                "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setDate(1, startDate);
         statement.setDate(2, finishDate);
@@ -194,8 +197,8 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
         List<RoutersUtilizationCapacity> routersUtilizationCapacity =
-                                    new ArrayList<RoutersUtilizationCapacity>();
-        while (ri.next()){
+                new ArrayList<RoutersUtilizationCapacity>();
+        while (ri.next()) {
             RoutersUtilizationCapacity routUtCap = new RoutersUtilizationCapacity();
             routUtCap.setDeviceName(ri.getString("name"));
             routUtCap.setCapacity(ri.getInt("portquantity"));
@@ -211,33 +214,33 @@ public class ReportDAOImpl implements ReportDAO {
      * @param finishDate - finish of period
      * @return list of objects for profitability by month report
      */
-    @Override                                                                   
+    @Override
     public List<ProfitInMonth> getProfitByMonth(Date startDate,
             Date finishDate) {
 
         // The query below needed in review with a lot of complex examples in table!
 
         String query = "SELECT months, SUM(incom) profit FROM ( " +
-                            "SELECT TO_CHAR(si.serviceinstancedate, 'Month') as months, " +
-                            "sc.price*(? - ?) incom " +
-                            "FROM serviceinstance si " +
-                            "LEFT JOIN serviceorder so ON so.serviceinstanceid = si.id " +
-                            "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
-                            "LEFT JOIN serviceinstancestatus sis ON " +
-                            "si.serviceinstancestatusid = sis.id " +
-                            "WHERE sis.status = 'Active' " +
-                            "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                            "UNION ALL " +
-                            "SELECT TO_CHAR(si.serviceinstancedate, 'Month') as months, " +
-                            "sc.price*(si.serviceinstancedate - ? ) incom " +
-                            "FROM serviceinstance si " +
-                            "LEFT JOIN serviceorder so ON so.serviceinstanceid = si.id " +
-                            "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
-                            "LEFT JOIN serviceinstancestatus sis ON " +
-                            "si.serviceinstancestatusid = sis.id " +
-                            "WHERE sis.status = 'Disconnected' " +
-                            "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                            " ) GROUP BY months";
+                "SELECT TO_CHAR(si.serviceinstancedate, 'Month') as months, " +
+                "sc.price*(? - ?) incom " +
+                "FROM serviceinstance si " +
+                "LEFT JOIN serviceorder so ON so.serviceinstanceid = si.id " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                "LEFT JOIN serviceinstancestatus sis ON " +
+                "si.serviceinstancestatusid = sis.id " +
+                "WHERE sis.status = 'Active' " +
+                "AND si.serviceinstancedate BETWEEN ? AND ? " +
+                "UNION ALL " +
+                "SELECT TO_CHAR(si.serviceinstancedate, 'Month') as months, " +
+                "sc.price*(si.serviceinstancedate - ? ) incom " +
+                "FROM serviceinstance si " +
+                "LEFT JOIN serviceorder so ON so.serviceinstanceid = si.id " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                "LEFT JOIN serviceinstancestatus sis ON " +
+                "si.serviceinstancestatusid = sis.id " +
+                "WHERE sis.status = 'Disconnected' " +
+                "AND si.serviceinstancedate BETWEEN ? AND ? " +
+                " ) GROUP BY months";
         Statement statement = dbManager.prepareStatement(query);
         statement.setDate(1, finishDate);
         statement.setDate(2, startDate);
@@ -248,7 +251,7 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setDate(7, finishDate);
         ResultIterator ri = statement.executeQuery();
         List<ProfitInMonth> profitByMonths = new ArrayList<ProfitInMonth>();
-        while (ri.next()){
+        while (ri.next()) {
             ProfitInMonth profInMonth = new ProfitInMonth();
             profInMonth.setProfit(ri.getInt("profit"));
             profInMonth.setMonth(ri.getString("months"));
@@ -256,5 +259,4 @@ public class ReportDAOImpl implements ReportDAO {
         }
         return profitByMonths;
     }
-    
 }
