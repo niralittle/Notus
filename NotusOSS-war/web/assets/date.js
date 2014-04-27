@@ -484,7 +484,6 @@ function formDate() {
         } else {
             resultTo += to;
         }
-         alert(resultTo.toString());
         document.getElementById("fromdate").value = resultFrom;
         document.getElementById("todate").value = resultTo;
 

@@ -140,4 +140,21 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
     public int getCurrentPageIndex() {
         return this.pageNumber;
     }
+
+    @Override
+    public boolean checkNextPage() {
+        DBManager dbManager = new DBManager();
+        try {
+            ReportDAO reportDAO = new ReportDAOImpl(dbManager);
+            List<ServiceInstance> instance = reportDAO.getDisconnectedServiceInstances(startDate,
+                    finishDate, (pageNumber + 1) * 1, 1);
+            if (instance.size() == 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } finally {
+            dbManager.close();
+        }
+    }
 }

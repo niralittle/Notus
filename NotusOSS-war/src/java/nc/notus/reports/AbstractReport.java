@@ -32,6 +32,10 @@ public abstract class AbstractReport {
      * paging functionality.
      *
      */
+
+    protected boolean checkNextPage() {
+        return false;
+    }
     protected boolean getNextDataPage() {
         return false;
     }

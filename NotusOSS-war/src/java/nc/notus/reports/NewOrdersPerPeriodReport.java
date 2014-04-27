@@ -22,9 +22,8 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
     /* Dates for report request */
     private Date startDate = null;
     private Date finishDate = null;
-    private int totalRowNumber = 0;
     private int pageNumber = 0;
-    private int recordsPerPage = 1; //FOR DEMONSTRATION
+    private int recordsPerPage = 2; //FOR DEMONSTRATION
 
     /*
      * Report data stored here
@@ -46,7 +45,24 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
         getDataFromDatabase();
     }
 
-    private void getDataFromDatabase() {
+    @Override
+    public boolean checkNextPage() {
+        DBManager dbManager = new DBManager();
+        try {
+            ReportDAO reportDAO = new ReportDAOImpl(dbManager);
+            List<ServiceOrder> order = reportDAO.getNewServiceOrders(startDate,
+                    finishDate, (pageNumber + 1) * 1, 1);
+            if (order.size() == 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } finally {
+            dbManager.close();
+        }
+    }
+
+     void getDataFromDatabase() {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
@@ -97,7 +113,11 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
         ++pageNumber;
         getDataFromDatabase();
         if (reportData.length > 1 && reportData.length == recordsPerPage + 1) {
-            return true;
+            if (checkNextPage()) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
