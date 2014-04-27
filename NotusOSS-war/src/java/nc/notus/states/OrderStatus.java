@@ -8,9 +8,9 @@ package nc.notus.states;
  */
 public enum OrderStatus {
     ENTERING("Entering"),
+    CANCELLED("Cancelled"),
     PROCESSING("Processing"),
-    COMPLETED("Completed"),
-    CANCELLED("Cancelled");
+    COMPLETED("Completed");
 
     private final String status;
 
