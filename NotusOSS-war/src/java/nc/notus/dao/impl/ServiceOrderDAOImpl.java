@@ -104,33 +104,28 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
 
     /**
      * Method that returns list of ServiceOrders with selected status
-     * not not connected to any Service Instance
      * @param userID
      * @param serviceOrderStatus for searching
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
-     * @return list ServiceOrders with selected status 
-     * not not connected to any Service Instance
+     * @return list ServiceOrders with selected status
      */
     @Override
-    public List<ServiceOrder> getSOByStatusWoSI(int userID, String serviceOrderStatus, int offset, int numberOfRecords) {
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                        "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
-                        "so.scenarioid, so.userid, so.servicecatalogid, " +
+    public List<ServiceOrder> getSOByStatus(int userID, int serviceOrderStatus, int offset, int numberOfRecords) {
+        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
+                        "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid," +
+                        "so.scenarioid, so.userid, so.servicecatalogid," +
                         "so.serviceinstanceid, so.servicelocation " +
                         "FROM serviceorder so " +
-                        "LEFT JOIN serviceorderstatus sos ON " +
-                        "so.serviceorderstatusid = sos.id " +
-                        "WHERE so.userid = ? " +
-                        "AND sos.status = ? " +
-                        "AND so.serviceinstanceid IS NULL " +
-                        "ORDER BY so.serviceorderdate " +
-                        ") a where ROWNUM <= ? ) " +
-                        "WHERE rnum  >= ?";
+                        "WHERE so.userid = ? AND so.serviceorderstatusid = ? " +
+                        "ORDER BY so.serviceorderdate) a " +
+                        "WHERE ROWNUM <= ? )  " +
+                        "WHERE rnum  >= ? ";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, serviceOrderStatus);
-        statement.setInt(2, numberOfRecords);
-        statement.setInt(3, offset);
+        statement.setInt(1, userID);
+        statement.setInt(2, serviceOrderStatus);
+        statement.setInt(3, numberOfRecords);
+        statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
         List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
         while (ri.next()){
