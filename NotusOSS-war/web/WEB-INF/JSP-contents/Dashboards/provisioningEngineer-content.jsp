@@ -17,7 +17,8 @@
         <title>Provisionoing Engineer page</title>
     </head>
     <body>
-        <%List<Task> tasksEng = (List) request.getAttribute("tasksEng");%>
+        <%List<Task> tasks = (List) request.getAttribute("tasks");
+        int userID = (Integer) request.getAttribute("userid");%>
         <table border="1" id="tablename1">
             <tbody>
                 <tr>
@@ -31,7 +32,7 @@
                         Action
                     </td>
                 </tr>
-                <%for (Task task : tasksEng) {%>
+                <%for (Task task : tasks) {%>
                 <form action="CreateCircuit" method="POST">
                     <tr>
                         <td>
@@ -42,6 +43,7 @@
                         </td>
                         <td>
                             <input type="hidden" name="username" value="<%=request.getUserPrincipal().getName()%>"/>
+                            <input type="hidden" name="userid" value="<%=userID%>"/>
                             <input type="submit" name="action" value="Submit" />
                         </td>
                     </tr>

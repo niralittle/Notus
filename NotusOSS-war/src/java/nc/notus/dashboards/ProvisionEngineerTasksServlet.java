@@ -11,7 +11,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.TaskDAO;
+import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.Task;
@@ -35,6 +37,8 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         int startpage = 1;
         int numbOfRecords = 10;
+        String login = "";
+        int userID = 0;
         DBManager dbManager = new DBManager();
         try {
             if (request.getParameter("startpage") != null) {
@@ -43,9 +47,14 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
             if (request.getParameter("numbOfRecords") != null) {
                 numbOfRecords = Integer.parseInt(request.getParameter("numbOfRecords"));
             }
+            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+            if (userDAO.getUserByLogin(login) != null){
+                userID = userDAO.getUserByLogin(login).getId();
+            }
             TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-            List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.PROVISION_ENGINEER.toInt());
-            request.setAttribute("tasksEng", tasksEng);
+            List<Task> tasks = taskDAO.getTasksByID(startpage, numbOfRecords, userID);
+            request.setAttribute("tasks", tasks);
+            request.setAttribute("userid", userID);
             request.getRequestDispatcher("provisioningEngineer.jsp").forward(request, response);
         } finally {
             dbManager.close();
