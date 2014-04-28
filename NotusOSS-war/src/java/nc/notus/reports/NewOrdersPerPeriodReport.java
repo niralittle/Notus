@@ -23,7 +23,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
     private Date startDate = null;
     private Date finishDate = null;
     private int pageNumber = 0;
-    private int recordsPerPage = 3; //FOR DEMONSTRATION
+    private int recordsPerPage = 1; //FOR DEMONSTRATION
 
     /*
      * Report data stored here
@@ -113,11 +113,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
         ++pageNumber;
         getDataFromDatabase();
         if (reportData.length > 1 && reportData.length == recordsPerPage + 1) {
-            if (checkNextPage()) {
-                return true;
-            } else {
-                return false;
-            }
+            return true;
         } else {
             return false;
         }

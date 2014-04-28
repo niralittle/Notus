@@ -32,7 +32,8 @@ public class ReportPagingServlet extends HttpServlet {
             Object a = request.getSession().getAttribute(reportGenId.toString());
             ReportGenerator rg = (ReportGenerator) a;
             if (request.getParameter("nextpage") != null) {
-                if (!rg.getReport().getNextDataPage()) {
+                rg.getReport().getNextDataPage();
+                if (!rg.getReport().checkNextPage()) {
                     request.setAttribute("nextpage", "disabled");
                 } else {
                     request.setAttribute("nextpage", "enabled");
