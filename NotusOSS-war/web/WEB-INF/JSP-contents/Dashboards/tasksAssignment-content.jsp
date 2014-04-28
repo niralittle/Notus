@@ -23,6 +23,7 @@
         <h2>
             Tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
         </h2>
+        <form action="TasksAssignment" method="POST">
         <table border="1" id="tablename1">
             <tbody>
                 <tr>
@@ -37,7 +38,7 @@
                     </td>
                 </tr>
                 <%for (Task task : tasksEng) {%>
-                <form action="TasksAssignment" method="POST">
+                
                     <tr>
                         <td>
                             <input type="text" name="taskid" value="<%=task.getId()%>" readonly="readonly"/>

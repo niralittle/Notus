@@ -49,20 +49,14 @@ public class TasksAssignment extends HttpServlet {
         String login = "";
         OSSUser user = null;
         Task task = null;
+        TaskDAO taskDAO = null;
         try {
-            if (request.getParameter("startpage") != null) {
-                startpage = Integer.parseInt(request.getParameter("startpage"));
-            }
-            if (request.getParameter("numbOfRecords") != null) {
-                numbOfRecords = Integer.parseInt(request.getParameter("numbOfRecords"));
-            }
-
             login = request.getUserPrincipal().getName();
 
-            if (request.getParameter("task") != null) {
+            if (request.getParameter("task") != null){
                 task  = (Task) (request.getAttribute("task"));
             }
-            TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+            taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
             if (userDAO.getUserByLogin(login) != null){
                 user = userDAO.getUserByLogin(login);
@@ -70,14 +64,7 @@ public class TasksAssignment extends HttpServlet {
 
             //Action "Assign" tasks
             if (request.getParameter("action") != null && request.getParameter("action").equals("Assign")){
-                if (request.getParameter("task") != null){
-                    task  = (Task) (request.getAttribute("task"));
-                    taskDAO.assignTask(task);
-                }
-                List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
-                request.setAttribute("tasksEng", tasksEng);
-                request.setAttribute("user", user);
-                request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
+                taskDAO.assignTask(task);
                 return;
             }
 
