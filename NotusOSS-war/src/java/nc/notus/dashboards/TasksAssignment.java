@@ -53,9 +53,9 @@ public class TasksAssignment extends HttpServlet {
         try {
             login = request.getUserPrincipal().getName();
 
-            if (request.getParameter("task") != null){
-                task  = (Task) (request.getAttribute("task"));
-            }
+          //  if (request.getParameter("task") != null){
+                task  = (Task) (request.getSession().getAttribute("task"));
+        //    }
             taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
             if (userDAO.getUserByLogin(login) != null){
