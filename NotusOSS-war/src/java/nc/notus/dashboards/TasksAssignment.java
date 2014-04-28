@@ -6,26 +6,18 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nc.notus.dao.OSSUserDAO;
-import nc.notus.dao.ScenarioDAO;
-import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
-import nc.notus.dao.impl.ScenarioDAOImpl;
-import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
-import nc.notus.entity.Scenario;
-import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
-import nc.notus.states.WorkflowScenario;
 
 /**
  * Implements tasks assignment from role tasks to personal task for
@@ -65,7 +57,7 @@ public class TasksAssignment extends HttpServlet {
 
             //Action "Assign" tasks
             if (request.getParameter("action") != null && request.getParameter("action").equals("Assign")){
-                taskDAO.assignTask(task);
+                //taskDAO.assignTask(task);
                 List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
                 request.setAttribute("tasksEng", tasksEng);
                 request.setAttribute("user", user);

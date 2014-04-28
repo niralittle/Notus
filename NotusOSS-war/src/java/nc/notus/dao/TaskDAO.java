@@ -11,8 +11,6 @@ public interface TaskDAO extends GenericDAO<Task> {
 
     /**
      * Method returns list of numberOfRecords choosen Engineer type tasks with paging;
-     * hash - virtual column to to prevent Lost Updates for implementing
-     * Optimistic Locking using hashes in tasks updates
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @param roleID - id of assigned role for tasks
@@ -22,8 +20,6 @@ public interface TaskDAO extends GenericDAO<Task> {
 
     /**
      * Method returns list of numberOfRecords choosen userID tasks with paging;
-     * hash - virtual column to to prevent Lost Updates for implementing
-     * Optimistic Locking using hashes in tasks updates
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @param userID - user ID
@@ -31,10 +27,4 @@ public interface TaskDAO extends GenericDAO<Task> {
      */
     public List<Task> getTasksByID(int offset, int numberOfRecords, int userID);
 
-     /**
-     * Method assign task to specific user without Lost Updates problem
-     * @param task - task for update
-     * @return quantity of updated records
-     */
-    public int assignTask(Task task);
 }
