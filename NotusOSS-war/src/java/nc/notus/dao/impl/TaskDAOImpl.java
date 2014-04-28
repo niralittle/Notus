@@ -74,16 +74,26 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
         }
         
     }
-
-    /**
-     * Method substitutes instance of entity in DB with one given.
-     * It invocates <code>getId()</code> method of instance to get primary key
-     * @param t instance of entity to update in DB
-     */
+    
+   /**
+    * Method substitutes instance of entity in DB with one given.
+    * It invocates <code>getId()</code> method of instance to get primary key
+    * @param t instance of entity to update in DB
+    */
     @Override
     public void update(Task task) { 
+    	 StringBuilder query = new StringBuilder();
+    	 query.append("UPDATE task");
+    	 query.append("SET SERVICEORDERID = ?, EMPLOYEEID = ?, ROLEID = ?, TASKSTATUSID = ?");
+    	 query.append("WHERE id = ?");
+    	 Statement statement = dbManager.prepareStatement(query.toString());
+	        statement.setInt(1, task.getServiceOrderID());
+	        statement.setInt(2, task.getEmployeeID());
+	        statement.setInt(3, task.getRoleID());
+	        statement.setInt(4, task.getTaskStatusID());
+	        statement.setInt(5, task.getId());
+	 statement.executeUpdate();
     }
-    
     
     
     /**
