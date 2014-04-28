@@ -20,26 +20,21 @@
                     <div id="showMenu">
                         <a href="javascript:void(0)" onclick="showCrRouter()"><li>Create Router</li></a>
                         <a href="javascript:void(0)" onclick="showCrCable()"><li>Create Cable</li></a>
-                        <a href="javascript:void(0)" onclick="showConnect()"><li>Connect Cable to Port</li></a>
                         <a href="javascript:void(0)" onclick="showDelete()"><li>Delete Cable</li></a>
                     </div>
                 </ul>
             </div>
             <div id ="contents">
-
                 <div id="selectTask">
+                    <h2>Please, choose Task:</h2>
                     <%List<Task> tasks = (List) request.getAttribute("tasks");
             int userID = (Integer) request.getAttribute("userid");%>
                     <table border="1" id="tablename1">
-
-                        <thead>
                             <tr>
                                 <th>Task Number</th>
                                 <th>Service Order ID</th>
                                 <th>Action</th>
                             </tr>
-                        </thead>
-                        <tbody>
                             <%for (Task task : tasks) {%>
                         <form action="SubmitTask" method="POST">
                             <tr>
@@ -53,32 +48,58 @@
                                     <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
                                     <input type="hidden" name="userid" value="<%=userID%>"/>
                                     <input type="submit" name="action" value="Submit" />
+
                                 </td>
                             </tr>
                         </form>
                         <% }%>
-                        </tbody>
+                        
                     </table>
                         <input type="submit" value="Action" onclick="show('showMenu',200,5)" />
                 </div>
 
                 <div id="createRouter">
-                    2
+                    <h2>Create Router</h2>
+                    <table border="1" id="tablename1">
+                        <tbody>
+                            <tr>
+                                <td>Input Device Name:</td>
+                                <td><input type="text" name="routerName" value="" /></td>
+                            </tr>
+                            <tr>
+                                <td>Input Port Quantity</td>
+                                <td><input type="text" name="portQuantity" value="" /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><a href="#" class="button28">Create</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </div>
 
                 <div id="createCable">
-                    3
-                </div>
+                    <h2>Create Cable</h2>
+                    <p>Press Create button</p>
+                    <a href="javascript:void(0)" class="button28"onclick="f(id)">Create</a>
+                    <div id="cableCreateDiv"></div>
+                    <p>Now, connect the Cable to Port.</p>
 
-                <div id="connectCabel">
-                    4
+                    <h2>Connect to Port:</h2>
+                    <select name="PortsList">
+                    </select>
+                    <br>
+                    <a href="javascript:void(0)" class="button28">Connect</a>
                 </div>
 
                 <div id="deleteRouter">
-
+                    <h2>Delete Cable</h2>
+                    <p>Choose Cable from the list below</p>
+                    <select name="deleteCabelList">
+                    </select>
+                    <a href="javascript:void(0)" class="button28">Delete</a>
                 </div>
             </div>
-
 
 
         </div>
