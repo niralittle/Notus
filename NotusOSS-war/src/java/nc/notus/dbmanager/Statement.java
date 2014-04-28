@@ -105,4 +105,12 @@ public class Statement implements Closeable {                                   
             throw new DBManagerException("SQL Exception", exc);
         }
     }
+
+    public void setLong(int parameterIndex, long value) {
+        try {
+            this.prStatement.setLong(parameterIndex, value);
+        } catch (SQLException exc) {
+            throw new DBManagerException("SQL Exception", exc);
+        }
+    }
 }

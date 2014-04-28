@@ -97,4 +97,31 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
         }
         return tasks;
     }
+
+
+    /**
+     * Method assign task to specific user without Lost Updates problem
+     * @param taskID - task for update
+     * @param employeeID - who is responsible for task fulfilment
+     * @param hash - virtual column to to prevent Lost Updates for implementing
+     * Optimistic Locking using hashes in tasks updates
+     * @return quantity of updated records
+     */
+
+    @Override
+    public int assignTask(int taskID, int employeeID, long hash) {
+        String query  = "UPDATE task " +
+                        "SET employeeid = ? " +
+                        "WHERE id = ? " +
+                        "AND ORA_HASH(t.employeeid || '/' || t.taskstatusid) = ? ";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setInt(1, employeeID);
+        statement.setInt(2, taskID);
+        statement.setLong(3, hash);
+        int rowsUpdated = statement.executeUpdate();
+        statement.close();
+        return rowsUpdated;
+    }
+
+
 }
