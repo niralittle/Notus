@@ -53,11 +53,11 @@
                             <input type="submit" name="action" value="Assign" />
                         </td>
                     </tr>
-                    </form>
+                    
                     <% } %>
                 </tbody>
             </table>
-
+            </form>
     </body>
 </html>
 

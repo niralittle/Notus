@@ -64,7 +64,14 @@ public class TasksAssignment extends HttpServlet {
 
             //Action "Assign" tasks
             if (request.getParameter("action") != null && request.getParameter("action").equals("Assign")){
+                if (request.getParameter("task") != null){
+                    task  = (Task) (request.getAttribute("task"));
+                }
                 taskDAO.assignTask(task);
+                List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
+                request.setAttribute("tasksEng", tasksEng);
+                request.setAttribute("user", user);
+                request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
                 return;
             }
 
