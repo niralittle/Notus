@@ -46,7 +46,7 @@
         <servlet-class>nc.notus.reports.DownloadReportServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ReportTestServlet</servlet-name>
+        <servlet-name>ReportViewServlet</servlet-name>
         <servlet-class>nc.notus.reports.ReportViewServlet</servlet-class>
     </servlet>
     <servlet>
@@ -83,7 +83,7 @@
         <servlet-name>ServiceCatalogServlet</servlet-name>
         <servlet-class>nc.notus.ServiceCatalogServlet</servlet-class>
     </servlet>
- 
+
     <servlet>
         <servlet-name>ChangeUserPassword</servlet-name>
         <servlet-class>nc.notus.dashboards.ChangeUserPassword</servlet-class>
@@ -137,7 +137,7 @@
         <url-pattern>/downloadReport</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ReportTestServlet</servlet-name>
+        <servlet-name>ReportViewServlet</servlet-name>
         <url-pattern>/getReport</url-pattern>
     </servlet-mapping>
     <servlet-mapping>

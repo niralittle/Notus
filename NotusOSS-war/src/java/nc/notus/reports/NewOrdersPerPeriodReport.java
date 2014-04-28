@@ -23,7 +23,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
     private Date startDate = null;
     private Date finishDate = null;
     private int pageNumber = 0;
-    private int recordsPerPage = 2; //FOR DEMONSTRATION
+    private int recordsPerPage = 3; //FOR DEMONSTRATION
 
     /*
      * Report data stored here
@@ -51,7 +51,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             List<ServiceOrder> order = reportDAO.getNewServiceOrders(startDate,
-                    finishDate, (pageNumber + 1) * 1, 1);
+                    finishDate, (pageNumber + 1) * recordsPerPage, 1);
             if (order.size() == 0) {
                 return false;
             } else {

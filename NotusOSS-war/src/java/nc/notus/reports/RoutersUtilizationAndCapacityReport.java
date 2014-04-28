@@ -150,7 +150,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             List<RoutersUtilizationCapacity> routersUtilCap = reportDAO.getRoutersUtilizationCapacityData(startDate,
-                    finishDate, (pageNumber + 1) * 1, 1);
+                    finishDate, (pageNumber + 1) * recordsPerPage, 1);
             if (routersUtilCap.size() == 0) {
                 return false;
             } else {

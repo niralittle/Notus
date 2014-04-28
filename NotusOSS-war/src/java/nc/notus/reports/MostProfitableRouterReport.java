@@ -49,17 +49,32 @@ public class MostProfitableRouterReport extends AbstractReport {
 
             this.reportName = "Most profitable router";
 
-            /* 1. Column headers 2. Device data */
-            this.reportData = new String[2];
+            /* Data */
+            Device dev = reportDAO.getMostProfitableRouter(startDate, finishDate);
+            if (dev != null) {
+
+                /* 1. Column headers 2. Device data */
+                this.reportData = new String[2];
+
+                /* Column headers */
+                this.reportData[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
+                        COLUMN_SEPARATOR + "Port quantity";
+                
+                this.reportData[1] = dev.getId() + COLUMN_SEPARATOR + dev.getName() +
+                        COLUMN_SEPARATOR + dev.getPortQuantity();
+            } else {
+                this.reportData = new String[1];
+                this.reportData[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
+                        COLUMN_SEPARATOR + "Port quantity";
+            }
+
+
 
             /* Column headers */
             this.reportData[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
                     COLUMN_SEPARATOR + "Port quantity";
 
-            /* Data */
-            Device dev = reportDAO.getMostProfitableRouter(startDate, finishDate);
-            this.reportData[1] = dev.getId() + COLUMN_SEPARATOR + dev.getName() +
-                    COLUMN_SEPARATOR + dev.getPortQuantity();
+
         } finally {
             dbManager.close();
         }

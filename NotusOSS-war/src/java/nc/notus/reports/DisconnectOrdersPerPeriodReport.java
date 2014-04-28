@@ -147,7 +147,7 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             List<ServiceInstance> instance = reportDAO.getDisconnectedServiceInstances(startDate,
-                    finishDate, (pageNumber + 1) * 1, 1);
+                    finishDate, (pageNumber + 1) * recordsPerPage, 1);
             if (instance.size() == 0) {
                 return false;
             } else {

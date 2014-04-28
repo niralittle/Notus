@@ -50,17 +50,25 @@ public class ReportViewServlet extends HttpServlet {
                 break;
 
         }
-        ReportGenerator reportGenerator = new ReportGenerator(currentReport);
+        if (currentReport.getReportData().length > 1) {
+            ReportGenerator reportGenerator = new ReportGenerator(currentReport);
 
-        request.getSession().setAttribute("table", reportGenerator.getReportHTML());
-        String objectId = UUID.randomUUID().toString();
-        request.setAttribute("prevpage", "disabled");
-        request.getSession().setAttribute("objectId", objectId);
-        request.getSession().setAttribute(objectId, (Object) reportGenerator);
-        request.getSession().setAttribute("title", currentReport.getReportName());
+            request.getSession().setAttribute("table", reportGenerator.getReportHTML());
+            String objectId = UUID.randomUUID().toString();
+            request.setAttribute("prevpage", "disabled");
+            if (currentReport.checkNextPage()) {
+                request.setAttribute("nextpage", "enabled");
+            } else {
+                request.setAttribute("nextpage", "disabled");
+            }
+            request.getSession().setAttribute("objectId", objectId);
+            request.getSession().setAttribute(objectId, (Object) reportGenerator);
+            request.getSession().setAttribute("title", currentReport.getReportName());
 
-        request.getRequestDispatcher("report.jsp").forward(request, response);
-
+            request.getRequestDispatcher("report.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("noreport.jsp").forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

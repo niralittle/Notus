@@ -172,7 +172,7 @@
                 </SCRIPT>
             </SELECT>
             <input type="submit" value="View report" id="viewreport"/><br>
-            <input type="hidden" name="fromdate" id="fromdate""/>
+            <input type="hidden" name="fromdate" id="fromdate"/>
             <input type="hidden" name="todate" id="todate"/>
             <div id="tip" style="display:none"></div>
         </form>
