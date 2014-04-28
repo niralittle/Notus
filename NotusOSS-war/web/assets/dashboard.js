@@ -42,7 +42,6 @@ function showTask(){
     document.getElementById("selectTask").style.display = "block";
     document.getElementById("createRouter").style.display = "none";
     document.getElementById("createCable").style.display = "none";
-    document.getElementById("connectCabel").style.display = "none";
     document.getElementById("deleteRouter").style.display = "none";
 }
 
@@ -50,28 +49,18 @@ function showCrRouter(){
     document.getElementById("selectTask").style.display = 'none';
     document.getElementById("createRouter").style.display = 'block';
     document.getElementById("createCable").style.display = 'none';
-    document.getElementById("connectCabel").style.display = 'none';
     document.getElementById("deleteRouter").style.display = 'none';
 }
 function showCrCable(){
     document.getElementById("selectTask").style.display = "none";
     document.getElementById("createRouter").style.display = "none";
     document.getElementById("createCable").style.display = "block";
-    document.getElementById("connectCabel").style.display = "none";
-    document.getElementById("deleteRouter").style.display = "none";
-}
-function showConnect(){
-    document.getElementById("selectTask").style.display = "none";
-    document.getElementById("createRouter").style.display = "none";
-    document.getElementById("createCable").style.display = "none";
-    document.getElementById("connectCabel").style.display = "block";
     document.getElementById("deleteRouter").style.display = "none";
 }
 function showDelete(){
     document.getElementById("selectTask").style.display = "none";
     document.getElementById("createRouter").style.display = "none";
     document.getElementById("createCable").style.display = "none";
-    document.getElementById("connectCabel").style.display = "none";
     document.getElementById("deleteRouter").style.display = "block";
 }
 var s=[],s_timer=[];
@@ -96,4 +85,7 @@ function show(id,h,spd) {
             setTimeout(arguments.callee, 10);
         }
     }, 10);
+}
+function f(obj){
+    document.getElementById('cableCreateDiv').innerHTML="Cable was created with id" + obj;
 }
