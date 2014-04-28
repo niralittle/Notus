@@ -63,7 +63,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
     @Override
     public void update(Task task) { 
     	 StringBuilder query = new StringBuilder();
-    	 query.append("UPDATE task");
+    	 query.append("UPDATE task ");
     	 query.append("SET SERVICEORDERID = ?, EMPLOYEEID = ?, ROLEID = ?, TASKSTATUSID = ?");
     	 query.append("WHERE id = ?");
     	 Statement statement = dbManager.prepareStatement(query.toString());
