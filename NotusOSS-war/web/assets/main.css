@@ -11,6 +11,7 @@ body {
     font: normal 13px 'Trebuchet MS', Arial, sans-serif;
     padding: 0 0 0 0;
     height: 100%;
+    background-color:#E9F2FF;
 }
 hr {
     border-top: 1px dotted #0099FF;
@@ -40,6 +41,7 @@ footer {
 #wrapper {
     min-height: 100%;
     position: relative;
+     background-color:#E9F2FF;
 }
 #top_menu {
     -webkit-border-radius:6px 6px 0px 0px;
@@ -47,6 +49,7 @@ footer {
 }
 #main {
     margin-bottom: 60px;
+   
 }
 #pages_list li {
     display: inline-block;
@@ -149,35 +152,35 @@ footer {
     font-weight: bold;
 }
 ul.tabs {
-        margin:0px; padding:0px;
+    margin:0px; padding:0px;
 }
 ul.tabs li {
-        list-style:none;
-        display:inline;
+    list-style:none;
+    display:inline;
 }
 ul.tabs li a {
-        background-color: #F7FFFE;
-        color:#000000;
-        padding:8px 14px 8px 14px;
-        text-decoration:none;
-        font: normal 9px 'Trebuchet MS', Arial, sans-serif;
-        font-weight:bold;
-        text-transform:uppercase;
-        border:1px solid #464c54;
+    background-color: #F7FFFE;
+    color:#000000;
+    padding:8px 14px 8px 14px;
+    text-decoration:none;
+    font: normal 9px 'Trebuchet MS', Arial, sans-serif;
+    font-weight:bold;
+    text-transform:uppercase;
+    border:1px solid #464c54;
 }
 ul.tabs li a:hover {
-        background-color: #F7FFFE;
-        border-color:#2f343a;
+    background-color: #F7FFFE;
+    border-color:#2f343a;
 }
 ul.tabs li a.active {
-        background-color:#F7FFFE;
-        color:#282e32;
-        border-bottom: 1px solid #F7FFFE;
+    background-color:#F7FFFE;
+    color:#282e32;
+    border-bottom: 1px solid #F7FFFE;
 }
 .content {
-        background-color:#F7FFFE;
-        border:1px solid #464c54;
-        margin-top: 5px;
+    background-color:#F7FFFE;
+    border:1px solid #464c54;
+    margin-top: 5px;
 }
 #dash-center, #dash-right, #dash-report {
     display:none;
@@ -214,4 +217,188 @@ ul.tabs li a.active {
 #somePortsAreAvailable {
     display:none;
     font:14px;
+}
+
+/*IE dashboard*/
+
+
+#content{
+    width:1000px;
+    margin: 0 auto;
+    border:appworkspace;
+    background-color:#E9F2FF;;
+
+    display:table;
+}
+#content-menu{
+    width: 273px;
+    background-color: #E9F2FF;
+    display:inline-table;
+    position: absolute;
+}
+#content-menu ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#content-menu ul li{
+    font: bold 18px 'Trebuchet MS', Arial, sans-serif;
+    height: 35px;
+    background: url(assets/menu-bg.png) no-repeat;
+    padding-left: 10px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(220, 227, 235);
+    border-bottom-style: dotted;
+    border-right-width: 1px;
+    border-right-color: rgb(220, 227, 235);
+    border-right-style: dotted;
+    color:#413F3F;
+    text-shadow: 1px 1px 0px #fff;
+
+}
+#content-menu ul a{
+    text-decoration:none;
+    margin-left:10px;
+
+}
+#content-menu ul a:active{
+    color:#0000ee;
+}
+#content-menu ul li:hover{
+    font: bolder 21px 'Trebuchet MS', Arial, sans-serif;
+    height: 35px;
+    background: url(assets/menu-bg2.png) no-repeat;
+}
+#content-menu ul li:focus{
+    font-size: 20px;
+    font: bold 18px 'Trebuchet MS', Arial, sans-serif;
+    height: 35px;
+    background: url(assets/menu-bg2.png) no-repeat;
+}
+
+#contents{
+    height:200px;
+    width: 727px;
+    display:inline-table;
+    background-color: #E9F2FF;
+    background: -webkit-gradient(linear, left top, left bottom, from(#E9F2FF), to(rgba(250, 248, 248, 0.38)));
+    float:right;
+}
+#createRouter{
+    display: none;
+}
+#createCable{
+    display: none;
+}
+#connectCabel{
+    display: none;
+}
+#deleteRouter{
+    display: none;
+}
+#selectTask{
+    display:block;
+}
+
+/*Table*/
+#tablename1 a:link {
+    color: #666;
+    font-weight: bold;
+    text-decoration:none;
+}
+#tablename1 a:visited {
+    color: #999999;
+    font-weight:bold;
+    text-decoration:none;
+}
+#tablename1 a:active,
+#tablename1 a:hover {
+    color: #bd5a35;
+    text-decoration:underline;
+}
+
+#tablename1 {
+    font-family:Arial, Helvetica, sans-serif;
+    color:#666;
+    font-size:12px;
+    text-shadow: 1px 1px 0px #fff;
+    background:#eaebec;
+    margin:20px;
+    border:#ccc 1px solid;
+
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;
+
+    -moz-box-shadow: 0 1px 2px #d1d1d1;
+    -webkit-box-shadow: 0 1px 2px #d1d1d1;
+    box-shadow: 0 1px 2px #d1d1d1;
+}
+#tablename1 th {
+    padding:21px 25px 22px 25px;
+    border-top:1px solid #fafafa;
+    border-bottom:1px solid #e0e0e0;
+
+    background: #ededed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#D6E0F5), to(#ebebeb));
+    background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+}
+#tablename1 th:first-child {
+    text-align: left;
+    padding-left:20px;
+}
+#tablename1 tr:first-child th:first-child {
+    -moz-border-radius-topleft:3px;
+    -webkit-border-top-left-radius:3px;
+    border-top-left-radius:3px;
+}
+#tablename1 tr:first-child th:last-child {
+    -moz-border-radius-topright:3px;
+    -webkit-border-top-right-radius:3px;
+    border-top-right-radius:3px;
+}
+#tablename1 tr {
+    text-align: center;
+    padding-left:20px;
+}
+#tablename1 td:first-child {
+    text-align: left;
+    padding-left:20px;
+    border-left: 0;
+}
+#tablename1 td {
+    padding:18px;
+    border-top: 1px solid #ffffff;
+    border-bottom:1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
+
+    background: #fafafa;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+    background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+}
+#tablename1 tr.even td {
+    background: #f6f6f6;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+    background: -moz-linear-gradient(top,  #F2F0FA,  #f6f6f6);
+}
+#tablename1 tr:last-child td {
+    border-bottom:0;
+}
+#tablename1 tr:last-child td:first-child {
+    -moz-border-radius-bottomleft:3px;
+    -webkit-border-bottom-left-radius:3px;
+    border-bottom-left-radius:3px;
+}
+#tablename1 tr:last-child td:last-child {
+    -moz-border-radius-bottomright:3px;
+    -webkit-border-bottom-right-radius:3px;
+    border-bottom-right-radius:3px;
+}
+#tablename1 tr:hover td {
+    background: #f2f2f2;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+    background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);
+}
+#showMenu{
+    display:none;
 }
