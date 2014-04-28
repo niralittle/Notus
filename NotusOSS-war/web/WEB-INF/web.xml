@@ -108,6 +108,8 @@
         <servlet-class>nc.notus.dashboards.CustomerUserServlet</servlet-class>
     </servlet>
 
+
+
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
@@ -196,6 +198,8 @@
         <servlet-name>CustomerUserServlet</servlet-name>
         <url-pattern>/CustomerUser</url-pattern>
     </servlet-mapping>
+
+
 
     <session-config>
         <session-timeout>

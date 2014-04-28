@@ -53,9 +53,9 @@ public class TasksAssignment extends HttpServlet {
         try {
             login = request.getUserPrincipal().getName();
 
-            if (request.getParameter("task") != null){
-                task  = (Task) (request.getAttribute("task"));
-            }
+            //if (request.getParameter("task") != null){
+             //   task  = (Task) (request.getAttribute("task"));
+            //}
             taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
             if (userDAO.getUserByLogin(login) != null){
@@ -64,9 +64,6 @@ public class TasksAssignment extends HttpServlet {
 
             //Action "Assign" tasks
             if (request.getParameter("action") != null && request.getParameter("action").equals("Assign")){
-                if (request.getParameter("task") != null){
-                    task  = (Task) (request.getAttribute("task"));
-                }
                 taskDAO.assignTask(task);
                 List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
                 request.setAttribute("tasksEng", tasksEng);
