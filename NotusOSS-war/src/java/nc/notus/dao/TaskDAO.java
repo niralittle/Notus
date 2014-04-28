@@ -31,13 +31,10 @@ public interface TaskDAO extends GenericDAO<Task> {
      */
     public List<Task> getTasksByID(int offset, int numberOfRecords, int userID);
 
-    /**
+     /**
      * Method assign task to specific user without Lost Updates problem
-     * @param taskID - task for update
-     * @param employeeID - who is responsible for task fulfilment
-     * @param hash - virtual column to to prevent Lost Updates for implementing
-     * Optimistic Locking using hashes in tasks updates
+     * @param task - task for update
      * @return quantity of updated records
      */
-    public int assignTask(int taskID, int employeeID, long hash);
+    public int assignTask(Task task);
 }

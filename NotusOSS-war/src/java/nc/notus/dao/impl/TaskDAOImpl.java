@@ -30,7 +30,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
     @Override
     public List<Task> getEngTasks(int offset, int numberOfRecords, int roleID) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
-                "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid " +
+                "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid, " +
                 "ORA_HASH(t.employeeid || '/' || t.taskstatusid) hash " +
                 "FROM task t " +
                 "JOIN taskstatus ts ON t.taskstatusid = ts.id " +
@@ -70,7 +70,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
      */
     public List<Task> getTasksByID(int offset, int numberOfRecords, int userID) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
-                "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid " +
+                "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid, " +
                 "ORA_HASH(t.employeeid || '/' || t.taskstatusid) hash " +
                 "FROM task t " +
                 "JOIN taskstatus ts ON t.taskstatusid = ts.id " +
@@ -101,23 +101,20 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 
     /**
      * Method assign task to specific user without Lost Updates problem
-     * @param taskID - task for update
-     * @param employeeID - who is responsible for task fulfilment
-     * @param hash - virtual column to to prevent Lost Updates for implementing
-     * Optimistic Locking using hashes in tasks updates
+     * @param task - task for update
      * @return quantity of updated records
      */
 
     @Override
-    public int assignTask(int taskID, int employeeID, long hash) {
+    public int assignTask(Task task) {
         String query  = "UPDATE task " +
                         "SET employeeid = ? " +
                         "WHERE id = ? " +
                         "AND ORA_HASH(t.employeeid || '/' || t.taskstatusid) = ? ";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setInt(1, employeeID);
-        statement.setInt(2, taskID);
-        statement.setLong(3, hash);
+        statement.setInt(1, task.getEmployeeID());
+        statement.setInt(2, task.getId());
+        statement.setLong(3, task.getHash());
         int rowsUpdated = statement.executeUpdate();
         statement.close();
         return rowsUpdated;
