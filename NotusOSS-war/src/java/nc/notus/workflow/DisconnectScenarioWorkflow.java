@@ -150,7 +150,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
 		DBManager dbManager = new DBManager();
 		try {
 			if (!isTaskValid(dbManager, taskID,
-					UserRole.SUPPORT_ENGINEER.toInt())) {
+					UserRole.PROVISION_ENGINEER.toInt())) {
 				throw new WorkflowException("Given Task is not valid");
 			}
 			ServiceInstanceDAOImpl siDAO = new ServiceInstanceDAOImpl(dbManager);
