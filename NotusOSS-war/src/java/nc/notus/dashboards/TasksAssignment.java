@@ -12,12 +12,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nc.notus.dao.OSSUserDAO;
+import nc.notus.dao.ScenarioDAO;
+import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
+import nc.notus.dao.impl.ScenarioDAOImpl;
+import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
+import nc.notus.entity.Scenario;
+import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
+import nc.notus.states.WorkflowScenario;
 
 /**
  * Implements tasks assignment from role tasks to personal task for
@@ -55,6 +62,7 @@ public class TasksAssignment extends HttpServlet {
             if (request.getParameter("task") != null) {
                 task  = (Task) (request.getAttribute("task"));
             }
+            TaskDAO taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
             if (userDAO.getUserByLogin(login) != null){
                 user = userDAO.getUserByLogin(login);
@@ -64,7 +72,7 @@ public class TasksAssignment extends HttpServlet {
             if (request.getParameter("action") != null && request.getParameter("action").equals("Assign")){
                 
                 //There will be some code to implement task  assignment
-                TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+
                 List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
                 request.setAttribute("tasksEng", tasksEng);
                 request.setAttribute("user", user);
@@ -72,7 +80,6 @@ public class TasksAssignment extends HttpServlet {
                 return;
             }
 
-            TaskDAO taskDAO = new TaskDAOImpl(dbManager);
             List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
             request.setAttribute("tasksEng", tasksEng);
             request.setAttribute("user", user);

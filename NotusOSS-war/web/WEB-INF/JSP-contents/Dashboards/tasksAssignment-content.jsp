@@ -47,6 +47,7 @@
                         </td>
                         <td>
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
+                            <input type="hidden" name="task" value="<%=task%>"/>
                             <input type="hidden" name="user" value="<%=user%>"/>
                             <input type="submit" name="action" value="Assign" />
                         </td>

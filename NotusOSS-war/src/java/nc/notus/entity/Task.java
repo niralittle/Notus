@@ -10,16 +10,19 @@ public class Task {
     private Integer employeeID; // could be null
     private int roleID;
     private int taskStatusID;
+    private long hash; // to prevent Lost Updates for implementing 
+                       //Optimistic Locking using hashes in tasks updates
 
     public Task() {
     }
 
-    public Task(int id, int serviceOrderID, Integer employeeID, int roleID, int taskStatusID) {
+    public Task(int id, int serviceOrderID, Integer employeeID, int roleID, int taskStatusID, long hash) {
         this.id = id;
         this.serviceOrderID = serviceOrderID;
         this.employeeID = employeeID;
         this.roleID = roleID;
         this.taskStatusID = taskStatusID;
+        this.hash = hash;
     }
 
     public Integer getEmployeeID() {
@@ -60,5 +63,13 @@ public class Task {
 
     public void setTaskStatusID(int taskStatusID) {
         this.taskStatusID = taskStatusID;
+    }
+
+    public long getHash() {
+            return hash;
+    }
+
+    public void setHash(long hash) {
+        this.hash = hash;
     }
 }

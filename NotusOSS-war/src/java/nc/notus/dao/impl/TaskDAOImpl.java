@@ -19,7 +19,9 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
     }
 
     /**
-     * Method returns list of numberOfRecords choosen Engineer type tasks with paging
+     * Method returns list of numberOfRecords choosen Engineer type tasks with paging;
+     * hash - virtual column to to prevent Lost Updates for implementing
+     * Optimistic Locking using hashes in tasks updates
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @param roleID - id of assigned role for tasks
@@ -29,6 +31,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
     public List<Task> getEngTasks(int offset, int numberOfRecords, int roleID) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                 "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid " +
+                "ORA_HASH(t.employeeid || '/' || t.taskstatusid) hash " +
                 "FROM task t " +
                 "JOIN taskstatus ts ON t.taskstatusid = ts.id " +
                 "WHERE t.roleid = ? " +
@@ -50,13 +53,16 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
             task.setEmployeeID(ri.getInt("employeeid"));
             task.setRoleID(ri.getInt("roleid"));
             task.setTaskStatusID(ri.getInt("taskstatusid"));
+            task.setHash(ri.getLong("hash"));
             tasksEng.add(task);
         }
         return tasksEng;
     }
     
     /**
-     * Method returns list of numberOfRecords choosen userID tasks with paging
+     * Method returns list of numberOfRecords choosen userID tasks with paging;
+     * hash - virtual column to to prevent Lost Updates for implementing
+     * Optimistic Locking using hashes in tasks updates
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @param userID - user ID
@@ -65,6 +71,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
     public List<Task> getTasksByID(int offset, int numberOfRecords, int userID) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                 "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid " +
+                "ORA_HASH(t.employeeid || '/' || t.taskstatusid) hash " +
                 "FROM task t " +
                 "JOIN taskstatus ts ON t.taskstatusid = ts.id " +
                 "WHERE ts.status = 'Active' " +
@@ -85,6 +92,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
             task.setEmployeeID(ri.getInt("employeeid"));
             task.setRoleID(ri.getInt("roleid"));
             task.setTaskStatusID(ri.getInt("taskstatusid"));
+            task.setHash(ri.getLong("hash"));
             tasks.add(task);
         }
         return tasks;
