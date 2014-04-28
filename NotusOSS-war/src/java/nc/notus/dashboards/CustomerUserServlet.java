@@ -11,15 +11,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.http.HttpSession;
 import nc.notus.dao.OSSUserDAO;
+import nc.notus.dao.ScenarioDAO;
+import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.ServiceInstanceDAO;
+import nc.notus.dao.ServiceTypeDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
+import nc.notus.dao.impl.ScenarioDAOImpl;
+import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
+import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
+import nc.notus.entity.Scenario;
+import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.ServiceInstance;
+import nc.notus.entity.ServiceType;
 import nc.notus.states.OrderStatus;
 
 /**
@@ -31,6 +40,8 @@ public class CustomerUserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private DBManager dbManager = null;
     private HttpServletRequest request = null;
+    private List<ServiceOrder> completeOrders;
+    private List<ServiceOrder> processingOrders;
 
     void processRequest(HttpServletRequest request, HttpServletResponse response)
                     throws ServletException, IOException {
@@ -40,24 +51,18 @@ public class CustomerUserServlet extends HttpServlet {
         dbManager = new DBManager();
         this.request = request;
         try {
-            if (request.getParameter("startpage") != null)
-                startpage = Integer.parseInt(request.getParameter("startpage"));
-
-            if (request.getParameter("numbOfRecords") != null)
-                numbOfRecords = Integer.parseInt(request
-                                .getParameter("numbOfRecords"));
-
             int userID = getUserID();
-
-            fillRequestWithOrders(userID, OrderStatus.COMPLETED.ordinal() + 1,
-                    "completedOrders", startpage, numbOfRecords);
-            fillRequestWithOrders(userID, OrderStatus.ENTERING.ordinal() + 1,
-                    "enteringOrders", startpage, numbOfRecords);
-            fillRequestWithOrders(userID, OrderStatus.PROCESSING.ordinal() + 1,
-                    "processingOrders", startpage, numbOfRecords);
+            
+            ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager); 
+            completeOrders = (List<ServiceOrder>) orderDAO.getSOByStatus(userID,
+            OrderStatus.COMPLETED.ordinal() + 1, startpage, numbOfRecords);
+            processingOrders = (List<ServiceOrder>) orderDAO.getSOByStatus(userID,
+            OrderStatus.PROCESSING.ordinal() + 1, startpage, numbOfRecords);
+        
+            fillRequestWithHtml();
 
             RequestDispatcher view = request.getRequestDispatcher("user.jsp");
-            view.forward(request, response);
+            view.forward(this.request, response);
 
         } finally {
             dbManager.close();
@@ -112,17 +117,81 @@ public class CustomerUserServlet extends HttpServlet {
         } else return userIDString;
     }
 
-    private void fillRequestWithOrders(int userID,
-            int orderStatus, String attributeName,
-            int startpage, int numbOfRecords) {
+  
 
-        ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
+    private void fillRequestWithHtml() {
+       StringBuilder sb = new StringBuilder();
+       
+       ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
+       ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
+       ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager); 
+           
+       if (completeOrders.size() > 0) {
+            int catalogID;
+            ServiceCatalog sc;
+            ServiceType st;
 
-        List<ServiceOrder> orders = (List<ServiceOrder>)
-            orderDAO.getSOByStatus( userID,
-            orderStatus, startpage, numbOfRecords);
+            sb.append("<table class='completeOrders'>");
+                 sb.append("<thead>");
+                    sb.append("<tr>");
+                        sb.append("<td>Location</td>");
+                        sb.append("<td>Type of Service</td>");
+                        sb.append("<td>Since</td>");
+                        sb.append("<td>Price</td>");
+                        sb.append("<td>Options</td>");
+                    sb.append("</tr>");
+                 sb.append("</thead>");
 
-        request.setAttribute(attributeName, orders);
-        
+             for (ServiceOrder o: completeOrders) {
+                catalogID = o.getServiceCatalogID();
+                sc = catalogDAO.find(catalogID);
+                st = typeDAO.find(sc.getServiceTypeID());
+                    sb.append("<tr>");
+                        sb.append("<td>").append(o.getServiceLocation()).append("</td>");
+                        sb.append("<td>").append(st.getService()).append("</td>");
+                        sb.append("<td>").append(o.getServiceOrderDate()).append("</td>");
+                        sb.append("<td>").append(sc.getPrice()).append("</td>");
+                        sb.append("<td>");
+                            sb.append("<button>Modify</button>");
+                            sb.append("<button>Disconnect</button>");
+                        sb.append("</td>");
+                    sb.append("</tr>");
+                 }
+        sb.append("</table>");
+             }
+
+             if (processingOrders.size() > 0) {
+                int catalogID;
+                ServiceCatalog sc;
+                ServiceType st;
+                Scenario s; 
+
+        sb.append("<h2>Orders being processed:</h2>");
+        sb.append("<table class='processingOrders'>");
+             sb.append("<thead>");
+                sb.append("<tr>");
+                    sb.append("<td>Scenario</td>");
+                    sb.append("<td>Location</td>");
+                    sb.append("<td>Type of Service</td>");
+                    sb.append("<td>Order Date</td>");
+                sb.append("</tr>");
+             sb.append("</thead>");
+
+                  for (ServiceOrder o: processingOrders) {
+                    catalogID = o.getServiceCatalogID();
+                    sc = catalogDAO.find(catalogID);
+                    st = typeDAO.find(sc.getServiceTypeID());
+                    s = scenarioDAO.find(o.getScenarioID());
+              
+                sb.append("<tr>");
+                    sb.append("<td>").append(s.getScenario()).append("</td>");
+                    sb.append("<td>").append(o.getServiceLocation()).append("</td>");
+                    sb.append("<td>").append(st.getService()).append("</td>");
+                    sb.append("<td>").append(o.getServiceOrderDate()).append("</td>");
+                sb.append("</tr>");
+                } 
+            sb.append("</table>");
+           } 
+       request.setAttribute("userDashboardHtml", sb.toString());
     }
 }

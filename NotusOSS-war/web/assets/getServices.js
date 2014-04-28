@@ -79,7 +79,7 @@ function parseMessages(responseXML) {
 }
 function addHeader(){
     var head = document.getElementById("header");
-    head.appendChild(document.createTextNode(minPos));
+    head.appendChild(document.createTextNode("Nearest provider at: "+minPos));
 }
 function removeHeader(){
     var head = document.getElementById("header");
@@ -105,7 +105,7 @@ function addButton() {
     var ok = document.createElement("input");
     ok.setAttribute("id", "proceed");
     ok.setAttribute("type", "button");
-    ok.setAttribute("value", "Proceed to order");
+    ok.setAttribute("value", "Choose and proceed to order");
     ok.setAttribute("onclick", "goToRegistration()");
     td.appendChild(ok);
     tr.appendChild(td);

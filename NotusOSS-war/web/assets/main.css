@@ -11,7 +11,6 @@ body {
     font: normal 13px 'Trebuchet MS', Arial, sans-serif;
     padding: 0 0 0 0;
     height: 100%;
-    background-color:#E9F2FF;
 }
 hr {
     border-top: 1px dotted #0099FF;
@@ -41,16 +40,12 @@ footer {
 #wrapper {
     min-height: 100%;
     position: relative;
-     background-color:#E9F2FF;
 }
 #top_menu {
     -webkit-border-radius:6px 6px 0px 0px;
     background: url(logo.jpg) no-repeat #E9F2FF;
 }
-#main {
-    margin-bottom: 60px;
-   
-}
+
 #pages_list li {
     display: inline-block;
     margin: 10px 25px 0 0;
@@ -77,18 +72,30 @@ footer {
     margin-right: 5px;
 }
 
+#main-content {
+    background-color:#E9F2FF; padding:5px 5px 5px 0;
+}
 /* Map service stuff*/
 #map-canvas {
     height: 600px;
     width: 500px;
     margin: 0px;
-    padding: 0px
+    padding: 0px;
+} 
+#map-canvas, #rightblock {
+    position: relative;
+    left: 0;
+    width: 485px;
+    float: left;
+    display: block;
+    margin: 0 -100% 0 0;
 }
-/* REVIEW: why the fuck is #map-canvas doubled? */
-#map-canvas {
-    width:500px;
-    position:fixed;
-    display: table-cell;
+
+#rightblock input[type="button"] {
+    margin: 10px 3px 0px;
+}
+#rightblock {
+    left: 505px;
 }
 #panel {
     position: absolute;
@@ -101,17 +108,10 @@ footer {
     border: 1px solid #999;
 }
 #map-container {
-    width: 100%;
-    display:table;
+    width: 100%; 
+    overflow: hidden;
 }
-#rigtblock {
-    width:500px;
-    display: table-cell;
-    position: absolute;
-    top: 300px;
-    left: 600px;
-    right: -60px;
-}
+
 #address {
     width:400px;
 }
