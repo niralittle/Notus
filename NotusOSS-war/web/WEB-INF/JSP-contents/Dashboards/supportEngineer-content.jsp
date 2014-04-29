@@ -3,9 +3,14 @@
 
 <a href="passwordChanging.jsp">Change user password</a> 
 
+<a href="TasksAssignment?type=personal">       Go to personal tasks</a> 
+
+
+<%=request.getParameter("wfScenario") %>
+
 <%
 	if (request.getAttribute("success") != null) {
-		out.print("\n\n"+request.getAttribute("success") + "\n\n");
+		out.print("<p>"+request.getAttribute("success") + "</p>");
 		request.setAttribute("success", null);
 	}
 	if(request.getAttribute("task") != null ) {
@@ -29,5 +34,5 @@
 	<input type="submit" value="Send bill" name="action" />
 </form>
 <%
-	}
-%>
+			}
+	%>
