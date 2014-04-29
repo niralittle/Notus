@@ -66,7 +66,6 @@ public class NewScenarioWorkflow extends Workflow {
             if (!getOrderStatus(dbManager).equals(OrderStatus.ENTERING.toString())) {
                 throw new WorkflowException("Cannot proceed Order: wrong order state");
             }
-
             ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
 
             changeOrderStatus(dbManager, OrderStatus.PROCESSING);
@@ -81,7 +80,7 @@ public class NewScenarioWorkflow extends Workflow {
              * because physical link to customer is always absent for "new"
              * scenario, so we have to create it mannualy
              */
-            createTask(dbManager, UserRole.INSTALLATION_ENGINEER);
+            createTask(dbManager, UserRole.INSTALLATION_ENGINEER, "Proceed new order");
 
             dbManager.commit();
         } finally {
@@ -203,7 +202,7 @@ public class NewScenarioWorkflow extends Workflow {
             siDAO.update(si);
 
             this.completeTask(dbManager, taskID);
-            this.createTask(dbManager, UserRole.PROVISION_ENGINEER);
+            this.createTask(dbManager, UserRole.PROVISION_ENGINEER, "Create curcuit");
             dbManager.commit();
         } finally {
             dbManager.close();
@@ -235,7 +234,7 @@ public class NewScenarioWorkflow extends Workflow {
             siDAO.update(si);
 
             this.completeTask(dbManager, taskID);
-            this.createTask(dbManager, UserRole.SUPPORT_ENGINEER);
+            this.createTask(dbManager, UserRole.SUPPORT_ENGINEER, "Approve bill");
             dbManager.commit();
         } finally {
             dbManager.close();
