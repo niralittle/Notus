@@ -1,18 +1,6 @@
 <%-- 
     Document   : provisioningEngineer-content
     Created on : Apr 23, 2014, 12:19:59 PM
-    Author     : Vladimir Ermolenko & Panchenko Dmytro
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.List"%>
-<%@page import="nc.notus.entity.Task"%>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-<%-- 
-    Document   : provisioningEngineer-content
-    Created on : Apr 23, 2014, 12:19:59 PM
     Author     : Vladimir Ermolenko
 --%>
 

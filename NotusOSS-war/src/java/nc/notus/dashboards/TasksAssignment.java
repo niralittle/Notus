@@ -36,28 +36,39 @@ public class TasksAssignment extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int startpage = 1;
+ int startpage = 1;
         int numbOfRecords = 10;
         DBManager dbManager = new DBManager();
         String login = "";
         OSSUser user = null;
         Task task = null;
         TaskDAO taskDAO = null;
+        int taskID;
         try {
-            login = request.getUserPrincipal().getName();
-
-          //  if (request.getParameter("task") != null){
-                task  = (Task) (request.getSession().getAttribute("task"));
-        //    }
             taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+
+            if (request.getUserPrincipal() != null) {
+                login = request.getUserPrincipal().getName();
+            }
+            else {
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                return;
+            }
+            if (request.getParameter("taskid") != null){
+                taskID  = Integer.parseInt(request.getParameter("taskid"));
+                task = taskDAO.find(taskID);
+            }
+
             if (userDAO.getUserByLogin(login) != null){
                 user = userDAO.getUserByLogin(login);
             }
 
             //Action "Assign" tasks
             if (request.getParameter("action") != null && request.getParameter("action").equals("Assign")){
-                //taskDAO.assignTask(task);
+                task.setEmployeeID(user.getId());
+                taskDAO.update(task);
+                dbManager.commit();
                 List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
                 request.setAttribute("tasksEng", tasksEng);
                 request.setAttribute("user", user);
@@ -72,6 +83,7 @@ public class TasksAssignment extends HttpServlet {
         } finally {
             dbManager.close();
         }
+
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
