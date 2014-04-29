@@ -27,27 +27,7 @@ public class SupportEngineerServlet extends HttpServlet {
 
 	void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
-
-		if (request.getParameter("taskid") != null) {
-
-			int taskID = Integer.parseInt(request.getParameter("taskID"));
-			DBManager dbManager = null;
-			try {
-				dbManager = new DBManager();
-				TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-
-				Task task = taskDAO.find(taskID);
-
-				request.setAttribute("task", task);
-
-				RequestDispatcher view = request.getRequestDispatcher(SUPPORT_PAGE);
-				view.forward(request, response);
-
-			} finally {
-				dbManager.close();
-			}
-		}
+		
 	}
 
 	
@@ -74,6 +54,7 @@ public class SupportEngineerServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
+	if ("Send bill".equalsIgnoreCase(request.getParameter("action"))) {
 		if (request.getParameter("taskid") != null) {
 			int taskID = Integer.parseInt(request.getParameter("taskid"));
 			
@@ -102,6 +83,7 @@ public class SupportEngineerServlet extends HttpServlet {
 			RequestDispatcher view = request.getRequestDispatcher(SUPPORT_PAGE);
 			view.forward(request, response);
 		}
+	    }
 	}
 
 	/**
