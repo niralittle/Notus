@@ -10,9 +10,14 @@
 <%@page import="nc.notus.entity.OSSUser"%>
 
         <%List<Task> tasksEng = (List) request.getAttribute("tasksEng");
+        boolean personal = (Boolean) request.getAttribute("type");
+        String title = "Group";
+        if (personal){
+            title = "Personal";
+        }
         OSSUser user = (OSSUser) request.getAttribute("user");%>
         <h2>
-            Tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
+            <%=title+" "%> tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
         </h2>
         <form action="TasksAssignment" method="POST">
         <table border="1" id="tablename1">
@@ -39,6 +44,7 @@
                         </td>
                         <td>
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
+                            <input type="hidden" name="type" value="personal"/>
                             <input type="submit" name="action" value="Submit" />
                         </td>
                     </tr>

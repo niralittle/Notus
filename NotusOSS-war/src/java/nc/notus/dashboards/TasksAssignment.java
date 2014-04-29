@@ -79,7 +79,7 @@ public class TasksAssignment extends HttpServlet {
                     dbManager.commit();
                 }
                 else {
-                    request.setAttribute("task", task);
+                    request.setAttribute("taskid", task.getId());
                     request.setAttribute("user", user);
                     if (user.getRoleID() == UserRole.INSTALLATION_ENGINEER.toInt()) {
                         request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
@@ -100,6 +100,7 @@ public class TasksAssignment extends HttpServlet {
                 tasksEng = taskDAO.getTasksByID(startpage, numbOfRecords, user.getId());
             }
             request.setAttribute("tasksEng", tasksEng);
+            request.setAttribute("type", personal);
             request.setAttribute("user", user);
             request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
             
