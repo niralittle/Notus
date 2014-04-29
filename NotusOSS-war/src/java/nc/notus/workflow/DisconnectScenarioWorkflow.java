@@ -66,7 +66,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
 			}
 
 			changeOrderStatus(dbManager, OrderStatus.PROCESSING);
-			createTask(dbManager, UserRole.PROVISION_ENGINEER);
+			createTask(dbManager, UserRole.PROVISION_ENGINEER, "Remove curcuit from SI");
 			dbManager.commit();
 		} finally {
 			dbManager.close();
@@ -160,12 +160,14 @@ public class DisconnectScenarioWorkflow extends Workflow {
 			siDAO.update(si);
 			
 			completeTask(dbManager, taskID);
-			createTask(dbManager, UserRole.INSTALLATION_ENGINEER);
+			createTask(dbManager, UserRole.INSTALLATION_ENGINEER, "Remove port and cable from SI");
 			dbManager.commit();
 			
+		} catch(Exception ex) {
+			dbManager.rollback();
+			throw new WorkflowException(" ",ex);
 		} finally {
 			dbManager.close();
-
 		}
 	}
 }
