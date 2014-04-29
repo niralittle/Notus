@@ -38,7 +38,7 @@
        soID = 0;
     }
 %>
-   <form action="TasksAssignment" method="POST">
+   <form action="TasksAssignment?type=personal" method="POST">
        <input type="submit" name="action" value="Back to Tasks" />
    </form>
    <table border="1" id="tablename1">

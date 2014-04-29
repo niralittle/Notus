@@ -58,10 +58,10 @@ public class TasksAssignment extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
-            if (request.getParameter("taskid") != null){
-                taskID  = Integer.parseInt(request.getParameter("taskid"));
-                task = taskDAO.find(taskID);
-            }
+//            if (request.getParameter("taskid") != null){
+//                taskID  = Integer.parseInt(request.getParameter("taskid"));
+//                task = taskDAO.find(taskID);
+//            }
 
             if (request.getParameter("type") != null && request.getParameter("type").equals("personal")){
                 personal = true;
@@ -73,6 +73,10 @@ public class TasksAssignment extends HttpServlet {
 
             //Action "Assign" tasks from group to personal or choose task from personal to execute it
             if (request.getParameter("action") != null && request.getParameter("action").equals("Submit")){
+                if (request.getParameter("taskid") != null){
+                    taskID  = Integer.parseInt(request.getParameter("taskid"));
+                    task = taskDAO.find(taskID);
+                }
                 if (!personal) {
                     task.setEmployeeID(user.getId());
                     taskDAO.update(task);

@@ -15,11 +15,12 @@
         if (personal){
             title = "Personal";
         }
-        OSSUser user = (OSSUser) request.getAttribute("user");%>
+        OSSUser user = (OSSUser) request.getAttribute("user");
+       %>
         <h2>
             <%=title+" "%> tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
         </h2>
-        <form action="TasksAssignment" method="POST">
+        
         <table border="1" id="tablename1">
             <tbody>
                 <tr>
@@ -34,13 +35,13 @@
                     </td>
                 </tr>
                 <%for (Task task : tasksEng) {%>
-                
+                <form action="TasksAssignment" method="POST">
                     <tr>
                         <td>
-                            <input type="text" name="taskid" value="<%=task.getId()%>" readonly="readonly"/>
+                            <input type="text" name="taskid" value="<%=task.getId()%>" readonly/>
                         </td>
                         <td>
-                            <input type="text" name="serviceorderid" value="<%=task.getServiceOrderID()%>" readonly="readonly"/>
+                            <input type="text" name="serviceorderid" value="<%=task.getServiceOrderID()%>" readonly/>
                         </td>
                         <td>
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
@@ -50,9 +51,9 @@
                             <input type="submit" name="action" value="Submit" />
                         </td>
                     </tr>
-                    
+                    </form>
                     <% } %>
                 </tbody>
             </table>
-            </form>
+            
 
