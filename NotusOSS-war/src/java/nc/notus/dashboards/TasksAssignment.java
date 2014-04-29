@@ -7,27 +7,33 @@ package nc.notus.dashboards;
 
 import java.io.IOException;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import nc.notus.dao.CableDAO;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.PortDAO;
+import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
+import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.Cable;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Port;
+import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
 import nc.notus.states.UserRole;
+import nc.notus.states.WorkflowScenario;
 
 /**
  * Implements tasks assignment from role tasks to personal task for
@@ -92,6 +98,8 @@ public class TasksAssignment extends HttpServlet {
                     dbManager.commit();
                 }
                 else {
+                	int roleID = user.getRoleID();
+                	
                     request.setAttribute("taskid", task.getId());
                     request.setAttribute("user", user);
                     if (user.getRoleID() == UserRole.INSTALLATION_ENGINEER.toInt()) {
@@ -108,11 +116,15 @@ public class TasksAssignment extends HttpServlet {
                         request.setAttribute("userid", user.getId());
                         request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
                     }   
-                    if (user.getRoleID() == UserRole.PROVISION_ENGINEER.toInt()) {
+                    if (roleID  == UserRole.PROVISION_ENGINEER.toInt()) {
+                    	prepareTask(task, request, dbManager, roleID );
                         request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
+                        return;
                     }
-                    if (user.getRoleID() == UserRole.SUPPORT_ENGINEER.toInt()) {
-                        request.getRequestDispatcher("supportEngineer.jsp").forward(request, response);
+                    if (roleID  == UserRole.SUPPORT_ENGINEER.toInt()) {
+                    	prepareTask(task, request, dbManager, roleID );
+                        request.getRequestDispatcher("supportEngineer.jsp").forward(request, response);                 	
+                    	return;
                     }
                 }
             }
@@ -133,6 +145,38 @@ public class TasksAssignment extends HttpServlet {
         }
 
     } 
+    
+    private void prepareTask(Task task, HttpServletRequest request, DBManager dbManager, 
+    		int roleID) {
+    		
+		if (roleID == UserRole.INSTALLATION_ENGINEER.toInt()) {
+			return;
+		}
+		if (roleID == UserRole.PROVISION_ENGINEER.toInt()) {
+			String wfScenario = getTaskScenario(task, dbManager);
+			request.setAttribute("wfScenario", wfScenario);
+		}
+		request.setAttribute("task", task);
+	}
+    
+    private String getTaskScenario(Task task, DBManager dbManager) {
+		ServiceOrderDAOImpl soDAO = new ServiceOrderDAOImpl(dbManager);
+		ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
+
+		ServiceOrder order = soDAO.find(task.getServiceOrderID());
+
+		int scenarioID = order.getScenarioID();
+		Scenario scenario = scenarioDAO.find(scenarioID);
+
+		
+		if (scenario.getScenario().equalsIgnoreCase(WorkflowScenario.NEW.toString())) {
+			return "NEW";
+		} else if ((scenario.getScenario().equalsIgnoreCase(WorkflowScenario.DISCONNECT.toString()))) {
+			return "DISCONNECT";
+		}
+		return null;
+	}
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
