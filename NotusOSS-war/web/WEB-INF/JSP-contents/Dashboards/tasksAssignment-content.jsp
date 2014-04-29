@@ -44,7 +44,9 @@
                         </td>
                         <td>
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
+                            <% if(personal) { %>
                             <input type="hidden" name="type" value="personal"/>
+                            <% } %>
                             <input type="submit" name="action" value="Submit" />
                         </td>
                     </tr>
