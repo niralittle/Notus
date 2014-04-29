@@ -1,7 +1,6 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,54 +8,49 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.TaskDAO;
+import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.Scenario;
+import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
-import nc.notus.states.UserRole;
+import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.NewScenarioWorkflow;
 
 public class SupportEngineerServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
-	private List<Task> tasks;
+	private static final String SUPPORT_PAGE = "supportEngineer.jsp";
 
 	void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
-		int startpage = 1;
-		int numbOfRecords = 100;
-		DBManager dbManager = new DBManager();
-		try {
-			if (request.getParameter("startpage") != null) {
-				startpage = Integer.parseInt(request.getParameter("startpage"));
+
+		if (request.getParameter("taskid") != null) {
+
+			int taskID = Integer.parseInt(request.getParameter("taskID"));
+			DBManager dbManager = null;
+			try {
+				dbManager = new DBManager();
+				TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+
+				Task task = taskDAO.find(taskID);
+
+				request.setAttribute("task", task);
+
+				RequestDispatcher view = request.getRequestDispatcher(SUPPORT_PAGE);
+				view.forward(request, response);
+
+			} finally {
+				dbManager.close();
 			}
-			if (request.getParameter("numbOfRecords") != null) {
-				numbOfRecords = Integer.parseInt(request
-						.getParameter("numbOfRecords"));
-			}
-
-			TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-			tasks = taskDAO.getEngTasks(startpage, numbOfRecords,
-					UserRole.SUPPORT_ENGINEER.toInt());
-
-			if (tasks.size() > 0) {
-				request.setAttribute("tasks", tasks);
-			} else {
-				request.setAttribute("notification",
-						"No tasks finded! You are free at this moment!");
-			}
-
-			RequestDispatcher view = request.getRequestDispatcher("supportEngineer.jsp");
-			view.forward(request, response);
-
-		} finally {
-			dbManager.close();
 		}
-
 	}
+
+	
 
 	@Override
 	protected void doGet(HttpServletRequest request,
@@ -80,31 +74,34 @@ public class SupportEngineerServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		if (tasks != null || tasks.size() > 0) {
+		if (request.getParameter("taskid") != null) {
+			int taskID = Integer.parseInt(request.getParameter("taskid"));
+			
 			DBManager dbManager = null;
+			NewScenarioWorkflow wf = null;
+			ServiceOrderDAOImpl orderDAO = null;
+			TaskDAO taskDAO = null;
 			try {
 				dbManager = new DBManager();
-				ServiceOrderDAOImpl order = new ServiceOrderDAOImpl(dbManager);
-				NewScenarioWorkflow wf = null;
 
-				for (int i = 0; i < tasks.size(); i++) {
+				taskDAO = new TaskDAOImpl(dbManager);
+				Task task = taskDAO.find(taskID);
+				int orderID = task.getServiceOrderID();
 
-					// getting ServiceOrder id and Task id for each task in list
-					int orderID = tasks.get(i).getServiceOrderID();
-					int taskID = tasks.get(i).getId();
+				orderDAO = new ServiceOrderDAOImpl(dbManager);
+				ServiceOrder order = orderDAO.find(orderID);
 
-					// create workflow for each task and approveBill
-					wf = new NewScenarioWorkflow(order.find(orderID));
-					wf.approveBill(taskID);
-				}
-				request.setAttribute("success", "All bills were sent!");
+				wf = new NewScenarioWorkflow(order);
+				wf.approveBill(taskID);
+
+				request.setAttribute("success", "Bill was sent!");
 			} finally {
 				dbManager.close();
 			}
-		} 
-		tasks = null;
-		request.setAttribute("tasks", null);
-		processRequest(request, response);
+
+			RequestDispatcher view = request.getRequestDispatcher(SUPPORT_PAGE);
+			view.forward(request, response);
+		}
 	}
 
 	/**
