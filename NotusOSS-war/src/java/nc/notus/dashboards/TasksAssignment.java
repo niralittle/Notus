@@ -18,6 +18,7 @@ import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Task;
+import nc.notus.states.UserRole;
 
 /**
  * Implements tasks assignment from role tasks to personal task for
@@ -72,14 +73,24 @@ public class TasksAssignment extends HttpServlet {
 
             //Action "Assign" tasks from group to personal or choose task from personal to execute it
             if (request.getParameter("action") != null && request.getParameter("action").equals("Submit")){
-                task.setEmployeeID(user.getId());
-                taskDAO.update(task);
-                dbManager.commit();
-                tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
-                request.setAttribute("tasksEng", tasksEng);
-                request.setAttribute("user", user);
-                request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
-                return;
+                if (!personal) {
+                    task.setEmployeeID(user.getId());
+                    taskDAO.update(task);
+                    dbManager.commit();
+                }
+                else {
+                    request.setAttribute("task", task);
+                    request.setAttribute("user", user);
+                    if (user.getRoleID() == UserRole.INSTALLATION_ENGINEER.toInt()) {
+                        request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+                    }   
+                    if (user.getRoleID() == UserRole.PROVISION_ENGINEER.toInt()) {
+                        request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
+                    }
+                    if (user.getRoleID() == UserRole.SUPPORT_ENGINEER.toInt()) {
+                        request.getRequestDispatcher("supportEngineer.jsp").forward(request, response);
+                    }
+                }
             }
 
             if (!personal) {
