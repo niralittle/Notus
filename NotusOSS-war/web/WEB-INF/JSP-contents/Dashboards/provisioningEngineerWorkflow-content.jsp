@@ -1,7 +1,7 @@
 <%-- 
     Document   : provisioningEngineerWorkflow-content
     Created on : Apr 23, 2014, 12:20:17 PM
-    Author     : Vladimir Ermolenko
+    Author     : Panchenko Dmytro
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -16,18 +16,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Provisioning Engineer Workflow</title>
 </head>
 <body>
+
 	<%
-		if ("NEW".equalsIgnoreCase(request.getParameter("wfScenario"))) {
+		if ("NEW".equalsIgnoreCase((String) request.getAttribute("wfScenario"))) {
 			Task task = (Task) request.getAttribute("task");
 			Integer taskID = task.getId();
 			Integer soID = task.getServiceOrderID();
 	%>
-	<form action="TasksAssignment?type=personal" method="POST">
-		<input type="submit" name="action" value="Back to Tasks" />
-	</form>
+
 	<form action="CreateCircuit" method="POST">
 		<table border="1" id="tablename1">
 			<caption>NEW SCENARIO TASK</caption>
@@ -50,7 +48,7 @@
 			type="submit" name="action" value="Create Circuit" />
 	</form>
 	<%
-		} else if ("DISCONNECT".equalsIgnoreCase(request.getParameter("wfScenario"))) {
+		} else if ("DISCONNECT".equalsIgnoreCase((String) request.getAttribute("wfScenario"))) {
 			
 			Task task = (Task) request.getAttribute("task");
 			Integer taskID = task.getId();
