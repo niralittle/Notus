@@ -81,8 +81,8 @@ public abstract class Workflow {
      * @param dbManager connection to database encapsulated in DBManager class
      * @param userRole identifies user group to create task for
      */
-    protected void createTask(DBManager dbManager, UserRole userRole) {
-        TaskDAO taskDAO = new TaskDAOImpl(dbManager);
+    protected void createTask(DBManager dbManager, UserRole userRole, String name) {
+        TaskDAOImpl taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
         Task task = new Task();
@@ -90,6 +90,7 @@ public abstract class Workflow {
         task.setRoleID(userRole.toInt());
         task.setServiceOrderID(order.getId());
         task.setTaskStatusID(taskStatusDAO.getTaskStatusID(TaskState.ACTIVE));
+        task.setName(name);
         taskDAO.add(task);
     }
 
