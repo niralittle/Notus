@@ -11,12 +11,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import nc.notus.dao.CableDAO;
 import nc.notus.dao.OSSUserDAO;
+import nc.notus.dao.PortDAO;
+import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
+import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.dao.impl.OSSUserDAOImpl;
+import nc.notus.dao.impl.PortDAOImpl;
+import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.entity.Cable;
 import nc.notus.entity.OSSUser;
+import nc.notus.entity.Port;
+import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
 import nc.notus.states.UserRole;
 
@@ -86,6 +95,17 @@ public class TasksAssignment extends HttpServlet {
                     request.setAttribute("taskid", task.getId());
                     request.setAttribute("user", user);
                     if (user.getRoleID() == UserRole.INSTALLATION_ENGINEER.toInt()) {
+                        ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
+                        ServiceOrder so = soDAO.find(task.getServiceOrderID());
+                        PortDAO portDAO = new PortDAOImpl(dbManager);
+                        Port port = portDAO.getFreePort();
+                        CableDAO cableDAO = new CableDAOImpl(dbManager);
+                        Cable cable = cableDAO.getFreeCable();
+                        request.setAttribute("port", port);
+                        request.setAttribute("cable", cable);
+                        request.setAttribute("taskid", task.getId());
+                        request.setAttribute("soid", task.getServiceOrderID());
+                        request.setAttribute("userid", user.getId());
                         request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
                     }   
                     if (user.getRoleID() == UserRole.PROVISION_ENGINEER.toInt()) {

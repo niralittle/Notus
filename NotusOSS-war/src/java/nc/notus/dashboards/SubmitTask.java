@@ -39,6 +39,10 @@ public class SubmitTask extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+
+    // Need to be refacored!!!
+    //I'm going to do it tomorrow morning(30.04.2014) Vladimir Ermolenko
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -123,10 +127,12 @@ public class SubmitTask extends HttpServlet {
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int startpage = 1;
                 int numbOfRecords = 10;
+                boolean personal = true;
                 List<Task> tasks = taskDAO.getTasksByID(startpage, numbOfRecords, userID);
                 request.setAttribute("userid", userID);
                 request.setAttribute("tasks", tasks);
-                request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
+                request.setAttribute("type", personal);
+                response.sendRedirect("TasksAssignment?type=personal");
                 return;
             }
             request.setAttribute("cable", cable);
