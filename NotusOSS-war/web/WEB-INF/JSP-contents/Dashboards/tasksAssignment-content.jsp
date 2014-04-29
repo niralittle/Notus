@@ -48,10 +48,7 @@
                         </td>
                         <td>
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
-                            <% request.getSession().setAttribute("task",task);%>
-                            <input type="hidden" name="task" value="<%= request.getParameter("task") %>"/>
-                            <input type="hidden" name="user" value="<%= request.getParameter("user") %>"/>
-                            <input type="submit" name="action" value="Assign" />
+                            <input type="submit" name="action" value="Submit" />
                         </td>
                     </tr>
                     

@@ -36,7 +36,7 @@ public class TasksAssignment extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
- int startpage = 1;
+        int startpage = 1;
         int numbOfRecords = 10;
         DBManager dbManager = new DBManager();
         String login = "";
@@ -44,6 +44,8 @@ public class TasksAssignment extends HttpServlet {
         Task task = null;
         TaskDAO taskDAO = null;
         int taskID;
+        List<Task> tasksEng;
+        boolean personal = false;
         try {
             taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
@@ -60,26 +62,36 @@ public class TasksAssignment extends HttpServlet {
                 task = taskDAO.find(taskID);
             }
 
+            if (request.getParameter("type") != null && request.getParameter("type").equals("personal")){
+                personal = true;
+            }
+
             if (userDAO.getUserByLogin(login) != null){
                 user = userDAO.getUserByLogin(login);
             }
 
-            //Action "Assign" tasks
-            if (request.getParameter("action") != null && request.getParameter("action").equals("Assign")){
+            //Action "Assign" tasks from group to personal or choose task from personal to execute it
+            if (request.getParameter("action") != null && request.getParameter("action").equals("Submit")){
                 task.setEmployeeID(user.getId());
                 taskDAO.update(task);
                 dbManager.commit();
-                List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
+                tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
                 request.setAttribute("tasksEng", tasksEng);
                 request.setAttribute("user", user);
                 request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
                 return;
             }
 
-            List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
+            if (!personal) {
+                tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
+            }
+            else {
+                tasksEng = taskDAO.getTasksByID(startpage, numbOfRecords, user.getId());
+            }
             request.setAttribute("tasksEng", tasksEng);
             request.setAttribute("user", user);
             request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
+            
         } finally {
             dbManager.close();
         }
