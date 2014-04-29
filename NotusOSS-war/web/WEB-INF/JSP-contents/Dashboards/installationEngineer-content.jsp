@@ -29,6 +29,7 @@
                     <h2>Please, choose Task:</h2>
                     <%List<Task> tasks = (List) request.getAttribute("tasks");
             int userID = (Integer) request.getAttribute("userid");%>
+                <form action="SubmitTask" method="POST">
                     <table border="1" id="tablename1">
                             <tr>
                                 <th>Task Number</th>
@@ -36,7 +37,7 @@
                                 <th>Action</th>
                             </tr>
                             <%for (Task task : tasks) {%>
-                        <form action="SubmitTask" method="POST">
+                        
                             <tr>
                                 <td>
                                     <input type="text" name="taskid" value="<%=task.getId()%>" readonly="readonly"/>

@@ -6,13 +6,9 @@
 		        <a href="CustomerUser">Go to Cabinet</a>
                             <div class="separator"></div>
 		<%  } else { %>
-                        <a href="TasksAssignment">Tasks Assignment</a>
+                        <a href="TasksAssignment">Group Tasks</a>
                             <div class="separator"></div>
-                        <a href="InstallationEngineerTasks">Installation Engineer Page</a>
-                            <div class="separator"></div>
-                        <a href="ProvisionEngineerTasksServlet">Provisioning Engineer Page</a>
-                            <div class="separator"></div>
-                        <a href="Support">Support Engineer Page</a>
+                        <a href="TasksAssignment?type=personal">Personal Tasks</a>
                             <div class="separator"></div>
                         <a href="admin.jsp">Admin page</a> 
                             <div class="separator"></div>
