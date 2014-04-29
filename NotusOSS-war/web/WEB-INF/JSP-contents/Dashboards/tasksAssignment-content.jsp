@@ -31,6 +31,9 @@
                         Service Order ID
                     </td>
                     <td>
+                        Task name
+                    </td>
+                    <td>
                         Action
                     </td>
                 </tr>
@@ -42,6 +45,9 @@
                         </td>
                         <td>
                             <input type="text" name="serviceorderid" value="<%=task.getServiceOrderID()%>" readonly/>
+                        </td>
+                        <td>
+                        	<input type="text"  value="<%=(task.getName() != null) ? "" : task.getName()%>" readonly/>
                         </td>
                         <td>
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
