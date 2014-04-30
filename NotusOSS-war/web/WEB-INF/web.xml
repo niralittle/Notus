@@ -110,6 +110,10 @@
 
 
 
+    <servlet>
+        <servlet-name>DisconnectScenarioForInstEng</servlet-name>
+        <servlet-class>nc.notus.dashboards.DisconnectScenarioForInstEng</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
@@ -201,6 +205,10 @@
 
 
 
+    <servlet-mapping>
+        <servlet-name>DisconnectScenarioForInstEng</servlet-name>
+        <url-pattern>/DisconnectScenarioForInstEng</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

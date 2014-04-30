@@ -114,7 +114,13 @@ public class TasksAssignment extends HttpServlet {
                         request.setAttribute("taskid", task.getId());
                         request.setAttribute("soid", task.getServiceOrderID());
                         request.setAttribute("userid", user.getId());
-                        request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+                        String wfScenario = getTaskScenario(task, dbManager);
+                        if (wfScenario.equalsIgnoreCase(WorkflowScenario.NEW.toString())) {
+                            request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+                        }
+                        if (wfScenario.equalsIgnoreCase(WorkflowScenario.DISCONNECT.toString())) {
+                            request.getRequestDispatcher("disconnectScenarioForInstEng.jsp").forward(request, response);
+                        }
                     }   
                     if (roleID  == UserRole.PROVISION_ENGINEER.toInt()) {
                     	prepareTask(task, request, dbManager, roleID );

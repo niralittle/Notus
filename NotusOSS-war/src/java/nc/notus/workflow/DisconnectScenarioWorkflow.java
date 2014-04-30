@@ -113,7 +113,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
 	}
 
 	/**
-	 * This method unplugs Cable from specified Port. It sets Port status to
+	 * This method unplugs Cable from specified Port. Then delete cable. And it sets Port status to
 	 * "Free" and changes status of Task to "Completed" after execution.
 	 * 
 	 * @param taskID
@@ -136,6 +136,9 @@ public class DisconnectScenarioWorkflow extends Workflow {
 			port.setCableID(null);
 			port.setPortStatus(PortState.FREE.toInt());
 			portDAO.update(port);
+
+                        CableDAO cableDAO = new CableDAOImpl(dbManager);
+                        cableDAO.delete(cableID);
 
 			completeTask(dbManager, taskID);
 			changeOrderStatus(dbManager, OrderStatus.COMPLETED);
