@@ -40,49 +40,31 @@ public class SubmitTask extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
 
-    // Need to be refacored!!!
-    //I'm going to do it tomorrow morning(30.04.2014) Vladimir Ermolenko
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         DBManager dbManager = new DBManager();
         int portQuantity = 60;
-        Cable cable = null;
+        Cable cable;
         Port port;
-        int taskID;
-        int soID;
-        int userID;
+        int taskID = 0;
+        int soID = 0;
+        int userID = 0;
         try {
             if (request.getParameter("taskid") != null){
                 taskID  = Integer.parseInt(request.getParameter("taskid"));
             }
-            else {
-                taskID = 0;
-            }
             if (request.getParameter("userid") != null){
                 userID  = Integer.parseInt(request.getParameter("userid"));
-            }
-            else {
-                userID = 0;
             }
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
             }
-            else {
-                soID = 0;
-            }
             if (request.getParameter("cable") != null){
                 cable  = (Cable) (request.getAttribute("cable"));
             }
-            else {
-                cable = new Cable();
-            }
             if (request.getParameter("port") != null){
                 port  = (Port) (request.getAttribute("port"));
-            }
-            else {
-                port = new Port();
             }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);
@@ -96,13 +78,6 @@ public class SubmitTask extends HttpServlet {
             if (request.getParameter("action").equals("Create Router")){
                 if (port == null){
                 nwf.createRouter(taskID, portQuantity);
-                request.setAttribute("port", port);
-                request.setAttribute("cable", cable);
-                request.setAttribute("taskid", taskID);
-                request.setAttribute("soid", soID);
-                request.setAttribute("userid", userID);
-                request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
-                return;
                 }
             }
 
@@ -111,17 +86,10 @@ public class SubmitTask extends HttpServlet {
                 if (cable == null){
                     nwf.createCable(taskID, "UTP Cable");
                     cable = cableDAO.getFreeCable();
-                    request.setAttribute("port", port);
-                    request.setAttribute("cable", cable);
-                    request.setAttribute("taskid", taskID);
-                    request.setAttribute("soid", soID);
-                    request.setAttribute("userid", userID);
-                    request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
-                    return;
                 }
             }
 
-            //Action "Connect Cable to Port"
+            //Action "Connect Cable to Port" and redirect to personal tasks page
             if (request.getParameter("action").equals("Connect Cable to Port")){
                 nwf.plugCableToPort(taskID, cable.getId(), port.getId());
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
