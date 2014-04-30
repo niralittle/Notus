@@ -105,7 +105,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
 			si.setPortID(null);
 			siDAO.update(si);
 
-			changeServiceInstanceStatus(dbManager, InstanceStatus.DISCONNECTED);
+			
 			dbManager.commit();
 		} finally {
 			dbManager.close();
@@ -159,6 +159,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
 			si.setCircuitID(null);
 			siDAO.update(si);
 			
+			changeServiceInstanceStatus(dbManager, InstanceStatus.DISCONNECTED);
 			completeTask(dbManager, taskID);
 			createTask(dbManager, UserRole.INSTALLATION_ENGINEER, "Remove port and cable from SI");
 			dbManager.commit();
