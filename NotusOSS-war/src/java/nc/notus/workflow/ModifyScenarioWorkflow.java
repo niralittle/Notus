@@ -45,7 +45,7 @@ public class ModifyScenarioWorkflow extends Workflow {
             }
 
             changeOrderStatus(dbManager, OrderStatus.PROCESSING);
-            createTask(dbManager, UserRole.SUPPORT_ENGINEER);
+            createTask(dbManager, UserRole.SUPPORT_ENGINEER, "Modify order");
             dbManager.commit();
         } finally {
             dbManager.close();
