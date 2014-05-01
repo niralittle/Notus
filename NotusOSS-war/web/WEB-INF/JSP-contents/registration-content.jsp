@@ -1,7 +1,7 @@
 <%--
     Document   : register-content
     Created on : 12 04 2014, 19:53:58
-    Author     : Katya Atamanchuk <nira@niralittle.name>
+    Author     : Panchenko Dmytro
 --%>
 
 <script type="text/javascript" src="assets/registerValidator.js"></script>
@@ -70,7 +70,16 @@
                 <div id="lnameMsg"></div>
             </td>
         </tr>
-    </table>
+		<tr>
+			<td>Input text on image below: </td>
+			<td><input type="text" name="code"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><img  src="Captcha"></td>
+		</tr>
+	</table>
+	
 
     <input type="submit" value="Register" />
 
