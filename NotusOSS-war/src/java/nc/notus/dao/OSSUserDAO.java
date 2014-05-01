@@ -49,8 +49,15 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * @param lastname of user
      * @return list of users with similar login
      */
-
     public List<OSSUser> getUsersByLastName(String lastname, int offset, int numberOfRecords);
+    
+    /**
+     * Check if user blocked.
+     * 
+     * @param login login to check
+     * @return
+     */
+    boolean isBlocked(String login);
     
     /**
      * Check if user with specified login is already exist in system
@@ -59,7 +66,7 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * @return true - if exist, false - otherwise
      * @throws NullPointerException if null reference
      */
-    boolean isLoginDuplicate(String login);
+    boolean isExist(String login);
     
     /**
      * Check if specified email is already exist in system
