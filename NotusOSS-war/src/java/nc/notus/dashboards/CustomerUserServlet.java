@@ -1,80 +1,76 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import javax.servlet.http.HttpSession;
+
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dao.ServiceOrderDAO;
-import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceTypeDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
-import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceOrder;
-import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceType;
 import nc.notus.states.OrderStatus;
 
 /**
- *
+ * Servlet prepares data to display on customer user dashboard.
+ * 
  * @author Katya Atamanchuk <nira@niralittle.name>
  */
 public class CustomerUserServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private DBManager dbManager = null;
-    private HttpServletRequest request = null;
-    private List<ServiceOrder> completeOrders;
-    private List<ServiceOrder> processingOrders;
 
-    void processRequest(HttpServletRequest request, HttpServletResponse response)
-                    throws ServletException, IOException {
+    /**
+     * Puts data into request and forwards it to user.jsp
+     *
+     * @param request
+     *          servlet request
+     * @param response
+     *          sevlet responce
+     * @throws ServletException when something bad happens
+     * @throws IOException  when something else, but also bad, happens
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, 
+            HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         int startpage = 1;
         int numbOfRecords = 100;
         dbManager = new DBManager();
-        this.request = request;
         try {
-            int userID = getUserID();
-            
-            ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager); 
-            completeOrders = (List<ServiceOrder>) orderDAO.getSOByStatus(userID,
-            OrderStatus.COMPLETED.ordinal() + 1, startpage, numbOfRecords);
-            processingOrders = (List<ServiceOrder>) orderDAO.getSOByStatus(userID,
-            OrderStatus.PROCESSING.ordinal() + 1, startpage, numbOfRecords);
-        
-            fillRequestWithHtml();
-
+            int userID = getUserID(request);
+            request.setAttribute("activeInstances",
+                    getActiveInstancesList(userID, startpage, numbOfRecords));
+            request.setAttribute("processingOrders",
+                    getProcessingOrdersList(userID, startpage, numbOfRecords));
             RequestDispatcher view = request.getRequestDispatcher("user.jsp");
-            view.forward(this.request, response);
-
+            view.forward(request, response);
         } finally {
             dbManager.close();
         }
     }
-
-    @Override
-    protected void doGet(HttpServletRequest request,
-                HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
+    //<editor-fold>
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -102,96 +98,100 @@ public class CustomerUserServlet extends HttpServlet {
             return "Creates data to display on customer user dashboard";
     }// </editor-fold>
 
-    private int getUserID() {
-
+    /*
+     * Get userID from the session; if there is none - get one from DB,
+     * put it in the session and return the value
+     */
+    private int getUserID(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Integer userIDString = (Integer) session.getAttribute("userID");
-
-        if (userIDString == null) {
-            String login = request.getUserPrincipal().getName();
+        if (session.getAttribute("userID") == null) {
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+            String login = request.getUserPrincipal().getName();
             OSSUser user = userDAO.getUserByLogin(login);
-            if (user == null) return -1;
             session.setAttribute("userID", user.getId());
-            return user.getId();
-        } else return userIDString;
+        }
+        return (Integer) session.getAttribute("userID");
     }
 
-  
+    /**
+     * Getting active instances data to display on customer user dashboard
+     *
+     * @param userID
+     *      id of the user whose info we are getting
+     * @param startpage
+     *      number of the page (used in paging)
+     * @param numbOfRecords
+     *      amount of records to get (used in paging)
+     * @return List<Map<String, String>>
+     *      list of maps, where each maprepresents data for a row in a table;
+     * map has element name String associated with data String
+     * 
+     */
+    public List<Map<String, String>> getActiveInstancesList(int userID,
+            int startpage, int numbOfRecords) {
+        ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
+        ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
+        ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
+        List<Map<String, String>> activeInstances =
+               new ArrayList<Map<String, String>>();
+        List<ServiceOrder> completeOrders = orderDAO.getSOByStatus(userID,
+                            OrderStatus.COMPLETED.ordinal() + 1,
+                            startpage, numbOfRecords);
+        for (ServiceOrder o: completeOrders) {
+            Map<String,String> row = new HashMap<String, String>();
+            int catalogID = o.getServiceCatalogID();
+            ServiceCatalog sc = catalogDAO.find(catalogID);
+            ServiceType st = typeDAO.find(sc.getServiceTypeID());
+            row.put("serviceLocation", o.getServiceLocation());
+            row.put("serviceDescription", st.getService());
+            row.put("orderDate", o.getServiceOrderDate().toString());
+            row.put("price", Integer.toString(sc.getPrice()));
+            row.put("instanceID", Integer.toString(o.getServiceInstanceID()));
+            activeInstances.add(row);
+        }
+        
+        return activeInstances;
+    }
 
-    private void fillRequestWithHtml() {
-       StringBuilder sb = new StringBuilder();
-       
-       ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
-       ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
-       ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager); 
+    /**
+     * Getting processing orders data to display on customer user dashboard
+     *
+     * @param userID
+     *      id of the user whose info we are getting
+     * @param startpage
+     *      number of the page (used in paging)
+     * @param numbOfRecords
+     *      amount of records to get (used in paging)
+     * @return List<Map<String, String>>
+     *      list of maps, where each maprepresents data for a row in a table;
+     * map has element name String associated with data String
+     *
+     */
+    public List<Map<String, String>> getProcessingOrdersList(int userID,
+            int startpage, int numbOfRecords) {
+        ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
+        ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
+        ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
+        ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
+        List<Map<String, String>> processingOrders =
+               new ArrayList<Map<String, String>>();
+        List<ServiceOrder> orders = orderDAO.getSOByStatus(userID,
+                           OrderStatus.PROCESSING.ordinal() + 1,
+                           startpage, numbOfRecords);
+        for (ServiceOrder o: orders) {
+            Map<String,String> row = new HashMap<String, String>();
+            int catalogID = o.getServiceCatalogID();
+            ServiceCatalog sc = catalogDAO.find(catalogID);
+            ServiceType st = typeDAO.find(sc.getServiceTypeID());
+            Scenario s = scenarioDAO.find(o.getScenarioID());
+            row.put("scenario", s.getScenario());
+            row.put("serviceLocation", o.getServiceLocation());
+            row.put("serviceDescription", st.getService());
+            row.put("orderDate", o.getServiceOrderDate().toString());
+            processingOrders.add(row);
+        }
            
-       if (completeOrders.size() > 0) {
-            int catalogID;
-            ServiceCatalog sc;
-            ServiceType st;
-
-            sb.append("<table class='completeOrders'>");
-                 sb.append("<thead>");
-                    sb.append("<tr>");
-                        sb.append("<td>Location</td>");
-                        sb.append("<td>Type of Service</td>");
-                        sb.append("<td>Since</td>");
-                        sb.append("<td>Price</td>");
-                        sb.append("<td>Options</td>");
-                    sb.append("</tr>");
-                 sb.append("</thead>");
-
-             for (ServiceOrder o: completeOrders) {
-                catalogID = o.getServiceCatalogID();
-                sc = catalogDAO.find(catalogID);
-                st = typeDAO.find(sc.getServiceTypeID());
-                    sb.append("<tr>");
-                        sb.append("<td>").append(o.getServiceLocation()).append("</td>");
-                        sb.append("<td>").append(st.getService()).append("</td>");
-                        sb.append("<td>").append(o.getServiceOrderDate()).append("</td>");
-                        sb.append("<td>").append(sc.getPrice()).append("</td>");
-                        sb.append("<td>");
-                            sb.append("<button>Modify</button>");
-                            sb.append("<button>Disconnect</button>");
-                        sb.append("</td>");
-                    sb.append("</tr>");
-                 }
-        sb.append("</table>");
-             }
-
-             if (processingOrders.size() > 0) {
-                int catalogID;
-                ServiceCatalog sc;
-                ServiceType st;
-                Scenario s; 
-
-        sb.append("<h2>Orders being processed:</h2>");
-        sb.append("<table class='processingOrders'>");
-             sb.append("<thead>");
-                sb.append("<tr>");
-                    sb.append("<td>Scenario</td>");
-                    sb.append("<td>Location</td>");
-                    sb.append("<td>Type of Service</td>");
-                    sb.append("<td>Order Date</td>");
-                sb.append("</tr>");
-             sb.append("</thead>");
-
-                  for (ServiceOrder o: processingOrders) {
-                    catalogID = o.getServiceCatalogID();
-                    sc = catalogDAO.find(catalogID);
-                    st = typeDAO.find(sc.getServiceTypeID());
-                    s = scenarioDAO.find(o.getScenarioID());
-              
-                sb.append("<tr>");
-                    sb.append("<td>").append(s.getScenario()).append("</td>");
-                    sb.append("<td>").append(o.getServiceLocation()).append("</td>");
-                    sb.append("<td>").append(st.getService()).append("</td>");
-                    sb.append("<td>").append(o.getServiceOrderDate()).append("</td>");
-                sb.append("</tr>");
-                } 
-            sb.append("</table>");
-           } 
-       request.setAttribute("userDashboardHtml", sb.toString());
+        return processingOrders;
     }
+
 }
