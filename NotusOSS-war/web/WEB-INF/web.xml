@@ -118,6 +118,10 @@
         <servlet-name>AuthServlet</servlet-name>
         <servlet-class>nc.notus.filters.AuthServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CaptchaServlet</servlet-name>
+        <servlet-class>nc.notus.CaptchaServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
@@ -216,6 +220,10 @@
     <servlet-mapping>
         <servlet-name>AuthServlet</servlet-name>
         <url-pattern>/Auth</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CaptchaServlet</servlet-name>
+        <url-pattern>/Captcha</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
