@@ -2,6 +2,7 @@ package nc.notus.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import nc.notus.dao.DAOException;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dbmanager.DBManager;
@@ -9,6 +10,7 @@ import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.OSSUser;
 import nc.notus.states.UserRole;
+import nc.notus.states.UserState;
 
 /**
  * Implementation of DAO for entity OSSUser
@@ -123,7 +125,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @author Panchenko Dmytro
      */
     @Override
-    public boolean isLoginDuplicate(String login) {
+    public boolean isExist(String login) {
         if (login == null) {
             throw new DAOException("Null reference invoke.");
         }
@@ -259,4 +261,24 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
         }
         return user;
     }
+
+	@Override
+	public boolean isBlocked(String login) {
+		int blocked = 0;
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT blocked FROM OSSUSER WHERE login = ? ");
+		
+		Statement statement = dbManager.prepareStatement(query.toString());
+		statement.setString(1, login);
+		
+		ResultIterator ri = statement.executeQuery();
+		if(ri.next()) {
+			blocked = ri.getInt("blocked");
+		}
+		if (blocked == UserState.BLOCKED.toInt()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
