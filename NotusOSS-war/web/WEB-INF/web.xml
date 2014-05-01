@@ -91,7 +91,7 @@
 
     <servlet>
         <servlet-name>GetingUsersInfo</servlet-name>
-        <servlet-class>nc.notus.dashboards.GetingUsersInfo</servlet-class>
+        <servlet-class>nc.notus.dashboards.GettingUsersInfo</servlet-class>
     </servlet>
 
     <servlet>
@@ -113,6 +113,10 @@
     <servlet>
         <servlet-name>DisconnectScenarioForInstEng</servlet-name>
         <servlet-class>nc.notus.dashboards.DisconnectScenarioForInstEng</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>nc.notus.filters.AuthServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
@@ -208,6 +212,10 @@
     <servlet-mapping>
         <servlet-name>DisconnectScenarioForInstEng</servlet-name>
         <url-pattern>/DisconnectScenarioForInstEng</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/Auth</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

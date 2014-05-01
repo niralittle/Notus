@@ -21,7 +21,7 @@ import nc.notus.entity.OSSUser;
  * 
  * @author Panchenko Dmytro
  */
-public class GetingUsersInfo extends HttpServlet {
+public class GettingUsersInfo extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
