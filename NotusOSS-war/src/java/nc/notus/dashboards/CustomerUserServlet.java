@@ -47,7 +47,7 @@ public class CustomerUserServlet extends HttpServlet {
      * @param request
      *          servlet request
      * @param response
-     *          sevlet responce
+     *          servlet response
      * @throws ServletException when something bad happens
      * @throws IOException  when something else, but also bad, happens
      */
@@ -122,9 +122,9 @@ public class CustomerUserServlet extends HttpServlet {
      *      number of the page (used in paging)
      * @param numbOfRecords
      *      amount of records to get (used in paging)
-     * @return List<Map<String, String>>
-     *      list of maps, where each maprepresents data for a row in a table;
-     * map has element name String associated with data String
+     * @return list of maps, where each map represents data 
+     * for a row in a table; map has element name String
+     * associated with data String
      * 
      */
     public List<Map<String, String>> getActiveInstancesList(int userID,
@@ -162,9 +162,9 @@ public class CustomerUserServlet extends HttpServlet {
      *      number of the page (used in paging)
      * @param numbOfRecords
      *      amount of records to get (used in paging)
-     * @return List<Map<String, String>>
-     *      list of maps, where each maprepresents data for a row in a table;
-     * map has element name String associated with data String
+     * @return list of maps, where each map represents data 
+     * for a row in a table; map has element name String
+     * associated with data String
      *
      */
     public List<Map<String, String>> getProcessingOrdersList(int userID,
