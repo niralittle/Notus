@@ -109,6 +109,7 @@ public class CustomerUserServlet extends HttpServlet {
             String login = request.getUserPrincipal().getName();
             OSSUser user = userDAO.getUserByLogin(login);
             session.setAttribute("userID", user.getId());
+            return user.getId();
         }
         return (Integer) session.getAttribute("userID");
     }
