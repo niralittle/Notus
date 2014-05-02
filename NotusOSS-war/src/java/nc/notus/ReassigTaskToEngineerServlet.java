@@ -48,10 +48,7 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
             taskID = Integer.parseInt(request.getParameter("taskID"));
             task = taskDAO.find(taskID);
             int roleID = task.getRoleID();
-            List<OSSUser> engineers = new ArrayList<OSSUser>();
-            engineers.add(new OSSUser(1,"inst", "inst", "d", "inst", "inst", 0, 2));
-            engineers.add(new OSSUser(2,"inst", "inst", "d", "inst", "inst", 0, 2));
-            engineers.add(new OSSUser(3,"inst", "inst", "d", "inst", "inst", 0, 2));
+            List<OSSUser> engineers = userDAO.getUsersByRoleID(roleID, OFFSET, NUMBER_OF_RECORDS);
             request.setAttribute("listOfEngineers", engineers);
             request.setAttribute("taskID", taskID);
             request.getRequestDispatcher("reassignTaskEngineer.jsp").forward(request, response);

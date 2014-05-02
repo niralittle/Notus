@@ -10,8 +10,7 @@
 <%@page import="java.util.List"%>
 <%@page import="nc.notus.entity.Task"%>
 
-<%List<Task> tasks = (List) request.getAttribute("listOfTasks");
-int taskID = 0;%>
+<%List<Task> tasks = (List) request.getAttribute("listOfTasks");%>
 <form action="ReassigTaskToEngineerServlet" method="post" id="sendTask">
 <table>
     <tr>
