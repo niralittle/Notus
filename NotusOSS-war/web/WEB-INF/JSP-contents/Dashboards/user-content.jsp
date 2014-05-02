@@ -32,11 +32,12 @@
                 <td><%= m.get("serviceDescription") %></td>
                 <td><%= m.get("orderDate") %></td>
                 <td><%= m.get("price") %></td>
-                <td>
-                    <button name="disconnectButton"
-                            onclick="disconnect(<%= m.get("instanceID") %>)">
-                        Disconnect
-                    </button>
+                <td>  
+                    <form action="DisconnectOrderProceed" method="POST">
+                        <input type="hidden" name="serviceInstanceID"
+                               value="<%= m.get("instanceID") %>"/> 
+                        <input type="submit" name="action" value="Disconnect" />
+                    </form>
                 </td>
             </tr>
     <%  } /*end of 'for' statement*/ %>
