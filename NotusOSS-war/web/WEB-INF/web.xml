@@ -256,6 +256,10 @@
     </error-page>
 
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.html</location>
+    </error-page>
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Admin Page</web-resource-name>
@@ -327,5 +331,7 @@
     <security-role>
         <role-name>CUSTOMER_USER</role-name>
     </security-role>
+
+
 
 </web-app>
