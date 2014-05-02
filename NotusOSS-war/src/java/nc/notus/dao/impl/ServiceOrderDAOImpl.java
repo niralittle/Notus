@@ -152,7 +152,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
      * @author Panchenko Dmytro
      */
     @Override
-    public ServiceOrder gerServiceOrderBySIId(int serviceInstanceId) {
+    public ServiceOrder getServiceOrderBySIId(int serviceInstanceId) {
     	ServiceOrder serviceOrder = null;
     	
     	StringBuilder query = new StringBuilder();

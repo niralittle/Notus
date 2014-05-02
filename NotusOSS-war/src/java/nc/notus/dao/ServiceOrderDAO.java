@@ -48,7 +48,7 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
     * 
     * @author Panchenko Dmytro
     */
-    public ServiceOrder gerServiceOrderBySIId(int serviceInstanceId);
+    public ServiceOrder getServiceOrderBySIId(int serviceInstanceId);
 
 
 
