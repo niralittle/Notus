@@ -29,53 +29,59 @@
 	<input type="submit" value="Find user" />
 </form>
 
-<h3><%= request.getAttribute("success") == null ? "" : request.getAttribute("success")%></h3>
+<h3><%=request.getAttribute("success") == null ? "" : request
+					.getAttribute("success")%></h3>
 <%
 	if (request.getAttribute("findedUsers") != null) {
-		List<OSSUser> users = (List<OSSUser>) request.getAttribute("findedUsers");
+		List<OSSUser> users = (List<OSSUser>) request
+				.getAttribute("findedUsers");
 		if (users.size() < 1) {
 			out.print("<h4>User for the specified parameter not found!</h4>");
 		} else {
 %>
 
-<form method="post" action="ChangeUserPassword">
-	<table border="1">
-		<tr>
-			<td>LOGIN</td>
-			<td>EMAIL</td>
-			<td>FIRST NAME</td>
-			<td>LAST NAME</td>
-			<td>STATUS</td>
-			<td>NEW PASSWORD</td>
-		</tr>
+
+<table border="1">
+	<tr>
+		<td>LOGIN</td>
+		<td>EMAIL</td>
+		<td>FIRST NAME</td>
+		<td>LAST NAME</td>
+		<td>STATUS</td>	
+		<td>NEW PASSWORD</td>
+	</tr>
+
 		<%
 			for (OSSUser user : users) {
 		%>
-		<tr>
-			<td><%=user.getLogin()%></td>
-			<td><%=user.getEmail()%></td>
-			<td><%=user.getFirstName()%></td>
-			<td><%=user.getLastName()%></td>
-			<td>
-				<%	if (user.getBlocked() == 1) {
-									out.print("BLOCKED");
-								} else {
-									out.print("ACTIVE");
-								}
-				%>
-			</td>
-			<td><input type="text" name="newPassword" value="" /></td>
-			<td><input type="submit" value="Change password" /></td>
-			<td><input type="hidden" value="<%=user.getId()%>" name="userId" /></td>
-		</tr>
-		<%
+		<form method="post" action="ChangeUserPassword">		
+			<tr>
+				<td><%=user.getLogin()%></td>
+				<td><%=user.getEmail()%></td>
+				<td><%=user.getFirstName()%></td>
+				<td><%=user.getLastName()%></td>
+				<td>
+					<%
+					if (user.getBlocked() == 1) {
+						out.print("BLOCKED");
+					} else {
+						out.print("ACTIVE");
+					}
+					%>
+				</td>
+
+				<td><input type="text" name="newPassword" value="" /></td>
+				<td><input type="submit" value="Change password" /></td>
+				<td><input type="hidden" value="<%=user.getId()%>"name="userId" /></td>
+			</tr>
+			
+		</form>
+				<%
 			}
 		%>
-	</table>
-	
-</form>
+</table>
 <%
 	}
 
-	} 
+	}
 %>
