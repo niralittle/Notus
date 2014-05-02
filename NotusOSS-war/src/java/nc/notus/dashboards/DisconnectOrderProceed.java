@@ -21,22 +21,22 @@ import nc.notus.workflow.DisconnectScenarioWorkflow;
 public class DisconnectOrderProceed extends HttpServlet {
 	
 	// page to redirect
-	private static final String CUSTOMER_USER_PAGE = "customerUser.jsp";
-
-	private ServiceOrder serviceOrder;
+	private static final String CUSTOMER_USER_PAGE = "CustomerUserServlet";
 	
-	void processRequest(HttpServletRequest request, HttpServletResponse response)
+	void processRequest(HttpServletRequest request,
+                        HttpServletResponse response)
 			throws ServletException, IOException {
 
 		response.setContentType("text/html;charset=UTF-8");
 		
-		int serviceInstanceId = Integer.parseInt(request.getParameter("serviceInstanceID"));
+		int serviceInstanceId = Integer.parseInt(
+                        request.getParameter("serviceInstanceID"));
 		
 		//get order
-		createServiceOrder(serviceInstanceId);
+		ServiceOrder serviceOrder = getServiceOrder(serviceInstanceId);
 		DisconnectScenarioWorkflow disconnectWF = null;
 		
-		if(serviceOrder != null) {
+		if (serviceOrder != null) {
 			disconnectWF = new DisconnectScenarioWorkflow(serviceOrder);
 			disconnectWF.proceedOrder();
 		//	request.setAttribute("serviceOrder", serviceOrder);
@@ -47,7 +47,7 @@ public class DisconnectOrderProceed extends HttpServlet {
 	}
 
 	/**
-	 * Redirect to passes page.
+	 * Redirect to passed page.
 	 * 
 	 * @param request
 	 * @param response
@@ -56,18 +56,22 @@ public class DisconnectOrderProceed extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void redirect(HttpServletRequest request,
-			HttpServletResponse response, String page) throws ServletException, IOException {
+			HttpServletResponse response, String page)
+                        throws ServletException, IOException {
 		RequestDispatcher view = request.getRequestDispatcher(page);
 		view.forward(request, response);
 	}
 
 	
-	private ServiceOrder createServiceOrder(int serviceInstanceId) {
+	private ServiceOrder getServiceOrder(int serviceInstanceId) {
 		DBManager dbManager = null;
-		try{
+                ServiceOrder serviceOrder;
+		try {
 			dbManager = new DBManager();
-			ServiceOrderDAOImpl soDAO = new ServiceOrderDAOImpl(dbManager);	
-			serviceOrder = soDAO.gerServiceOrderBySIId(serviceInstanceId);
+			ServiceOrderDAOImpl soDAO =
+                                new ServiceOrderDAOImpl(dbManager);
+                        serviceOrder = soDAO
+                                .getServiceOrderBySIId(serviceInstanceId);
 		} finally {
 			dbManager.close();
 		}
@@ -76,7 +80,8 @@ public class DisconnectOrderProceed extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response)
+                        throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
@@ -94,7 +99,8 @@ public class DisconnectOrderProceed extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response)
+                        throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
@@ -105,8 +111,7 @@ public class DisconnectOrderProceed extends HttpServlet {
 	 */
 	@Override
 	public String getServletInfo() {
-		return "Registers user in the system, creates a new order "
-				+ "and executes it ('New' scenario workflow).";
+		return "";
 	}// </editor-fold>
 
 }

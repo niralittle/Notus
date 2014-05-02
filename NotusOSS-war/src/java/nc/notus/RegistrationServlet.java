@@ -241,11 +241,14 @@ public class RegistrationServlet extends HttpServlet {
 			isValid = false;
 		}
 
-		/*
-		 * try { serviceLocation = java.net.URLDecoder.decode(serviceLocation,
-		 * "UTF-8"); } catch (Exception exc) { isValid = false;
-		 * errMessage.append("- Wrong location specified.<br />"); }
-		 */
+		
+		try { 
+			serviceLocation = java.net.URLDecoder.decode(serviceLocation,"UTF-8"); 
+		} catch (Exception exc) { 
+			isValid = false;
+		 	errMessage.append("- Wrong location specified.<br />"); 
+		 }
+		 
 
 		return isValid;
 	}
