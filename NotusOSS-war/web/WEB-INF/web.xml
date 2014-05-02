@@ -122,6 +122,14 @@
         <servlet-name>CaptchaServlet</servlet-name>
         <servlet-class>nc.notus.CaptchaServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TasksForReassignmentServlet</servlet-name>
+        <servlet-class>nc.notus.TasksForReassignmentServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
+        <servlet-class>nc.notus.ReassigTaskToEngineerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
@@ -224,6 +232,14 @@
     <servlet-mapping>
         <servlet-name>CaptchaServlet</servlet-name>
         <url-pattern>/Captcha</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TasksForReassignmentServlet</servlet-name>
+        <url-pattern>/Reassign</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
+        <url-pattern>/ReassigTaskToEngineerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
