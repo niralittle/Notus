@@ -4,16 +4,26 @@ package nc.notus.entity;
  * This class implements entity RoutersUtilizationCapacity
  * @author Vladimir Ermolenko
  */
-
 public class RoutersUtilizationCapacity {
+
+    private int deviceId;
     private String deviceName;
     private int capacity;
-    private int utilization;
+    private float utilization;
+
+    public int getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(int deviceId) {
+        this.deviceId = deviceId;
+    }
 
     public RoutersUtilizationCapacity() {
     }
 
-    public RoutersUtilizationCapacity(String deviceName, int capacity, int utilization) {
+    public RoutersUtilizationCapacity(int deviceId, String deviceName, int capacity, int utilization) {
+        this.deviceId = deviceId;
         this.deviceName = deviceName;
         this.capacity = capacity;
         this.utilization = utilization;
@@ -35,11 +45,11 @@ public class RoutersUtilizationCapacity {
         this.deviceName = deviceName;
     }
 
-    public int getUtilization() {
+    public float getUtilization() {
         return utilization;
     }
 
-    public void setUtilization(int utilization) {
+    public void setUtilization(float utilization) {
         this.utilization = utilization;
     }
 }

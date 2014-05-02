@@ -422,71 +422,121 @@ function formDate() {
     var resultFrom;
     var resultTo;
     var flag = true;
-    var selectedFrom = document.getElementById("yearFrom");
-    var selectedTo = document.getElementById("yearTo");
-    var from = parseInt(selectedFrom.options[selectedFrom.selectedIndex].value);
-    var to = parseInt(selectedTo.options[selectedTo.selectedIndex].value);
-    if (from > to) {
-        flag = false;
-    } else if (from == to) {
-        selectedFrom = document.getElementById("monthFrom");
-        selectedTo = document.getElementById("monthTo");
-        from = selectedFrom.selectedIndex + 1;
-        to = selectedTo.selectedIndex + 1;
+//    var check = document.getElementById("year");
+    //    if (check.disabled) {
+        var selectedFrom = document.getElementById("yearFrom");
+        var selectedTo = document.getElementById("yearTo");
+        var from = parseInt(selectedFrom.options[selectedFrom.selectedIndex].value);
+        var to = parseInt(selectedTo.options[selectedTo.selectedIndex].value);
         if (from > to) {
             flag = false;
         } else if (from == to) {
+            selectedFrom = document.getElementById("monthFrom");
+            selectedTo = document.getElementById("monthTo");
+            from = selectedFrom.selectedIndex + 1;
+            to = selectedTo.selectedIndex + 1;
+            if (from > to) {
+                flag = false;
+            } else if (from == to) {
+                selectedFrom = document.getElementById("dayFrom");
+                selectedTo = document.getElementById("dayTo");
+                from = parseInt(selectedFrom.options[selectedFrom.selectedIndex].value);
+                to = parseInt(selectedTo.options[selectedTo.selectedIndex].value);
+                if (from > to) {
+                    flag = false;
+                }
+            }
+        }
+        if (flag == true) {
+            selectedFrom = document.getElementById("yearFrom");
+            selectedTo = document.getElementById("yearTo");
+            from = parseInt(selectedFrom.options[selectedFrom.selectedIndex].value);
+            to = parseInt(selectedTo.options[selectedTo.selectedIndex].value);
+
+            resultFrom = from + '-';
+            resultTo = to + '-';
+       
+            selectedFrom = document.getElementById("monthFrom");
+            selectedTo = document.getElementById("monthTo");
+            from = selectedFrom.selectedIndex + 1;
+            to = selectedTo.selectedIndex + 1;
+            if (from < 10){
+                resultFrom += '0' + from + '-';
+            } else {
+                resultFrom += from + '-';
+            }
+            if (to < 10) {
+                resultTo += '0' + to + '-';
+            } else {
+                resultTo += to + '-';
+            }
+        
+
             selectedFrom = document.getElementById("dayFrom");
             selectedTo = document.getElementById("dayTo");
             from = parseInt(selectedFrom.options[selectedFrom.selectedIndex].value);
             to = parseInt(selectedTo.options[selectedTo.selectedIndex].value);
-            if (from > to) {
-                flag = false;
+            if (from < 10){
+                resultFrom += '0' + from;
+            } else {
+                resultFrom += from;
             }
-        }
-    }
-    if (flag == true) {
-        selectedFrom = document.getElementById("yearFrom");
-        selectedTo = document.getElementById("yearTo");
-        from = parseInt(selectedFrom.options[selectedFrom.selectedIndex].value);
-        to = parseInt(selectedTo.options[selectedTo.selectedIndex].value);
+            if (to < 10) {
+                resultTo += '0' + to;
+            } else {
+                resultTo += to;
+            }
+            document.getElementById("fromdate").value = resultFrom;
+            document.getElementById("todate").value = resultTo;
 
-        resultFrom = from + '-';
-        resultTo = to + '-';
-       
-        selectedFrom = document.getElementById("monthFrom");
-        selectedTo = document.getElementById("monthTo");
-        from = selectedFrom.selectedIndex + 1;
-        to = selectedTo.selectedIndex + 1;
-        if (from < 10){
-            resultFrom += '0' + from + '-';
-        } else {
-            resultFrom += from + '-';
         }
-        if (to < 10) {
-            resultTo += '0' + to + '-';
-        } else {
-            resultTo += to + '-';
-        }
-        
-
-        selectedFrom = document.getElementById("dayFrom");
-        selectedTo = document.getElementById("dayTo");
-        from = parseInt(selectedFrom.options[selectedFrom.selectedIndex].value);
-        to = parseInt(selectedTo.options[selectedTo.selectedIndex].value);
-        if (from < 10){
-            resultFrom += '0' + from;
-        } else {
-            resultFrom += from;
-        }
-        if (to < 10) {
-            resultTo += '0' + to;
-        } else {
-            resultTo += to;
-        }
-        document.getElementById("fromdate").value = resultFrom;
-        document.getElementById("todate").value = resultTo;
-
-    }
+//    } else {
+//        var month = document.getElementById("month");
+//        var year = document.getElementById("year");
+//        month = month.selectedIndex + 1;
+//        year = parseInt(year.options[year.selectedIndex].value);
+//        document.getElementById("bymonth").value = year + "-" + month + "-" + "01";
+//    }
     return flag;
+}
+function disableDate() {
+    var selectedOne = document.getElementById("yearFrom");
+    var selectedTwo = document.getElementById("yearTo");
+    selectedOne.disabled = true;
+    selectedTwo.disabled = true;
+    selectedOne = document.getElementById("monthFrom");
+    selectedTwo = document.getElementById("monthTo");
+    selectedOne.disabled = true;
+    selectedTwo.disabled = true;
+    selectedOne = document.getElementById("dayFrom");
+    selectedTwo = document.getElementById("dayTo");
+    selectedOne.disabled = true;
+    selectedTwo.disabled = true;
+    selectedOne = document.getElementById("year");
+    selectedTwo = document.getElementById("month");
+    selectedOne.disabled = true;
+    selectedTwo.disabled = true;
+}
+function enableDate() {
+    disableDate();
+    var selectedOne = document.getElementById("yearFrom");
+    var selectedTwo = document.getElementById("yearTo");
+    selectedOne.disabled = false;
+    selectedTwo.disabled = false;
+    selectedOne = document.getElementById("monthFrom");
+    selectedTwo = document.getElementById("monthTo");
+    selectedOne.disabled = false;
+    selectedTwo.disabled = false;
+    selectedOne = document.getElementById("dayFrom");
+    selectedTwo = document.getElementById("dayTo");
+    selectedOne.disabled = false;
+    selectedTwo.disabled = false;
+
+}
+function enableMonthSelect() {
+    disableDate();
+    selectedOne = document.getElementById("year");
+    selectedTwo = document.getElementById("month");
+    selectedOne.disabled = false;
+    selectedTwo.disabled = false;
 }

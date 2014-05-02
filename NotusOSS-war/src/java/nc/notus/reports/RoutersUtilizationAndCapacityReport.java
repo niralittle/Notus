@@ -1,6 +1,7 @@
 package nc.notus.reports;
 
-import java.sql.Date;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
@@ -18,10 +19,6 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
 
     /* Separates columns in reportData row strings */
     private final String COLUMN_SEPARATOR = "#";
-
-    /* Dates for report request */
-    private Date startDate = null;
-    private Date finishDate = null;
     private int pageNumber = 0;
     private int recordsPerPage = 10;
 
@@ -37,10 +34,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
      * Creates a report instance with given name
      * @param reportName report name
      */
-    public RoutersUtilizationAndCapacityReport(String reportName, String startDate,
-            String finishDate) {
-        this.startDate = Date.valueOf(startDate);
-        this.finishDate = Date.valueOf(finishDate);
+    public RoutersUtilizationAndCapacityReport(String reportName) {
         this.reportName = reportName;
         getDataFromDatabase();
     }
@@ -51,18 +45,20 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             List<RoutersUtilizationCapacity> routersUtilCap =
-                    reportDAO.getRoutersUtilizationCapacityData(startDate,
-                    finishDate, pageNumber * recordsPerPage, recordsPerPage);
+                    reportDAO.getRoutersUtilizationCapacityData(pageNumber * recordsPerPage,
+                    recordsPerPage);
             this.reportData = new String[routersUtilCap.size() + 1]; // +1 for column headers
 
             /* Column headers */
-            this.reportData[0] = "Router name" + COLUMN_SEPARATOR + "Utilization" +
-                    COLUMN_SEPARATOR + "Capacity";
+            this.reportData[0] = "Router id" + COLUMN_SEPARATOR + "Router name" +
+                    COLUMN_SEPARATOR + "Utilization" + COLUMN_SEPARATOR +
+                    "Capacity";
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = routersUtilCap.get(i - 1).getDeviceName() +
-                        COLUMN_SEPARATOR + routersUtilCap.get(i - 1).getUtilization() +
+                this.reportData[i] = routersUtilCap.get(i - 1).getDeviceId() +
+                        COLUMN_SEPARATOR + routersUtilCap.get(i - 1).getDeviceName() +
+                        COLUMN_SEPARATOR + routersUtilCap.get(i - 1).getUtilization() + "%" +
                         COLUMN_SEPARATOR + routersUtilCap.get(i - 1).getCapacity();
             }
         } finally {
@@ -149,13 +145,31 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
-            List<RoutersUtilizationCapacity> routersUtilCap = reportDAO.getRoutersUtilizationCapacityData(startDate,
-                    finishDate, (pageNumber + 1) * recordsPerPage, 1);
+            List<RoutersUtilizationCapacity> routersUtilCap =
+                    reportDAO.getRoutersUtilizationCapacityData((pageNumber + 1) * recordsPerPage, 1);
             if (routersUtilCap.size() == 0) {
                 return false;
             } else {
                 return true;
             }
+        } finally {
+            dbManager.close();
+        }
+    }
+
+    /**
+     * Writes all emount of report data to character stream.
+     * Then data can be written to file.
+     * @param writer Writer object
+     * @param fileSeparator data column separator
+     */
+    @Override
+    public void getFileData(Writer writer, String fileSeparator)
+            throws IOException {
+        DBManager dbManager = new DBManager();
+        try {
+            ReportDAO reportDAO = new ReportDAOImpl(dbManager);
+            reportDAO.getRoutersUtilizationCapacityData(writer, fileSeparator);
         } finally {
             dbManager.close();
         }

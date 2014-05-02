@@ -1,11 +1,13 @@
 package nc.notus.reports;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.Date;
 import java.util.List;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
 import nc.notus.dbmanager.DBManager;
-import nc.notus.entity.ServiceOrder;
+import nc.notus.entity.ServiceOrderReportData;
 
 /**
  * Represents report of new orders per period
@@ -50,7 +52,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
-            List<ServiceOrder> order = reportDAO.getNewServiceOrders(startDate,
+            List<ServiceOrderReportData> order = reportDAO.getNewServiceOrders(startDate,
                     finishDate, (pageNumber + 1) * recordsPerPage, 1);
             if (order.size() == 0) {
                 return false;
@@ -62,23 +64,31 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
         }
     }
 
-     void getDataFromDatabase() {
+    void getDataFromDatabase() {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             this.reportName = "New orders per period";
-//            this.totalRowNumber = 
-            List<ServiceOrder> orders = reportDAO.getNewServiceOrders(
+            List<ServiceOrderReportData> orders = reportDAO.getNewServiceOrders(
                     startDate, finishDate, pageNumber * recordsPerPage, recordsPerPage);
             this.reportData = new String[orders.size() + 1]; // +1 for column headers
 
             /* Column headers */
-            this.reportData[0] = "Order ID" + COLUMN_SEPARATOR + "Order date";
+            this.reportData[0] = "Order ID" + COLUMN_SEPARATOR + "Order date" +
+                    COLUMN_SEPARATOR + "Service location" + COLUMN_SEPARATOR +
+                    "Service name" + COLUMN_SEPARATOR + "Service price" +
+                    COLUMN_SEPARATOR + "Provider location name" + COLUMN_SEPARATOR +
+                    "Provider location";
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
                 this.reportData[i] = orders.get(i - 1).getId() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getServiceOrderDate();
+                        orders.get(i - 1).getDate() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getServiceLocation() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getServiceName() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getPrice() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getProviderLocationName() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getProviderLocation();
             }
         } finally {
             dbManager.close();
@@ -157,6 +167,23 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
     @Override
     public int getCurrentPageIndex() {
         return this.pageNumber;
+    }
+
+    /**
+     * Writes all emount of report data to character stream.
+     * Then data can be written to file.
+     * @param writer Writer object
+     * @param fileSeparator data column separator
+     */
+    @Override
+    public void getFileData(Writer writer, String fileSeparator) throws IOException {
+        DBManager dbManager = new DBManager();
+        try {
+            ReportDAO reportDAO = new ReportDAOImpl(dbManager);
+            reportDAO.getNewServiceOrders(writer, fileSeparator, startDate, finishDate);
+        } finally {
+            dbManager.close();
+        }
     }
 }
 

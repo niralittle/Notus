@@ -1,10 +1,12 @@
 package nc.notus.reports;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.Date;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
 import nc.notus.dbmanager.DBManager;
-import nc.notus.entity.Device;
+import nc.notus.entity.MostProfitableRouterReportData;
 
 /**
  * Represents report of most profitable router.
@@ -18,10 +20,6 @@ public class MostProfitableRouterReport extends AbstractReport {
     /* Separates columns in reportData row strings */
     private final String COLUMN_SEPARATOR = "#";
 
-    /* Dates for report request */
-    private Date startDate = null;
-    private Date finishDate = null;
-
     /*
      * Report data stored here                                                  
      * Data is stored as strings that represents table rows
@@ -34,11 +32,8 @@ public class MostProfitableRouterReport extends AbstractReport {
      * Creates a report instance with given name
      * @param reportName
      */
-    public MostProfitableRouterReport(String reportName, String startDate,
-            String finishDate) {
+    public MostProfitableRouterReport(String reportName) {
         this.reportName = reportName;
-        this.startDate = Date.valueOf(startDate);
-        this.finishDate = Date.valueOf(finishDate);
         getDataFromDatabase();
     }
 
@@ -50,7 +45,7 @@ public class MostProfitableRouterReport extends AbstractReport {
             this.reportName = "Most profitable router";
 
             /* Data */
-            Device dev = reportDAO.getMostProfitableRouter(startDate, finishDate);
+            MostProfitableRouterReportData dev = reportDAO.getMostProfitableRouter();
             if (dev != null) {
 
                 /* 1. Column headers 2. Device data */
@@ -58,23 +53,18 @@ public class MostProfitableRouterReport extends AbstractReport {
 
                 /* Column headers */
                 this.reportData[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
-                        COLUMN_SEPARATOR + "Port quantity";
-                
+                        COLUMN_SEPARATOR + "Port quantity" + COLUMN_SEPARATOR +
+                        "Profit";
+
                 this.reportData[1] = dev.getId() + COLUMN_SEPARATOR + dev.getName() +
-                        COLUMN_SEPARATOR + dev.getPortQuantity();
+                        COLUMN_SEPARATOR + dev.getPortQuantity() + COLUMN_SEPARATOR +
+                        dev.getProfit();
             } else {
                 this.reportData = new String[1];
                 this.reportData[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
-                        COLUMN_SEPARATOR + "Port quantity";
+                        COLUMN_SEPARATOR + "Port quantity" + COLUMN_SEPARATOR +
+                        "Profit";
             }
-
-
-
-            /* Column headers */
-            this.reportData[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
-                    COLUMN_SEPARATOR + "Port quantity";
-
-
         } finally {
             dbManager.close();
         }
@@ -96,5 +86,23 @@ public class MostProfitableRouterReport extends AbstractReport {
     @Override
     public String getReportName() {
         return this.reportName;
+    }
+
+    /**
+     * Writes all emount of report data to character stream.
+     * Then data can be written to file.
+     * @param writer Writer object
+     * @param fileSeparator data column separator
+     */
+    @Override
+    public void getFileData(Writer writer, String fileSeparator)
+            throws IOException {
+        DBManager dbManager = new DBManager();
+        try {
+            ReportDAO reportDAO = new ReportDAOImpl(dbManager);
+            reportDAO.getMostProfitableRouter(writer, fileSeparator);
+        } finally {
+            dbManager.close();
+        }
     }
 }

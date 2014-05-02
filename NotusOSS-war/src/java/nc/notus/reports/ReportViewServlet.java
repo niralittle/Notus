@@ -24,13 +24,14 @@ public class ReportViewServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         int reportTypeValue = Integer.parseInt(request.getParameter("report"));
+        //String byMonth = request.getParameter("bymonth");
         String startDate = request.getParameter("fromdate");
         String finishDate = request.getParameter("todate");
+
         AbstractReport currentReport = null;
         switch (reportTypeValue) {
             case 0:
-                currentReport = new MostProfitableRouterReport("Most profitable router",
-                        startDate, finishDate);
+                currentReport = new MostProfitableRouterReport("Most profitable router");
                 break;
             case 1:
                 currentReport = new NewOrdersPerPeriodReport("New orders per period",
@@ -41,13 +42,12 @@ public class ReportViewServlet extends HttpServlet {
                         startDate, finishDate);
                 break;
             case 3:
-                currentReport = new RoutersUtilizationAndCapacityReport("Routers utilization and capacity",
-                        startDate, finishDate);
+                currentReport = new RoutersUtilizationAndCapacityReport("Routers utilization and capacity");
                 break;
-            case 4:
-                currentReport = new ProfitabilityByMonthReport("Profitability by month",
-                        startDate, finishDate);
-                break;
+//            case 4:
+//                currentReport = new ProfitabilityByMonthReport("Profitability by month",
+//                        byMonth);
+//                break;
 
         }
         if (currentReport.getReportData().length > 1) {

@@ -1,8 +1,6 @@
 package nc.notus.reports;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,20 +24,20 @@ public class DownloadReportServlet extends HttpServlet {
         String reportGenId = request.getParameter("objectId");
         Object a = request.getSession().getAttribute(reportGenId.toString());
         ReportGenerator rg = (ReportGenerator) a;
-
+        rg.getReportCSV(response.getWriter());
+//        PrintWriter pw = response.getWriter();
         if (request.getParameter("type").equals("xls")) {
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment; filename=" +
                     rg.getReportName() + ".xls");
-            OutputStream os = response.getOutputStream();
-            rg.getReportXLS(os);
+//            pw.write(rg.getReportCSV());
         }
         if (request.getParameter("type").equals("csv")) {
-            PrintWriter pw = response.getWriter();
-            response.setContentType("Content-type: text/csv");
+
+            response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=" +
                     rg.getReportName() + ".csv");
-            pw.write(rg.getReportCSV());
+//            pw.write(rg.getReportCSV());
         }
 
 

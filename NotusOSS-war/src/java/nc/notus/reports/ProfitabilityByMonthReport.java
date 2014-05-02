@@ -1,5 +1,7 @@
 package nc.notus.reports;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.Date;
 import java.util.List;
 import nc.notus.dao.ReportDAO;
@@ -20,8 +22,7 @@ public class ProfitabilityByMonthReport extends AbstractReport {
     private final String COLUMN_SEPARATOR = "#";
 
     /* Dates for report request */
-    private Date startDate = null;
-    private Date finishDate = null;
+    private Date month = null;
 
     /*
      * Report data stored here
@@ -35,10 +36,8 @@ public class ProfitabilityByMonthReport extends AbstractReport {
      * Creates a report instance with given name
      * @param reportName report name
      */
-    public ProfitabilityByMonthReport(String reportName, String startDate,
-            String finishDate) {
-        this.startDate = Date.valueOf(startDate);
-        this.finishDate = Date.valueOf(finishDate);
+    public ProfitabilityByMonthReport(String reportName, String month) {
+        this.month = Date.valueOf(month);
         this.reportName = reportName;
         getDataFromDatabase();
     }
@@ -48,8 +47,7 @@ public class ProfitabilityByMonthReport extends AbstractReport {
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             this.reportName = "Profitability by month";
-            List<ProfitInMonth> profit = reportDAO.getProfitByMonth(startDate,
-                    finishDate);
+            List<ProfitInMonth> profit = reportDAO.getProfitByMonth(month);
             this.reportData = new String[profit.size() + 1];
 
             /* Column headers */
@@ -81,5 +79,10 @@ public class ProfitabilityByMonthReport extends AbstractReport {
     @Override
     public String getReportName() {
         return this.reportName;
+    }
+
+    @Override
+    public void getFileData(Writer writer, String fileSeparator) throws IOException {
+        
     }
 }

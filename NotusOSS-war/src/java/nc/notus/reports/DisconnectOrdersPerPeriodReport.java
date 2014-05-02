@@ -1,11 +1,13 @@
 package nc.notus.reports;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.Date;
 import java.util.List;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
 import nc.notus.dbmanager.DBManager;
-import nc.notus.entity.ServiceInstance;
+import nc.notus.entity.ServiceOrderReportData;
 
 /**
  * Represents report of most disconnecte orders per period
@@ -50,17 +52,26 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
-            List<ServiceInstance> instances = reportDAO.getDisconnectedServiceInstances(
+            List<ServiceOrderReportData> orders = reportDAO.getDisconnectServiceOrders(
                     startDate, finishDate, pageNumber * recordsPerPage, recordsPerPage);
-            this.reportData = new String[instances.size() + 1]; // +1 for column headers
+            this.reportData = new String[orders.size() + 1]; // +1 for column headers
 
             /* Column headers */
-            this.reportData[0] = "Order ID" + COLUMN_SEPARATOR + "Order date";
+            this.reportData[0] = "Order ID" + COLUMN_SEPARATOR + "Order date" +
+                    COLUMN_SEPARATOR + "Service location" + COLUMN_SEPARATOR +
+                    "Service name" + COLUMN_SEPARATOR + "Price" + COLUMN_SEPARATOR +
+                    "Provider location name" + COLUMN_SEPARATOR +
+                    "Provider location";
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = instances.get(i - 1).getId() + COLUMN_SEPARATOR +
-                        instances.get(i - 1).getServiceInstanceDate();
+                this.reportData[i] = orders.get(i - 1).getId() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getDate() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getServiceLocation() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getServiceName() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getPrice() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getProviderLocationName() + COLUMN_SEPARATOR +
+                        orders.get(i - 1).getProviderLocation();
             }
         } finally {
             dbManager.close();
@@ -146,13 +157,30 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
-            List<ServiceInstance> instance = reportDAO.getDisconnectedServiceInstances(startDate,
+            List<ServiceOrderReportData> orders = reportDAO.getDisconnectServiceOrders(startDate,
                     finishDate, (pageNumber + 1) * recordsPerPage, 1);
-            if (instance.size() == 0) {
+            if (orders.size() == 0) {
                 return false;
             } else {
                 return true;
             }
+        } finally {
+            dbManager.close();
+        }
+    }
+
+    /**
+     * Writes all emount of report data to character stream.
+     * Then data can be written to file.
+     * @param writer Writer object
+     * @param fileSeparator data column separator
+     */
+    @Override
+    public void getFileData(Writer writer, String fileSeparator) throws IOException {
+        DBManager dbManager = new DBManager();
+        try {
+            ReportDAO reportDAO = new ReportDAOImpl(dbManager);
+            reportDAO.getDisconnectServiceOrders(writer, fileSeparator, startDate, finishDate);
         } finally {
             dbManager.close();
         }

@@ -9,9 +9,9 @@ import java.sql.SQLException;
  * @author Igor Litvinenko
  */
 public class ResultIterator {                                                   // REVIEW: documentation on every public function expected
-    
+
     private ResultSet rs;
-    
+
     public ResultIterator(ResultSet rs) {
         this.rs = rs;
     }
@@ -51,6 +51,22 @@ public class ResultIterator {                                                   
     public Date getDate(int columnNumber) {
         try {
             return rs.getDate(columnNumber);
+        } catch (SQLException exc) {
+            throw new DBManagerException("SQL exception", exc);
+        }
+    }
+
+    public float getFloat(String columnName) {
+        try {
+            return rs.getFloat(columnName);
+        } catch (SQLException exc) {
+            throw new DBManagerException("SQL exception", exc);
+        }
+    }
+
+    public float getFloat(int columnNumber) {
+        try {
+            return rs.getFloat(columnNumber);
         } catch (SQLException exc) {
             throw new DBManagerException("SQL exception", exc);
         }

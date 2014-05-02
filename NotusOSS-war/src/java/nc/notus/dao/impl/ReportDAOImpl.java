@@ -1,5 +1,7 @@
 package nc.notus.dao.impl;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,15 +9,14 @@ import nc.notus.dao.ReportDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
-import nc.notus.entity.Device;
+import nc.notus.entity.MostProfitableRouterReportData;
 import nc.notus.entity.ProfitInMonth;
 import nc.notus.entity.RoutersUtilizationCapacity;
-import nc.notus.entity.ServiceInstance;
-import nc.notus.entity.ServiceOrder;
+import nc.notus.entity.ServiceOrderReportData;
 
 /**
  * Implementation of DAO for our reports
- * @author Vladimir Ermolenko
+ * @author Vladimir Ermolenko, Andrey Ilin
  */
 public class ReportDAOImpl implements ReportDAO {
 
@@ -32,48 +33,26 @@ public class ReportDAOImpl implements ReportDAO {
      * @return device which is most profitable per period
      */
     @Override
-    public Device getMostProfitableRouter(Date startDate, Date finishDate) {
-
-        // The query below needed in review with a lot of complex examples in table!
-
-        String query = "SELECT p.deviceid, sum(sc.price*(? - ?)) total " +
+    public MostProfitableRouterReportData getMostProfitableRouter() {
+        String query = "SELECT d.id, d.name, d.portquantity, sum(sc.price) total " +
                 "FROM serviceorder so " +
-                "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid = sc.id " +
                 "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
                 "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                "LEFT JOIN port p ON si.portid  = p.id " +
+                "LEFT JOIN port p ON si.portid = p.id " +
                 "LEFT JOIN device d ON p.deviceid = d.id " +
                 "WHERE sis.status = 'Active' " +
-                "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                "GROUP BY p.deviceid " +
-                "UNION ALL " +
-                "SELECT p.deviceid, sum(sc.price*(si.serviceinstancedate - ?)) total " +
-                "FROM serviceorder so " +
-                "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
-                "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
-                "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                "LEFT JOIN port p ON si.portid  = p.id " +
-                "LEFT JOIN device d ON p.deviceid = d.id " +
-                "WHERE sis.status = 'Disconnected' " +
-                "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                "GROUP BY p.deviceid " +
+                "GROUP BY d.id, d.name, d.portquantity " +
                 "ORDER BY total DESC";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setDate(1, finishDate);
-        statement.setDate(2, startDate);
-        statement.setDate(3, startDate);
-        statement.setDate(4, finishDate);
-        statement.setDate(5, startDate);
-        statement.setDate(6, startDate);
-        statement.setDate(7, finishDate);
         ResultIterator ri = statement.executeQuery();
-
         if (ri.next()) {
-            Device device = new Device();
-            device.setId(ri.getInt("deviceid"));
-            device.setName("Cisco 7606");                                       // TODO: hardcode
-            device.setPortQuantity(60);                                         // TODO: hardcode
-            return device;
+            MostProfitableRouterReportData data = new MostProfitableRouterReportData();
+            data.setId(ri.getInt("id"));
+            data.setName(ri.getString("name"));
+            data.setPortQuantity(ri.getInt("portquantity"));
+            data.setProfit(ri.getInt("total"));
+            return data;
         } else {
             return null;
         }
@@ -88,17 +67,19 @@ public class ReportDAOImpl implements ReportDAO {
      * @return list of new ServiceOrders per period
      */
     @Override
-    public List<ServiceOrder> getNewServiceOrders(Date startDate,
+    public List<ServiceOrderReportData> getNewServiceOrders(Date startDate,
             Date finishDate, int offset, int numberOfRecords) {
         String query = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
-                "       so.scenarioid, so.userid, so.servicecatalogid, " +
-                "so.serviceinstanceid, so.servicelocation " +
+                "SELECT so.id, so.serviceorderdate, so.servicelocation, " +
+                "st.service, sc.price, pl.name, pl.location " +
                 "FROM serviceorder so " +
                 "LEFT JOIN scenario s ON so.scenarioid = s.id " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid = sc.id " +
+                "LEFT JOIN servicetype st ON sc.servicetypeid = st.id " +
+                "LEFT JOIN providerlocation pl ON sc.providerlocationid = pl.id " +
                 "WHERE so.serviceorderdate BETWEEN ? AND ? " +
                 "AND s.scenario = 'New' " +
-                "ORDER BY so.serviceorderdate " +
+                "ORDER BY so.serviceorderdate ASC " +
                 ") a where ROWNUM <= ? ) " +
                 "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
@@ -107,20 +88,19 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setInt(3, offset + numberOfRecords);
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
-        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
+        List<ServiceOrderReportData> orders = new ArrayList<ServiceOrderReportData>();
         while (ri.next()) {
-            ServiceOrder servOrder = new ServiceOrder();
-            servOrder.setId(ri.getInt("id"));
-            servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
-            servOrder.setServiceOrderStatusID(ri.getInt("serviceorderstatusid"));
-            servOrder.setScenarioID(ri.getInt("scenarioid"));
-            servOrder.setUserID(ri.getInt("userid"));
-            servOrder.setServiceCatalogID(ri.getInt("servicecatalogid"));
-            servOrder.setServiceInstanceID(ri.getInt("serviceinstanceid"));
-            servOrder.setServiceLocation(ri.getString("servicelocation"));
-            serviceOrders.add(servOrder);
+            ServiceOrderReportData serviceOrderData = new ServiceOrderReportData();
+            serviceOrderData.setId(ri.getInt("id"));
+            serviceOrderData.setDate(ri.getDate("serviceorderdate").toString());
+            serviceOrderData.setServiceLocation(ri.getString("servicelocation"));
+            serviceOrderData.setServiceName(ri.getString("service"));
+            serviceOrderData.setPrice(ri.getInt("price"));
+            serviceOrderData.setProviderLocationName(ri.getString("name"));
+            serviceOrderData.setProviderLocation(ri.getString("location"));
+            orders.add(serviceOrderData);
         }
-        return serviceOrders;
+        return orders;
     }
 
     /**
@@ -132,16 +112,19 @@ public class ReportDAOImpl implements ReportDAO {
      * @return list of disconnected ServiceInstances per period
      */
     @Override
-    public List<ServiceInstance> getDisconnectedServiceInstances(Date startDate,
+    public List<ServiceOrderReportData> getDisconnectServiceOrders(Date startDate,
             Date finishDate, int offset, int numberOfRecords) {
         String query = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                "SELECT si.id, si.serviceinstancedate, si.serviceinstancestatusid, " +
-                "       si.circuitid, si.portid " +
-                "FROM serviceinstance si " +
-                "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                "WHERE si.serviceinstancedate BETWEEN ? AND ? " +
-                "AND sis.status = 'Disconnected' " +
-                "ORDER BY si.serviceinstancedate " +
+                "SELECT so.id, so.serviceorderdate, so.servicelocation, " +
+                "st.service, sc.price, pl.name, pl.location " +
+                "FROM serviceorder so " +
+                "LEFT JOIN scenario s ON so.scenarioid = s.id " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid = sc.id " +
+                "LEFT JOIN servicetype st ON sc.servicetypeid = st.id " +
+                "LEFT JOIN providerlocation pl ON sc.providerlocationid = pl.id " +
+                "WHERE so.serviceorderdate BETWEEN ? AND ? " +
+                "AND s.scenario = 'Disconnect' " +
+                "ORDER BY so.serviceorderdate ASC " +
                 ") a where ROWNUM <= ? ) " +
                 "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
@@ -150,17 +133,19 @@ public class ReportDAOImpl implements ReportDAO {
         statement.setInt(3, offset + numberOfRecords);
         statement.setInt(4, offset);
         ResultIterator ri = statement.executeQuery();
-        List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
+        List<ServiceOrderReportData> orders = new ArrayList<ServiceOrderReportData>();
         while (ri.next()) {
-            ServiceInstance servInstance = new ServiceInstance();
-            servInstance.setId(ri.getInt("id"));
-            servInstance.setServiceInstanceDate(ri.getDate("serviceinstancedate"));
-            servInstance.setServiceInstanceStatusID(ri.getInt("serviceinstancestatusid"));
-            servInstance.setCircuitID(ri.getInt("circuitid"));
-            servInstance.setPortID(ri.getInt("portid"));
-            serviceInstances.add(servInstance);
+            ServiceOrderReportData serviceOrderData = new ServiceOrderReportData();
+            serviceOrderData.setId(ri.getInt("id"));
+            serviceOrderData.setDate(ri.getDate("serviceorderdate").toString());
+            serviceOrderData.setServiceLocation(ri.getString("servicelocation"));
+            serviceOrderData.setServiceName(ri.getString("service"));
+            serviceOrderData.setPrice(ri.getInt("price"));
+            serviceOrderData.setProviderLocationName(ri.getString("name"));
+            serviceOrderData.setProviderLocation(ri.getString("location"));
+            orders.add(serviceOrderData);
         }
-        return serviceInstances;
+        return orders;
     }
 
     /**
@@ -173,41 +158,35 @@ public class ReportDAOImpl implements ReportDAO {
      */
     @Override
     public List<RoutersUtilizationCapacity> getRoutersUtilizationCapacityData(
-            Date startDate, Date finishDate, int offset, int numberOfRecords) {
+            int offset, int numberOfRecords) {
 
-        // The query below needed in review with a lot of complex examples in table!
 
         String query = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
-                "SELECT d.name, COUNT(p.portnumber)/d.portquantity*100 " +
-                "AS utilization, d.portquantity " +
-                "FROM port p " +
-                "LEFT JOIN device d ON p.deviceid = d.id " +
-                "LEFT JOIN serviceinstance si ON si.portid = p.id " +
-                "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
-                "WHERE sis.status = 'Active' " +
-                "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                "GROUP BY d.name, d.portquantity " +
-                "ORDER BY d.name " +
+                "SELECT d.id, d.name, d.portquantity," +
+                "COUNT(p.portnumber) / d.portquantity * 100 AS utilization " +
+                "FROM device d " +
+                "LEFT JOIN port p ON p.deviceid = d.id " +
+                "WHERE p.portstatus = '1' GROUP BY d.id, d.name, d.portquantity" +
                 ") a where ROWNUM <= ? ) " +
                 "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setDate(1, startDate);
-        statement.setDate(2, finishDate);
-        statement.setInt(3, offset + numberOfRecords);
-        statement.setInt(4, offset);
+        statement.setInt(1, offset + numberOfRecords);
+        statement.setInt(2, offset);
         ResultIterator ri = statement.executeQuery();
         List<RoutersUtilizationCapacity> routersUtilizationCapacity =
                 new ArrayList<RoutersUtilizationCapacity>();
         while (ri.next()) {
             RoutersUtilizationCapacity routUtCap = new RoutersUtilizationCapacity();
+            routUtCap.setDeviceId(ri.getInt("id"));
             routUtCap.setDeviceName(ri.getString("name"));
             routUtCap.setCapacity(ri.getInt("portquantity"));
-            routUtCap.setUtilization(ri.getInt("utilization"));
+            routUtCap.setUtilization(ri.getFloat("utilization"));
             routersUtilizationCapacity.add(routUtCap);
         }
         return routersUtilizationCapacity;
     }
 
+    ////////////////////////////////////////MODIFY\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /**
      * Method that returns list of objects for profitability by month report
      * @param startDate - start of period
@@ -215,40 +194,9 @@ public class ReportDAOImpl implements ReportDAO {
      * @return list of objects for profitability by month report
      */
     @Override
-    public List<ProfitInMonth> getProfitByMonth(Date startDate,
-            Date finishDate) {
-
-        // The query below needed in review with a lot of complex examples in table!
-
-        String query = "SELECT months, SUM(incom) profit FROM ( " +
-                "SELECT TO_CHAR(si.serviceinstancedate, 'Month') as months, " +
-                "sc.price*(? - ?) incom " +
-                "FROM serviceinstance si " +
-                "LEFT JOIN serviceorder so ON so.serviceinstanceid = si.id " +
-                "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
-                "LEFT JOIN serviceinstancestatus sis ON " +
-                "si.serviceinstancestatusid = sis.id " +
-                "WHERE sis.status = 'Active' " +
-                "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                "UNION ALL " +
-                "SELECT TO_CHAR(si.serviceinstancedate, 'Month') as months, " +
-                "sc.price*(si.serviceinstancedate - ? ) incom " +
-                "FROM serviceinstance si " +
-                "LEFT JOIN serviceorder so ON so.serviceinstanceid = si.id " +
-                "LEFT JOIN servicecatalog sc ON so.servicecatalogid  = sc.id " +
-                "LEFT JOIN serviceinstancestatus sis ON " +
-                "si.serviceinstancestatusid = sis.id " +
-                "WHERE sis.status = 'Disconnected' " +
-                "AND si.serviceinstancedate BETWEEN ? AND ? " +
-                " ) GROUP BY months";
+    public List<ProfitInMonth> getProfitByMonth(Date month) {
+        String query = "";
         Statement statement = dbManager.prepareStatement(query);
-        statement.setDate(1, finishDate);
-        statement.setDate(2, startDate);
-        statement.setDate(3, startDate);
-        statement.setDate(4, finishDate);
-        statement.setDate(5, startDate);
-        statement.setDate(6, startDate);
-        statement.setDate(7, finishDate);
         ResultIterator ri = statement.executeQuery();
         List<ProfitInMonth> profitByMonths = new ArrayList<ProfitInMonth>();
         while (ri.next()) {
@@ -258,5 +206,166 @@ public class ReportDAOImpl implements ReportDAO {
             profitByMonths.add(profInMonth);
         }
         return profitByMonths;
+    }
+
+    /**
+     * Writes data about profitability by month to Writer as strings that
+     * represent rows. Rows separated with columnSeparator to determine data columns.
+     * @param storage - Writer data will be stored at
+     * @param columnSeparator separates columns in a string row
+     */
+    @Override
+    public void getProfitByMonth(Writer storage, String columnSeparator,
+            Date startDate, Date finishDate) throws IOException {
+    }
+    ////////////////////////////////////////MODIFY\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+    /**
+     * Writes data about new service orders to Writer as strings that represent
+     * rows. Rows separated with columnSeparator to determine data columns.
+     * @param storage - Writer data will be stored at
+     * @param columnSeparator separates columns in a string row
+     * @param startDate - start of period
+     * @param finishDate - end of period
+     * @throws IOException in case of writer errors
+     */
+    @Override
+    public void getNewServiceOrders(Writer storage, String columnSeparator,
+            Date startDate, Date finishDate) throws IOException {
+        String query = "SELECT so.id, so.serviceorderdate, so.servicelocation, " +
+                "st.service, sc.price, pl.name, pl.location " +
+                "FROM serviceorder so " +
+                "LEFT JOIN scenario s ON so.scenarioid = s.id " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid = sc.id " +
+                "LEFT JOIN servicetype st ON sc.servicetypeid = st.id " +
+                "LEFT JOIN providerlocation pl ON sc.providerlocationid = pl.id " +
+                "WHERE so.serviceorderdate BETWEEN ? AND ? " +
+                "AND s.scenario = 'New' " +
+                "ORDER BY so.serviceorderdate ASC ";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setDate(1, startDate);
+        statement.setDate(2, finishDate);
+        ResultIterator ri = statement.executeQuery();
+        while (ri.next()) {
+            storage.write(String.valueOf(ri.getInt("id")));
+            storage.write(columnSeparator);
+            storage.write(ri.getDate("serviceorderdate").toString());
+            storage.write(columnSeparator);
+            storage.write(ri.getString("servicelocation"));
+            storage.write(columnSeparator);
+            storage.write(ri.getString("service"));
+            storage.write(columnSeparator);
+            storage.write(String.valueOf(ri.getInt("price")));
+            storage.write(columnSeparator);
+            storage.write(ri.getString("name"));
+            storage.write(columnSeparator);
+            storage.write(ri.getString("location"));
+            storage.write("\n");
+        }
+    }
+
+    /**
+     * Writes data about disconnect service orders to Writer as strings that represent
+     * rows. Rows separated with columnSeparator to determine data columns.
+     * @param storage - Writer data will be stored at
+     * @param columnSeparator separates columns in a string row
+     * @param startDate - start of period
+     * @param finishDate - end of period
+     * @throws IOException in case of writer errors
+     */
+    @Override
+    public void getDisconnectServiceOrders(Writer storage, String columnSeparator,
+            Date startDate, Date finishDate) throws IOException {
+        String query = "SELECT so.id, so.serviceorderdate, so.servicelocation, " +
+                "st.service, sc.price, pl.name, pl.location " +
+                "FROM serviceorder so " +
+                "LEFT JOIN scenario s ON so.scenarioid = s.id " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid = sc.id " +
+                "LEFT JOIN servicetype st ON sc.servicetypeid = st.id " +
+                "LEFT JOIN providerlocation pl ON sc.providerlocationid = pl.id " +
+                "WHERE so.serviceorderdate BETWEEN ? AND ? " +
+                "AND s.scenario = 'Disconnect' " +
+                "ORDER BY so.serviceorderdate ASC ";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setDate(1, startDate);
+        statement.setDate(2, finishDate);
+        ResultIterator ri = statement.executeQuery();
+        while (ri.next()) {
+            storage.write(String.valueOf(ri.getInt("id")));
+            storage.write(columnSeparator);
+            storage.write(ri.getDate("serviceorderdate").toString());
+            storage.write(columnSeparator);
+            storage.write(ri.getString("servicelocation"));
+            storage.write(columnSeparator);
+            storage.write(ri.getString("service"));
+            storage.write(columnSeparator);
+            storage.write(String.valueOf(ri.getInt("price")));
+            storage.write(columnSeparator);
+            storage.write(ri.getString("name"));
+            storage.write(columnSeparator);
+            storage.write(ri.getString("location"));
+            storage.write("\n");
+        }
+    }
+
+    /**
+     * Writes data about routers utilization and capacity to Writer as strings that
+     * represent rows. Rows separated with columnSeparator to determine data columns.
+     * @param storage - Writer data will be stored at
+     * @param columnSeparator separates columns in a string row
+     */
+    @Override
+    public void getRoutersUtilizationCapacityData(Writer storage, String columnSeparator)
+            throws IOException {
+        String query = "SELECT d.id, d.name, d.portquantity," +
+                "COUNT(p.portnumber) / d.portquantity * 100 AS utilization " +
+                "FROM device d " +
+                "LEFT JOIN port p ON p.deviceid = d.id " +
+                "WHERE p.portstatus = '1' GROUP BY d.id, d.name, d.portquantity";
+        Statement statement = dbManager.prepareStatement(query);
+        ResultIterator ri = statement.executeQuery();
+        while (ri.next()) {
+            storage.write(String.valueOf(ri.getInt("id")));
+            storage.write(columnSeparator);
+            storage.write(ri.getString("name"));
+            storage.write(columnSeparator);
+            storage.write(String.valueOf(ri.getInt("portquantity")));
+            storage.write(columnSeparator);
+            storage.write(String.valueOf(ri.getFloat("utilization")));
+            storage.write("\n");
+        }
+    }
+
+    /**
+     * Writes data about most profitable router to Writer as string that
+     * represent row. Row separated with columnSeparator to determine data columns.
+     * @param storage - Writer data will be stored at
+     * @param columnSeparator separates columns in a string row
+     */
+    @Override
+    public void getMostProfitableRouter(Writer storage, String columnSeparator)
+            throws IOException {
+        String query = "SELECT d.id, d.name, d.portquantity, sum(sc.price) total " +
+                "FROM serviceorder so " +
+                "LEFT JOIN servicecatalog sc ON so.servicecatalogid = sc.id " +
+                "LEFT JOIN serviceinstance si ON so.serviceinstanceid = si.id " +
+                "LEFT JOIN serviceinstancestatus sis ON si.serviceinstancestatusid = sis.id " +
+                "LEFT JOIN port p ON si.portid = p.id " +
+                "LEFT JOIN device d ON p.deviceid = d.id " +
+                "WHERE sis.status = 'Active' " +
+                "GROUP BY d.id, d.name, d.portquantity " +
+                "ORDER BY total DESC";
+        Statement statement = dbManager.prepareStatement(query);
+        ResultIterator ri = statement.executeQuery();
+        ri.next();
+        storage.write(String.valueOf(ri.getInt("id")));
+        storage.write(columnSeparator);
+        storage.write(ri.getString("name"));
+        storage.write(columnSeparator);
+        storage.write(String.valueOf(ri.getInt("portquantity")));
+        storage.write(columnSeparator);
+        storage.write(String.valueOf(ri.getFloat("total")));
+        storage.write("\n");
+
     }
 }
