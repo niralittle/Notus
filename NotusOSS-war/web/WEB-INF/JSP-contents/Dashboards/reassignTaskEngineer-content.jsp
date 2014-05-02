@@ -21,7 +21,8 @@
         <th>Last Name</th>
     </tr>
 
-<%    for(OSSUser engineer : engineers){
+<%if (engineers != null){
+      for(OSSUser engineer : engineers){
 %>
 <tr>
 
@@ -31,7 +32,8 @@
     <td><input type="submit" value="Assign"
                onclick="document.getElementById('engineerID').setAttribute('value', <%=engineer.getId()%>)"></td>
 </tr>
-<%}%>
+<%    }
+  }%>
 </table>
 <input type="hidden" id="engineerID" name="engineerID">
 <input type="hidden" name="taskID" value="<%=request.getParameter("taskID")%>">

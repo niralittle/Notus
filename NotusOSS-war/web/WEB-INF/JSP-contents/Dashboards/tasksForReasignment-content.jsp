@@ -21,7 +21,9 @@
         <th>Role ID</th>
     </tr>
 
-<%    for(Task task : tasks){
+<%
+if(tasks != null){
+    for(Task task : tasks){
 %>
 <tr>
 
@@ -33,7 +35,8 @@
     <td><input type="submit" value="Reassign" onclick="document.getElementById('taskID').setAttribute('value', <%=task.getId()%>)"></td>
     <td id="send"></td>
 </tr>
-<%}%>
+<%  }
+}%>
 </table>
 <input type="hidden" name="taskID" id="taskID">
 </form>
