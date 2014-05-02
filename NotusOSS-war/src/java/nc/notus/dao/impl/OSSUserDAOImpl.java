@@ -281,4 +281,42 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 			return false;
 		}
 	}
+
+    /**
+     * Method returns list of users of specific role with paging
+     * @param roleID - ID of role in system
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return list of users with similar login
+     */
+    @Override
+    public List<OSSUser> getUsersByRoleID(int roleID, int offset, int numberOfRecords) {
+        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
+                        "SELECT u.id, u.firstname, u.lastname, u.email, u.login, " +
+                        "u.password, u.blocked, u.roleid " +
+                        "FROM ossuser u " +
+                        "WHERE u.roleid  = ? " +
+                        "ORDER BY u.firstname " +
+                        " ) a where ROWNUM <= ? )" +
+                        "WHERE rnum  >= ?";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setInt(1, roleID);
+        statement.setInt(2, numberOfRecords);
+        statement.setInt(3, offset);
+        ResultIterator ri = statement.executeQuery();
+        List<OSSUser> users = new ArrayList<OSSUser>();
+        while (ri.next()){
+            OSSUser us = new OSSUser();
+            us.setId(ri.getInt("id"));
+            us.setFirstName(ri.getString("firstname"));
+            us.setLastName(ri.getString("lastname"));
+            us.setEmail(ri.getString("email"));
+            us.setLogin(ri.getString("login"));
+            us.setPassword(ri.getString("password"));
+            us.setBlocked(ri.getInt("blocked"));
+            us.setRoleID(ri.getInt("roleid"));
+            users.add(us);
+        }
+        return users;
+    }
 }

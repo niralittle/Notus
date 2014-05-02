@@ -26,6 +26,15 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
     public List<OSSUser> getUsersByLogin(String login, int offset, int numberOfRecords);
 
     /**
+     * Method returns list of users of specific role with paging
+     * @param roleID - ID of role in system
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return list of users with similar login
+     */
+    public List<OSSUser> getUsersByRoleID(int roleID, int offset, int numberOfRecords);
+
+    /**
      * Method returns users with specific login
      * @param login - login
      * @return users with specific login
