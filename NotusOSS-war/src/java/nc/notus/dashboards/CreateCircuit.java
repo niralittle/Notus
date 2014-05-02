@@ -7,10 +7,13 @@ package nc.notus.dashboards;
 
 import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
@@ -27,6 +30,10 @@ import nc.notus.workflow.NewScenarioWorkflow;
  */
 public class CreateCircuit extends HttpServlet {
    
+	
+	private static final String PERSONAL_TASKS_PAGE = "TasksAssignment?type=personal";
+	private static final String PROVISIONING_WORKFLOW_PAGE = "provisioningEngineerWorkflow.jsp";
+	
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -71,19 +78,34 @@ public class CreateCircuit extends HttpServlet {
                 int startpage = 1;
                 int numbOfRecords = 10;
                 List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.PROVISION_ENGINEER.toInt());
-                request.setAttribute("tasksEng", tasksEng);
-                request.getRequestDispatcher("provisioningEngineer.jsp").forward(request, response);
-                return;
+                redirect(request, response, PERSONAL_TASKS_PAGE);
             }
             request.setAttribute("taskid", taskID);
             request.setAttribute("soid", soID);
             request.setAttribute("circuit", circuitConf);
-            request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
+            redirect(request, response, PROVISIONING_WORKFLOW_PAGE);
 
         } finally {
                 dbManager.close();
         }
     } 
+    
+    /**
+	 * Redirect to passes page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @param page
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void redirect(HttpServletRequest request,
+			HttpServletResponse response, String page) throws ServletException,
+			IOException {
+		RequestDispatcher view = request.getRequestDispatcher(page);
+		view.forward(request, response);
+		return;
+	}
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
