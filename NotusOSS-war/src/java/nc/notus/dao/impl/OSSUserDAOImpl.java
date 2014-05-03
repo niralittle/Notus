@@ -42,7 +42,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @return list of users with similar login
      */
     @Override
-    public List<OSSUser> getUsersByLogin(String login, int offset, int numberOfRecords) {
+    public List<OSSUser> getUsersByLogin(String login,  int numberOfRecords, int offset) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                         "SELECT u.id, u.firstname, u.lastname, u.email, u.login, " +
                         "u.password, u.blocked, u.roleid " +
@@ -81,7 +81,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      */
 
     @Override
-    public List<OSSUser> getUsersByLastName(String lastname, int offset, int numberOfRecords) {
+    public List<OSSUser> getUsersByLastName(String lastname,  int numberOfRecords, int offset) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                         "SELECT u.id, u.firstname, u.lastname, u.email, u.login, " +
                         "u.password, u.blocked, u.roleid " +
@@ -200,7 +200,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @param email of user
      * @return list of users with similar email
      */
-    public List<OSSUser> getUsersByEmail(String email, int offset, int numberOfRecords) {
+    public List<OSSUser> getUsersByEmail(String email,  int numberOfRecords, int offset) {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                         "SELECT u.id, u.firstname, u.lastname, u.email, u.login, " +
                         "u.password, u.blocked, u.roleid " +
