@@ -17,7 +17,6 @@ import java.util.List;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.entity.Task;
-import nc.notus.states.UserRole;
 
 /**
  * Implements part of Installation Engineer dashboard

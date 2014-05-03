@@ -8,16 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.TaskDAO;
-import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
-import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
-import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.NewScenarioWorkflow;
 
 public class SupportEngineerServlet extends HttpServlet {

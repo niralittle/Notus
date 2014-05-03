@@ -6,19 +6,14 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
-import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
-import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
@@ -26,7 +21,6 @@ import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
-import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.DisconnectScenarioWorkflow;
 

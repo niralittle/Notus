@@ -23,7 +23,6 @@ import nc.notus.workflow.Workflow;
 
 import java.io.IOException;
 
-import javax.mail.Session;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

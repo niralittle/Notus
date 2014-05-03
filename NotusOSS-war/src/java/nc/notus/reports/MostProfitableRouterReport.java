@@ -2,7 +2,7 @@ package nc.notus.reports;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.Date;
+
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
 import nc.notus.dbmanager.DBManager;
