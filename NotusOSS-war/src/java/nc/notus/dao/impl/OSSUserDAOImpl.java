@@ -52,7 +52,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "AND u.login LIKE ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setString(1, ("%" + login + "%"));
         statement.setInt(2, numberOfRecords);
@@ -91,7 +91,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "AND u.lastname LIKE ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setString(1, ("%" + lastname + "%"));
         statement.setInt(2, numberOfRecords);
@@ -210,7 +210,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "AND u.email LIKE ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
         Statement statement = dbManager.prepareStatement(query);
         statement.setString(1, ("%" + email + "%"));
         statement.setInt(2, numberOfRecords);
