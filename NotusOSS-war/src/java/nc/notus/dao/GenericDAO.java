@@ -15,6 +15,15 @@ public interface GenericDAO<T> {
      */
     long countAll(Map<String, Object> params);
 
+     /**
+     * Returns the number of entries from a table that meet some
+     * criteria (LIKE clause params)
+     * @param params sql parameters (name-value) that are criteria for SELECT
+     * @return the number of records meeting the criteria
+     */
+	long countAllWithLikeCause(Map<String, Object> params);
+
+
     /**
      * Method creates new instance of entity in DB
      * @param t entity to add to DB
