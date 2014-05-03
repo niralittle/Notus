@@ -21,6 +21,33 @@
             <%=title+" "%> tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
         </h2>
         
+         <%if(request.isUserInRole("SUPPORT_ENGINEER")) { %>
+        	<br><a href="passwordChanging.jsp">View user information</a>
+    <%
+	} 
+		if (request.getAttribute("noOfPages") != null && request.getAttribute("page") != null) {
+			String url;
+			long noOfPages = (Long) request.getAttribute("noOfPages");
+			int currPage = (Integer) request.getAttribute("page");
+			if(personal) {
+				url = "TasksAssignment?type=personal&";
+			} else {
+				url = "TasksAssignment?";
+			}
+			for (long i = 1; i <= noOfPages; i++) {
+				if (i == (currPage + 1)) {
+		%>
+		<a href="<%=url%>page=<%=i%>" style="font-size: 12pt; font-weight: bold;"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+	<%
+		} else {
+	%>
+		<a href="<%=url%>page=<%=i%>"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+	<%
+		}
+					}
+					} %>
+        
+        
         <table border="1" id="tablename1">
             <tbody>
                 <tr>
