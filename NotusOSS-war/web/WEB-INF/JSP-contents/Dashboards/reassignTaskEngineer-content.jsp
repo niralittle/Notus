@@ -12,7 +12,19 @@
 <%@page import="nc.notus.entity.OSSUser"%>
 <%@page import="nc.notus.entity.Task"%>
 
-<%List<OSSUser> engineers = (List) request.getAttribute("listOfEngineers");%>
+<%List<OSSUser> engineers = (List) request.getAttribute("listOfEngineers");
+Integer numberOfPages = (Integer)request.getAttribute("pages");
+%>
+<form action="ReassigTaskToEngineerServlet" method="post" id="pagesForm">
+    <% for(int i=1;i<=numberOfPages;i++){%>
+    <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;">
+    <%=i%>
+    </a>
+    <% }%>
+    <input type="hidden" name="page" id="page">
+    <input type="hidden" name="taskID" value="<%=request.getParameter("taskID")%>">
+
+</form>
 <form action="Reassign" method="post">
 <table>
     <tr>

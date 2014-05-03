@@ -10,7 +10,15 @@
 <%@page import="java.util.List"%>
 <%@page import="nc.notus.entity.Task"%>
 
-<%List<Task> tasks = (List) request.getAttribute("listOfTasks");%>
+<%List<Task> tasks = (List) request.getAttribute("listOfTasks");
+Integer numberOfPages = (Integer)request.getAttribute("pages");
+%>
+<form action="Reassign" method="post" id="pagesForm">
+    <% for(int i=1;i<=numberOfPages;i++){%>
+    <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;"><%=i%></a>
+    <% }%>
+    <input type="hidden" name="page" id="page">
+</form>
 <form action="ReassigTaskToEngineerServlet" method="post" id="sendTask">
 <table>
     <tr>

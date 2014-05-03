@@ -8,7 +8,9 @@ package nc.notus;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +29,7 @@ import nc.notus.entity.Task;
  */
 public class ReassigTaskToEngineerServlet extends HttpServlet {
     private final int OFFSET = 1;
-    private final int NUMBER_OF_RECORDS = 100;
+    private final int NUMBER_OF_RECORDS = 3;
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -48,7 +50,16 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
             taskID = Integer.parseInt(request.getParameter("taskID"));
             task = taskDAO.find(taskID);
             int roleID = task.getRoleID();
-            List<OSSUser> engineers = userDAO.getUsersByRoleID(roleID, OFFSET, NUMBER_OF_RECORDS);
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("roleID", roleID);
+            long countAll = taskDAO.countAll(params);
+            Integer numberOfPages = Math.round(countAll/NUMBER_OF_RECORDS);
+            request.setAttribute("pages", numberOfPages);
+            int page = 1;
+            if(request.getParameter("page") != null){
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+            List<OSSUser> engineers = userDAO.getUsersByRoleID(roleID, page, NUMBER_OF_RECORDS);
             request.setAttribute("listOfEngineers", engineers);
             request.setAttribute("taskID", taskID);
             request.getRequestDispatcher("reassignTaskEngineer.jsp").forward(request, response);

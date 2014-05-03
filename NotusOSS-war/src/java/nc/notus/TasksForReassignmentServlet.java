@@ -7,7 +7,9 @@ package nc.notus;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +26,7 @@ import nc.notus.entity.Task;
  */
 public class TasksForReassignmentServlet extends HttpServlet {
     private final int OFFSET = 1;
-    private final int NUMBER_OF_RECORDS = 100;
+    private final int NUMBER_OF_RECORDS = 3;
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -48,7 +50,16 @@ public class TasksForReassignmentServlet extends HttpServlet {
                 taskDAO.update(task);
                 dbManager.commit();
             }
-            List<Task> tasks = taskDAO.getAssignedTasks(OFFSET, NUMBER_OF_RECORDS);
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("taskStatusID", "1");
+            long countAll = taskDAO.countAll(params);
+            Integer numberOfPages = Math.round(countAll/NUMBER_OF_RECORDS);
+            request.setAttribute("pages", numberOfPages);
+            int page = 1;
+            if(request.getParameter("page") != null){
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+            List<Task> tasks = taskDAO.getAssignedTasks(page, NUMBER_OF_RECORDS);
             request.setAttribute("listOfTasks", tasks);
             request.getRequestDispatcher("tasksForReasignment.jsp").forward(request, response);
         } finally { 
