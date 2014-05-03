@@ -6,9 +6,7 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +32,6 @@ import nc.notus.entity.Port;
 import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
-import nc.notus.states.TaskState;
 import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
 
@@ -45,13 +42,6 @@ import nc.notus.states.WorkflowScenario;
  */
 public class TasksAssignment extends HttpServlet {
    
-	private static final int RECORDS_PER_PAGE = 1;
-	
-	private int offset;
-	private int page;
-	private boolean personal = false;
-	
-	private OSSUser user;
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -66,12 +56,12 @@ public class TasksAssignment extends HttpServlet {
         int numbOfRecords = 10;
         DBManager dbManager = new DBManager();
         String login = "";
-        //OSSUser user = null;
+        OSSUser user = null;
         Task task = null;
         TaskDAO taskDAO = null;
         int taskID;
         List<Task> tasksEng;
-        //boolean personal = false;
+        boolean personal = false;
         try {
             taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
@@ -144,28 +134,12 @@ public class TasksAssignment extends HttpServlet {
                     }
                 }
             }
-            
-            if (request.getParameter("page") == null) {
-		page = 0;
-	    } else {
-		page = Integer.parseInt(request.getParameter("page"));
-				
-		if (page == 1) {
-		    page = 0;
-		} else {
-		    page = page - 1;
-		    }
-		}
-		offset = page + RECORDS_PER_PAGE;
-			
-		request.setAttribute("noOfPages", getPageCount(taskDAO));
-		request.setAttribute("page", page);
 
             if (!personal) {
-                tasksEng = taskDAO.getEngTasks( page, offset, user.getRoleID());
+                tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
             }
             else {
-                tasksEng = taskDAO.getTasksByID(page, offset, user.getId());
+                tasksEng = taskDAO.getTasksByID(startpage, numbOfRecords, user.getId());
             }
             request.setAttribute("tasksEng", tasksEng);
             request.setAttribute("type", personal);
@@ -209,22 +183,6 @@ public class TasksAssignment extends HttpServlet {
 		return null;
 	}
     
-    
-    private long getPageCount(TaskDAO taskDAO) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-	     if (personal) {
-	    	 params.put("id", user.getId());
-	    } else {
-	    	 params.put("roleid", user.getRoleID());
-	    	 params.put("employeeid", null);
-	    }
-	    params.put("TASKSTATUSID", 1);
-		
-	    long quantityOfRecords = taskDAO.countAll(params);
-		long quantityOfPages = (long) Math.ceil(quantityOfRecords * 1.0/ RECORDS_PER_PAGE);
-		return quantityOfPages;
-	}
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
