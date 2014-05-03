@@ -73,6 +73,46 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         return ri.getLong(1);  // element at position (1,1)
     }
 
+/**
+     * Method that returns the number of entries from a table that meet some
+     * criteria (LIKE cause params)
+     * @param params sql parameters (name-value) that are criteria for SELECT
+     * @return the number of records meeting the criteria
+     */
+    @Override
+    public long countAllWithLikeCause(Map<String, Object> params) {
+        // form SQL query
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT COUNT(*) FROM " + type.getSimpleName());
+
+        if (params != null && !params.isEmpty()) {
+            query.append(" WHERE ");
+            boolean notFirst = false; //not adding " AND " before the first param
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                if (notFirst) query.append(" AND ");
+                if (entry.getValue() != null) {
+                    query.append(entry.getKey() + " LIKE ?");
+                } else {
+                    query.append(entry.getKey() + " IS NULL");
+                }
+                notFirst = true;
+            }
+        }
+
+        Statement statement = dbManager.prepareStatement(query.toString());
+        // fill in statement
+        int paramIndex = 1;
+        for (Object value : params.values()) {
+            if (value != null) {
+                statement.setObject(paramIndex++, value);
+            }
+        }
+
+        ResultIterator ri = statement.executeQuery();
+        ri.next();
+        return ri.getLong(1);  // element at position (1,1)
+    }
+    
     /**
      * Method creates new instance of entity in DB
      * @param t entity to add to DB
