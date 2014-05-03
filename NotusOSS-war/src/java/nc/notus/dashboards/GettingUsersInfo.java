@@ -1,7 +1,10 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,64 +12,75 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
+import nc.notus.states.UserRole;
 
 /**
- * Get users information for specified last name or email or login 
- * that uses by Support Engineer to changing user password.
+ * Get users information for specified last name, email or login that uses by
+ * Support Engineer to changing user password.
  * 
  * @author Panchenko Dmytro
  */
 public class GettingUsersInfo extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	
-	// page to redirect
+
 	private static final String CHANGE_PASSWORD_PAGE = "passwordChanging.jsp";
-	
+	private static int RECORDS_PER_PAGE = 1;
+
 	private List<OSSUser> users = null;
 	private String login;
 	private String email;
 	private String lastName;
+	
+	private int offset;
+	private int page;
+	
 
 	void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		
-		int startPage = 1;
-		int numberOfRecords = 30;
-		
-		email = request.getParameter("email");
-		login = request.getParameter("login");
-		lastName = request.getParameter("lastName");
-		
-		//if all fields empty we can't search any user
-		if (login.isEmpty() & email.isEmpty() & lastName.isEmpty()) {
-			redirect(request, response, CHANGE_PASSWORD_PAGE);
-		}
-		if (!login.isEmpty() & !email.isEmpty() & !lastName.isEmpty()) {
-			redirect(request, response, CHANGE_PASSWORD_PAGE);
-		}
-		
-		// create necessary DAO
 		DBManager dbManager = null;
-		OSSUserDAOImpl userDAO = null;
+		OSSUserDAO userDAO = null;
 		
+		readInputtedData(request);
+		if (!isValidParams(request)) {
+			redirect(request, response, CHANGE_PASSWORD_PAGE);
+		}
+	
 		try {
 			dbManager = new DBManager();
 			userDAO = new OSSUserDAOImpl(dbManager);
 
-			// search user for one criteria only:
-			if(!lastName.isEmpty()) {
-				users = userDAO.getUsersByLastName(lastName, startPage, numberOfRecords);
-			} else if (!login.isEmpty()) {
-				users = userDAO.getUsersByLogin(login, startPage, numberOfRecords);	
+			if (request.getParameter("page") == null) {
+				page = 0;
 			} else {
-				users = userDAO.getUsersByEmail(email, startPage, numberOfRecords);
+				page = Integer.parseInt(request.getParameter("page"));
+				
+				if (page == 1) {
+					page = 0;
+				} else {
+					page = page - 1;
+				}
 			}
+			offset = page + RECORDS_PER_PAGE;
 			
+			request.setAttribute("noOfPages", getPageCount(userDAO));
+			request.setAttribute("page", page);
+
+			// search user for one criteria only:
+			if (!lastName.isEmpty()) {
+				users = userDAO.getUsersByLastName(lastName, offset, page);
+			} else if (!login.isEmpty()) {
+				users = userDAO.getUsersByLogin(login, offset, page);
+			} else {
+				users = userDAO.getUsersByEmail(email, offset, page);
+			}
+
 			request.setAttribute("findedUsers", users);
 
 		} finally {
@@ -74,6 +88,61 @@ public class GettingUsersInfo extends HttpServlet {
 		}
 
 		redirect(request, response, CHANGE_PASSWORD_PAGE);
+	}
+
+	private void readInputtedData(HttpServletRequest request) {
+		email = request.getParameter("email");
+		login = request.getParameter("login");
+		lastName = request.getParameter("lastName");
+	}
+
+	private boolean isValidParams(HttpServletRequest request) {
+		if (login.isEmpty() & email.isEmpty() & lastName.isEmpty()) {
+			request.setAttribute("errMessage",
+					"Specify at least one parameter to search user!");
+			return false;
+		}
+		if (!login.isEmpty() & !email.isEmpty() & !lastName.isEmpty()) {
+			request.setAttribute("errMessage",
+					"Specify only one parameter to search user!");
+			return false;
+		}
+		
+		//check combination
+		if (!login.isEmpty() & !email.isEmpty()) {
+			request.setAttribute("errMessage",
+					"Specify only one parameter to search user!");
+			return false;
+		}
+		if (!login.isEmpty() & !lastName.isEmpty()) {
+			request.setAttribute("errMessage",
+					"Specify only one parameter to search user!");
+			return false;
+		}
+		if (!email.isEmpty() & !lastName.isEmpty()) {
+			request.setAttribute("errMessage",
+					"Specify only one parameter to search user!");
+			return false;
+		}
+		
+		return true;
+	}
+
+	private long getPageCount(OSSUserDAO userDAO) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		if (!lastName.isEmpty()) {
+			params.put("lastname", "%" + lastName + "%");
+		} else if (!login.isEmpty()) {
+			params.put("login", "%" + login + "%");
+		} else {
+			params.put("email", "%" + email + "%");
+		}
+		params.put("roleid", UserRole.CUSTOMER_USER.toInt());
+		
+		long quantityOfRecords = userDAO.countAllWithLikeCause(params);
+		long quantityOfPages = (long) Math.ceil(quantityOfRecords * 1.0/ RECORDS_PER_PAGE);
+		return quantityOfPages;
 	}
 
 	/**
@@ -90,6 +159,7 @@ public class GettingUsersInfo extends HttpServlet {
 			IOException {
 		RequestDispatcher view = request.getRequestDispatcher(page);
 		view.forward(request, response);
+		return;
 	}
 
 	@Override
