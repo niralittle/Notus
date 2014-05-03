@@ -20,10 +20,6 @@
     </filter-mapping>
 
     <servlet>
-        <servlet-name>TestConnectionPoolServlet</servlet-name>
-        <servlet-class>nc.notus.TestConnectionPoolServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>nc.notus.LogoutServlet</servlet-class>
     </servlet>
@@ -137,10 +133,6 @@
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>TestConnectionPoolServlet</servlet-name>
-        <url-pattern>/TestConnectionPoolServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
