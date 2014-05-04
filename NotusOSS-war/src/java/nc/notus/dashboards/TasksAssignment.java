@@ -147,27 +147,21 @@ public class TasksAssignment extends HttpServlet {
             
             
             if (request.getParameter("page") == null) {
-				page = 0;
+				page = 1;
 			} else {
 				page = Integer.parseInt(request.getParameter("page"));
-				
-				if (page == 1) {
-					page = 0;
-				} else {
-					page = page - 1;
-				}
 			}
-			offset = page + RECORDS_PER_PAGE;
+			offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
 			
 			request.setAttribute("noOfPages", getPageCount(taskDAO, user, personal));
 			request.setAttribute("page", page);
 			
 
-			 if (!personal) {
-	                tasksEng = taskDAO.getEngTasks(page, offset, user.getRoleID());
+			if (!personal) {
+	                tasksEng = taskDAO.getEngTasks(page - 1, offset, user.getRoleID());
 	            }
 	            else {
-	                tasksEng = taskDAO.getTasksByID(page, offset, user.getId());
+	                tasksEng = taskDAO.getTasksByID(page - 1, offset, user.getId());
 	            }
             request.setAttribute("tasksEng", tasksEng);
             request.setAttribute("type", personal);

@@ -37,7 +37,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	                "AND t.employeeid IS NULL " +
 	                "ORDER BY t.id " +
 	                ") a where ROWNUM <= ? )" +
-	                "WHERE rnum  > ?";
+	                "WHERE rnum  >= ?";
 	        Statement statement = dbManager.prepareStatement(query);
 	        statement.setInt(1, roleID);
 	        statement.setInt(2, numberOfRecords);
@@ -74,7 +74,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	                "AND t.employeeid = ? " +
 	                "ORDER BY t.id " +
 	                ") a where ROWNUM <= ? )" +
-	                "WHERE rnum  > ?";
+	                "WHERE rnum  >= ?";
 	        Statement statement = dbManager.prepareStatement(query);
 	        statement.setInt(1, userID);
 	        statement.setInt(2, numberOfRecords);
