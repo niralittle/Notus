@@ -39,6 +39,9 @@ import nc.notus.states.OrderStatus;
 public class CustomerUserServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+    
+    private static final String USER_INFO_PAGE = "userSOandSI.jsp";
+    
     private DBManager dbManager = null;
 
     /**
@@ -60,12 +63,20 @@ public class CustomerUserServlet extends HttpServlet {
         dbManager = new DBManager();
         try {
             int userID = getUserID(request);
+            
             request.setAttribute("activeInstances",
                     getActiveInstancesList(userID, startpage, numbOfRecords));
             request.setAttribute("processingOrders",
                     getProcessingOrdersList(userID, startpage, numbOfRecords));
-            RequestDispatcher view = request.getRequestDispatcher("user.jsp");
-            view.forward(request, response);
+            
+            if (request.isUserInRole("SUPPORT_ENGINEER")) {
+            	RequestDispatcher view = request.getRequestDispatcher(USER_INFO_PAGE);
+            	view.forward(request, response);
+            	return;
+            } else {
+            	RequestDispatcher view = request.getRequestDispatcher("user.jsp");
+            	view.forward(request, response);
+            }
         } finally {
             dbManager.close();
         }
@@ -103,15 +114,20 @@ public class CustomerUserServlet extends HttpServlet {
      * put it in the session and return the value
      */
     private int getUserID(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("userID") == null) {
-            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-            String login = request.getUserPrincipal().getName();
-            OSSUser user = userDAO.getUserByLogin(login);
-            session.setAttribute("userID", user.getId());
-            return user.getId();
-        }
-        return (Integer) session.getAttribute("userID");
+		if (request.isUserInRole("SUPPORT_ENGINEER")) {
+			int id = Integer.parseInt(request.getParameter("userID"));
+			return id;
+		} else {
+			HttpSession session = request.getSession();
+			if (session.getAttribute("userID") == null) {
+				OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+				String login = request.getUserPrincipal().getName();
+				OSSUser user = userDAO.getUserByLogin(login);
+				session.setAttribute("userID", user.getId());
+				return user.getId();
+			}
+			return (Integer) session.getAttribute("userID");
+		}
     }
 
     /**
