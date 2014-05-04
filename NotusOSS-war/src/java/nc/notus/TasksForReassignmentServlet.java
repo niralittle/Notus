@@ -26,7 +26,7 @@ import nc.notus.entity.Task;
  */
 public class TasksForReassignmentServlet extends HttpServlet {
     private final int OFFSET = 1;
-    private final int NUMBER_OF_RECORDS = 3;
+    private final int NUMBER_OF_RECORDS = 100;
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
