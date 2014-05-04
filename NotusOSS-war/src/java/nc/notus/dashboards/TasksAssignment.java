@@ -216,7 +216,7 @@ public class TasksAssignment extends HttpServlet {
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 	    if (personal) {
-	    	 params.put("id", user.getId());
+	    	 params.put("employeeid", user.getId());
 	    } else {
 	    	 params.put("roleid", user.getRoleID());
 	    	 params.put("employeeid", null);
