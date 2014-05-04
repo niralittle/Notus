@@ -34,7 +34,6 @@ import nc.notus.entity.Port;
 import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
-import nc.notus.states.TaskState;
 import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
 
@@ -45,12 +44,11 @@ import nc.notus.states.WorkflowScenario;
  */
 public class TasksAssignment extends HttpServlet {
    
-	private static final int RECORDS_PER_PAGE = 1;
+	private static final int RECORDS_PER_PAGE = 5;
 	
 	
 	private int offset;
 	private int page;
-	//private boolean personal;
 	
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -62,8 +60,6 @@ public class TasksAssignment extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int startpage = 1;
-        int numbOfRecords = 10;
         DBManager dbManager = new DBManager();
         String login = "";
         OSSUser user = null;
