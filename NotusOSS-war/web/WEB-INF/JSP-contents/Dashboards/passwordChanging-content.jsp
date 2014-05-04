@@ -71,7 +71,7 @@
 %>
 
 
-<table  border="1" id="tablename1">
+<table  border="1">
 	<tr>
 		<td>LOGIN</td>
 		<td>EMAIL</td>
@@ -101,7 +101,7 @@
 
 			<td><input type="text" name="newPassword" value="" /></td>
 			<td><input type="submit" value="Change password" /></td>
-			<td><input type="submit" name="action" value="View info" /></td>
+			<td><a href="CustomerUser?userID=<%=user.getId()%>" target="_blank">View information about SO and SI</a></td>
 			<td><input type="hidden" value="<%=user.getId()%>" name="userId" /></td>
 		</tr>
 
@@ -121,8 +121,6 @@
 	<%
 		} else {
 	%>
-
-
 	<a
 		href="GetUsers?page=<%=i%>&lastName=<%=lastName%>&login=<%=login%>&email=<%=email%>"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
 	<%
