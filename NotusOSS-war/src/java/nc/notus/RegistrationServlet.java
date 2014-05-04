@@ -43,104 +43,102 @@ import nc.notus.email.RegistrationSuccessfulEmail;
  */
 public class RegistrationServlet extends HttpServlet {
 
-	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	private static final String LOGIN_PATTERN = "^[A-Za-z0-9_-]{3,40}$";
-	private static final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
+    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final String LOGIN_PATTERN = "^[A-Za-z0-9_-]{3,40}$";
+    private static final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
 
-	private static final String CUSTOMER_REGISTRATION_PAGE = "registration.jsp";
-	private static final String ENGINEER_REGISTRATION_PAGE = "registrateEngineer.jsp";
-	private static final String CONGRATULATION_PAGE = "orderRecieved.jsp";
+    private static final String CUSTOMER_REGISTRATION_PAGE = "registration.jsp";
+    private static final String ENGINEER_REGISTRATION_PAGE = "registrateEngineer.jsp";
+    private static final String CONGRATULATION_PAGE = "orderRecieved.jsp";
 
-	private String login;
-	private String inputtedCaptcha;
-	private String password;
-	private String passwordConf;
-	private String email;
-	private String firstName;
-	private String lastName;
-	private int groupID;
-	private int catalogID;
-	private String serviceLocation;
+    private String login;
+    private String inputtedCaptcha;
+    private String password;
+    private String passwordConf;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private int groupID;
+    private int catalogID;
+    private String serviceLocation;
 
-	protected void processRequest(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request,
+                    HttpServletResponse response)
+                    throws ServletException, IOException {
+        //declaration of variables
+        DBManager dbManager = new DBManager();
+        ServiceOrder newOrder = null;
+        Integer userID = null;
+        boolean paramsValid = false;
+        StringBuilder errMessage = new StringBuilder();
 
-		//declaration of variables
-		DBManager dbManager = new DBManager();
-		ServiceOrder newOrder = null;
-		Integer userID = null;
-		boolean paramsValid = false;
-		StringBuilder errMessage = new StringBuilder();
-		
-		
-		//read values inputted by user in text fields
-		readParamaters(request);
-		
-		//check if inputted captcha equals to generated captcha
-		if (!request.getSession().getAttribute("captcha").equals(inputtedCaptcha)) {
-			errMessage.append("Codes not matches!");
-			request.setAttribute("errMessage", errMessage.toString());
-			redirect(request, response, CUSTOMER_REGISTRATION_PAGE);
-		}
+        //read values inputted by user in text fields
+        readParamaters(request);
 
-		
-		// if user is ADMINISTRATOR then we register a new engineer
-		if (request.isUserInRole("ADMINISTRATOR")) {
-			
-			//server-side data validation
-			paramsValid = validateParams(dbManager, errMessage);
-			
-			//if data is valid then register new engineer
-			if (paramsValid) {
-				createUser(dbManager, groupID);
-				
-				// commit change in DB
-				dbManager.commit();
+        //check if inputted captcha equals to generated captcha
+        if (!request.getSession().getAttribute("captcha").equals(inputtedCaptcha)) {
+                errMessage.append("Codes not matches!");
+                request.setAttribute("errMessage", errMessage.toString());
+                redirect(request, response, CUSTOMER_REGISTRATION_PAGE);
+        }
 
-				errMessage.append("New employee successfully registred! ");
-			}
-			
-			// redirect to register page with appropriate message
-			request.setAttribute("errMessage", errMessage.toString());
-			redirect(request, response, ENGINEER_REGISTRATION_PAGE);
-			
-		}	else {
+        // if user is ADMINISTRATOR then we register a new engineer
+        if (request.isUserInRole("ADMINISTRATOR")) {
 
-			// register CUSTOMER_USER
-			try {
-				paramsValid = validateParams(dbManager, errMessage);
-				if (paramsValid) {
-					
-					//if data is valid then register new user and create service order
-					// for specified service location and 
-					userID = createUser(dbManager,UserRole.CUSTOMER_USER.toInt());
-					newOrder = createOrder(dbManager, userID);
-					dbManager.commit();
-				}
-			} finally {
-				dbManager.close();
-			}
+                //server-side data validation
+                paramsValid = validateParams(dbManager, errMessage);
 
-			if (paramsValid) {
-				// proceed Order
-				Workflow wf = new NewScenarioWorkflow(newOrder);
-				wf.proceedOrder();
+                //if data is valid then register new engineer
+                if (paramsValid) {
+                        createUser(dbManager, groupID);
 
-				
-				 // send email to user 
-				 RegistrationSuccessfulEmail notificationEmail = new 
-				                    RegistrationSuccessfulEmail(firstName, "24.04.2014", login, password); 
-				EmailSender emailSender = new EmailSender();
-				emailSender.sendEmail(userID, notificationEmail);
-				 
-				// redirect to congratulation page
-				redirect(request, response, CONGRATULATION_PAGE);
-			} else {
-				request.setAttribute("errMessage", errMessage.toString());
-				redirect(request, response, CUSTOMER_REGISTRATION_PAGE);
-			}
-		}
+                        // commit change in DB
+                        dbManager.commit();
+
+                        errMessage.append("New employee successfully registred! ");
+                }
+
+                // redirect to register page with appropriate message
+                request.setAttribute("errMessage", errMessage.toString());
+                redirect(request, response, ENGINEER_REGISTRATION_PAGE);
+
+        } else {
+
+            // register CUSTOMER_USER
+                try {
+                    paramsValid = validateParams(dbManager, errMessage);
+                    if (paramsValid) {
+
+                        //if data is valid then register new user and create service order
+                        // for specified service location and
+                        userID = createUser(dbManager,UserRole.CUSTOMER_USER.toInt());
+                        newOrder = createOrder(dbManager, userID);
+                        dbManager.commit();
+                    }
+                } finally {
+                    dbManager.close();
+                }
+
+                if (paramsValid) {
+                    // proceed Order
+                    Workflow wf = new NewScenarioWorkflow(newOrder);
+                    wf.proceedOrder();
+
+                     // send email to user
+                     RegistrationSuccessfulEmail notificationEmail =
+                             new RegistrationSuccessfulEmail(firstName,
+                             login, password);
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.sendEmail(userID, notificationEmail);
+
+                    // redirect to congratulation page
+                    redirect(request, response, CONGRATULATION_PAGE);
+                } else {
+                        request.setAttribute("errMessage", errMessage.toString());
+                        redirect(request, response, CUSTOMER_REGISTRATION_PAGE);
+                }
+            }
 
 	}
 	
