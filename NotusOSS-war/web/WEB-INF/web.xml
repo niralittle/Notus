@@ -126,7 +126,7 @@
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
         <servlet-class>nc.notus.ReassigTaskToEngineerServlet</servlet-class>
     </servlet>
-    <servlet-mapping>
+    <servlet><servlet-name>LoggedChecking</servlet-name><servlet-class>nc.notus.LoggedChecking</servlet-class></servlet><servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
     </servlet-mapping>
@@ -232,6 +232,10 @@
     <servlet-mapping>
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
         <url-pattern>/ReassigTaskToEngineerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoggedChecking</servlet-name>
+        <url-pattern>/LoggedChecking</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
