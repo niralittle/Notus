@@ -27,8 +27,7 @@ import nc.notus.entity.Task;
  * @author Alina Vorobiova
  */
 public class ReassigTaskToEngineerServlet extends HttpServlet {
-    private final int OFFSET = 1;
-    private final int NUMBER_OF_RECORDS = 3;
+    private final int RECORDS_PER_PAGE = 5;
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -51,14 +50,15 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
             int roleID = task.getRoleID();
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("roleID", roleID);
-            long countAll = taskDAO.countAll(params);
-            Integer numberOfPages = Math.round(countAll/NUMBER_OF_RECORDS);
+            long countAll = userDAO.countAssignedByRoleID(roleID);
+            Integer numberOfPages = Math.round(countAll/RECORDS_PER_PAGE);
             request.setAttribute("pages", numberOfPages);
             int page = 1;
             if(request.getParameter("page") != null){
                 page = Integer.parseInt(request.getParameter("page"));
             }
-            List<OSSUser> engineers = userDAO.getUsersByRoleID(roleID, page, NUMBER_OF_RECORDS);
+            int offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
+            List<OSSUser> engineers = userDAO.getUsersByRoleID(roleID, (page-1) * RECORDS_PER_PAGE+1, offset);
             request.setAttribute("listOfEngineers", engineers);
             request.setAttribute("taskID", taskID);
             request.getRequestDispatcher("reassignTaskEngineer.jsp").forward(request, response);

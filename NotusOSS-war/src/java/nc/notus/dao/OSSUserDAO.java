@@ -67,7 +67,14 @@ public interface OSSUserDAO extends GenericDAO<OSSUser> {
      * @return
      */
     boolean isBlocked(String login);
-    
+
+    /**
+     * Method returns count of users by specific role
+     * @param roleID - specific role id
+     * @return count of users
+     */
+    public long countAssignedByRoleID(int roleID);
+
     /**
      * Check if user with specified login is already exist in system
      * 

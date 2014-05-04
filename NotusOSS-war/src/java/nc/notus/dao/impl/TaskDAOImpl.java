@@ -11,7 +11,7 @@ import nc.notus.entity.Task;
 
 /**
  * 
- * @author Igor Litvinenko & Vladimir Ermolenko & Panchenko Dmytro
+ * @author Vladimir Ermolenko 
  */
 public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 
@@ -131,8 +131,6 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 
     /**
      * Method returns count of active assigned tasks
-     * @param offset - offset from start position in paging
-     * @param numberOfRecords - quantity of records to fetch
      * @return count of tasks
      */
     @Override
@@ -150,6 +148,4 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	}
         return count;
     }
-
-
 }
