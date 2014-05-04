@@ -36,7 +36,7 @@
 				url = "TasksAssignment?";
 			}
 			for (long i = 1; i <= noOfPages; i++) {
-				if (i == (currPage + 1)) {
+				if (i == (currPage )) {
 		%>
 		<a href="<%=url%>page=<%=i%>" style="font-size: 12pt; font-weight: bold;"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
 	<%

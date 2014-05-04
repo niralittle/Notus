@@ -154,10 +154,10 @@ public class TasksAssignment extends HttpServlet {
 			
 
 			if (!personal) {
-	                tasksEng = taskDAO.getEngTasks(page, offset, user.getRoleID());
+	                tasksEng = taskDAO.getEngTasks((page-1) * RECORDS_PER_PAGE+1, offset, user.getRoleID());
 	            }
 	            else {
-	                tasksEng = taskDAO.getTasksByID(page, offset, user.getId());
+	                tasksEng = taskDAO.getTasksByID((page-1) * RECORDS_PER_PAGE+1, offset, user.getId());
 	            }
             request.setAttribute("tasksEng", tasksEng);
             request.setAttribute("type", personal);
