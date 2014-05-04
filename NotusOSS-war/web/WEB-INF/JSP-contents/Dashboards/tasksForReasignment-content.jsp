@@ -13,7 +13,7 @@
 <%List<Task> tasks = (List) request.getAttribute("listOfTasks");
 Integer numberOfPages = (Integer)request.getAttribute("pages");
 %>
-<form action="Reassign" method="post" id="pagesForm">
+<form action="Reassign" method="get" id="pagesForm">
     <% for(int i=1;i<=numberOfPages;i++){%>
     <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;"><%=i%></a>
     <% }%>

@@ -25,8 +25,9 @@ import nc.notus.entity.Task;
  * @author Alina Vorobiova
  */
 public class TasksForReassignmentServlet extends HttpServlet {
-    private final int OFFSET = 1;
+    //private final int OFFSET = 1;
     private final int NUMBER_OF_RECORDS = 100;
+    private final int RECORDS_PER_PAGE  =10;
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -53,13 +54,14 @@ public class TasksForReassignmentServlet extends HttpServlet {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("taskStatusID", "1");
             long countAll = taskDAO.countAll(params);
-            Integer numberOfPages = Math.round(countAll/NUMBER_OF_RECORDS);
+            int numberOfPages = (int) Math.ceil(countAll * 1.0/ RECORDS_PER_PAGE);
             request.setAttribute("pages", numberOfPages);
             int page = 1;
             if(request.getParameter("page") != null){
                 page = Integer.parseInt(request.getParameter("page"));
             }
-            List<Task> tasks = taskDAO.getAssignedTasks(page, NUMBER_OF_RECORDS);
+            int offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
+            List<Task> tasks = taskDAO.getAssignedTasks((page-1) * RECORDS_PER_PAGE, offset);
             request.setAttribute("listOfTasks", tasks);
             request.getRequestDispatcher("tasksForReasignment.jsp").forward(request, response);
         } finally { 
