@@ -5,12 +5,19 @@
                 <%  if (request.isUserInRole("CUSTOMER_USER")) { %>
 		        <a href="CustomerUser">Go to Cabinet</a>
                             <div class="separator"></div>
-		<%  } else { %>
+		<%  } else if(request.isUserInRole("ADMINISTRATOR")){ %>
+                        <a href="Reassign">Reassign task</a> 
+                            <div class="separator"></div>
+
+                        <a href="admin.jsp">Admin page</a> 
+                            <div class="separator"></div>
+                <%  } else if (request.isUserInRole("CUSTOMER_USER")||
+                        request.isUserInRole("SUPPORT_ENGINEER")||
+                        request.isUserInRole("INSTALLATION_ENGINEER")){%>
+
                         <a href="TasksAssignment">Group Tasks</a>
                             <div class="separator"></div>
                         <a href="TasksAssignment?type=personal">Personal Tasks</a>
-                            <div class="separator"></div>
-                        <a href="admin.jsp">Admin page</a> 
                             <div class="separator"></div>
 		<%  } %>
 
