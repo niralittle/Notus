@@ -11,7 +11,7 @@ import nc.notus.entity.Task;
 
 /**
  * 
- * @author Igor Litvinenko & Vladimir Ermolenko & Panchenko Dmytro
+ * @author Vladimir Ermolenko 
  */
 public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 
@@ -129,5 +129,23 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	        return tasks;
 	    }
 
-
+    /**
+     * Method returns count of active assigned tasks
+     * @return count of tasks
+     */
+    @Override
+    public long countAllAssigned() {
+        long count = 0;
+	String query  = "SELECT COUNT(*) total " +
+	                "FROM task t " +
+	                "JOIN taskstatus ts ON t.taskstatusid = ts.id " +
+	                "WHERE ts.status = 'Active' " +
+	                "AND t.employeeid IS NOT NULL ";
+        Statement statement = dbManager.prepareStatement(query);
+	ResultIterator ri = statement.executeQuery();
+	if (ri.next()){
+            count = ri.getLong("total");
+	}
+        return count;
+    }
 }

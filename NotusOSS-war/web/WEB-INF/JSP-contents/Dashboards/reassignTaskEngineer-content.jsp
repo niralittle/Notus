@@ -15,7 +15,7 @@
 <%List<OSSUser> engineers = (List) request.getAttribute("listOfEngineers");
 Integer numberOfPages = (Integer)request.getAttribute("pages");
 %>
-<form action="ReassigTaskToEngineerServlet" method="post" id="pagesForm">
+<form action="ReassigTaskToEngineerServlet" method="GET" id="pagesForm">
     <% for(int i=1;i<=numberOfPages;i++){%>
     <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;">
     <%=i%>

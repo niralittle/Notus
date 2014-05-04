@@ -319,4 +319,24 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
         }
         return users;
     }
+
+    /**
+     * Method returns count of users by specific role
+     * @param roleID - specific role id
+     * @return count of users
+     */
+    @Override
+    public long countAssignedByRoleID(int roleID) {
+        long count = 0;
+        String query  = "SELECT COUNT(*) total " +
+	                "FROM ossuser u " +
+	                "WHERE u.roleid = ? ";
+        Statement statement = dbManager.prepareStatement(query);
+        statement.setInt(1, roleID);
+	ResultIterator ri = statement.executeQuery();
+	if (ri.next()){
+            count = ri.getLong("total");
+	}
+        return count;
+    }
 }
