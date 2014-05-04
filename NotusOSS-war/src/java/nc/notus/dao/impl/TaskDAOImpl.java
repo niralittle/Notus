@@ -129,5 +129,27 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	        return tasks;
 	    }
 
+    /**
+     * Method returns count of active assigned tasks
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return count of tasks
+     */
+    @Override
+    public long countAllAssigned() {
+        long count = 0;
+	String query  = "SELECT COUNT(*) total " +
+	                "FROM task t " +
+	                "JOIN taskstatus ts ON t.taskstatusid = ts.id " +
+	                "WHERE ts.status = 'Active' " +
+	                "AND t.employeeid IS NOT NULL ";
+        Statement statement = dbManager.prepareStatement(query);
+	ResultIterator ri = statement.executeQuery();
+	if (ri.next()){
+            count = ri.getLong("total");
+	}
+        return count;
+    }
+
 
 }

@@ -53,7 +53,7 @@ public class TasksForReassignmentServlet extends HttpServlet {
             }
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("taskStatusID", "1");
-            long countAll = taskDAO.countAll(params);
+            long countAll = taskDAO.countAllAssigned();
             int numberOfPages = (int) Math.ceil(countAll * 1.0/ RECORDS_PER_PAGE);
             request.setAttribute("pages", numberOfPages);
             int page = 1;
@@ -61,7 +61,7 @@ public class TasksForReassignmentServlet extends HttpServlet {
                 page = Integer.parseInt(request.getParameter("page"));
             }
             int offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
-            List<Task> tasks = taskDAO.getAssignedTasks((page-1) * RECORDS_PER_PAGE, offset);
+            List<Task> tasks = taskDAO.getAssignedTasks((page-1) * RECORDS_PER_PAGE+1, offset);
             request.setAttribute("listOfTasks", tasks);
             request.getRequestDispatcher("tasksForReasignment.jsp").forward(request, response);
         } finally { 

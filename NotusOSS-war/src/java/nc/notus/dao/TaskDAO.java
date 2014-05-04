@@ -35,4 +35,12 @@ public interface TaskDAO extends GenericDAO<Task> {
      */
 	    public List<Task> getAssignedTasks(int offset, int numberOfRecords);
 
+    /**
+     * Method returns count of active assigned tasks
+     * @param offset - offset from start position in paging
+     * @param numberOfRecords - quantity of records to fetch
+     * @return count of tasks
+     */
+    public long countAllAssigned();
+
 }
