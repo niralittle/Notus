@@ -6,7 +6,9 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +34,7 @@ import nc.notus.entity.Port;
 import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
+import nc.notus.states.TaskState;
 import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
 
@@ -42,6 +45,13 @@ import nc.notus.states.WorkflowScenario;
  */
 public class TasksAssignment extends HttpServlet {
    
+	private static final int RECORDS_PER_PAGE = 1;
+	
+	
+	private int offset;
+	private int page;
+	//private boolean personal;
+	
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -61,6 +71,8 @@ public class TasksAssignment extends HttpServlet {
         TaskDAO taskDAO = null;
         int taskID;
         List<Task> tasksEng;
+        
+ 
         boolean personal = false;
         try {
             taskDAO = new TaskDAOImpl(dbManager);
@@ -73,10 +85,6 @@ public class TasksAssignment extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
-//            if (request.getParameter("taskid") != null){
-//                taskID  = Integer.parseInt(request.getParameter("taskid"));
-//                task = taskDAO.find(taskID);
-//            }
 
             if (request.getParameter("type") != null && request.getParameter("type").equals("personal")){
                 personal = true;
@@ -117,9 +125,11 @@ public class TasksAssignment extends HttpServlet {
                         String wfScenario = getTaskScenario(task, dbManager);
                         if (wfScenario.equalsIgnoreCase(WorkflowScenario.NEW.toString())) {
                             request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+                            return;
                         }
                         if (wfScenario.equalsIgnoreCase(WorkflowScenario.DISCONNECT.toString())) {
                             request.getRequestDispatcher("disconnectScenarioForInstEng.jsp").forward(request, response);
+                            return;
                         }
                     }   
                     if (roleID  == UserRole.PROVISION_ENGINEER.toInt()) {
@@ -134,18 +144,36 @@ public class TasksAssignment extends HttpServlet {
                     }
                 }
             }
+            
+            
+            if (request.getParameter("page") == null) {
+				page = 0;
+			} else {
+				page = Integer.parseInt(request.getParameter("page"));
+				
+				if (page == 1) {
+					page = 0;
+				} else {
+					page = page - 1;
+				}
+			}
+			offset = page + RECORDS_PER_PAGE;
+			
+			request.setAttribute("noOfPages", getPageCount(taskDAO, user, personal));
+			request.setAttribute("page", page);
+			
 
-            if (!personal) {
-                tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, user.getRoleID());
-            }
-            else {
-                tasksEng = taskDAO.getTasksByID(startpage, numbOfRecords, user.getId());
-            }
+			 if (!personal) {
+	                tasksEng = taskDAO.getEngTasks(page, offset, user.getRoleID());
+	            }
+	            else {
+	                tasksEng = taskDAO.getTasksByID(page, offset, user.getId());
+	            }
             request.setAttribute("tasksEng", tasksEng);
             request.setAttribute("type", personal);
             request.setAttribute("user", user);
             request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
-            
+            return;
         } finally {
             dbManager.close();
         }
@@ -183,6 +211,23 @@ public class TasksAssignment extends HttpServlet {
 		return null;
 	}
     
+    
+    private long getPageCount(TaskDAO taskDAO, OSSUser user, boolean personal) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+	    if (personal) {
+	    	 params.put("id", user.getId());
+	    } else {
+	    	 params.put("roleid", user.getRoleID());
+	    	 params.put("employeeid", null);
+	    }
+	    params.put("TASKSTATUSID", 1);
+		
+		long quantityOfRecords = taskDAO.countAll(params);
+		long quantityOfPages = (long) Math.ceil(quantityOfRecords * 1.0/ RECORDS_PER_PAGE);
+		return quantityOfPages;
+	}
+	
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
