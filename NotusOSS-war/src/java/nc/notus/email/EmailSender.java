@@ -3,10 +3,8 @@ package nc.notus.email;
 import java.util.List;
 import java.util.Properties;
 import javax.mail.Address;
-import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -30,19 +28,15 @@ import org.apache.log4j.Logger;
  */
 public class EmailSender {
 
-    private final String USERNAME = "notus.noreply@gmail.com";
-    private final String PASSWORD = "notusnotus";
+    private final String USERNAME = "noreply@notus.niralittle.name";
     private static Properties props;
     private static Logger logger = Logger.getLogger(EmailSender.class.getName());
     /*SMTP parameters*/
 
     static {
         props = new Properties();
-        /*Parameters for Gmail (Shoud be changed)*/
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.host", "notus.niralittle.name");
+        props.put("mail.smtp.port", "25");
     }
 
     /**
@@ -115,13 +109,7 @@ public class EmailSender {
             }
 
             /*Authentication to mail service */
-            Session session = Session.getInstance(props, new Authenticator() {
-
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(USERNAME, PASSWORD);
-                }
-            });
+            Session session = Session.getInstance(props);
             /*Send mail*/
             try {
                 Message message = new MimeMessage(session);
