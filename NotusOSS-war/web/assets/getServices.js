@@ -17,6 +17,7 @@ function getServices(){
     }else{
         showErrorMessage("Choose location, please");
     }
+    document.getElementById("selectTable").style.display = "table";
 }
 function getAvailableServices(minID){
     var url = "ServicesServlet?providerLocationID="+minID;

@@ -39,7 +39,7 @@ function createRef(location,i){
 function createTable(location,i){
     var div = document.createElement("div");
     div.setAttribute("id", "table"+i);
-    div.setAttribute("style", "font-size: 120%;margin:0 auto;display:none;height:200px;width:500px;");
+    div.setAttribute("style", "font-size: 120%;margin:0 auto;display:none;height:200px;width:540px;");
     var address = location.getElementsByTagName("address")[0].firstChild.nodeValue;
     address = "Location Address: " + address;
     div.appendChild(document.createTextNode(address));
