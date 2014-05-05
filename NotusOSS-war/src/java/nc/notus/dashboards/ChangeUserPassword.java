@@ -101,8 +101,8 @@ public class ChangeUserPassword extends HttpServlet {
 			userDAO.update(user);
 			dbManager.commit();
 
-			request.setAttribute("succes", "User " + user.getLogin()
-					+ " successfully blocked!");
+			request.setAttribute("success", "User, " + user.getLogin()
+					+ ", successfully blocked!");
 
 			redirect(request, response, CHANGE_PASSWORD_PAGE);
 		} finally {
