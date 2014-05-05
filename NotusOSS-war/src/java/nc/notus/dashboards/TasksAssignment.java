@@ -38,7 +38,6 @@ import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
-import nc.notus.states.OrderStatus;
 import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
 
@@ -74,9 +73,8 @@ public class TasksAssignment extends HttpServlet {
         List<Task> tasksEng;
         Cable cable = null;
         Port port = null;
-        
- 
         boolean personal = false;
+
         try {
             taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
@@ -98,7 +96,7 @@ public class TasksAssignment extends HttpServlet {
             }
 
             //Action "Assign" tasks from group to personal or choose task from personal to execute it
-            if (request.getParameter("action") != null && request.getParameter("action").equals("Submit")){
+            if (request.getParameter("action") != null && "Submit".equals(request.getParameter("action"))){
                 if (request.getParameter("taskid") != null){
                     taskID  = Integer.parseInt(request.getParameter("taskid"));
                     task = taskDAO.find(taskID);
@@ -107,8 +105,7 @@ public class TasksAssignment extends HttpServlet {
                     task.setEmployeeID(user.getId());
                     taskDAO.update(task);
                     dbManager.commit();
-                }
-                else {
+                } else {
                 	int roleID = user.getRoleID();
                 	
                     request.setAttribute("taskid", task.getId());
@@ -163,22 +160,20 @@ public class TasksAssignment extends HttpServlet {
             
             
             if (request.getParameter("page") == null) {
-				page = 1;
-			} else {
-				page = Integer.parseInt(request.getParameter("page"));
-			}
-			offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
-			
-			request.setAttribute("noOfPages", getPageCount(taskDAO, user, personal));
-			request.setAttribute("page", page);
-			
+                page = 1;
+            } else {
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+            offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
 
-			if (!personal) {
-	                tasksEng = taskDAO.getEngTasks((page-1) * RECORDS_PER_PAGE+1, offset, user.getRoleID());
-	            }
-	            else {
-	                tasksEng = taskDAO.getTasksByID((page-1) * RECORDS_PER_PAGE+1, offset, user.getId());
-	            }
+            request.setAttribute("noOfPages", getPageCount(taskDAO, user, personal));
+            request.setAttribute("page", page);
+			
+            if (!personal) {
+                tasksEng = taskDAO.getEngTasks((page-1) * RECORDS_PER_PAGE+1, offset, user.getRoleID());
+            } else {
+                tasksEng = taskDAO.getTasksByID((page-1) * RECORDS_PER_PAGE+1, offset, user.getId());
+            }
             request.setAttribute("tasksEng", tasksEng);
             request.setAttribute("type", personal);
             request.setAttribute("user", user);

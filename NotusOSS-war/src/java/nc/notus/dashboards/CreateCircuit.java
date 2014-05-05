@@ -51,20 +51,17 @@ public class CreateCircuit extends HttpServlet {
         try {
             if (request.getParameter("taskid") != null){
                 taskID  = Integer.parseInt(request.getParameter("taskid"));
-            }
-            else {
+            } else {
                 taskID = 0;
             }
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
-            }
-            else {
+            } else {
                 soID = 0;
             }
             if (request.getParameter("circuit") != null){
                 circuitConf  = request.getParameter("circuit");
-            }
-            else {
+            } else {
                 circuitConf = "";
             }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
@@ -72,12 +69,12 @@ public class CreateCircuit extends HttpServlet {
             NewScenarioWorkflow nwf = new NewScenarioWorkflow(so);
 
             //Action "Create Circuit"
-            if (request.getParameter("action").equals("Create Circuit")){
+            if (request.getParameter("action") != null && "Create Circuit".equals(request.getParameter("action"))){
                 nwf.createCircuit(taskID, circuitConf);
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-                int startpage = 1;
+                int startPage = 1;
                 int numbOfRecords = 10;
-                List<Task> tasksEng = taskDAO.getEngTasks(startpage, numbOfRecords, UserRole.PROVISION_ENGINEER.toInt());
+                List<Task> tasksEng = taskDAO.getEngTasks(startPage, numbOfRecords, UserRole.PROVISION_ENGINEER.toInt());
                 redirect(request, response, PERSONAL_TASKS_PAGE);
             }
             request.setAttribute("taskid", taskID);
