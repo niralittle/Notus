@@ -1,6 +1,9 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,9 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
+import nc.notus.states.UserState;
 
 /**
  * Change password for specified user.
@@ -71,6 +76,7 @@ public class ChangeUserPassword extends HttpServlet {
 			IOException {
 		RequestDispatcher view = request.getRequestDispatcher(page);
 		view.forward(request, response);
+		return;
 	}
 
 	@Override
@@ -79,6 +85,31 @@ public class ChangeUserPassword extends HttpServlet {
 		processRequest(request, response);
 	}
 
+	
+	private void blockUser(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+
+		int userID = Integer.parseInt(request.getParameter("userId"));
+		DBManager dbManager = null;
+		try {
+			dbManager = new DBManager();
+
+			OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+			OSSUser user = userDAO.find(userID);
+
+			user.setBlocked(UserState.BLOCKED.toInt());
+			userDAO.update(user);
+			dbManager.commit();
+
+			request.setAttribute("succes", "User " + user.getLogin()
+					+ " successfully blocked!");
+
+			redirect(request, response, CHANGE_PASSWORD_PAGE);
+		} finally {
+			dbManager.close();
+		}
+	}
+	
 	/**
 	 * Handles the HTTP <code>POST</code> method.
 	 * 
@@ -94,7 +125,11 @@ public class ChangeUserPassword extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+		if(request.isUserInRole("ADMINISTRATOR")) {
+			blockUser(request, response);
+		} else {
+			processRequest(request, response);
+		}
 	}
 
 	/**
