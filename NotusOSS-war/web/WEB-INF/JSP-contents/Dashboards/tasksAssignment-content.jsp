@@ -22,13 +22,11 @@
         </h2>
         
         
-        <%if(request.isUserInRole("SUPPORT_ENGINEER")) { %>
-        	<br><a href="passwordChanging.jsp">View user information</a>
-<%
-	} 
+        <%
 		if (request.getAttribute("noOfPages") != null && request.getAttribute("page") != null) {
 			String url;
 			long noOfPages = (Long) request.getAttribute("noOfPages");
+			if(noOfPages > 1) {
 			int currPage = (Integer) request.getAttribute("page");
 			if(personal) {
 				url = "TasksAssignment?type=personal&";
@@ -45,6 +43,7 @@
 		<a href="<%=url%>page=<%=i%>"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
 	<%
 		}
+					}
 					}
 					}
 					 %>
