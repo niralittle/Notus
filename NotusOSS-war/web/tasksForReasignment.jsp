@@ -4,7 +4,7 @@
     Author     : Alina Vorobiova
 --%>
 
-<jsp:include page="/WEB-INF/template.jsp">
+<jsp:include page="/WEB-INF/dashboardsTemplate.jsp">
 	<jsp:param name="content" value="/Dashboards/tasksForReasignment-content"/>
 	<jsp:param name="title" value="Reassign Tasks"/>
 </jsp:include>
