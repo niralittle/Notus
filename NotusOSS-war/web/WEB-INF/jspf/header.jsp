@@ -40,9 +40,11 @@
             </li>
             <li><a href="selectLocation.jsp">SELECT SERVICE</a></li>
             <li><a href="serviceCatalog.jsp">OUR SERVICES</a> </li>
-            <li><a href="#">OUR TEAM</a></li>
-            <li><a href="#">PROMOTIONS</a></li>
-            <li><a href="#">SOCIAL</a></li>
+            <!-- Don't display this links 
+	            <li><a href="#">OUR TEAM</a></li>
+	            <li><a href="#">PROMOTIONS</a></li>
+	            <li><a href="#">SOCIAL</a></li>
+            -->
         </ul>
     </div>
 </div>
