@@ -24,6 +24,7 @@ function initialize() {
     },500);
     google.maps.event.addListener(map, 'click', function(event) {
         addMarker(event.latLng);
+         document.getElementById("selectTable").style.display = "none";
     });
 }
 //makes request and implements the ajax

@@ -5,7 +5,7 @@
 --%>
 
 
-<p>Please enter your username and password to access the system.</p>
+<h2>Please enter your username and password to access the system.</h2>
 
 
 <form method="POST" action="Auth">
@@ -19,8 +19,8 @@
             <td><input required="required" type="password" name="j_password"></td>
         </tr>
         <tr>
-            <td></td>
-            <td><input type="submit" value="Login"></td>
+            <td></td> 
+            <td><input type="submit" value="Login" id="btn-style"></td>
         </tr>
     </table>
     <input id="serviceLocationID" name="serviceLocationID" type='hidden' value ="<%=request.getParameter("serviceLocationID") == null ? "" : request.getParameter("serviceLocationID")%>">

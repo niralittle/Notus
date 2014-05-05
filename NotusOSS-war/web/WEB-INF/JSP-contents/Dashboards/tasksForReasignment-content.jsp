@@ -10,15 +10,7 @@
 <%@page import="java.util.List"%>
 <%@page import="nc.notus.entity.Task"%>
 
-<%List<Task> tasks = (List) request.getAttribute("listOfTasks");
-Integer numberOfPages = (Integer)request.getAttribute("pages");
-%>
-<form action="Reassign" method="get" id="pagesForm">
-    <% for(int i=1;i<=numberOfPages;i++){%>
-    <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;"><%=i%></a>
-    <% }%>
-    <input type="hidden" name="page" id="page">
-</form>
+
 <form action="ReassigTaskToEngineerServlet" method="post" id="sendTask">
 <table>
     <tr>
@@ -27,6 +19,7 @@ Integer numberOfPages = (Integer)request.getAttribute("pages");
         <th>Name</th>
         <th>Employee ID</th>
         <th>Role ID</th>
+        <th>Action</th>
     </tr>
 
 <%
@@ -40,11 +33,21 @@ if(tasks != null){
     <td><%=task.getName()%></td>
     <td><%=task.getEmployeeID()%></td>
     <td><%=task.getRoleID()%></td>
-    <td><input type="submit" value="Reassign" onclick="document.getElementById('taskID').setAttribute('value', <%=task.getId()%>)"></td>
-    <td id="send"></td>
+    <td><input type="submit" value="Reassign" id="btn-style" onclick="document.getElementById('taskID').setAttribute('value', <%=task.getId()%>)"></td>
+   <%-- <td id="send"></td>  --%>
 </tr>
 <%  }
 }%>
 </table>
 <input type="hidden" name="taskID" id="taskID">
+</form>
+
+<%List<Task> tasks = (List) request.getAttribute("listOfTasks");
+Integer numberOfPages = (Integer)request.getAttribute("pages");
+%>
+<form action="Reassign" method="get" id="pagesForm">
+    <% for(int i=1;i<=numberOfPages;i++){%>
+    <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;"><%=i%></a>
+    <% }%>
+    <input type="hidden" name="page" id="page">
 </form>
