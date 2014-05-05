@@ -8,8 +8,8 @@ package nc.notus.states;
  */
 public enum WorkflowScenario {
     NEW("New",1),
-    MODIFY("Modify",2),
-    DISCONNECT("Disconnect",3);
+    MODIFY("Modify",3),
+    DISCONNECT("Disconnect",2);
 
     private final String scenario;
     private final int scenarioId;
