@@ -15,16 +15,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.servlet.http.HttpSession;
 import nc.notus.dao.CableDAO;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.PortDAO;
 import nc.notus.dao.ScenarioDAO;
+import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ScenarioDAOImpl;
+import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
@@ -32,8 +35,10 @@ import nc.notus.entity.Cable;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Port;
 import nc.notus.entity.Scenario;
+import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
+import nc.notus.states.OrderStatus;
 import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
 
@@ -49,7 +54,7 @@ public class TasksAssignment extends HttpServlet {
 	
 	private int offset;
 	private int page;
-	
+	private HttpSession session;
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -67,6 +72,8 @@ public class TasksAssignment extends HttpServlet {
         TaskDAO taskDAO = null;
         int taskID;
         List<Task> tasksEng;
+        Cable cable = null;
+        Port port = null;
         
  
         boolean personal = false;
@@ -110,15 +117,28 @@ public class TasksAssignment extends HttpServlet {
                         ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
                         ServiceOrder so = soDAO.find(task.getServiceOrderID());
                         PortDAO portDAO = new PortDAOImpl(dbManager);
-                        Port port = portDAO.getFreePort();
+                        ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
                         CableDAO cableDAO = new CableDAOImpl(dbManager);
-                        Cable cable = cableDAO.getFreeCable();
+                        if (so.getScenarioID() == WorkflowScenario.NEW.toInt()){
+                            port = portDAO.getFreePort();
+                            cable = cableDAO.getFreeCable();
+                        }
+                        if (so.getScenarioID() == WorkflowScenario.DISCONNECT.toInt()){
+                            ServiceInstance si = siDAO.find(so.getServiceInstanceID());
+                            port = portDAO.find(si.getPortID());
+                            cable = cableDAO.find(port.getCableID());
+                        }
                         request.setAttribute("port", port);
                         request.setAttribute("cable", cable);
                         request.setAttribute("taskid", task.getId());
                         request.setAttribute("soid", task.getServiceOrderID());
                         request.setAttribute("userid", user.getId());
                         String wfScenario = getTaskScenario(task, dbManager);
+                        session = request.getSession();
+                        session.setAttribute("taskid", task.getId());
+                        session.setAttribute("port", port);
+                        session.setAttribute("cable", cable);
+                        session.setAttribute("userid", user.getId());
                         if (wfScenario.equalsIgnoreCase(WorkflowScenario.NEW.toString())) {
                             request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
                             return;

@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
@@ -27,7 +28,8 @@ import nc.notus.workflow.DisconnectScenarioWorkflow;
  * @author Vladimir Ermolenko
  */
 public class DisconnectScenarioForInstEng extends HttpServlet {
-   
+
+    private HttpSession session;
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -59,6 +61,20 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
             }
             if (request.getParameter("port") != null){
                 port  = (Port) (request.getAttribute("port"));
+            }
+
+            session = request.getSession();
+            if (session.getAttribute("userid") != null) {
+                userID = (Integer) session.getAttribute("userid");
+            }
+            if (session.getAttribute("taskid") != null) {
+                taskID = (Integer) session.getAttribute("taskid");
+            }
+            if (session.getAttribute("port") != null) {
+                port = (Port) session.getAttribute("port");
+            }
+            if (session.getAttribute("cable") != null) {
+                cable = (Cable) session.getAttribute("cable");
             }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);

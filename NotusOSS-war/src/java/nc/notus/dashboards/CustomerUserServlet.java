@@ -51,13 +51,13 @@ public class CustomerUserServlet extends HttpServlet {
     
     private DBManager dbManager = null;
 
-    int catalogID;
+    private int catalogID;
 
-    ServiceOrder newOrder;
+    private ServiceOrder newOrder;
 
-    String serviceLocation;
+    private String serviceLocation;
 
-    HttpSession session;
+    private HttpSession session;
 
     /**
      * Puts data into request and forwards it to user.jsp
