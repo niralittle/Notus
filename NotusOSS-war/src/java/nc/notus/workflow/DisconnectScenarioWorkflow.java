@@ -1,9 +1,11 @@
 package nc.notus.workflow;
 
 import nc.notus.dao.CableDAO;
+import nc.notus.dao.CircuitDAO;
 import nc.notus.dao.PortDAO;
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.impl.CableDAOImpl;
+import nc.notus.dao.impl.CircuitDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dbmanager.DBManager;
