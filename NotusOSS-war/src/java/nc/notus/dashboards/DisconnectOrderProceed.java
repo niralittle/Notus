@@ -34,6 +34,8 @@ public class DisconnectOrderProceed extends HttpServlet {
 		
 		//get order
 		ServiceOrder serviceOrder = getServiceOrder(serviceInstanceId);
+			serviceOrder.setScenarioID(WorkflowScenario.DISCONNECT.toInt());
+			serviceOrder.setServiceOrderStatusID(OrderStatus.ENTERING.toInt());
 		DisconnectScenarioWorkflow disconnectWF = null;
 		
 		if (serviceOrder != null) {

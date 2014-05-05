@@ -159,7 +159,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     	query.append("SELECT so.id, so.serviceOrderDate, so.scenarioID, ");
     	query.append("so.userId, so.serviceCatalogId, so.serviceLocation, ");
     	query.append("so.serviceOrderStatusId ");
-    	query.append("FROM SERVICEORDER so");
+    	query.append("FROM SERVICEORDER so ");
     	query.append("WHERE so.serviceInstanceId = ?");
     	
         Statement statement = dbManager.prepareStatement(query.toString());
