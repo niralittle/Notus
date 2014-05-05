@@ -87,15 +87,16 @@ public class CustomerUserServlet extends HttpServlet {
             if (session.getAttribute("serviceLocationID") != null) {
                 serviceLocation = (String) session.getAttribute("serviceLocationID");
                 serviceLocation = java.net.URLDecoder.decode(serviceLocation,"UTF-8");
-            }
-            
-
-            // create new Service Order
+                // create new Service Order
             newOrder = createOrder(dbManager, userID);
             dbManager.commit();
             // proceed Service Order
             Workflow wf = new NewScenarioWorkflow(newOrder);
             wf.proceedOrder();
+            }
+            
+
+            
 
 
             request.setAttribute("activeInstances",
