@@ -1,7 +1,7 @@
 <script type="text/javascript" src="assets/dashboard.js"></script>
 
 
-
+<div id="content">
     <ul class="tabs">
         <li><a href="javascript:tabSwitch('tab_1', 'dash-left');" id="tab_1" class="active">Create Employee Account</a></li>
         <li><a href="javascript:tabSwitch('tab_2', 'dash-center');" id="tab_2">Reassign task</a></li>
@@ -52,14 +52,10 @@
                     <div id="lnameMsg"></div>
                 </td>
             </tr>
-            <tr>
-                <td colspan="2">
-                    <input id="dash-buttons" type="submit" value="Register" />
-                </td>
-            </tr>
         </table>
-            
-
+        <div id="dash-buttons">
+            <input type="submit" value="Register" />
+        </div>
 
 
         <%--     </form> --%>
@@ -100,7 +96,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
+                <td>
                     <input type="submit" value="Reassign" name="Reassign" />
                 </td>
             </tr>
@@ -127,7 +123,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
+                <td>
                     <input type="submit" value="Block" name="Block" />
                 </td>
             </tr>
@@ -136,7 +132,7 @@
     <div id="dash-report" class="content">
         <div id="container-header"><span>Reports</span> </div>
         <script type="text/javascript" src="assets/date.js"></script>
-        <form method="post" id="admin-report" action="getReport" target="_blank" onsubmit="return continueOrNot()">
+        <form method="post" action="getReport" target="_blank" onsubmit="return continueOrNot()">
             <input type="radio" name="report" value="0" onselect="disableDate()" checked/>
             Most profitable router<br>
             <input type="radio" name="report" value="3" onselect="disableDate()"/>
@@ -199,3 +195,4 @@
             <div id="tip" style="display:none"></div>
         </form>
     </div>
+</div>

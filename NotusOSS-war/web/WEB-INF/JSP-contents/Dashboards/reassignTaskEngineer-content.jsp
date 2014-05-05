@@ -31,7 +31,6 @@ Integer numberOfPages = (Integer)request.getAttribute("pages");
         <th>Employee ID</th>
         <th>First Name</th>
         <th>Last Name</th>
-        <th>Action</th>
     </tr>
 
 <%if (engineers != null){
@@ -42,7 +41,7 @@ Integer numberOfPages = (Integer)request.getAttribute("pages");
     <td><%=engineer.getId()%></td>
     <td><%=engineer.getFirstName()%></td>
     <td><%=engineer.getLastName()%></td>
-    <td><input id="btn-style" type="submit" value="Assign"
+    <td><input type="submit" value="Assign"
                onclick="document.getElementById('engineerID').setAttribute('value', <%=engineer.getId()%>)"></td>
 </tr>
 <%    }

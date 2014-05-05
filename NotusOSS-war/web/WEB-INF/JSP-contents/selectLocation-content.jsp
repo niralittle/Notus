@@ -30,7 +30,7 @@
              <input id="see" type="button" value="Show available services for this location" onclick="getServices()"/>
              <img id="loader" src="assets/ajax-loader.gif" alt="Loading..." style="display:none;"/>
              <div id="errorPanel" style="padding-top:20px;"></div>
-             <table id="selectTable"style="display: none;">
+             <table style="padding-top:20px;">
                 <thead><tr><th id="header"></th></tr></thead>
                 <tbody id ="services"><tr><td></td></tr></tbody>
             </table>
