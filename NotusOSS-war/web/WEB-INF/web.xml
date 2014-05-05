@@ -129,7 +129,7 @@
         </servlet>
     <servlet>
         <servlet-name>DisconnectOrderProceed</servlet-name>
-        <servlet-class>DisconnectOrderProceed.java</servlet-class>
+        <servlet-class>nc.notus.dashboards.DisconnectOrderProceed</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RedirectingServlet</servlet-name>
