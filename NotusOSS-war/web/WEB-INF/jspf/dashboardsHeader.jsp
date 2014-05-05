@@ -11,7 +11,7 @@
 						<a href="registerEngineer.jsp">Register new engineer</a>
 						<div class="separator"></div>
 				
-						<a href="blockUser.jsp">Block user</a>
+						<a href="passwordChanging.jsp">Block user</a>
 						<div class="separator"></div>
 						
 						<a href="adminDashboard.jsp">Reports</a>
@@ -26,7 +26,13 @@
                             <div class="separator"></div>
                         <a href="TasksAssignment?type=personal">Personal Tasks</a>
                             <div class="separator"></div>
-		<%  } %>
+                 <%  if (request.isUserInRole("SUPPORT_ENGINEER")) { %>
+			<a href="passwordChanging.jsp">View user information</a>
+			<div class="separator"></div>
+		
+		<%  }
+		
+			}%>
 
                 <%  if (request.getUserPrincipal() == null) { %>
 		        <a href="login.jsp">Login</a>
