@@ -148,7 +148,7 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 					wf = new DisconnectScenarioWorkflow(order);
 					wf.removeCurcuitFromSI(taskID);
 
-					request.setAttribute("success","Bill successfully sent!");
+					request.setAttribute("success","Circuit successfully deleted!");
 					request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
 				}
 			} finally {
