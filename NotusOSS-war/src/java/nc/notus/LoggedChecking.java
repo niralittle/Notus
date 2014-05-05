@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceOrderDAO;
@@ -60,22 +61,27 @@ public class LoggedChecking extends HttpServlet {
             taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 
+            
+            if (request.getParameter("serviceCatalogID") != null) {
+                catalogID = Integer.parseInt(request.getParameter("serviceCatalogID"));
+            }
+            if (request.getParameter("serviceLocationID") != null) {
+                serviceLocation = request.getParameter("serviceLocationID");
+                serviceLocation = java.net.URLDecoder.decode(serviceLocation,"UTF-8");
+            }
+            
             // if user already logged in system
             if (request.getUserPrincipal() != null) {
                 login = request.getUserPrincipal().getName();
             }
             else {
                 //if user not logged but registered user
+                HttpSession session = request.getSession();
+                session.setAttribute("serviceCatalogID", catalogID);
+                session.setAttribute("serviceLocationID", serviceLocation);
                 response.sendRedirect("CustomerUser");
                 return;
             }
-            if (request.getParameter("serviceCatalogID") != null) {
-                catalogID = Integer.parseInt(request.getParameter("serviceCatalogID"));
-            }
-            if (request.getParameter("serviceLocationID") != null) {
-                serviceLocation = request.getParameter("serviceLocationID");
-            }
-            serviceLocation = java.net.URLDecoder.decode(serviceLocation,"UTF-8");
 
             if (userDAO.getUserByLogin(login) != null){
                 user = userDAO.getUserByLogin(login);
@@ -96,6 +102,12 @@ public class LoggedChecking extends HttpServlet {
         }
     }
 
+    /**
+     * Create new Service Order with status ENTERING
+     * @param dbManager
+     * @param userID
+     * @return so  - new Service Order
+     */
     private ServiceOrder createOrder(DBManager dbManager, int userID) {
 
 		ServiceOrderStatusDAO statusDAO = new ServiceOrderStatusDAOImpl(dbManager);

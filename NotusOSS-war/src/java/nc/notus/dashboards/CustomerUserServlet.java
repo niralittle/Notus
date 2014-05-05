@@ -1,7 +1,9 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +19,13 @@ import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dao.ServiceOrderDAO;
+import nc.notus.dao.ServiceOrderStatusDAO;
 import nc.notus.dao.ServiceTypeDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
+import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.OSSUser;
@@ -30,6 +34,9 @@ import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.ServiceType;
 import nc.notus.states.OrderStatus;
+import nc.notus.states.WorkflowScenario;
+import nc.notus.workflow.NewScenarioWorkflow;
+import nc.notus.workflow.Workflow;
 
 /**
  * Servlet prepares data to display on customer user dashboard.
@@ -43,6 +50,14 @@ public class CustomerUserServlet extends HttpServlet {
     private static final String USER_INFO_PAGE = "userSOandSI.jsp";
     
     private DBManager dbManager = null;
+
+    int catalogID;
+
+    ServiceOrder newOrder;
+
+    String serviceLocation;
+
+    HttpSession session;
 
     /**
      * Puts data into request and forwards it to user.jsp
@@ -63,7 +78,26 @@ public class CustomerUserServlet extends HttpServlet {
         dbManager = new DBManager();
         try {
             int userID = getUserID(request);
+
+            session = request.getSession();
+            //if need to create new SO
+            if (session.getAttribute("serviceCatalogID") != null) {
+                catalogID = (Integer) session.getAttribute("serviceCatalogID");
+            }
+            if (session.getAttribute("serviceLocationID") != null) {
+                serviceLocation = (String) session.getAttribute("serviceLocationID");
+                serviceLocation = java.net.URLDecoder.decode(serviceLocation,"UTF-8");
+            }
             
+
+            // create new Service Order
+            newOrder = createOrder(dbManager, userID);
+            dbManager.commit();
+            // proceed Service Order
+            Workflow wf = new NewScenarioWorkflow(newOrder);
+            wf.proceedOrder();
+
+
             request.setAttribute("activeInstances",
                     getActiveInstancesList(userID, startpage, numbOfRecords));
             request.setAttribute("processingOrders",
@@ -118,7 +152,7 @@ public class CustomerUserServlet extends HttpServlet {
 			int id = Integer.parseInt(request.getParameter("userID"));
 			return id;
 		} else {
-			HttpSession session = request.getSession();
+			session = request.getSession();
 			if (session.getAttribute("userID") == null) {
 				OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 				String login = request.getUserPrincipal().getName();
@@ -129,6 +163,37 @@ public class CustomerUserServlet extends HttpServlet {
 			return (Integer) session.getAttribute("userID");
 		}
     }
+    /**
+     * Create new Service Order with status ENTERING
+     * @param dbManager
+     * @param userID
+     * @return so  - new Service Order
+     */
+    private ServiceOrder createOrder(DBManager dbManager, int userID) {
+
+		ServiceOrderStatusDAO statusDAO = new ServiceOrderStatusDAOImpl(dbManager);
+		ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
+		ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
+
+		// create new order with status ENTERING
+		ServiceOrder so = new ServiceOrder();
+		int orderStatusID = statusDAO.getServiceOrderStatusID(OrderStatus.ENTERING);
+			so.setServiceOrderStatusID(orderStatusID);
+			so.setScenarioID(scenarioDAO.getScenarioID(WorkflowScenario.NEW));
+			so.setServiceCatalogID(catalogID);
+			so.setServiceInstanceID(null);
+			so.setServiceLocation(serviceLocation);
+			so.setUserID(userID);
+
+		Calendar cal = java.util.Calendar.getInstance();
+		Date date = new Date(cal.getTimeInMillis());
+			so.setServiceOrderDate(date);
+
+		int orderID = (Integer) orderDAO.add(so);
+		so.setId(orderID);
+		return so;
+	}
+
 
     /**
      * Getting active instances data to display on customer user dashboard
