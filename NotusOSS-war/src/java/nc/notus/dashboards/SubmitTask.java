@@ -91,6 +91,14 @@ public class SubmitTask extends HttpServlet {
 
             //Action "Connect Cable to Port" and redirect to personal tasks page
             if (request.getParameter("action").equals("Connect Cable to Port")){
+                if (cable == null){
+                    nwf.createCable(taskID, "UTP Cable");
+                    cable = cableDAO.getFreeCable();
+                }
+                if (port == null){
+                nwf.createRouter(taskID, portQuantity);
+                port = portDAO.getFreePort();
+                }
                 nwf.plugCableToPort(taskID, cable.getId(), port.getId());
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int startpage = 1;
