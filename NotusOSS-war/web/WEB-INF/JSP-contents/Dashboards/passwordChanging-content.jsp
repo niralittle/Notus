@@ -3,10 +3,14 @@
 <script>
 	var show;
 	function hidetxt(type) {
+		//clean all fields if chosen other criteria to searching
+		document.getElementById("get_users").reset();
+		
 		param = document.getElementById(type);
 		if (param.style.display == "none") {
-			if (show)
+			if (show) {
 				show.style.display = "none";
+			}
 			param.style.display = "block";
 			show = param;
 		} else
@@ -18,9 +22,11 @@
 	String login = request.getParameter("login") == null ? "" : request.getParameter("login");
 	String lastName = request.getParameter("lastName") == null ? "" : request.getParameter("lastName");
 	String email = request.getParameter("email") == null ? "" : request.getParameter("email");
+ 	boolean isAdmin = request.isUserInRole("ADMINISTRATOR");
  %>
 
 <h3><%=request.getAttribute("errMessage") == null ? "" : request.getAttribute("errMessage")%></h3>
+<h3><%=request.getAttribute("success") == null ? "" : request.getAttribute("success")%></h3>
 
 <form id="get_users" method="get" action="GetUsers">
 	<div>
@@ -29,7 +35,7 @@
 			<table>
 				<tr>
 					<td>Last Name:</td>
-					<td><input type="text" name="lastName" value="" /></td>
+					<td><input type="text" id="lastName" name="lastName" value="" /></td>
 				</tr>
 			</table>
 		</div>
@@ -40,7 +46,7 @@
 			<table>
 				<tr>
 					<td>Login:</td>
-					<td><input type="text" name="login" value="" /></td>
+					<td><input type="text" id="login" name="login" value="" /></td>
 				</tr>
 			</table>
 		</div>
@@ -51,7 +57,7 @@
 			<table>
 				<tr>
 			<td>Email:</td>
-			<td><input type="text" name="email" value="" />
+			<td><input type="text" id="email" name="email" value="" />
 			<td>
 		</tr>
 			</table>
@@ -98,10 +104,13 @@
 					}
 				%>
 			</td>
-
+			<% if (!isAdmin){ %>
 			<td><input type="text" name="newPassword" value="" /></td>
 			<td><input type="submit" value="Change password" /></td>
 			<td><a href="CustomerUser?userID=<%=user.getId()%>" target="_blank">View information about SO and SI</a></td>
+			<% } else { %>
+				<td><input type="submit" value="Block user" /></td>
+			<% } %>
 			<td><input type="hidden" value="<%=user.getId()%>" name="userId" /></td>
 		</tr>
 
@@ -110,6 +119,7 @@
 		}
 	if (request.getAttribute("noOfPages") != null && request.getAttribute("page") != null) {
 			long noOfPages = (Long) request.getAttribute("noOfPages");
+			if(noOfPages > 1) {
 			int currPage = (Integer) request.getAttribute("page");
 
 			for (long i = 1; i <= noOfPages; i++) {
@@ -126,8 +136,7 @@
 	<%
 		}
 					}
-				} else {
-					out.print("something bad");
+				} 
 				}
 	%>
 </table>
