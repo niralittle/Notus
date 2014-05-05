@@ -29,10 +29,10 @@
 <h3><%=request.getAttribute("success") == null ? "" : request.getAttribute("success")%></h3>
 
 <form id="get_users" method="get" action="GetUsers">
-	<div>
-		<a onclick="hidetxt('div1'); return false;" href="#" rel="nofollow">Search by Last Name</a>
+	<div id="passChange">
+		<a onclick="hidetxt('div1'); return false;" href="#" rel="nofollow">Search by Last Name:</a>
 		<div style="display: none;" id="div1">
-			<table>
+                    <table id="table" style="margin:0">
 				<tr>
 					<td>Last Name:</td>
 					<td><input type="text" id="lastName" name="lastName" value="" /></td>
@@ -40,10 +40,10 @@
 			</table>
 		</div>
 	</div>
-	<div>
-		<a onclick="hidetxt('div2'); return false;" href="#" rel="nofollow">Search by login</a>
+	<div id="passChange">
+		<a onclick="hidetxt('div2'); return false;" href="#" rel="nofollow">Search by login:</a>
 		<div style="display: none;" id="div2">
-			<table>
+			<table id="table" style="margin:0">
 				<tr>
 					<td>Login:</td>
 					<td><input type="text" id="login" name="login" value="" /></td>
@@ -51,14 +51,14 @@
 			</table>
 		</div>
 	</div>
-	<div>
-		<a onclick="hidetxt('div3'); return false;" href="#" rel="nofollow">Search by email</a>
+	<div id="passChange">
+		<a onclick="hidetxt('div3'); return false;" href="#" rel="nofollow">Search by email:</a>
 		<div style="display: none;" id="div3">
-			<table>
+			<table id="table" style="margin:0">
 				<tr>
 			<td>Email:</td>
 			<td><input type="text" id="email" name="email" value="" />
-			<td>
+			
 		</tr>
 			</table>
 		</div>
@@ -77,14 +77,14 @@
 %>
 
 
-<table  border="1">
+<table  border="1" id="table">
 	<tr>
-		<td>LOGIN</td>
-		<td>EMAIL</td>
-		<td>FIRST NAME</td>
-		<td>LAST NAME</td>
-		<td>STATUS</td>
-		<td>NEW PASSWORD</td>
+		<th>LOGIN</th>
+		<th>EMAIL</th>
+		<th>FIRST NAME</th>
+		<th>LAST NAME</th>
+		<th>STATUS</th>
+		<th>NEW PASSWORD</th>
 	</tr>
 	<%
 		for (OSSUser user : users) {
@@ -111,7 +111,7 @@
 			<% } else { %>
 				<td><input type="submit" value="Block user" /></td>
 			<% } %>
-			<td><input type="hidden" value="<%=user.getId()%>" name="userId" /></td>
+			<%--<td><input type="hidden" value="<%=user.getId()%>" name="userId" /></td> --%>
 		</tr>
 
 	</form>
