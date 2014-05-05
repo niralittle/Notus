@@ -4,7 +4,7 @@
     Author     : Vladimir Ermolenko
 --%>
 
-<jsp:include page="/WEB-INF/template.jsp">
+<jsp:include page="/WEB-INF/dashboardsTemplate.jsp">
 	<jsp:param name="content" value="/Dashboards/disconnectScenarioForInstEng-content"/>
 	<jsp:param name="title" value="Installation Engineer page"/>
 </jsp:include>
