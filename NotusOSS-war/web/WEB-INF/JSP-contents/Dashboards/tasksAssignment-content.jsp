@@ -50,7 +50,7 @@
         
         
         
-        <table border="1" id="tablename1">
+        <table border="1" id="table">
             <tbody>
                 <tr>
                     <td>
@@ -83,7 +83,7 @@
                             <% if(personal) { %>
                             <input type="hidden" name="type" value="personal"/>
                             <% } %>
-                            <input type="submit" name="action" value="Submit" />
+                            <input type="submit" name="action" id="button" value="Submit" />
                         </td>
                     </tr>
                     </form>
