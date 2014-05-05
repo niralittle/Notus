@@ -49,7 +49,7 @@ public class RegistrationServlet extends HttpServlet {
     private static final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
 
     private static final String CUSTOMER_REGISTRATION_PAGE = "registration.jsp";
-    private static final String ENGINEER_REGISTRATION_PAGE = "registrateEngineer.jsp";
+    private static final String ENGINEER_REGISTRATION_PAGE = "registerEngineer.jsp";
     private static final String CONGRATULATION_PAGE = "orderRecieved.jsp";
 
     private String login;
@@ -62,6 +62,7 @@ public class RegistrationServlet extends HttpServlet {
     private int groupID;
     private int catalogID;
     private String serviceLocation;
+    private boolean isAdmin;
 
     protected void processRequest(HttpServletRequest request,
                     HttpServletResponse response)
@@ -72,19 +73,12 @@ public class RegistrationServlet extends HttpServlet {
         Integer userID = null;
         boolean paramsValid = false;
         StringBuilder errMessage = new StringBuilder();
-
+        isAdmin = request.isUserInRole("ADMINISTRATOR");
         //read values inputted by user in text fields
         readParamaters(request);
 
-        //check if inputted captcha equals to generated captcha
-        if (!request.getSession().getAttribute("captcha").equals(inputtedCaptcha)) {
-                errMessage.append("Codes not matches!");
-                request.setAttribute("errMessage", errMessage.toString());
-                redirect(request, response, CUSTOMER_REGISTRATION_PAGE);
-        }
-
         // if user is ADMINISTRATOR then we register a new engineer
-        if (request.isUserInRole("ADMINISTRATOR")) {
+        if (isAdmin) {
 
                 //server-side data validation
                 paramsValid = validateParams(dbManager, errMessage);
@@ -105,6 +99,13 @@ public class RegistrationServlet extends HttpServlet {
 
         } else {
 
+        	//check if inputted captcha equals to generated captcha
+            if (!request.getSession().getAttribute("captcha").equals(inputtedCaptcha)) {
+                    errMessage.append("Codes not matches!");
+                    request.setAttribute("errMessage", errMessage.toString());
+                    redirect(request, response, CUSTOMER_REGISTRATION_PAGE);
+            }
+            
             // register CUSTOMER_USER
                 try {
                     paramsValid = validateParams(dbManager, errMessage);
@@ -124,14 +125,14 @@ public class RegistrationServlet extends HttpServlet {
                     // proceed Order
                     Workflow wf = new NewScenarioWorkflow(newOrder);
                     wf.proceedOrder();
-
+/*
                      // send email to user
                      RegistrationSuccessfulEmail notificationEmail =
                              new RegistrationSuccessfulEmail(firstName,
                              login, password);
                     EmailSender emailSender = new EmailSender();
                     emailSender.sendEmail(userID, notificationEmail);
-
+*/
                     // redirect to congratulation page
                     redirect(request, response, CONGRATULATION_PAGE);
                 } else {
@@ -151,7 +152,7 @@ public class RegistrationServlet extends HttpServlet {
 		lastName = request.getParameter("lastName");
 		inputtedCaptcha = request.getParameter("code");
 
-		if (request.isUserInRole("ADMINISTRATOR")) {
+		if (isAdmin) {
 			groupID = Integer.parseInt(request.getParameter("employeeGroup"));
 		} else {
 			catalogID = Integer.parseInt(request
@@ -238,13 +239,15 @@ public class RegistrationServlet extends HttpServlet {
 			isValid = false;
 		}
 
-		
-		try { 
-			serviceLocation = java.net.URLDecoder.decode(serviceLocation,"UTF-8"); 
-		} catch (Exception exc) { 
-			isValid = false;
-		 	errMessage.append("- Wrong location specified.<br />"); 
-		 }
+		if (!isAdmin) {
+			try {
+				serviceLocation = java.net.URLDecoder.decode(serviceLocation,
+						"UTF-8");
+			} catch (Exception exc) {
+				isValid = false;
+				errMessage.append("- Wrong location specified.<br />");
+			}
+		}
 		 
 
 		return isValid;
