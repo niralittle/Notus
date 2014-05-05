@@ -159,11 +159,16 @@ public class DisconnectScenarioWorkflow extends Workflow {
                 throw new WorkflowException("Given Task is not valid");
             }
             ServiceInstanceDAOImpl siDAO = new ServiceInstanceDAOImpl(dbManager);
-
-            ServiceInstance si = siDAO.find(order.getServiceInstanceID());
-            si.setCircuitID(null);
-            siDAO.update(si);
-
+            CircuitDAO ciDAO = new CircuitDAOImpl(dbManager);
+			
+			ServiceInstance si = siDAO.find(order.getServiceInstanceID());
+			
+			int circuitID = si.getCircuitID();
+			si.setCircuitID(null);
+			siDAO.update(si);
+			
+			ciDAO.delete(circuitID);
+			
             changeServiceInstanceStatus(dbManager, InstanceStatus.DISCONNECTED);
             completeTask(dbManager, taskID);
             createTask(dbManager, UserRole.INSTALLATION_ENGINEER,
