@@ -85,6 +85,7 @@
 		<th>LAST NAME</th>
 		<th>STATUS</th>
 		<th>NEW PASSWORD</th>
+                <th colspan="2">ACTION</th>
 	</tr>
 	<%
 		for (OSSUser user : users) {

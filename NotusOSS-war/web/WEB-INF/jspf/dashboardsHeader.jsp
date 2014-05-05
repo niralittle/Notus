@@ -8,7 +8,7 @@
 						<a href="Reassign">Reassign task</a>
 						<div class="separator"></div>
 				
-						<a href="registrateEngineer.jsp">Register new engineer</a>
+						<a href="registerEngineer.jsp">Register new engineer</a>
 						<div class="separator"></div>
 				
 						<a href="passwordChanging.jsp">Block user</a>

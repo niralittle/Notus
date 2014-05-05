@@ -21,32 +21,7 @@
             <%=title+" "%> tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
         </h2>
         
-        
-        <%
-		if (request.getAttribute("noOfPages") != null && request.getAttribute("page") != null) {
-			String url;
-			long noOfPages = (Long) request.getAttribute("noOfPages");
-			if(noOfPages > 1) {
-			int currPage = (Integer) request.getAttribute("page");
-			if(personal) {
-				url = "TasksAssignment?type=personal&";
-			} else {
-				url = "TasksAssignment?";
-			}
-			for (long i = 1; i <= noOfPages; i++) {
-				if (i == (currPage )) {
-		%>
-		<a href="<%=url%>page=<%=i%>" style="font-size: 12pt; font-weight: bold;"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
-	<%
-		} else {
-	%>
-		<a href="<%=url%>page=<%=i%>"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
-	<%
-		}
-					}
-					}
-					}
-					 %>
+
         
         
         
@@ -92,3 +67,28 @@
             </table>
             
 
+        <%
+		if (request.getAttribute("noOfPages") != null && request.getAttribute("page") != null) {
+			String url;
+			long noOfPages = (Long) request.getAttribute("noOfPages");
+			if(noOfPages > 1) {
+			int currPage = (Integer) request.getAttribute("page");
+			if(personal) {
+				url = "TasksAssignment?type=personal&";
+			} else {
+				url = "TasksAssignment?";
+			}
+			for (long i = 1; i <= noOfPages; i++) {
+				if (i == (currPage )) {
+		%>
+		<a href="<%=url%>page=<%=i%>" style="font-size: 12pt; font-weight: bold;"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+	<%
+		} else {
+	%>
+		<a href="<%=url%>page=<%=i%>"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+	<%
+		}
+					}
+					}
+					}
+					 %>

@@ -41,21 +41,21 @@
    <form action="TasksAssignment?type=personal" method="POST">
        <input type="submit" name="action" value="Back to Tasks" />
    </form>
-   <table border="1" id="tablename1">
+   <table border="1" id="table">
     <tbody>
         <tr>
-            <td>
+            <th>
                 Task ID
-            </td>
-            <td>
+            </th>
+            <th>
                 Service Order ID
-            </td>
-            <td>
+            </th>
+            <th>
                 Cable
-            </td>
-            <td>
+            </th>
+            <th>
                 Port
-            </td>
+            </th>
         </tr>
         <tr>
             <td>
