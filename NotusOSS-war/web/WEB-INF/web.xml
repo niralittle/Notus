@@ -131,6 +131,10 @@
         <servlet-name>DisconnectOrderProceed</servlet-name>
         <servlet-class>DisconnectOrderProceed.java</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RedirectingServlet</servlet-name>
+        <servlet-class>nc.notus.filters.RedirectingServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
@@ -239,7 +243,11 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DisconnectOrderProceed</servlet-name>
-        <url-pattern>/Disconnect</url-pattern>
+        <url-pattern>/DisconnectOrderProceed</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RedirectingServlet</servlet-name>
+        <url-pattern>/Welcome</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -247,7 +255,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>Welcome</welcome-file>
     </welcome-file-list>
 
     <error-page>
@@ -264,7 +272,7 @@
         <web-resource-collection>
             <web-resource-name>Admin Page</web-resource-name>
             <description/>
-            <url-pattern>/admin.jsp</url-pattern>
+            <url-pattern>/adminDashboard.jsp</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>

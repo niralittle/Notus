@@ -12,6 +12,8 @@ import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dbmanager.DBManager;
 
 import nc.notus.entity.ServiceOrder;
+import nc.notus.states.OrderStatus;
+import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.DisconnectScenarioWorkflow;
 
 /**
