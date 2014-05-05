@@ -9,7 +9,8 @@ package nc.notus.states;
 public enum InstanceStatus {
     PLANNED("Planned"),
     ACTIVE("Active"),
-    DISCONNECTED("Disconnected");
+    DISCONNECTED("Disconnected"),
+    PENDING_TO_DISCONNECT("Pending to disconnect");
 
     private final String status;
 
