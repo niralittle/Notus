@@ -21,9 +21,9 @@ public class DisconnectSuccessfulEmail extends Email {
 
     /**
      *
-     * @param firstName
-     * @param orderId
-     * @param location
+     * @param firstName user's name
+     * @param orderId ID of the completed order
+     * @param location address of the connection
      * @throws IOException
      */
     public DisconnectSuccessfulEmail(String firstName,
@@ -34,7 +34,7 @@ public class DisconnectSuccessfulEmail extends Email {
         this.firstName = firstName;
         this.orderId = orderId;
         this.location = location;
-        subject = "Your disconnect order has been complete";
+        subject = "Your disconnect order has been completed ";
         message = String.format(message, firstName, orderId, location);
     }
 
