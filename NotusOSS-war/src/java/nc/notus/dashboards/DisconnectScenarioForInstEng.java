@@ -12,13 +12,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
+import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.entity.Cable;
 import nc.notus.entity.Port;
+import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
 import nc.notus.workflow.DisconnectScenarioWorkflow;
@@ -78,16 +81,18 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
             }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);
+            ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+            ServiceInstance si = siDAO.find(so.getServiceInstanceID());
             DisconnectScenarioWorkflow dwf = new DisconnectScenarioWorkflow(so);
 
             //Action "Disconnect Cable from Port" and redirect to personal tasks page
-            if (request.getParameter("action").equals("Disconnect Cable from Port")){
-                dwf.unplugCableFromPort(taskID, cable.getId(), port.getId());
+            if (request.getParameter("action") != null && "Disconnect Cable from Port".equals(request.getParameter("action"))){
+                dwf.unplugCableFromPort(taskID, cable.getId(), port.getId(), si.getId());
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-                int startpage = 1;
+                int startPage = 1;
                 int numbOfRecords = 10;
                 boolean personal = true;
-                List<Task> tasks = taskDAO.getTasksByID(startpage, numbOfRecords, userID);
+                List<Task> tasks = taskDAO.getTasksByID(startPage, numbOfRecords, userID);
                 request.setAttribute("userid", userID);
                 request.setAttribute("tasks", tasks);
                 request.setAttribute("type", personal);
