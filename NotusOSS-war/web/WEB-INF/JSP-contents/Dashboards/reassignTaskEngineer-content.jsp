@@ -15,22 +15,14 @@
 <%List<OSSUser> engineers = (List) request.getAttribute("listOfEngineers");
 Integer numberOfPages = (Integer)request.getAttribute("pages");
 %>
-<form action="ReassigTaskToEngineerServlet" method="GET" id="pagesForm">
-    <% for(int i=1;i<=numberOfPages;i++){%>
-    <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;">
-    <%=i%>
-    </a>
-    <% }%>
-    <input type="hidden" name="page" id="page">
-    <input type="hidden" name="taskID" value="<%=request.getParameter("taskID")%>">
 
-</form>
 <form action="Reassign" method="post">
-<table>
+<table id="table">
     <tr>
         <th>Employee ID</th>
         <th>First Name</th>
         <th>Last Name</th>
+        <th>Action</th>
     </tr>
 
 <%if (engineers != null){
@@ -41,7 +33,7 @@ Integer numberOfPages = (Integer)request.getAttribute("pages");
     <td><%=engineer.getId()%></td>
     <td><%=engineer.getFirstName()%></td>
     <td><%=engineer.getLastName()%></td>
-    <td><input type="submit" value="Assign"
+    <td><input type="submit" id="button" value="Assign"
                onclick="document.getElementById('engineerID').setAttribute('value', <%=engineer.getId()%>)"></td>
 </tr>
 <%    }
@@ -49,4 +41,13 @@ Integer numberOfPages = (Integer)request.getAttribute("pages");
 </table>
 <input type="hidden" id="engineerID" name="engineerID">
 <input type="hidden" name="taskID" value="<%=request.getParameter("taskID")%>">
+</form>
+<form action="ReassigTaskToEngineerServlet" method="GET" id="pagesForm">
+    <% for(int i=1;i<=numberOfPages;i++){%>
+    <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;">
+    <%=i%>
+    </a>
+    <% }%>
+    <input type="hidden" name="page" id="page">
+    <input type="hidden" name="taskID" value="<%=request.getParameter("taskID")%>">
 </form>

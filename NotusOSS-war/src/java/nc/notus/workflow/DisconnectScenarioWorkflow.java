@@ -1,9 +1,13 @@
 package nc.notus.workflow;
 
+import java.sql.Date;
+import java.util.Calendar;
 import nc.notus.dao.CableDAO;
+import nc.notus.dao.CircuitDAO;
 import nc.notus.dao.PortDAO;
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.impl.CableDAOImpl;
+import nc.notus.dao.impl.CircuitDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dbmanager.DBManager;
@@ -68,53 +72,17 @@ public class DisconnectScenarioWorkflow extends Workflow {
             createTask(dbManager, UserRole.PROVISION_ENGINEER,
                     "Remove circuit from SI");
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
     }
 
-    /*
-    /**
-     * This method unassigns given Port from given Service Instance. It also
-     * unlinks Circuit from SI and deletes the Circuit. It sets status of given
-     * task to "Completed". After execution it automatically creates task for
-     * Installation Engineer group.
-     *
-     * @param taskID
-     *            ID of task for Provisioning Engineer
-     * @param portID
-     *            ID of port to unlink SI from
-     * @param serviceInstanceID
-     *            ID of SI to unlink from port
-     */
-    public void unassignPortFromSI(int taskID, int portID,
-            int serviceInstanceID) {
-        if (order.getServiceInstanceID() != serviceInstanceID) {
-            throw new WorkflowException("Given SI is not connected " +
-                    "with current Order");
-        }
-
-        DBManager dbManager = new DBManager();
-        try {
-            if (!isTaskValid(dbManager, taskID,
-                    UserRole.INSTALLATION_ENGINEER.toInt())) {
-                throw new WorkflowException("Given Task is not valid");
-            }
-            ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
-
-            ServiceInstance si = siDAO.find(serviceInstanceID);
-            si.setPortID(null);
-            siDAO.update(si);
-
-
-            dbManager.commit();
-        } finally {
-            dbManager.close();
-        }
-    }
-
-    /**
-     * This method unplugs Cable from specified Port. Then delete cable.
+    /**This method unassigns given Port from given Service Instance.
+     * Then method unplugs Cable from specified Port. Then delete cable.
      * And it sets Port status to
      * "Free" and changes status of Task to "Completed" after execution.
      *
@@ -125,7 +93,8 @@ public class DisconnectScenarioWorkflow extends Workflow {
      * @param portID
      *            ID of Port to unplug Cable from
      */
-    public void unplugCableFromPort(int taskID, int cableID, int portID) {
+    public void unplugCableFromPort(int taskID, int cableID, int portID,
+            int serviceInstanceID) {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,
@@ -142,10 +111,23 @@ public class DisconnectScenarioWorkflow extends Workflow {
             CableDAO cableDAO = new CableDAOImpl(dbManager);
             cableDAO.delete(cableID);
 
+            ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+
+            ServiceInstance si = siDAO.find(serviceInstanceID);
+            si.setPortID(null);
+            Calendar cal = java.util.Calendar.getInstance();
+            Date date = new Date(cal.getTimeInMillis());
+            si.setServiceInstanceDate(date);
+            siDAO.update(si);
+
             completeTask(dbManager, taskID);
             changeOrderStatus(dbManager, OrderStatus.COMPLETED);
             // TODO: send email here
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
@@ -159,11 +141,16 @@ public class DisconnectScenarioWorkflow extends Workflow {
                 throw new WorkflowException("Given Task is not valid");
             }
             ServiceInstanceDAOImpl siDAO = new ServiceInstanceDAOImpl(dbManager);
-
-            ServiceInstance si = siDAO.find(order.getServiceInstanceID());
-            si.setCircuitID(null);
-            siDAO.update(si);
-
+            CircuitDAO ciDAO = new CircuitDAOImpl(dbManager);
+			
+			ServiceInstance si = siDAO.find(order.getServiceInstanceID());
+			
+			int circuitID = si.getCircuitID();
+			si.setCircuitID(null);
+			siDAO.update(si);
+			
+			ciDAO.delete(circuitID);
+			
             changeServiceInstanceStatus(dbManager, InstanceStatus.DISCONNECTED);
             completeTask(dbManager, taskID);
             createTask(dbManager, UserRole.INSTALLATION_ENGINEER,

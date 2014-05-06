@@ -29,7 +29,7 @@ public class GettingUsersInfo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String CHANGE_PASSWORD_PAGE = "passwordChanging.jsp";
-	private static int RECORDS_PER_PAGE = 1;
+	private static int RECORDS_PER_PAGE = 10;
 
 	private List<OSSUser> users = null;
 	private String login;

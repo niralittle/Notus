@@ -1,5 +1,6 @@
 package nc.notus.workflow;
 
+import java.sql.SQLException;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceInstanceDAO;
@@ -69,6 +70,11 @@ public abstract class Workflow {
                 throw new WorkflowException("Given Task is not valid");
             }
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
+
         } finally {
             dbManager.close();
         }

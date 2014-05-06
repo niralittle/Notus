@@ -103,9 +103,6 @@
         <servlet-name>CustomerUserServlet</servlet-name>
         <servlet-class>nc.notus.dashboards.CustomerUserServlet</servlet-class>
     </servlet>
-
-
-
     <servlet>
         <servlet-name>DisconnectScenarioForInstEng</servlet-name>
         <servlet-class>nc.notus.dashboards.DisconnectScenarioForInstEng</servlet-class>
@@ -125,6 +122,18 @@
     <servlet>
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
         <servlet-class>nc.notus.ReassigTaskToEngineerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoggedChecking</servlet-name>
+        <servlet-class>nc.notus.LoggedChecking</servlet-class>
+        </servlet>
+    <servlet>
+        <servlet-name>DisconnectOrderProceed</servlet-name>
+        <servlet-class>nc.notus.dashboards.DisconnectOrderProceed</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RedirectingServlet</servlet-name>
+        <servlet-class>nc.notus.filters.RedirectingServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
@@ -200,8 +209,6 @@
         <servlet-name>TasksAssignment</servlet-name>
         <url-pattern>/TasksAssignment</url-pattern>
     </servlet-mapping>
-
-
     <servlet-mapping>
         <servlet-name>CustomerUserServlet</servlet-name>
         <url-pattern>/CustomerUserServlet</url-pattern>
@@ -210,9 +217,6 @@
         <servlet-name>CustomerUserServlet</servlet-name>
         <url-pattern>/CustomerUser</url-pattern>
     </servlet-mapping>
-
-
-
     <servlet-mapping>
         <servlet-name>DisconnectScenarioForInstEng</servlet-name>
         <url-pattern>/DisconnectScenarioForInstEng</url-pattern>
@@ -233,13 +237,25 @@
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
         <url-pattern>/ReassigTaskToEngineerServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoggedChecking</servlet-name>
+        <url-pattern>/LoggedChecking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisconnectOrderProceed</servlet-name>
+        <url-pattern>/DisconnectOrderProceed</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RedirectingServlet</servlet-name>
+        <url-pattern>/Welcome</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>Welcome</welcome-file>
     </welcome-file-list>
 
     <error-page>
@@ -256,7 +272,7 @@
         <web-resource-collection>
             <web-resource-name>Admin Page</web-resource-name>
             <description/>
-            <url-pattern>/admin.jsp</url-pattern>
+            <url-pattern>/adminDashboard.jsp</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
@@ -296,7 +312,8 @@
         <auth-constraint>
             <description/>
             <role-name>CUSTOMER_USER</role-name>
-        </auth-constraint>
+            <role-name>SUPPORT_ENGINEER</role-name>
+            </auth-constraint>
     </security-constraint>
 
     <login-config>

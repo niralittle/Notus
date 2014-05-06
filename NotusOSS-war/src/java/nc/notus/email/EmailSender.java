@@ -25,7 +25,8 @@ import nc.notus.states.UserRole;
  * Depends on parameters send to one user - sendEmail(int userID, EMail mail);
  * or group of users - sendEmail(UserRole role, EMail mail);
  * Need SMTP properties from email host and login/password of email author
- * @author Roman Martynuyk
+ *
+ * @author Roman Martynuyk & Katya Atamanchuk
  */
 public class EmailSender {
 
@@ -44,92 +45,86 @@ public class EmailSender {
     }
 
     /**
-     * Method send email to 1 user by userID
-     * @param userID - ID of the recipient
-     * @param mail - text of the letter
+     * Method sends email to 1 user by userID
+     * @param userID ID of the recipient
+     * @param mail the letter
      */
     public void sendEmail(int userID, Email mail) {
-
-        DBManager dbManager = new DBManager();
-        String userEmail;
-        try {
-            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-            OSSUser user = userDAO.find(userID);
-            userEmail = user.getEmail();
-        } finally {
-            dbManager.close();
-        }
-
-        /*Get the address of user*/
-        Address address = null;
-        try {
-            address = new InternetAddress(userEmail);
-        } catch (AddressException ex) {
-            Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        /*Authentication to mail service */
-        Session session = Session.getInstance(props, new Authenticator() {
-
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
-
-        /*Send mail*/
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipient(Message.RecipientType.BCC, address);
-            message.setSubject(mail.getSubject());
-            message.setContent(mail.getMessage(), "text/html");
-            Transport.send(message);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
+        Thread sender = new SenderThread(userID, mail);
+        sender.start();
     }
 
+    /**
+     * Method sends emails to a group of users
+     * @param role user group role
+     * @param mail the letter
+     */
     public void sendEmail(UserRole role, Email mail) {
+        Thread sender = new SenderThread(role, mail);
+        sender.start();
+    }
 
-        DBManager dbManager = new DBManager();
-        List<String> addressList;
-        try {
-            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-            addressList = userDAO.getGroupEmails(role);
-        } finally {
-            dbManager.close();
+    private class SenderThread extends Thread {
+
+        private final Email mail;
+        private UserRole role;
+        private int userID;
+
+        SenderThread(UserRole role, Email mail) {
+            this.mail = mail;
+            this.role = role;
+
         }
-        Address[] address = new Address[addressList.size()];
 
-        /*Authentication to mail service */
-        Session session = Session.getInstance(props, new Authenticator() {
+        SenderThread(int userID, Email mail) {
+            this.mail = mail;
+            this.userID = userID;
+        }
 
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
-
-        /*get the array of users addresses*/
-        for (int i = 0; i < addressList.size(); i++) {
+        @Override
+        public void run() {
+            DBManager dbManager = new DBManager();
+            Address[] address = null;
             try {
-                address[i] = new InternetAddress(addressList.get(i));
+                OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+
+                if (role == null) {
+                    address = new Address[1];
+                    OSSUser user = userDAO.find(userID);
+                    address[0] = new InternetAddress(user.getEmail());
+
+                } else {
+                    List<String> userEmails = userDAO.getGroupEmails(role);
+                    address = new Address[userEmails.size()];
+                    for (int i = 0; i < userEmails.size(); i++) {
+                        address[i] = new InternetAddress(userEmails.get(i));
+                    }
+                }
             } catch (AddressException ex) {
-                Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE,
-                        null, ex);
+                Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                dbManager.close();
             }
-        }
+
+                    /*Authentication to mail service */
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+                }
+            });
 
         /*Send mail*/
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.BCC, address);
-            message.setSubject(mail.getSubject());
-            message.setContent(mail.getMessage(), "text/html");
-            Transport.send(message);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            try {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                message.setRecipients(Message.RecipientType.BCC, address);
+                message.setSubject(mail.getSubject());
+                message.setContent(mail.getMessage(), "text/html");
+                Transport.send(message);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

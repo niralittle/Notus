@@ -1,8 +1,11 @@
 package nc.notus.dao.impl;
 
+import org.apache.log4j.Logger;
+
 import nc.notus.dao.DAOException;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.Scenario;
@@ -10,10 +13,12 @@ import nc.notus.states.WorkflowScenario;
 
 /**
  * Implementation of DAO for entity Scenario
- * @author Vladimir Ermolenko
+ * @author Vladimir Ermolenko & Panchenko Dmytro
  */
 public class ScenarioDAOImpl extends GenericDAOImpl<Scenario> implements ScenarioDAO {
 
+	private static Logger logger = Logger.getLogger(ScenarioDAOImpl.class.getName());
+	
     public ScenarioDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
@@ -26,16 +31,25 @@ public class ScenarioDAOImpl extends GenericDAOImpl<Scenario> implements Scenari
      */
     @Override
     public int getScenarioID(WorkflowScenario scenario) {
-        String queryString = "SELECT s.id, s.scenario " +
+    	Statement statement = null;
+    	ResultIterator ri = null;
+    	int scenarioId = 0;
+    	
+    	String queryString = "SELECT s.id, s.scenario " +
                 "FROM scenario s WHERE s.scenario = ?";
-        Statement statement = dbManager.prepareStatement(queryString);
-        statement.setString(1, scenario.toString());
-        ResultIterator ri = statement.executeQuery();
-        if (ri.next()) {
-            return ri.getInt("id");
-        } else {
-            throw new DAOException("Given Scenario was not found in DB: " +
-                    scenario.toString());
-        }
+		try {
+			statement = dbManager.prepareStatement(queryString);
+			statement.setString(1, scenario.toString());
+
+			ri = statement.executeQuery();
+			if (ri.next()) {
+				scenarioId = ri.getInt("id");
+			}
+		} catch (DBManagerException exc) {
+			logger.error(exc.getMessage(), exc);
+		} finally {
+			statement.close();
+		}
+		return scenarioId;
     }
 }

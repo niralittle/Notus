@@ -54,14 +54,23 @@ public class ReportGenerator {
      */
     public String getReportHTML() {
         StringBuilder HTMLReportBuilder = new StringBuilder();
-        HTMLReportBuilder.append("<table border='1' width='90%' cellpadding='10'>");
+        HTMLReportBuilder.append("<table border='1' id ='table' width='90%' cellpadding='10'>");
         if (reportRef.getReportData() != null) {
-            for (String row : reportRef.getReportData()) {
-                String[] columns = row.split(COLUMN_SEPARATOR);
+            String[] rows = reportRef.getReportData();
+            String[] columns = rows[0].split(COLUMN_SEPARATOR); //headers
+            HTMLReportBuilder.append("<tr>");
+            for (int i = 0; i < columns.length; i++) {
+                HTMLReportBuilder.append("<th>");
+                HTMLReportBuilder.append(columns[i]);
+                HTMLReportBuilder.append("</th>");
+            }
+            HTMLReportBuilder.append("</tr>");
+            for (int i = 1; i < rows.length; i++) {
+                columns = rows[i].split(COLUMN_SEPARATOR);
                 HTMLReportBuilder.append("<tr>");
-                for (int i = 0; i < columns.length; i++) {
+                for (int j = 0; j < columns.length; j++) {
                     HTMLReportBuilder.append("<td>");
-                    HTMLReportBuilder.append(columns[i]);
+                    HTMLReportBuilder.append(columns[j]);
                     HTMLReportBuilder.append("</td>");
                 }
                 HTMLReportBuilder.append("</tr>");

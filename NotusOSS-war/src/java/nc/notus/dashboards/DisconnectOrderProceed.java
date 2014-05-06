@@ -2,6 +2,7 @@ package nc.notus.dashboards;
 
 import java.io.IOException;
 
+import javax.mail.Session;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,8 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dbmanager.DBManager;
-
 import nc.notus.entity.ServiceOrder;
+import nc.notus.states.OrderStatus;
+import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.DisconnectScenarioWorkflow;
 
 /**
@@ -34,16 +36,22 @@ public class DisconnectOrderProceed extends HttpServlet {
 		
 		//get order
 		ServiceOrder serviceOrder = getServiceOrder(serviceInstanceId);
+			serviceOrder.setScenarioID(WorkflowScenario.DISCONNECT.toInt());
+			serviceOrder.setServiceOrderStatusID(OrderStatus.ENTERING.toInt());
 		DisconnectScenarioWorkflow disconnectWF = null;
-		
-		if (serviceOrder != null) {
+		try{
 			disconnectWF = new DisconnectScenarioWorkflow(serviceOrder);
 			disconnectWF.proceedOrder();
-		//	request.setAttribute("serviceOrder", serviceOrder);
-		} else {
-			request.setAttribute("error", "Service order not found!");
+			
+			/*
+			request.getSession().setAttribute("success", "Your request to disconnect service on location " 
+					+ serviceOrder.getServiceLocation() + " accepted!");
+			*/
+		} finally {
+			
 		}
-		redirect(request, response, CUSTOMER_USER_PAGE);
+		response.sendRedirect(CUSTOMER_USER_PAGE);
+		//redirect(request, response, CUSTOMER_USER_PAGE);
 	}
 
 	/**

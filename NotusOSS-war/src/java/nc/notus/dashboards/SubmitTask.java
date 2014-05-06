@@ -75,14 +75,14 @@ public class SubmitTask extends HttpServlet {
             NewScenarioWorkflow nwf = new NewScenarioWorkflow(so);
 
             //Action "Create Router"
-            if (request.getParameter("action").equals("Create Router")){
+            if (request.getParameter("action") != null && "Create Router".equals(request.getParameter("action"))){
                 if (port == null){
                 nwf.createRouter(taskID, portQuantity);
                 }
             }
 
             //Action "Create Cable"
-            if (request.getParameter("action").equals("Create Cable")){
+            if (request.getParameter("action") != null && "Create Cable".equals(request.getParameter("action"))){
                 if (cable == null){
                     nwf.createCable(taskID, "UTP Cable");
                     cable = cableDAO.getFreeCable();
@@ -90,7 +90,15 @@ public class SubmitTask extends HttpServlet {
             }
 
             //Action "Connect Cable to Port" and redirect to personal tasks page
-            if (request.getParameter("action").equals("Connect Cable to Port")){
+            if (request.getParameter("action") != null && "Connect Cable to Port".equals(request.getParameter("action"))){
+                if (cable == null){
+                    nwf.createCable(taskID, "UTP Cable");
+                    cable = cableDAO.getFreeCable();
+                }
+                if (port == null){
+                nwf.createRouter(taskID, portQuantity);
+                port = portDAO.getFreePort();
+                }
                 nwf.plugCableToPort(taskID, cable.getId(), port.getId());
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int startpage = 1;

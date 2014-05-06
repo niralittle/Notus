@@ -83,6 +83,10 @@ public class NewScenarioWorkflow extends Workflow {
             createTask(dbManager, UserRole.INSTALLATION_ENGINEER, "Proceed new order");
 
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
@@ -142,6 +146,10 @@ public class NewScenarioWorkflow extends Workflow {
             }
 
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
@@ -166,6 +174,10 @@ public class NewScenarioWorkflow extends Workflow {
             cableDAO.add(cable);
 
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
@@ -204,6 +216,10 @@ public class NewScenarioWorkflow extends Workflow {
             this.completeTask(dbManager, taskID);
             this.createTask(dbManager, UserRole.PROVISION_ENGINEER, "Create curcuit");
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
@@ -236,6 +252,10 @@ public class NewScenarioWorkflow extends Workflow {
             this.completeTask(dbManager, taskID);
             this.createTask(dbManager, UserRole.SUPPORT_ENGINEER, "Approve bill");
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
@@ -261,6 +281,10 @@ public class NewScenarioWorkflow extends Workflow {
             changeOrderStatus(dbManager, OrderStatus.COMPLETED);
             // TODO: send email here
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }

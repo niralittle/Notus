@@ -27,13 +27,13 @@
 	%>
 
 	<form action="CreateCircuit" method="POST">
-		<table border="1" id="tablename1">
+		<table border="1" id="table">
 			<caption>NEW SCENARIO TASK</caption>
 			<tbody>
 				<tr>
-					<td>Task ID</td>
-					<td>Service Order ID</td>
-					<td>Circuit</td>
+					<th>Task ID</th>
+					<th>Service Order ID</th>
+					<th>Circuit</th>
 				</tr>
 				<tr>
 					<td><%=taskID%></td>

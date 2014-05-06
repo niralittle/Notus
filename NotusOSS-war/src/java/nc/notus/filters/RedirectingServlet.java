@@ -1,14 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.filters;
 
 import java.io.IOException;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,50 +8,61 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import nc.notus.dao.OSSUserDAO;
-import nc.notus.dao.impl.OSSUserDAOImpl;
-import nc.notus.dbmanager.DBManager;
 
 /**
- * Check if user blocked. If yes - then redirect to error-page.             
+ * Redirect engineers to personal tasks page.         
  *                 
  * @author Pacnhenko Dmytro
  *
  */
-public class AuthServlet extends HttpServlet {
+public class RedirectingServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	
-	private static Logger logger=Logger.getLogger(AuthServlet.class.getName());
-	private static final String LOGIN_ERROR_PAGE = "loginError.jsp";
 	
 	protected void processRequest(HttpServletRequest request,
                 HttpServletResponse response)
                 throws ServletException, IOException {
 		
-		logger.log(Level.INFO, "Test loger");
-		String username = request.getParameter("j_username");
-		String password = request.getParameter("j_password");
-		
-		OSSUserDAO userDAO = null;
-		DBManager dbManager = null;
-		StringBuilder sb = new StringBuilder();
-		try {
-			dbManager = new DBManager();
-			userDAO = new OSSUserDAOImpl(dbManager);
-			if(userDAO.isBlocked(username)) {
-				sb.append("User with specified login blocked!");
-				request.setAttribute("errMessage", sb.toString());
-				redirect(request, response, LOGIN_ERROR_PAGE);
-			} 
-		} finally {
-			dbManager.close();
+		if(isAuthorized(request) == false) {
+			redirect(request, response, "index.jsp");
+		} else if (isEngineer(request)) {
+			redirect(request, response, "TasksAssignment?type=personal");
+		} else if(isAdministator(request)) {
+			redirect(request, response, "adminDashboard.jsp");
+		} else if(isCustomerUser(request)) {
+			redirect(request, response, "index.jsp");
 		}
-		
-		response.sendRedirect("j_security_check?j_username=" 
-				+ username + "&j_password="+password);
     }
+	
+	private boolean isEngineer(HttpServletRequest request) {
+		if(request.isUserInRole("SUPPORT_ENGINEER") 
+				|| request.isUserInRole("PROVISION_ENGINEER")
+				|| request.isUserInRole("INSTALLATION_ENGINEER")) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isCustomerUser(HttpServletRequest request) {
+		if(request.isUserInRole("CUSTOMER_USER")) {
+			return true;
+		}
+		return false;
+	}
+	private boolean isAuthorized(HttpServletRequest request) {
+		if(request.getUserPrincipal() != null) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isAdministator(HttpServletRequest request) {
+		if(request.isUserInRole("ADMINISTRATOR")) {
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * Redirect to passes page.

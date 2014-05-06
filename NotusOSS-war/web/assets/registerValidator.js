@@ -38,7 +38,7 @@ function validate() {
 
 
 	if (!login_check.test(login.value)) {
-		document.getElementById("loginMsg").innerHTML = "Please provide a valid login. min 3 chars, max 30 chars, without spaces";
+                document.getElementById("loginMsg").innerHTML = "Please provide a valid login. Min 3 chars, max 30 chars, without spaces";
 		valid = false;
 	} else {
 		document.getElementById("loginMsg").innerHTML = " ";

@@ -5,12 +5,19 @@
                 <%  if (request.isUserInRole("CUSTOMER_USER")) { %>
 		        <a href="CustomerUser">Go to Cabinet</a>
                             <div class="separator"></div>
-		<%  } else { %>
+		<%  } else if(request.isUserInRole("ADMINISTRATOR")){ %>
+                        <a href="Reassign">Reassign task</a> 
+                            <div class="separator"></div>
+
+                        <a href="admin.jsp">Admin page</a> 
+                            <div class="separator"></div>
+                <%  } else if (request.isUserInRole("CUSTOMER_USER")||
+                        request.isUserInRole("SUPPORT_ENGINEER")||
+                        request.isUserInRole("INSTALLATION_ENGINEER")){%>
+
                         <a href="TasksAssignment">Group Tasks</a>
                             <div class="separator"></div>
                         <a href="TasksAssignment?type=personal">Personal Tasks</a>
-                            <div class="separator"></div>
-                        <a href="admin.jsp">Admin page</a> 
                             <div class="separator"></div>
 		<%  } %>
 
@@ -33,9 +40,11 @@
             </li>
             <li><a href="selectLocation.jsp">SELECT SERVICE</a></li>
             <li><a href="serviceCatalog.jsp">OUR SERVICES</a> </li>
-            <li><a href="#">OUR TEAM</a></li>
-            <li><a href="#">PROMOTIONS</a></li>
-            <li><a href="#">SOCIAL</a></li>
+            <!-- Don't display this links 
+	            <li><a href="#">OUR TEAM</a></li>
+	            <li><a href="#">PROMOTIONS</a></li>
+	            <li><a href="#">SOCIAL</a></li>
+            -->
         </ul>
     </div>
 </div>
