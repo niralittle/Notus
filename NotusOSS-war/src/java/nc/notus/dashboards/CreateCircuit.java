@@ -69,11 +69,12 @@ public class CreateCircuit extends HttpServlet {
             }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);
-            NewScenarioWorkflow nwf = new NewScenarioWorkflow(so);
+            NewScenarioWorkflow nwf = new NewScenarioWorkflow(so, dbManager);
 
             //Action "Create Circuit"
             if (request.getParameter("action") != null && "Create Circuit".equals(request.getParameter("action"))){
                 nwf.createCircuit(taskID, circuitConf);
+                dbManager.commit();
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int startPage = 1;
                 int numbOfRecords = 10;

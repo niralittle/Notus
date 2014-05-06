@@ -71,9 +71,9 @@ public class SupportEngineerServlet extends HttpServlet {
 				orderDAO = new ServiceOrderDAOImpl(dbManager);
 				ServiceOrder order = orderDAO.find(orderID);
 
-				wf = new NewScenarioWorkflow(order);
+				wf = new NewScenarioWorkflow(order, dbManager);
 				wf.approveBill(taskID);
-
+				dbManager.commit();
 				request.setAttribute("success", "Bill was sent!");
 			} catch (DBManagerException ex) {
                     Logger.getLogger(SupportEngineerServlet.class.getName()).log(Level.SEVERE, null, ex);

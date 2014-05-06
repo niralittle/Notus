@@ -95,8 +95,9 @@ public class LoggedChecking extends HttpServlet {
             newOrder = createOrder(dbManager, userID);
             dbManager.commit();
             // proceed Service Order
-            Workflow wf = new NewScenarioWorkflow(newOrder);
+            Workflow wf = new NewScenarioWorkflow(newOrder,dbManager);
             wf.proceedOrder();
+            dbManager.commit();
             response.sendRedirect("CustomerUser");
             return;
 

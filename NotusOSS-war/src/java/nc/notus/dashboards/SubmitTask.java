@@ -75,12 +75,13 @@ public class SubmitTask extends HttpServlet {
             port = portDAO.getFreePort();
             CableDAO cableDAO = new CableDAOImpl(dbManager);
             cable = cableDAO.getFreeCable();
-            NewScenarioWorkflow nwf = new NewScenarioWorkflow(so);
+            NewScenarioWorkflow nwf = new NewScenarioWorkflow(so, dbManager);
 
             //Action "Create Router"
             if (request.getParameter("action") != null && "Create Router".equals(request.getParameter("action"))){
                 if (port == null){
-                nwf.createRouter(taskID, portQuantity);
+                	nwf.createRouter(taskID, portQuantity);
+                    dbManager.commit();
                 }
             }
 
@@ -88,6 +89,7 @@ public class SubmitTask extends HttpServlet {
             if (request.getParameter("action") != null && "Create Cable".equals(request.getParameter("action"))){
                 if (cable == null){
                     nwf.createCable(taskID, "UTP Cable");
+                    dbManager.commit();
                     cable = cableDAO.getFreeCable();
                 }
             }
@@ -103,6 +105,8 @@ public class SubmitTask extends HttpServlet {
                 port = portDAO.getFreePort();
                 }
                 nwf.plugCableToPort(taskID, cable.getId(), port.getId());
+                dbManager.commit();
+
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int startpage = 1;
                 int numbOfRecords = 10;

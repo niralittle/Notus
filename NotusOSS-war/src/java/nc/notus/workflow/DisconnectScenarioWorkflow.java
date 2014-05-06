@@ -38,19 +38,12 @@ public class DisconnectScenarioWorkflow extends Workflow {
      *             exception if Order scenario doesn't match "Disconnect"
      *             scenario workflow
      */
-    public DisconnectScenarioWorkflow(ServiceOrder order) throws DBManagerException {
-        super(order);
-        DBManager dbManager = new DBManager();
-        try {
-            if (!getOrderScenario(dbManager).equals(
-                    WorkflowScenario.DISCONNECT.toString())) {
-                throw new WorkflowException(
-                        "Cannot proceed Order: " +
-                        "wrong order scenario");
-            }
-        } finally {
-            dbManager.close();
-        }
+    public DisconnectScenarioWorkflow(ServiceOrder order, DBManager dbManager) throws DBManagerException {
+        super(order, dbManager);
+		if (!getOrderScenario().equals(WorkflowScenario.DISCONNECT.toString())) {
+			throw new WorkflowException("Cannot proceed Order: "
+											+ "wrong order scenario");
+		}
     }
 
     /**
@@ -60,26 +53,16 @@ public class DisconnectScenarioWorkflow extends Workflow {
      */
     @Override
     public void proceedOrder() throws DBManagerException {
-        DBManager dbManager = new DBManager();
-        try {
-            if (!getOrderStatus(dbManager).equals(
-                    OrderStatus.ENTERING.toString())) {
-                throw new WorkflowException(
-                        "Cannot proceed Order: " +
-                        "wrong order state");
-            }
-
-            changeOrderStatus(dbManager, OrderStatus.PROCESSING);
-            createTask(dbManager, UserRole.PROVISION_ENGINEER,
-                    "Remove circuit from SI");
-            dbManager.commit();
-        } catch(Exception ex) {
-            // need to be logged like:
-            //log.error("SQLException", ex);
-            dbManager.rollback();
-        } finally {
-            dbManager.close();
-        }
+		try {
+			if (!getOrderStatus().equals(OrderStatus.ENTERING.toString())) {
+				throw new WorkflowException("Cannot proceed Order: "
+													+ "wrong order state");
+			}
+			changeOrderStatus(OrderStatus.PROCESSING);
+			createTask(UserRole.PROVISION_ENGINEER, "Remove circuit from SI");
+		} catch (Exception ex) {
+			dbManager.rollback();
+		}
     }
 
     /**This method unassigns given Port from given Service Instance.
@@ -96,10 +79,9 @@ public class DisconnectScenarioWorkflow extends Workflow {
      */
     public void unplugCableFromPort(int taskID, int cableID, int portID,
             int serviceInstanceID) throws DBManagerException {
-        DBManager dbManager = new DBManager();
-        try {
-            if (!isTaskValid(dbManager, taskID,
-                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+       
+    	try {
+            if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
 
@@ -121,24 +103,20 @@ public class DisconnectScenarioWorkflow extends Workflow {
             si.setServiceInstanceDate(date);
             siDAO.update(si);
 
-            completeTask(dbManager, taskID);
-            changeOrderStatus(dbManager, OrderStatus.COMPLETED);
+            completeTask(taskID);
+            changeOrderStatus(OrderStatus.COMPLETED);
             // TODO: send email here
-            dbManager.commit();
+           // dbManager.commit();
         } catch(Exception ex) {
             // need to be logged like:
             //log.error("SQLException", ex);
             dbManager.rollback();
-        } finally {
-            dbManager.close();
         }
     }
 
     public void removeCurcuitFromSI(int taskID) throws DBManagerException {
-        DBManager dbManager = new DBManager();
         try {
-            if (!isTaskValid(dbManager, taskID,
-                    UserRole.PROVISION_ENGINEER.toInt())) {
+            if (!isTaskValid(taskID, UserRole.PROVISION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
             ServiceInstanceDAOImpl siDAO = new ServiceInstanceDAOImpl(dbManager);
@@ -152,17 +130,14 @@ public class DisconnectScenarioWorkflow extends Workflow {
 			
 			ciDAO.delete(circuitID);
 			
-            changeServiceInstanceStatus(dbManager, InstanceStatus.DISCONNECTED);
-            completeTask(dbManager, taskID);
-            createTask(dbManager, UserRole.INSTALLATION_ENGINEER,
-                    "Remove port and cable from SI");
-            dbManager.commit();
+            changeServiceInstanceStatus(InstanceStatus.DISCONNECTED);
+            completeTask(taskID);
+            createTask(UserRole.INSTALLATION_ENGINEER, "Remove port and cable from SI");
+           // dbManager.commit();
 
         } catch (Exception ex) {
             dbManager.rollback();
             throw new WorkflowException(" ", ex);
-        } finally {
-            dbManager.close();
-        }
+        } 
     }
 }

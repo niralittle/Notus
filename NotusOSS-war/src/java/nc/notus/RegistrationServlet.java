@@ -126,9 +126,10 @@ public class RegistrationServlet extends HttpServlet {
 
                 if (paramsValid) {
                     // proceed Order
-                    Workflow wf = new NewScenarioWorkflow(newOrder);
+                    Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
                     wf.proceedOrder();
-/*
+                    dbManager.commit();
+/*	
                      // send email to user
                      RegistrationSuccessfulEmail notificationEmail =
                              new RegistrationSuccessfulEmail(firstName,

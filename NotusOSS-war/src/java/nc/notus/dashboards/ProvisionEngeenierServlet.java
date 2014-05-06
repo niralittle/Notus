@@ -51,16 +51,13 @@ public class ProvisionEngeenierServlet extends HttpServlet {
 			dbManager = new DBManager();
 			ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
 			so = soDAO.find(serviceOrderId);
+	
+		// create workflow instance and assign received port to SI
+			NewScenarioWorkflow wf = new NewScenarioWorkflow(so, dbManager);
+		//wf.assignPortToSI(taskID, portID, serviceInstanceID);
 		} finally {
 			dbManager.close();
 		}
-
-		// ==== or add default constructor to NewScenarioWorkflow implementation
-
-		// create workflow instance and assign received port to SI
-		NewScenarioWorkflow wf = new NewScenarioWorkflow(so);
-		//wf.assignPortToSI(taskID, portID, serviceInstanceID);
-
 		request.setAttribute("success", "Port successfully assigned!");
 		
 		RequestDispatcher view = request.getRequestDispatcher("provisionEngeenier.jsp");

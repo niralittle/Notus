@@ -37,23 +37,24 @@ import nc.notus.entity.Circuit;
 public class NewScenarioWorkflow extends Workflow {
 
     /**
-     * This method creates NewScenarioWorkflow for given Order.
-     * It doesn't proceed Order to execution(See {@link Workflow#proceedOrder()})
-     * @param order Order to create Workflow for
-     * @throws Workflow exception if Order scenario doesn't match "New" scenario
-     * workflow
-     */
-    public NewScenarioWorkflow(ServiceOrder order) throws DBManagerException {
-        super(order);
-        DBManager dbManager = new DBManager();
-        try {
-            if (!getOrderScenario(dbManager).equals(WorkflowScenario.NEW.toString())) {
-                throw new WorkflowException("Cannot proceed Order: wrong order scenario");
-            }
-        } finally {
-            dbManager.close();
-        }
-    }
+	 * This method creates NewScenarioWorkflow for given Order. It doesn't
+	 * proceed Order to execution(See {@link Workflow#proceedOrder()})
+	 * 
+	 * @param order
+	 *            Order to create Workflow for
+	 * @throws Workflow
+	 *             exception if Order scenario doesn't match "New" scenario
+	 *             workflow
+	 */
+	public NewScenarioWorkflow(ServiceOrder order, DBManager dbManager)
+			throws DBManagerException {
+		super(order, dbManager);
+
+		if (!getOrderScenario().equals(WorkflowScenario.NEW.toString())) {
+			throw new WorkflowException("Cannot proceed Order: wrong order scenario");
+		}
+
+	}
 
     /**
      * This method proceeds Order by creating tasks for
@@ -62,15 +63,14 @@ public class NewScenarioWorkflow extends Workflow {
      */
     @Override
     public void proceedOrder() throws DBManagerException {
-        DBManager dbManager = new DBManager();
         try {
-            if (!getOrderStatus(dbManager).equals(OrderStatus.ENTERING.toString())) {
+            if (!getOrderStatus().equals(OrderStatus.ENTERING.toString())) {
                 throw new WorkflowException("Cannot proceed Order: wrong order state");
             }
             ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
 
-            changeOrderStatus(dbManager, OrderStatus.PROCESSING);
-            ServiceInstance serviceInstance = createServiceInstance(dbManager);
+            changeOrderStatus(OrderStatus.PROCESSING);
+            ServiceInstance serviceInstance = createServiceInstance();
 
             // Link Order with SI
             order.setServiceInstanceID(serviceInstance.getId());
@@ -81,19 +81,17 @@ public class NewScenarioWorkflow extends Workflow {
              * because physical link to customer is always absent for "new"
              * scenario, so we have to create it mannualy
              */
-            createTask(dbManager, UserRole.INSTALLATION_ENGINEER, "Proceed new order");
+            createTask(UserRole.INSTALLATION_ENGINEER, "Proceed new order");
 
             dbManager.commit();
         } catch(Exception ex) {
             // need to be logged like:
             //log.error("SQLException", ex);
             dbManager.rollback();
-        } finally {
-            dbManager.close();
-        }
+        } 
     }
 
-    private ServiceInstance createServiceInstance(DBManager dbManager) throws DBManagerException {
+    private ServiceInstance createServiceInstance() throws DBManagerException {
         ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
         ServiceInstanceStatusDAO sisDAO = new ServiceInstanceStatusDAOImpl(dbManager);
 
@@ -117,10 +115,8 @@ public class NewScenarioWorkflow extends Workflow {
      * @param taskID ID of task for installation engineer                  
      */
     public void createRouter(int taskID, int portQuantity) throws DBManagerException {
-        DBManager dbManager = new DBManager();
         try {
-            if (!isTaskValid(dbManager, taskID,
-                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+            if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
 
@@ -151,9 +147,7 @@ public class NewScenarioWorkflow extends Workflow {
             // need to be logged like:
             //log.error("SQLException", ex);
             dbManager.rollback();
-        } finally {
-            dbManager.close();
-        }
+        } 
     }
 
     /**
@@ -161,10 +155,8 @@ public class NewScenarioWorkflow extends Workflow {
      * @param taskID ID of task for installation engineer
      */
     public void createCable(int taskID, String cableType) throws DBManagerException {
-        DBManager dbManager = new DBManager();
         try {
-            if (!isTaskValid(dbManager, taskID,
-                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+            if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
 
@@ -179,9 +171,7 @@ public class NewScenarioWorkflow extends Workflow {
             // need to be logged like:
             //log.error("SQLException", ex);
             dbManager.rollback();
-        } finally {
-            dbManager.close();
-        }
+        } 
     }
 
     /**
@@ -193,10 +183,8 @@ public class NewScenarioWorkflow extends Workflow {
      * @param portID ID of Port to plug Cable to
      */
     public void plugCableToPort(int taskID, int cableID, int portID) throws DBManagerException {
-        DBManager dbManager = new DBManager();
         try {
-            if (!isTaskValid(dbManager, taskID,
-                    UserRole.INSTALLATION_ENGINEER.toInt())) {
+            if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
             PortDAO portDAO = new PortDAOImpl(dbManager);
@@ -214,16 +202,14 @@ public class NewScenarioWorkflow extends Workflow {
             si.setPortID(portID);
             siDAO.update(si);
 
-            this.completeTask(dbManager, taskID);
-            this.createTask(dbManager, UserRole.PROVISION_ENGINEER, "Create curcuit");
+            this.completeTask(taskID);
+            this.createTask(UserRole.PROVISION_ENGINEER, "Create curcuit");
             dbManager.commit();
         } catch(Exception ex) {
             // need to be logged like:
             //log.error("SQLException", ex);
             dbManager.rollback();
-        } finally {
-            dbManager.close();
-        }
+        } 
     }
 
     /**
@@ -232,10 +218,8 @@ public class NewScenarioWorkflow extends Workflow {
      * @return ID of created Circuit instance
      */
     public void createCircuit(int taskID, String circuitConfig) throws DBManagerException {
-        DBManager dbManager = new DBManager();
         try {
-            if (!isTaskValid(dbManager, taskID,
-                    UserRole.PROVISION_ENGINEER.toInt())) {
+            if (!isTaskValid(taskID, UserRole.PROVISION_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
             CircuitDAO circuitDAO = new CircuitDAOImpl(dbManager);
@@ -250,16 +234,14 @@ public class NewScenarioWorkflow extends Workflow {
             si.setCircuitID(circuitID);
             siDAO.update(si);
 
-            this.completeTask(dbManager, taskID);
-            this.createTask(dbManager, UserRole.SUPPORT_ENGINEER, "Approve bill");
+            this.completeTask(taskID);
+            this.createTask(UserRole.SUPPORT_ENGINEER, "Approve bill");
             dbManager.commit();
         } catch(Exception ex) {
             // need to be logged like:
             //log.error("SQLException", ex);
             dbManager.rollback();
-        } finally {
-            dbManager.close();
-        }
+        } 
     }
 
     /**
@@ -269,34 +251,30 @@ public class NewScenarioWorkflow extends Workflow {
      * @param taskID ID of Task for Support Engineer
      */
     public void approveBill(int taskID) throws DBManagerException {
-        DBManager dbManager = new DBManager();
         try {
-            if (!isTaskValid(dbManager, taskID, UserRole.SUPPORT_ENGINEER.toInt())) {
+            if (!isTaskValid(taskID, UserRole.SUPPORT_ENGINEER.toInt())) {
                 throw new WorkflowException("Given Task is not valid");
             }
 
-            completeTask(dbManager, taskID);
+            completeTask(taskID);
 
-            updateServiceInstanceDate(dbManager, order.getServiceInstanceID());
-            changeServiceInstanceStatus(dbManager, InstanceStatus.ACTIVE);
-            changeOrderStatus(dbManager, OrderStatus.COMPLETED);
+            updateServiceInstanceDate(order.getServiceInstanceID());
+            changeServiceInstanceStatus(InstanceStatus.ACTIVE);
+            changeOrderStatus(OrderStatus.COMPLETED);
             // TODO: send email here
             dbManager.commit();
         } catch(Exception ex) {
             // need to be logged like:
             //log.error("SQLException", ex);
             dbManager.rollback();
-        } finally {
-            dbManager.close();
-        }
+        } 
     }
 
     /**
      * Sets SI creation date with current date
-     * @param dbManager class that represents connection to DB
      * @param serviceInstanceID ID of SI
      */
-    private void updateServiceInstanceDate(DBManager dbManager, int serviceInstanceID) throws DBManagerException {
+    private void updateServiceInstanceDate(int serviceInstanceID) throws DBManagerException {
         ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
         Calendar cal = java.util.Calendar.getInstance();
         Date date = new Date(cal.getTimeInMillis());
