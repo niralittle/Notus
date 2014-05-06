@@ -59,7 +59,8 @@ public abstract class Workflow {
      * @throws WorkflowException if task is not valid
      */
     public void assignTask(int taskID, int userID) throws DBManagerException {
-        try {
+        
+    	try {
             TaskDAO taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 

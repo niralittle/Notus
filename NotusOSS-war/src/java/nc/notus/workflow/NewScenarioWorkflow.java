@@ -53,7 +53,6 @@ public class NewScenarioWorkflow extends Workflow {
 		if (!getOrderScenario().equals(WorkflowScenario.NEW.toString())) {
 			throw new WorkflowException("Cannot proceed Order: wrong order scenario");
 		}
-
 	}
 
     /**

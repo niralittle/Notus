@@ -44,6 +44,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
 			throw new WorkflowException("Cannot proceed Order: "
 											+ "wrong order scenario");
 		}
+		
     }
 
     /**
