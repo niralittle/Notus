@@ -4,7 +4,7 @@ package nc.notus.dbmanager;
  * Wrapper of exceptions, occured in nc.notus.dbmanager packet
  * @author Igor Litvinenko
  */
-public class DBManagerException extends RuntimeException {
+public class DBManagerException extends Exception {
 
     /**
      * Creates a new instance of <code>DBManagerException</code> without detail message.

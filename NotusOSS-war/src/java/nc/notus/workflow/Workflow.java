@@ -18,6 +18,7 @@ import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dao.impl.TaskStatusDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceInstance;
@@ -46,7 +47,7 @@ public abstract class Workflow {
      * This method proceeds Order by creating tasks for
      * corresponding user groups which take part in Order execution
      */
-    public abstract void proceedOrder();
+    public abstract void proceedOrder() throws DBManagerException;
 
     /**
      * This method assigns task to particular user of user group
@@ -55,7 +56,7 @@ public abstract class Workflow {
      * @param userID ID of user to assign
      * @throws WorkflowException if task is not valid
      */
-    public void assignTask(int taskID, int userID) {
+    public void assignTask(int taskID, int userID) throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             TaskDAO taskDAO = new TaskDAOImpl(dbManager);
@@ -87,7 +88,7 @@ public abstract class Workflow {
      * @param dbManager connection to database encapsulated in DBManager class
      * @param userRole identifies user group to create task for
      */
-    protected void createTask(DBManager dbManager, UserRole userRole, String name) {
+    protected void createTask(DBManager dbManager, UserRole userRole, String name) throws DBManagerException {
         TaskDAOImpl taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
@@ -107,7 +108,7 @@ public abstract class Workflow {
      * @param dbManager connection to database encapsulated in DBManager class
      * @param taskID ID of task
      */
-    protected void completeTask(DBManager dbManager, int taskID) {
+    protected void completeTask(DBManager dbManager, int taskID) throws DBManagerException {
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
@@ -117,14 +118,14 @@ public abstract class Workflow {
         taskDAO.update(task);
     }
 
-    protected String getOrderStatus(DBManager dbManager) {
+    protected String getOrderStatus(DBManager dbManager) throws DBManagerException {
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
         int statusID = order.getServiceOrderStatusID();
         ServiceOrderStatus status = orderStatusDAO.find(statusID);
         return status.getStatus();
     }
 
-    protected String getOrderScenario(DBManager dbManager) {
+    protected String getOrderScenario(DBManager dbManager) throws DBManagerException {
         ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
         int scenarioID = order.getScenarioID();
         Scenario scenario = scenarioDAO.find(scenarioID);
@@ -132,7 +133,7 @@ public abstract class Workflow {
     }
 
     protected void changeServiceInstanceStatus(DBManager dbManager,
-            InstanceStatus status) {
+            InstanceStatus status) throws DBManagerException {
         ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
         ServiceInstanceStatusDAO sisDAO = new ServiceInstanceStatusDAOImpl(dbManager);
 
@@ -142,7 +143,7 @@ public abstract class Workflow {
         siDAO.update(si);
     }
 
-    protected void changeOrderStatus(DBManager dbManager, OrderStatus status) {
+    protected void changeOrderStatus(DBManager dbManager, OrderStatus status) throws DBManagerException {
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
 
@@ -160,7 +161,7 @@ public abstract class Workflow {
      * @return <code>true</code> if Task is valid for execution and
      * <code>false</code> otherwise
      */
-    protected boolean isTaskValid(DBManager dbManager, int taskID, int userRoleID) {
+    protected boolean isTaskValid(DBManager dbManager, int taskID, int userRoleID) throws DBManagerException {
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 

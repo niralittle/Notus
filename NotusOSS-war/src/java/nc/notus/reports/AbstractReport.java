@@ -2,6 +2,7 @@ package nc.notus.reports;
 
 import java.io.IOException;
 import java.io.Writer;
+import nc.notus.dbmanager.DBManagerException;
 
 /**
  * Abstract representation of a system report.
@@ -17,7 +18,7 @@ public abstract class AbstractReport {
      * each report and report generator.
      * @return report data as string array
      */
-    public abstract String[] getReportData();
+    public abstract String[] getReportData() throws DBManagerException;
 
     /**
      * Gets report name.
@@ -32,7 +33,7 @@ public abstract class AbstractReport {
      * @param fileSeparator data column separator
      */
     public abstract void getFileData(Writer writer, String fileSeparator)
-            throws IOException;
+            throws IOException, DBManagerException;
 
     /*
      * This methods should be overridden if report has paging functionality.
@@ -40,15 +41,15 @@ public abstract class AbstractReport {
      * paging functionality.
      *
      */
-    protected boolean checkNextPage() {
+    protected boolean checkNextPage() throws DBManagerException {
         return false;
     }
 
-    protected boolean getNextDataPage() {
+    protected boolean getNextDataPage() throws DBManagerException {
         return false;
     }
 
-    protected boolean getPreviousDataPage() {
+    protected boolean getPreviousDataPage() throws DBManagerException {
         return false;
     }
 
@@ -56,6 +57,6 @@ public abstract class AbstractReport {
         return 0;
     }
 
-    protected void setCurrentPageIndex(int pageIndex) {
+    protected void setCurrentPageIndex(int pageIndex) throws DBManagerException {
     }
 }

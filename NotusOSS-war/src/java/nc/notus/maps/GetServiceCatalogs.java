@@ -7,6 +7,7 @@ import nc.notus.dao.ServiceTypeDAO;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceType;
 
@@ -28,7 +29,7 @@ public class GetServiceCatalogs {
      * Gets serviceCatalogs by providerLocationID via DAO
      * @return serviceCatalogs - list of service catalogs
      */
-    public List<ServiceCatalog> getServiceCatalogs() {
+    public List<ServiceCatalog> getServiceCatalogs() throws DBManagerException {
         DBManager dbManager = new DBManager();
         List<ServiceCatalog> serviceCatalogs = new ArrayList<ServiceCatalog>();
         try {
@@ -46,7 +47,7 @@ public class GetServiceCatalogs {
      * @param serviceCatalog - service catalog
      * @return serviceType - type of service catalog
      */
-    public ServiceType getServiceType(ServiceCatalog serviceCatalog) {
+    public ServiceType getServiceType(ServiceCatalog serviceCatalog) throws DBManagerException {
         DBManager dbManager = new DBManager();
         ServiceTypeDAO type = new ServiceTypeDAOImpl(dbManager);
         ServiceType serviceType = new ServiceType();

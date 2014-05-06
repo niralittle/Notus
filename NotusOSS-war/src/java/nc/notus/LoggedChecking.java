@@ -8,6 +8,8 @@ package nc.notus;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
@@ -53,7 +56,7 @@ public class LoggedChecking extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
         DBManager dbManager = new DBManager();
         
@@ -108,7 +111,7 @@ public class LoggedChecking extends HttpServlet {
      * @param userID
      * @return so  - new Service Order
      */
-    private ServiceOrder createOrder(DBManager dbManager, int userID) {
+    private ServiceOrder createOrder(DBManager dbManager, int userID) throws DBManagerException {
 
 		ServiceOrderStatusDAO statusDAO = new ServiceOrderStatusDAOImpl(dbManager);
 		ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
@@ -144,7 +147,11 @@ public class LoggedChecking extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(LoggedChecking.class.getName()).log(Level.SEVERE, null, ex);
+        }
     } 
 
     /** 
@@ -157,7 +164,11 @@ public class LoggedChecking extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(LoggedChecking.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /** 

@@ -7,6 +7,7 @@ package nc.notus.filters;
 
 import java.io.IOException;
 
+import nc.notus.dbmanager.DBManagerException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -36,7 +37,7 @@ public class AuthServlet extends HttpServlet {
 	
 	protected void processRequest(HttpServletRequest request,
                 HttpServletResponse response)
-                throws ServletException, IOException {
+                throws ServletException, IOException, DBManagerException {
 		
 		logger.log(Level.INFO, "Test loger");
 		String username = request.getParameter("j_username");
@@ -83,7 +84,11 @@ public class AuthServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response)
                         throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            java.util.logging.Logger.getLogger(AuthServlet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
 	}
 
 	
@@ -91,7 +96,11 @@ public class AuthServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response)
                         throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            java.util.logging.Logger.getLogger(AuthServlet.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
 	}
 
 	

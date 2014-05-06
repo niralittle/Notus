@@ -2,6 +2,8 @@ package nc.notus.dashboards;
 
 import java.io.IOException;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Session;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
 import nc.notus.states.WorkflowScenario;
@@ -27,7 +30,7 @@ public class DisconnectOrderProceed extends HttpServlet {
 	
 	void processRequest(HttpServletRequest request,
                         HttpServletResponse response)
-			throws ServletException, IOException {
+			throws ServletException, IOException, DBManagerException {
 
 		response.setContentType("text/html;charset=UTF-8");
 		
@@ -71,7 +74,7 @@ public class DisconnectOrderProceed extends HttpServlet {
 	}
 
 	
-	private ServiceOrder getServiceOrder(int serviceInstanceId) {
+	private ServiceOrder getServiceOrder(int serviceInstanceId) throws DBManagerException {
 		DBManager dbManager = null;
                 ServiceOrder serviceOrder;
 		try {
@@ -90,7 +93,11 @@ public class DisconnectOrderProceed extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response)
                         throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(DisconnectOrderProceed.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**
@@ -109,7 +116,11 @@ public class DisconnectOrderProceed extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response)
                         throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(DisconnectOrderProceed.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**

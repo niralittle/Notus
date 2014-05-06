@@ -1,6 +1,7 @@
 package nc.notus.dao;
 
 import java.util.List;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceCatalog;
 
 /**
@@ -17,5 +18,5 @@ public interface ServiceCatalogDAO extends GenericDAO<ServiceCatalog> {
      * @return ServiceCatalog list of objects
      */                                                                         
     public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id,
-                                        int offset, int numberOfRecords);
+                                        int offset, int numberOfRecords)throws DBManagerException;
 }

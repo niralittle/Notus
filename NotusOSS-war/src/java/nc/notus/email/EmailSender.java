@@ -17,6 +17,7 @@ import javax.mail.internet.MimeMessage;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.states.UserRole;
 
@@ -83,47 +84,50 @@ public class EmailSender {
 
         @Override
         public void run() {
-            DBManager dbManager = new DBManager();
-            Address[] address = null;
-            try {
-                OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-
-                if (role == null) {
-                    address = new Address[1];
-                    OSSUser user = userDAO.find(userID);
-                    address[0] = new InternetAddress(user.getEmail());
-
-                } else {
-                    List<String> userEmails = userDAO.getGroupEmails(role);
-                    address = new Address[userEmails.size()];
-                    for (int i = 0; i < userEmails.size(); i++) {
-                        address[i] = new InternetAddress(userEmails.get(i));
-                    }
-                }
-            } catch (AddressException ex) {
-                Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                dbManager.close();
-            }
-
-                    /*Authentication to mail service */
-            Session session = Session.getInstance(props, new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username, password);
-                }
-            });
 
         /*Send mail*/
             try {
-                Message message = new MimeMessage(session);
-                message.setFrom(new InternetAddress(username));
-                message.setRecipients(Message.RecipientType.BCC, address);
-                message.setSubject(mail.getSubject());
-                message.setContent(mail.getMessage(), "text/html");
-                Transport.send(message);
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
+                DBManager dbManager = new DBManager();
+                Address[] address = null;
+                try {
+                    OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+                    if (role == null) {
+                        address = new Address[1];
+                        OSSUser user = userDAO.find(userID);
+                        address[0] = new InternetAddress(user.getEmail());
+                    } else {
+                        List<String> userEmails = userDAO.getGroupEmails(role);
+                        address = new Address[userEmails.size()];
+                        for (int i = 0; i < userEmails.size(); i++) {
+                            address[i] = new InternetAddress(userEmails.get(i));
+                        }
+                    }
+                } catch (AddressException ex) {
+                    Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    dbManager.close();
+                }
+                /*Authentication to mail service */
+                Session session = Session.getInstance(props, new Authenticator() {
+
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+                /*Send mail*/
+                try {
+                    Message message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(username));
+                    message.setRecipients(Message.RecipientType.BCC, address);
+                    message.setSubject(mail.getSubject());
+                    message.setContent(mail.getMessage(), "text/html");
+                    Transport.send(message);
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
+            } catch (DBManagerException ex) {
+                Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

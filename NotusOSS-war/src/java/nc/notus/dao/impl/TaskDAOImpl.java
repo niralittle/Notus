@@ -5,6 +5,7 @@ import java.util.List;
 
 import nc.notus.dao.TaskDAO;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.Task;
@@ -27,7 +28,8 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
          * @return list of tasks
          */
 	   @Override
-	    public List<Task> getEngTasks(int offset, int numberOfRecords, int roleID) {
+	    public List<Task> getEngTasks(int offset, int numberOfRecords, int roleID) 
+                                                        throws DBManagerException {
 	        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
 	                "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid, t.name " +
 	                "FROM task t " +
@@ -65,7 +67,8 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	    * @return list of tasks
 	    */
 	   @Override
-           public List<Task> getTasksByID(int offset, int numberOfRecords, int userID) {
+           public List<Task> getTasksByID(int offset, int numberOfRecords, int userID)
+                                                    throws DBManagerException {
 	        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
 	                "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid, t.name " +
 	                "FROM task t " +
@@ -101,7 +104,8 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	    * @return list of tasks
 	    */
            @Override
-	    public List<Task> getAssignedTasks(int offset, int numberOfRecords) {
+	    public List<Task> getAssignedTasks(int offset, int numberOfRecords)
+                                                        throws DBManagerException {
 	        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
 	                "SELECT t.id, t.serviceorderid, t.employeeid, t.roleid, t.taskstatusid, t.name " +
 	                "FROM task t " +
@@ -134,7 +138,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
      * @return count of tasks
      */
     @Override
-    public long countAllAssigned() {
+    public long countAllAssigned() throws DBManagerException {
         long count = 0;
 	String query  = "SELECT COUNT(*) total " +
 	                "FROM task t " +

@@ -1,6 +1,7 @@
 package nc.notus.dao;
 
 import java.util.List;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Task;
 
 /**
@@ -16,7 +17,8 @@ public interface TaskDAO extends GenericDAO<Task> {
      * @param roleID - id of assigned role for tasks
      * @return list of tasks
      */
-    public List<Task> getEngTasks(int offset, int numberOfRecords, int roleID);
+    public List<Task> getEngTasks(int offset, int numberOfRecords, int roleID)
+                                                    throws DBManagerException;
 
     /**
      * Method returns list of numberOfRecords choosen userID tasks with paging;
@@ -25,7 +27,8 @@ public interface TaskDAO extends GenericDAO<Task> {
      * @param userID - user ID
      * @return list of tasks
      */
-    public List<Task> getTasksByID(int offset, int numberOfRecords, int userID);
+    public List<Task> getTasksByID(int offset, int numberOfRecords, int userID) 
+                                                    throws DBManagerException;
 
     /**
      * Method returns list of numberOfRecords active assigned tasks with paging;
@@ -33,11 +36,12 @@ public interface TaskDAO extends GenericDAO<Task> {
      * @param numberOfRecords - quantity of records to fetch
      * @return list of tasks
      */
-	    public List<Task> getAssignedTasks(int offset, int numberOfRecords);
+	    public List<Task> getAssignedTasks(int offset, int numberOfRecords) 
+                                                    throws DBManagerException;
 
     /**
      * Method returns count of active assigned tasks
      * @return count of tasks
      */
-    public long countAllAssigned();
+    public long countAllAssigned() throws DBManagerException;
 }

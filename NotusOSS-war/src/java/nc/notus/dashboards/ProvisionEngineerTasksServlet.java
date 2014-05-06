@@ -7,6 +7,8 @@ package nc.notus.dashboards;
 
 import java.io.IOException;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,7 @@ import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
@@ -45,7 +48,7 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 	 *             if an I/O error occurs
 	 */
 	protected void processRequest(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response) throws ServletException, IOException, DBManagerException {
 		response.setContentType("text/html;charset=UTF-8");
 
 		if (request.getParameter("taskid") != null) {
@@ -71,7 +74,7 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 
 	}
 
-	private String getTaskScenario(Task task, DBManager dbManager) {
+	private String getTaskScenario(Task task, DBManager dbManager) throws DBManagerException {
 
 		String wfScenario = null;
 
@@ -109,7 +112,11 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(ProvisionEngineerTasksServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**
@@ -151,7 +158,9 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 					request.setAttribute("success","Circuit successfully deleted!");
 					request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
 				}
-			} finally {
+			} catch (DBManagerException ex) {
+                Logger.getLogger(ProvisionEngineerTasksServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
 				dbManager.close();
 			}
 		}

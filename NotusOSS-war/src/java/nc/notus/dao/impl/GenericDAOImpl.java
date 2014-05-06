@@ -11,6 +11,7 @@ import java.util.HashMap;
 import nc.notus.dao.GenericDAO;
 import nc.notus.dao.DAOException;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 
@@ -40,7 +41,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      * @return the number of records meeting the criteria
      */
     @Override
-    public long countAll(Map<String, Object> params) {
+    public long countAll(Map<String, Object> params) throws DBManagerException {
         // form SQL query
         StringBuilder query = new StringBuilder();
         query.append("SELECT COUNT(*) FROM " + type.getSimpleName());
@@ -80,7 +81,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      * @return the number of records meeting the criteria
      */
     @Override
-    public long countAllWithLikeCause(Map<String, Object> params) {
+    public long countAllWithLikeCause(Map<String, Object> params) throws DBManagerException {
         // form SQL query
         StringBuilder query = new StringBuilder();
         query.append("SELECT COUNT(*) FROM " + type.getSimpleName());
@@ -119,7 +120,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      * @return Primary Key of created instance
      */
     @Override
-    public Object add(T t) {
+    public Object add(T t) throws DBManagerException {
         StringBuilder query = new StringBuilder();
         query.append("INSERT INTO ").append(type.getSimpleName()).append('(');
         Map<String, Object> fields = getFieldsList(t);
@@ -157,7 +158,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      * @param id id of entity instance
      */
     @Override
-    public void delete(Object id) {
+    public void delete(Object id) throws DBManagerException {
         if (id instanceof Number) {
             String queryString =
                     "DELETE FROM " + type.getSimpleName() + " WHERE id = ?";
@@ -178,7 +179,8 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      * @param id id of entity instance
      * @return instance of entity found
      */
-    public T find(Object id) {
+    @Override
+    public T find(Object id) throws DBManagerException {
         if (!(id instanceof Number)) {
             throw new DAOException("Wrong primary key type");
         }
@@ -242,7 +244,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      * @param t instance of entity to update in DB
      */
     @Override
-    public void update(T t) {
+    public void update(T t) throws DBManagerException {
         Object id;
         try {
             id = type.getMethod("getId").invoke(t);
@@ -291,7 +293,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      * @param t instance of entity to get fields from
      * @return map of field names and their corresponding values
      */
-    private Map<String, Object> getFieldsList(T t) {
+    private Map<String, Object> getFieldsList(T t) throws DBManagerException {
         Map<String, Object> map = new HashMap<String, Object>();
         Field[] fields = type.getDeclaredFields();
         for (Field f : fields) {

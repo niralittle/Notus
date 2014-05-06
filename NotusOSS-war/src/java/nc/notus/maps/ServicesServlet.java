@@ -3,10 +3,13 @@ package nc.notus.maps;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceType;
 
@@ -27,7 +30,7 @@ public class ServicesServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, DBManagerException {
         PrintWriter out = response.getWriter();
         StringBuffer sb = new StringBuffer();
         int providerLocationID = 0;
@@ -67,7 +70,11 @@ public class ServicesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(ServicesServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -80,7 +87,11 @@ public class ServicesServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(ServicesServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

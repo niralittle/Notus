@@ -1,6 +1,7 @@
 package nc.notus.dao;
 
 import java.util.Map;
+import nc.notus.dbmanager.DBManagerException;
 
 /**
  * This interface provides general DAO functions for all entities
@@ -13,7 +14,7 @@ public interface GenericDAO<T> {
      * @param params sql parameters (name-value) that are criteria for SELECT
      * @return the number of records meeting the criteria
      */
-    long countAll(Map<String, Object> params);
+    long countAll(Map<String, Object> params)throws DBManagerException;
 
      /**
      * Returns the number of entries from a table that meet some
@@ -21,7 +22,7 @@ public interface GenericDAO<T> {
      * @param params sql parameters (name-value) that are criteria for SELECT
      * @return the number of records meeting the criteria
      */
-	long countAllWithLikeCause(Map<String, Object> params);
+	long countAllWithLikeCause(Map<String, Object> params)throws DBManagerException;
 
 
     /**
@@ -29,13 +30,13 @@ public interface GenericDAO<T> {
      * @param t entity to add to DB
      * @return Primary Key of created instance
      */
-    Object add(T t);
+    Object add(T t)throws DBManagerException;
 
     /**
      * Method deletes instance of entity from DB by given primary key
      * @param id id of entity instance
      */
-    void delete(Object id);
+    void delete(Object id)throws DBManagerException;
 
     /**
      * Method finds instance of entity in DB by given primary key.
@@ -45,12 +46,12 @@ public interface GenericDAO<T> {
      * @param id id of entity instance
      * @return instance of entity found
      */
-    T find(Object id);
+    T find(Object id)throws DBManagerException;
 
     /**
      * Method substitutes instance of entity in DB with one given.
      * It invocates <code>getId()</code> method of instance to get primary key
      * @param t instance of entity to update in DB
      */
-    void update(T t);
+    void update(T t)throws DBManagerException;
 }

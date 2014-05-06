@@ -1,6 +1,7 @@
 package nc.notus.dao;
 
 import java.util.List;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceInstance;
 
 /**
@@ -16,5 +17,6 @@ public interface ServiceInstanceDAO extends GenericDAO<ServiceInstance> {
      * @param numberOfRecords - quantity of records to fetch
      * @return list ServiceInstances  
      */
-    public List<ServiceInstance> getServiceInstancesByUserID(int userID, int offset, int numberOfRecords);
+    public List<ServiceInstance> getServiceInstancesByUserID(int userID, 
+            int offset, int numberOfRecords) throws DBManagerException;
 }

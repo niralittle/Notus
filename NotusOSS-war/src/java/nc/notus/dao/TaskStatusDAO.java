@@ -1,5 +1,6 @@
 package nc.notus.dao;
 
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.TaskStatus;
 import nc.notus.states.TaskState;
 
@@ -15,5 +16,5 @@ public interface TaskStatusDAO extends GenericDAO<TaskStatus> {
      * @return id of task
      * @throws DAOException if task was not found
      */
-    public int getTaskStatusID(TaskState taskState);
+    public int getTaskStatusID(TaskState taskState) throws DBManagerException;
 }

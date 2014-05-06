@@ -1,5 +1,6 @@
 package nc.notus.dao;
 
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Scenario;
 import nc.notus.states.WorkflowScenario;
 
@@ -15,5 +16,5 @@ public interface ScenarioDAO extends GenericDAO<Scenario> {
      * @return ID of Scenario
      * @throws DAOException if Scenario was not found
      */
-    public int getScenarioID(WorkflowScenario scenario);
+    public int getScenarioID(WorkflowScenario scenario) throws DBManagerException;
 }

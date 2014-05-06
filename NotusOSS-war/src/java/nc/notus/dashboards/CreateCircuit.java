@@ -8,6 +8,8 @@ package nc.notus.dashboards;
 import java.io.IOException;
 import java.util.List;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +21,7 @@ import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
 import nc.notus.states.UserRole;
@@ -42,7 +45,7 @@ public class CreateCircuit extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
         DBManager dbManager = new DBManager();
         int taskID;
@@ -115,7 +118,11 @@ public class CreateCircuit extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(CreateCircuit.class.getName()).log(Level.SEVERE, null, ex);
+        }
     } 
 
     /** 
@@ -128,7 +135,11 @@ public class CreateCircuit extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(CreateCircuit.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /** 

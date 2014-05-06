@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.states.UserRole;
 
@@ -41,7 +44,7 @@ public class GettingUsersInfo extends HttpServlet {
 	
 
 	void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws ServletException, IOException, DBManagerException {
 		response.setContentType("text/html;charset=UTF-8");
 		
 		DBManager dbManager = null;
@@ -128,7 +131,7 @@ public class GettingUsersInfo extends HttpServlet {
 		return true;
 	}
 
-	private long getPageCount(OSSUserDAO userDAO) {
+	private long getPageCount(OSSUserDAO userDAO) throws DBManagerException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 		if (!lastName.isEmpty()) {
@@ -165,7 +168,11 @@ public class GettingUsersInfo extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(GettingUsersInfo.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**
@@ -183,7 +190,11 @@ public class GettingUsersInfo extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(GettingUsersInfo.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**

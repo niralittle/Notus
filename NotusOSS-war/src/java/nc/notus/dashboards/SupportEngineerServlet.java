@@ -2,6 +2,8 @@ package nc.notus.dashboards;
 
 import java.io.IOException;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +14,7 @@ import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
 import nc.notus.workflow.NewScenarioWorkflow;
@@ -72,7 +75,9 @@ public class SupportEngineerServlet extends HttpServlet {
 				wf.approveBill(taskID);
 
 				request.setAttribute("success", "Bill was sent!");
-			} finally {
+			} catch (DBManagerException ex) {
+                    Logger.getLogger(SupportEngineerServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
 				dbManager.close();
 			}
 

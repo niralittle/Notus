@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +33,7 @@ import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Cable;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Port;
@@ -62,7 +65,7 @@ public class TasksAssignment extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
         DBManager dbManager = new DBManager();
         String login = "";
@@ -186,7 +189,7 @@ public class TasksAssignment extends HttpServlet {
     } 
     
     private void prepareTask(Task task, HttpServletRequest request, DBManager dbManager, 
-    		int roleID) {
+    		int roleID) throws DBManagerException {
     		
 		if (roleID == UserRole.INSTALLATION_ENGINEER.toInt()) {
 			return;
@@ -198,7 +201,7 @@ public class TasksAssignment extends HttpServlet {
 		request.setAttribute("task", task);
 	}
     
-    private String getTaskScenario(Task task, DBManager dbManager) {
+    private String getTaskScenario(Task task, DBManager dbManager) throws DBManagerException {
 		ServiceOrderDAOImpl soDAO = new ServiceOrderDAOImpl(dbManager);
 		ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
 
@@ -217,7 +220,7 @@ public class TasksAssignment extends HttpServlet {
 	}
     
     
-    private long getPageCount(TaskDAO taskDAO, OSSUser user, boolean personal) {
+    private long getPageCount(TaskDAO taskDAO, OSSUser user, boolean personal) throws DBManagerException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		
 	    if (personal) {
@@ -245,7 +248,11 @@ public class TasksAssignment extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(TasksAssignment.class.getName()).log(Level.SEVERE, null, ex);
+        }
     } 
 
     /** 
@@ -258,7 +265,11 @@ public class TasksAssignment extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(TasksAssignment.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /** 

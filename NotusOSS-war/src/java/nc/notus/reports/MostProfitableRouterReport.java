@@ -6,6 +6,7 @@ import java.io.Writer;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.MostProfitableRouterReportData;
 
 /**
@@ -32,12 +33,12 @@ public class MostProfitableRouterReport extends AbstractReport {
      * Creates a report instance with given name
      * @param reportName
      */
-    public MostProfitableRouterReport(String reportName) {
+    public MostProfitableRouterReport(String reportName) throws DBManagerException {
         this.reportName = reportName;
         getDataFromDatabase();
     }
 
-    private void getDataFromDatabase() {
+    private void getDataFromDatabase() throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
@@ -96,7 +97,7 @@ public class MostProfitableRouterReport extends AbstractReport {
      */
     @Override
     public void getFileData(Writer writer, String fileSeparator)
-            throws IOException {
+            throws IOException, DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);

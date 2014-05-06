@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.Date;
 import java.util.List;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.MostProfitableRouterReportData;
 import nc.notus.entity.ProfitInMonth;
 import nc.notus.entity.RoutersUtilizationCapacity;
@@ -28,7 +29,7 @@ public interface ReportDAO {
      * @param columnSeparator separates columns in a string row
      */
     public void getMostProfitableRouter(Writer storage, String columnSeparator)
-            throws IOException;
+            throws IOException, DBManagerException;
 
     /**
      * Method that returns list of new ServiceOrders per period
@@ -74,7 +75,7 @@ public interface ReportDAO {
      * @throws IOException in case of writer errors
      */
     public void getDisconnectServiceOrders(Writer storage, String columnSeparator,
-            Date startDate, Date finishDate) throws IOException;
+            Date startDate, Date finishDate) throws IOException, DBManagerException;
 
     /**
      * Method that returns list of objects for routers utilization and capacity report
@@ -92,7 +93,7 @@ public interface ReportDAO {
      * @param columnSeparator separates columns in a string row
      */
     public void getRoutersUtilizationCapacityData(Writer storage, String columnSeparator)
-            throws IOException;
+            throws IOException, DBManagerException;
 
     /**
      * Method that returns list of objects for profitability by month report

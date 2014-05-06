@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.ServiceCatalog;
@@ -27,7 +28,8 @@ public class ServiceCatalogDAOImpl extends GenericDAOImpl<ServiceCatalog>
      * @return ServiceCatalog list of objects
      */
     @Override
-    public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id, int offset, int numberOfRecords) {
+    public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id, 
+            int offset, int numberOfRecords) throws DBManagerException  {
         List<ServiceCatalog> serviceCatalogs = new ArrayList<ServiceCatalog>();
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +   
                 "SELECT sc.id, sc.providerlocationid, sc.servicetypeid, sc.price " +

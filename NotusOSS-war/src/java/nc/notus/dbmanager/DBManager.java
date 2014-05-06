@@ -4,6 +4,8 @@ import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -23,7 +25,7 @@ public class DBManager implements Closeable {
      * Creates new instance of <code>DBManager</code>.
      * Uses JNDI lookup to obtain DataSource.
      */
-    public DBManager() {
+    public DBManager() throws DBManagerException {
         try {
             InitialContext initContext = new InitialContext();
             dataSource = (DataSource) initContext.lookup("jdbc/_NOTUS");
@@ -38,7 +40,7 @@ public class DBManager implements Closeable {
      * @param query SQL query to form statement from
      * @return Statement of given query
      */
-    public Statement prepareStatement(String query) {
+    public Statement prepareStatement(String query) throws DBManagerException {
         try {
             String generatedColumns[] = { "ID" }; // primary key column for Statement.getGeneratedPrimaryKey()
             PreparedStatement prStatement = conn.prepareStatement(query, generatedColumns);
@@ -48,7 +50,7 @@ public class DBManager implements Closeable {
         }
     }
                                                                                 // REVIEW: documentation expected
-    public void commit() {
+    public void commit() throws DBManagerException {
         try {
             conn.commit();
         } catch (SQLException exc) {
@@ -56,7 +58,7 @@ public class DBManager implements Closeable {
         }
     }
                                                                                 // REVIEW: documentation expected
-    public void rollback() {
+    public void rollback() throws DBManagerException {
         try {
             conn.rollback();
         } catch (SQLException exc) {
@@ -68,7 +70,7 @@ public class DBManager implements Closeable {
      * Gets connection to DataSource
      * @return Connection
      */
-    private Connection getConnection() {
+    private Connection getConnection() throws DBManagerException {
         try {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
@@ -81,7 +83,7 @@ public class DBManager implements Closeable {
     /**
      * Releases obtained connection
      */
-    private void releaseConnection() {
+    private void releaseConnection() throws DBManagerException {
         try {
             conn.close();
         } catch (SQLException exc) {
@@ -93,6 +95,10 @@ public class DBManager implements Closeable {
      * Releases resources
      */
     public void close() {
-        this.releaseConnection();
+        try {
+            this.releaseConnection();
+        } catch (DBManagerException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
