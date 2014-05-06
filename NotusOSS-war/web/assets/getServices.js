@@ -117,7 +117,7 @@ function goToRegistration(){
     var selected = getSelected();
     if(selected != false){
         var selectedID = selected.getAttribute("id");
-        var location = escape(address.value);
+        var location = escapeURI(address.value);
         var postForm=document.getElementById('postForm');
         document.getElementById("serviceLocationID").setAttribute("value", location);
         document.getElementById("serviceCatalogID").setAttribute("value", selectedID);
