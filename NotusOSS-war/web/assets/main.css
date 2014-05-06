@@ -508,3 +508,13 @@ a.button28:active {
     
     text-decoration: none;
 }
+
+#notAvailableService img{
+    margin: 0 auto;
+}
+
+#notAvailableService a{
+    text-decoration: none;
+    font-size: 16px;
+    color: #000;
+}
