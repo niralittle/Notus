@@ -347,7 +347,7 @@ public class ReportDAOImpl implements ReportDAO {
      */
     @Override
     public void getDisconnectServiceOrders(Writer storage, String columnSeparator,
-            Date startDate, Date finishDate) throws IOException {
+            Date startDate, Date finishDate) throws IOException, DBManagerException {
         String query = "SELECT so.id, so.serviceorderdate, so.servicelocation, " +
                 "st.service, sc.price, pl.name, pl.location " +
                 "FROM serviceorder so " +
@@ -388,7 +388,7 @@ public class ReportDAOImpl implements ReportDAO {
      */
     @Override
     public void getRoutersUtilizationCapacityData(Writer storage, String columnSeparator)
-            throws IOException {
+            throws IOException, DBManagerException {
         String query = "SELECT d.id, d.name, d.portquantity," +
                 "COUNT(p.portnumber) / d.portquantity * 100 AS utilization " +
                 "FROM device d " +
@@ -416,7 +416,7 @@ public class ReportDAOImpl implements ReportDAO {
      */
     @Override
     public void getMostProfitableRouter(Writer storage, String columnSeparator)
-            throws IOException {
+            throws IOException, DBManagerException {
         String query = "SELECT d.id, d.name, d.portquantity, sum(sc.price) total " +
                 "FROM serviceorder so " +
                 "LEFT JOIN servicecatalog sc ON so.servicecatalogid = sc.id " +

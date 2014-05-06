@@ -7,6 +7,7 @@ import java.util.List;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceOrderReportData;
 
 /**
@@ -40,14 +41,14 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
      * @param reportName
      */
     public DisconnectOrdersPerPeriodReport(String reportName, String startDate,
-            String finishDate) {
+            String finishDate) throws DBManagerException {
         this.startDate = Date.valueOf(startDate);
         this.finishDate = Date.valueOf(finishDate);
         this.reportName = reportName;
         getDataFromDatabase();
     }
 
-    private void getDataFromDatabase() {
+    private void getDataFromDatabase() throws DBManagerException {
         this.reportName = "Disconnect orders per period";
         DBManager dbManager = new DBManager();
         try {
@@ -102,7 +103,7 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
      * and false - if not.
      */
     @Override
-    public boolean getNextDataPage() {
+    public boolean getNextDataPage() throws DBManagerException {
         pageNumber++;
         getDataFromDatabase();
         if (reportData.length > 1 && reportData.length == recordsPerPage + 1) {
@@ -117,7 +118,7 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
      * @return true - if this page isn't last and false - if not.
      */
     @Override
-    public boolean getPreviousDataPage() {
+    public boolean getPreviousDataPage() throws DBManagerException {
         if (pageNumber > 0) {
             pageNumber--;
             getDataFromDatabase();
@@ -136,7 +137,7 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
      * @param pageIndex page to select
      */
     @Override
-    public void setCurrentPageIndex(int pageIndex) {
+    public void setCurrentPageIndex(int pageIndex) throws DBManagerException {
         this.pageNumber = pageIndex;
         if (pageIndex > 0) {
             getDataFromDatabase();
@@ -153,7 +154,7 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
     }
 
     @Override
-    public boolean checkNextPage() {
+    public boolean checkNextPage() throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
@@ -176,7 +177,8 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
      * @param fileSeparator data column separator
      */
     @Override
-    public void getFileData(Writer writer, String fileSeparator) throws IOException {
+    public void getFileData(Writer writer, String fileSeparator) 
+                                    throws IOException, DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);

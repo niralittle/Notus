@@ -16,7 +16,7 @@ public class ResultIterator {                                                   
         this.rs = rs;
     }
 
-    public boolean next() {
+    public boolean next() throws DBManagerException {
         try {
             return rs.next();
         } catch (SQLException exc) {
@@ -24,7 +24,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public Object getObject(String columnName) {
+    public Object getObject(String columnName) throws DBManagerException {
         try {
             return rs.getObject(columnName);
         } catch (SQLException exc) {
@@ -32,7 +32,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public Object getObject(int columnNumber) {
+    public Object getObject(int columnNumber) throws DBManagerException {
         try {
             return rs.getObject(columnNumber);
         } catch (SQLException exc) {
@@ -40,7 +40,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public Date getDate(String columnName) {
+    public Date getDate(String columnName) throws DBManagerException {
         try {
             return rs.getDate(columnName);
         } catch (SQLException exc) {
@@ -48,7 +48,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public Date getDate(int columnNumber) {
+    public Date getDate(int columnNumber) throws DBManagerException {
         try {
             return rs.getDate(columnNumber);
         } catch (SQLException exc) {
@@ -56,7 +56,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public float getFloat(String columnName) {
+    public float getFloat(String columnName) throws DBManagerException {
         try {
             return rs.getFloat(columnName);
         } catch (SQLException exc) {
@@ -64,7 +64,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public float getFloat(int columnNumber) {
+    public float getFloat(int columnNumber) throws DBManagerException {
         try {
             return rs.getFloat(columnNumber);
         } catch (SQLException exc) {
@@ -72,7 +72,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public int getInt(String columnName) {
+    public int getInt(String columnName) throws DBManagerException {
         try {
             return rs.getInt(columnName);
         } catch (SQLException exc) {
@@ -80,7 +80,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public int getInt(int columnNumber) {
+    public int getInt(int columnNumber) throws DBManagerException {
         try {
             return rs.getInt(columnNumber);
         } catch (SQLException exc) {
@@ -88,7 +88,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public String getString(String columnName) {
+    public String getString(String columnName) throws DBManagerException {
         try {
             return rs.getString(columnName);
         } catch (SQLException exc) {
@@ -96,7 +96,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public String getString(int columnNumber) {
+    public String getString(int columnNumber) throws DBManagerException {
         try {
             return rs.getString(columnNumber);
         } catch (SQLException exc) {
@@ -104,7 +104,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public boolean getBoolean(String columnName) {
+    public boolean getBoolean(String columnName) throws DBManagerException {
         try {
             return rs.getBoolean(columnName);
         } catch (SQLException exc) {
@@ -112,7 +112,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public boolean getBoolean(int columnNumber) {
+    public boolean getBoolean(int columnNumber) throws DBManagerException {
         try {
             return rs.getBoolean(columnNumber);
         } catch (SQLException exc) {
@@ -120,7 +120,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public long getLong(String columnName) {
+    public long getLong(String columnName) throws DBManagerException {
         try {
             return rs.getLong(columnName);
         } catch (SQLException exc) {
@@ -128,7 +128,7 @@ public class ResultIterator {                                                   
         }
     }
 
-    public long getLong(int columnNumber) {
+    public long getLong(int columnNumber) throws DBManagerException {
         try {
             return rs.getLong(columnNumber);
         } catch (SQLException exc) {

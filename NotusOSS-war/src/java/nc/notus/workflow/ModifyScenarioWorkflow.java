@@ -1,6 +1,7 @@
 package nc.notus.workflow;
 
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
 import nc.notus.states.UserRole;
@@ -19,7 +20,7 @@ public class ModifyScenarioWorkflow extends Workflow {
      * @throws Workflow exception if Order scenario doesn't match "Modify" scenario
      * workflow
      */
-    public ModifyScenarioWorkflow(ServiceOrder order) {
+    public ModifyScenarioWorkflow(ServiceOrder order) throws DBManagerException {
         super(order);
         DBManager dbManager = new DBManager();
         try {
@@ -37,7 +38,7 @@ public class ModifyScenarioWorkflow extends Workflow {
      * Order should have status "Entering" and workflow scenario "Modify"
      */
     @Override
-    public void proceedOrder() {
+    public void proceedOrder() throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!getOrderStatus(dbManager).equals(OrderStatus.ENTERING.toString())) {
@@ -58,7 +59,7 @@ public class ModifyScenarioWorkflow extends Workflow {
      * automatically leads to updating type of provided service for customer.
      * @param taskID ID of Task for Support Engineer
      */
-    public void approveBill(int taskID) {
+    public void approveBill(int taskID) throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if(!isTaskValid(dbManager, taskID, UserRole.SUPPORT_ENGINEER.toInt())) {

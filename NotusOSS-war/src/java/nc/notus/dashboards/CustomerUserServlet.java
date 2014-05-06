@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +30,7 @@ import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceCatalog;
@@ -75,7 +78,11 @@ public class CustomerUserServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         int startpage = 1;
         int numbOfRecords = 100;
-        dbManager = new DBManager();
+        try {
+            dbManager = new DBManager();
+        } catch (DBManagerException ex) {
+            Logger.getLogger(CustomerUserServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             int userID = getUserID(request);
 
@@ -112,6 +119,8 @@ public class CustomerUserServlet extends HttpServlet {
             	RequestDispatcher view = request.getRequestDispatcher("user.jsp");
             	view.forward(request, response);
             }
+        } catch (DBManagerException ex) {
+            Logger.getLogger(CustomerUserServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             dbManager.close();
         }
@@ -170,7 +179,7 @@ public class CustomerUserServlet extends HttpServlet {
      * @param userID
      * @return so  - new Service Order
      */
-    private ServiceOrder createOrder(DBManager dbManager, int userID) {
+    private ServiceOrder createOrder(DBManager dbManager, int userID) throws DBManagerException {
 
 		ServiceOrderStatusDAO statusDAO = new ServiceOrderStatusDAOImpl(dbManager);
 		ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
@@ -211,7 +220,7 @@ public class CustomerUserServlet extends HttpServlet {
      * 
      */
     public List<Map<String, String>> getActiveInstancesList(int userID,
-            int startpage, int numbOfRecords) {
+            int startpage, int numbOfRecords) throws DBManagerException {
         ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
         ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
@@ -251,7 +260,7 @@ public class CustomerUserServlet extends HttpServlet {
      *
      */
     public List<Map<String, String>> getProcessingOrdersList(int userID,
-            int startpage, int numbOfRecords) {
+            int startpage, int numbOfRecords) throws DBManagerException {
         ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
         ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
         ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);

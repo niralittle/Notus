@@ -1,6 +1,7 @@
 package nc.notus.dao;
 
 import java.util.List;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceOrder;
 
 /**
@@ -17,7 +18,7 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
      * @return list ServiceOrders with selected status
      */
     List<ServiceOrder> getServiceOrdersByStatus(String serviceOrderStatus,
-                                        int offset, int numberOfRecords);
+                                        int offset, int numberOfRecords) throws DBManagerException;
 
     /**
      * Method that returns list of ServiceOrders with selected status
@@ -28,7 +29,7 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
      * @return list ServiceOrders with selected status
      */
     List<ServiceOrder> getSOByStatus(int userID, int serviceOrderStatus,
-                                        int offset, int numberOfRecords);
+                                        int offset, int numberOfRecords) throws DBManagerException;
 
     /**
      * Method that returns list of ServiceOrders with selected scenario
@@ -38,7 +39,7 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
      * @return list ServiceOrders with selected scenario
      */
     public List<ServiceOrder> getServiceOrdersByScenario(String scenario,
-                                        int offset, int numberOfRecords);
+                                        int offset, int numberOfRecords) throws DBManagerException;
                                         
    /**
     * Return service order by specified SI id.
@@ -48,7 +49,7 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
     * 
     * @author Panchenko Dmytro
     */
-    public ServiceOrder getServiceOrderBySIId(int serviceInstanceId);
+    public ServiceOrder getServiceOrderBySIId(int serviceInstanceId) throws DBManagerException;
 
 
 

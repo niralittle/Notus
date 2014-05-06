@@ -3,6 +3,8 @@ package nc.notus;
 import java.sql.Date;
 import java.util.Calendar;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceOrderDAO;
@@ -12,6 +14,7 @@ import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
@@ -66,7 +69,7 @@ public class RegistrationServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request,
                     HttpServletResponse response)
-                    throws ServletException, IOException {
+                    throws ServletException, IOException, DBManagerException {
         //declaration of variables
         DBManager dbManager = new DBManager();
         ServiceOrder newOrder = null;
@@ -254,7 +257,7 @@ public class RegistrationServlet extends HttpServlet {
 	}
 
 	
-	private int createUser(DBManager dbManager, int roleID) {
+	private int createUser(DBManager dbManager, int roleID) throws DBManagerException {
 		OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 		OSSUser user = new OSSUser();
 		user.setFirstName(firstName);
@@ -268,7 +271,7 @@ public class RegistrationServlet extends HttpServlet {
 		return userID;
 	}
 
-	private ServiceOrder createOrder(DBManager dbManager, int userID) {
+	private ServiceOrder createOrder(DBManager dbManager, int userID) throws DBManagerException  {
 
 		ServiceOrderStatusDAO statusDAO = new ServiceOrderStatusDAOImpl(dbManager);
 		ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
@@ -296,7 +299,11 @@ public class RegistrationServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**
@@ -314,8 +321,11 @@ public class RegistrationServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**

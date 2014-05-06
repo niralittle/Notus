@@ -6,6 +6,8 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,7 @@ import nc.notus.dbmanager.DBManager;
 import java.util.List;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Task;
 
 /**
@@ -33,7 +36,7 @@ public class InstallationEngineerTasks extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
         int startpage = 1;
         int numbOfRecords = 10;
@@ -76,7 +79,11 @@ public class InstallationEngineerTasks extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(InstallationEngineerTasks.class.getName()).log(Level.SEVERE, null, ex);
+        }
     } 
 
     /** 
@@ -89,7 +96,11 @@ public class InstallationEngineerTasks extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(InstallationEngineerTasks.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /** 

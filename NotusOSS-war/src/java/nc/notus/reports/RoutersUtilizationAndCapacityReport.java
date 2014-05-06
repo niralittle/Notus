@@ -6,6 +6,7 @@ import java.util.List;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.RoutersUtilizationCapacity;
 
 /**
@@ -34,12 +35,12 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
      * Creates a report instance with given name
      * @param reportName report name
      */
-    public RoutersUtilizationAndCapacityReport(String reportName) {
+    public RoutersUtilizationAndCapacityReport(String reportName) throws DBManagerException {
         this.reportName = reportName;
         getDataFromDatabase();
     }
 
-    private void getDataFromDatabase() {
+    private void getDataFromDatabase() throws DBManagerException {
         this.reportName = "Routers utilization and capacity";
         DBManager dbManager = new DBManager();
         try {
@@ -90,7 +91,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
      * and false - if not.
      */
     @Override
-    public boolean getNextDataPage() {
+    public boolean getNextDataPage() throws DBManagerException {
         pageNumber++;
         getDataFromDatabase();
         if (reportData.length > 1 && reportData.length == recordsPerPage + 1) {
@@ -105,7 +106,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
      * @return true - if this page isn't last and false - if not.
      */
     @Override
-    public boolean getPreviousDataPage() {
+    public boolean getPreviousDataPage() throws DBManagerException {
         if (pageNumber > 0) {
             pageNumber--;
             getDataFromDatabase();
@@ -124,7 +125,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
      * @param pageIndex page to select
      */
     @Override
-    public void setCurrentPageIndex(int pageIndex) {
+    public void setCurrentPageIndex(int pageIndex) throws DBManagerException {
         this.pageNumber = pageIndex;
         if (pageIndex > 0) {
             getDataFromDatabase();
@@ -141,7 +142,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
     }
 
     @Override
-    public boolean checkNextPage() {
+    public boolean checkNextPage() throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
@@ -165,7 +166,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
      */
     @Override
     public void getFileData(Writer writer, String fileSeparator)
-            throws IOException {
+            throws IOException, DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);

@@ -11,6 +11,7 @@ import nc.notus.dao.impl.CircuitDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Port;
 import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
@@ -37,7 +38,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
      *             exception if Order scenario doesn't match "Disconnect"
      *             scenario workflow
      */
-    public DisconnectScenarioWorkflow(ServiceOrder order) {
+    public DisconnectScenarioWorkflow(ServiceOrder order) throws DBManagerException {
         super(order);
         DBManager dbManager = new DBManager();
         try {
@@ -58,7 +59,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
      * "Entering" and workflow scenario "Disconnect"
      */
     @Override
-    public void proceedOrder() {
+    public void proceedOrder() throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!getOrderStatus(dbManager).equals(
@@ -94,7 +95,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
      *            ID of Port to unplug Cable from
      */
     public void unplugCableFromPort(int taskID, int cableID, int portID,
-            int serviceInstanceID) {
+            int serviceInstanceID) throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,
@@ -133,7 +134,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
         }
     }
 
-    public void removeCurcuitFromSI(int taskID) {
+    public void removeCurcuitFromSI(int taskID) throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,

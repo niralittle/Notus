@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import nc.notus.dbmanager.DBManagerException;
 
 /**
  * This class contains operations to manipulate with system report object.
@@ -52,7 +53,7 @@ public class ReportGenerator {
      * Returns a report as html format string
      * @return html format string
      */
-    public String getReportHTML() {
+    public String getReportHTML() throws DBManagerException {
         StringBuilder HTMLReportBuilder = new StringBuilder();
         HTMLReportBuilder.append("<table border='1' id ='table' width='90%' cellpadding='10'>");
         if (reportRef.getReportData() != null) {
@@ -85,7 +86,7 @@ public class ReportGenerator {
      * in COLUMN_SEPARATOR field
      * @return string that represents CSV report
      */
-    public void getReportCSV(Writer writer) {
+    public void getReportCSV(Writer writer) throws DBManagerException {
         try {
             StringBuilder CSVReportHeaderBuilder = new StringBuilder();
             CSVReportHeaderBuilder.append("sep=");

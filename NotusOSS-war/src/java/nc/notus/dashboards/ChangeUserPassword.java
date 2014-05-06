@@ -2,6 +2,8 @@ package nc.notus.dashboards;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.states.UserState;
 
@@ -30,7 +33,7 @@ public class ChangeUserPassword extends HttpServlet {
 	private static final String CHANGE_PASSWORD_PAGE = "passwordChanging.jsp";
 
 	void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws ServletException, IOException, DBManagerException {
 		response.setContentType("text/html;charset=UTF-8");
 
 		//read necessary parameters from request scope
@@ -82,12 +85,16 @@ public class ChangeUserPassword extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(ChangeUserPassword.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	
 	private void blockUser(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+			HttpServletResponse response) throws ServletException, IOException, DBManagerException {
 
 		int userID = Integer.parseInt(request.getParameter("userId"));
 		DBManager dbManager = null;
@@ -126,9 +133,17 @@ public class ChangeUserPassword extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		if(request.isUserInRole("ADMINISTRATOR")) {
-			blockUser(request, response);
+            try {
+                blockUser(request, response);
+            } catch (DBManagerException ex) {
+                Logger.getLogger(ChangeUserPassword.class.getName()).log(Level.SEVERE, null, ex);
+            }
 		} else {
-			processRequest(request, response);
+            try {
+                processRequest(request, response);
+            } catch (DBManagerException ex) {
+                Logger.getLogger(ChangeUserPassword.class.getName()).log(Level.SEVERE, null, ex);
+            }
 		}
 	}
 

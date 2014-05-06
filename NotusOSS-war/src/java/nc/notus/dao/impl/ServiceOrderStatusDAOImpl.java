@@ -3,6 +3,7 @@ package nc.notus.dao.impl;
 import nc.notus.dao.DAOException;
 import nc.notus.dao.ServiceOrderStatusDAO;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.ServiceOrderStatus;
@@ -25,7 +26,7 @@ public class ServiceOrderStatusDAOImpl extends GenericDAOImpl<ServiceOrderStatus
      * @throws DAOException if id was not found
      */
     @Override
-    public int getServiceOrderStatusID(OrderStatus status) {
+    public int getServiceOrderStatusID(OrderStatus status) throws DBManagerException {
         String serviceOrderStatusName = status.toString();
         String queryString = "SELECT sos.id, sos.status " +
                 "FROM serviceorderstatus sos WHERE sos.status = ?";

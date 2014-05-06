@@ -7,6 +7,7 @@ import java.util.List;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ProfitInMonth;
 
 /**
@@ -36,13 +37,13 @@ public class ProfitabilityByMonthReport extends AbstractReport {
      * Creates a report instance with given name
      * @param reportName report name
      */
-    public ProfitabilityByMonthReport(String reportName, String month) {
+    public ProfitabilityByMonthReport(String reportName, String month) throws DBManagerException {
         this.month = Date.valueOf(month);
         this.reportName = reportName;
         getDataFromDatabase();
     }
 
-    private void getDataFromDatabase() {
+    private void getDataFromDatabase() throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);

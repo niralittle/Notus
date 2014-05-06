@@ -4,6 +4,7 @@ import java.sql.Date;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
@@ -42,7 +43,7 @@ public class NewScenarioWorkflow extends Workflow {
      * @throws Workflow exception if Order scenario doesn't match "New" scenario
      * workflow
      */
-    public NewScenarioWorkflow(ServiceOrder order) {
+    public NewScenarioWorkflow(ServiceOrder order) throws DBManagerException {
         super(order);
         DBManager dbManager = new DBManager();
         try {
@@ -60,7 +61,7 @@ public class NewScenarioWorkflow extends Workflow {
      * Order should have status "Entering" and workflow scenario "New"
      */
     @Override
-    public void proceedOrder() {
+    public void proceedOrder() throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!getOrderStatus(dbManager).equals(OrderStatus.ENTERING.toString())) {
@@ -92,7 +93,7 @@ public class NewScenarioWorkflow extends Workflow {
         }
     }
 
-    private ServiceInstance createServiceInstance(DBManager dbManager) {
+    private ServiceInstance createServiceInstance(DBManager dbManager) throws DBManagerException {
         ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
         ServiceInstanceStatusDAO sisDAO = new ServiceInstanceStatusDAOImpl(dbManager);
 
@@ -115,7 +116,7 @@ public class NewScenarioWorkflow extends Workflow {
      * @param portQuantity amount of Ports that Router accommodates
      * @param taskID ID of task for installation engineer                  
      */
-    public void createRouter(int taskID, int portQuantity) {
+    public void createRouter(int taskID, int portQuantity) throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,
@@ -159,7 +160,7 @@ public class NewScenarioWorkflow extends Workflow {
      * This method creates Cable entity
      * @param taskID ID of task for installation engineer
      */
-    public void createCable(int taskID, String cableType) {
+    public void createCable(int taskID, String cableType) throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,
@@ -191,7 +192,7 @@ public class NewScenarioWorkflow extends Workflow {
      * @param cableID ID of Cable to plug
      * @param portID ID of Port to plug Cable to
      */
-    public void plugCableToPort(int taskID, int cableID, int portID) {
+    public void plugCableToPort(int taskID, int cableID, int portID) throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,
@@ -230,7 +231,7 @@ public class NewScenarioWorkflow extends Workflow {
      * @param dbManager class representing connection to DB                     // TODO: update documentation
      * @return ID of created Circuit instance
      */
-    public void createCircuit(int taskID, String circuitConfig) {
+    public void createCircuit(int taskID, String circuitConfig) throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID,
@@ -267,7 +268,7 @@ public class NewScenarioWorkflow extends Workflow {
      * "Completed"
      * @param taskID ID of Task for Support Engineer
      */
-    public void approveBill(int taskID) {
+    public void approveBill(int taskID) throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             if (!isTaskValid(dbManager, taskID, UserRole.SUPPORT_ENGINEER.toInt())) {
@@ -295,7 +296,7 @@ public class NewScenarioWorkflow extends Workflow {
      * @param dbManager class that represents connection to DB
      * @param serviceInstanceID ID of SI
      */
-    private void updateServiceInstanceDate(DBManager dbManager, int serviceInstanceID) {
+    private void updateServiceInstanceDate(DBManager dbManager, int serviceInstanceID) throws DBManagerException {
         ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
         Calendar cal = java.util.Calendar.getInstance();
         Date date = new Date(cal.getTimeInMillis());

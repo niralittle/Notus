@@ -1,10 +1,13 @@
 package nc.notus.dashboards;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nc.notus.dao.ServiceOrderDAO;
 
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.workflow.NewScenarioWorkflow;
 
@@ -35,7 +38,7 @@ public class ProvisionEngeenierServlet extends HttpServlet {
 	private int serviceOrderId;
 
 	void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws ServletException, IOException, DBManagerException {
 
 		// read paramaters from request scope
 		parseParams(request);
@@ -76,7 +79,11 @@ public class ProvisionEngeenierServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(ProvisionEngeenierServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**
@@ -94,7 +101,11 @@ public class ProvisionEngeenierServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(ProvisionEngeenierServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	/**

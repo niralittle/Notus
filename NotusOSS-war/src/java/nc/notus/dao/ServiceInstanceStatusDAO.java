@@ -1,5 +1,6 @@
 package nc.notus.dao;
 
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceInstanceStatus;
 import nc.notus.states.InstanceStatus;
 
@@ -14,5 +15,5 @@ public interface ServiceInstanceStatusDAO extends GenericDAO<ServiceInstanceStat
      * @param InstanceStatus status of Service Instance
      * @return ID of given SI Status
      */
-    public int getServiceInstanceStatusID(InstanceStatus status);
+    public int getServiceInstanceStatusID(InstanceStatus status)throws DBManagerException;
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.ServiceOrder;
@@ -28,7 +29,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
      */
     @Override
     public List<ServiceOrder> getServiceOrdersByStatus(String serviceOrderStatus,
-                                        int offset, int numberOfRecords) {
+                                        int offset, int numberOfRecords) throws DBManagerException {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                         "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
                         "so.scenarioid, so.userid, so.servicecatalogid, " +
@@ -70,7 +71,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
      */
     @Override
     public List<ServiceOrder> getServiceOrdersByScenario(String scenario,
-                                        int offset, int numberOfRecords) {
+                                        int offset, int numberOfRecords) throws DBManagerException {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                         "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
                         "so.scenarioid, so.userid, so.servicecatalogid, " +
@@ -111,7 +112,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
      * @return list ServiceOrders with selected status
      */
     @Override
-    public List<ServiceOrder> getSOByStatus(int userID, int serviceOrderStatus, int offset, int numberOfRecords) {
+    public List<ServiceOrder> getSOByStatus(int userID, int serviceOrderStatus, int offset, int numberOfRecords) throws DBManagerException {
         String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                         "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid," +
                         "so.scenarioid, so.userid, so.servicecatalogid," +
@@ -152,7 +153,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
      * @author Panchenko Dmytro
      */
     @Override
-    public ServiceOrder getServiceOrderBySIId(int serviceInstanceId) {
+    public ServiceOrder getServiceOrderBySIId(int serviceInstanceId) throws DBManagerException {
     	ServiceOrder serviceOrder = null;
     	
     	StringBuilder query = new StringBuilder();

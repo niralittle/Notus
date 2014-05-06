@@ -8,6 +8,8 @@ package nc.notus;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,7 @@ import nc.notus.dao.impl.ProviderLocationDAOImpl;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ProviderLocation;
 import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceType;
@@ -42,7 +45,7 @@ public class ServiceCatalogServlet extends HttpServlet {
     private final int START = 1;
     private final int NUMBER_OF_RECORDS = 20;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         DBManager dbManager = new DBManager();
@@ -89,7 +92,11 @@ public class ServiceCatalogServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(ServiceCatalogServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     } 
 
     /** 
@@ -102,7 +109,11 @@ public class ServiceCatalogServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (DBManagerException ex) {
+            Logger.getLogger(ServiceCatalogServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /** 

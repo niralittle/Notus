@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dbmanager.DBManager;
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.ServiceInstance;
@@ -27,7 +28,7 @@ public class ServiceInstanceDAOImpl extends GenericDAOImpl<ServiceInstance>
      * @return list ServiceInstances
      */
     @Override
-    public List<ServiceInstance> getServiceInstancesByUserID(int userID, int offset, int numberOfRecords) {
+    public List<ServiceInstance> getServiceInstancesByUserID(int userID, int offset, int numberOfRecords) throws DBManagerException {
             String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                             "SELECT si.id, si.serviceinstancedate, " +
                             "si.serviceinstancestatusid, si.circuitid, si.portid " +
