@@ -70,6 +70,10 @@ public class DisconnectScenarioWorkflow extends Workflow {
             createTask(dbManager, UserRole.PROVISION_ENGINEER,
                     "Remove circuit from SI");
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
@@ -107,9 +111,11 @@ public class DisconnectScenarioWorkflow extends Workflow {
             ServiceInstance si = siDAO.find(serviceInstanceID);
             si.setPortID(null);
             siDAO.update(si);
-
-
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
@@ -148,6 +154,10 @@ public class DisconnectScenarioWorkflow extends Workflow {
             changeOrderStatus(dbManager, OrderStatus.COMPLETED);
             // TODO: send email here
             dbManager.commit();
+        } catch(Exception ex) {
+            // need to be logged like:
+            //log.error("SQLException", ex);
+            dbManager.rollback();
         } finally {
             dbManager.close();
         }
