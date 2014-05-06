@@ -25,7 +25,7 @@ public class CaptchaServlet extends HttpServlet {
 	protected void processRequest(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		int width = 130;
+		int width = 140;
 		int height = 50;
 
 		char data[][] = { { 'z', 'e', 't', 'c', 'o', 'd', 'e' },
