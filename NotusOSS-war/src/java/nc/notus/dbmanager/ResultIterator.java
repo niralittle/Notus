@@ -4,13 +4,16 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 /**
  * Wraps ResultSet class to handle SQL exceptions
- * @author Igor Litvinenko
+ * @author Igor Litvinenko & Pancnhenko Dmytro
  */
-public class ResultIterator {                                                   // REVIEW: documentation on every public function expected
+public class ResultIterator {                                                   
 
     private ResultSet rs;
+    private static Logger logger = Logger.getLogger(DBManager.class.getName());
 
     public ResultIterator(ResultSet rs) {
         this.rs = rs;
@@ -20,6 +23,7 @@ public class ResultIterator {                                                   
         try {
             return rs.next();
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -28,6 +32,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getObject(columnName);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -36,6 +41,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getObject(columnNumber);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -44,6 +50,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getDate(columnName);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -52,6 +59,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getDate(columnNumber);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -60,6 +68,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getFloat(columnName);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -68,6 +77,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getFloat(columnNumber);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -76,6 +86,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getInt(columnName);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -84,6 +95,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getInt(columnNumber);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -92,6 +104,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getString(columnName);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -100,6 +113,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getString(columnNumber);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -108,6 +122,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getBoolean(columnName);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -116,6 +131,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getBoolean(columnNumber);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -124,6 +140,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getLong(columnName);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }
@@ -132,6 +149,7 @@ public class ResultIterator {                                                   
         try {
             return rs.getLong(columnNumber);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL exception", exc);
         }
     }

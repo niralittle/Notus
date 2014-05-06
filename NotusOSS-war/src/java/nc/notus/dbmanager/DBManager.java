@@ -4,20 +4,23 @@ import java.io.Closeable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class provides functionality of managing connection to DB.
  * It encapsulates <code>DataSource</code> and is responsible for obtaining and
  * releasing DB connection.
- * @author Igor Litvinenko
+ * @author Igor Litvinenko & Panchenko Dmytro
  */
 public class DBManager implements Closeable {
 
+	private static Logger logger = Logger.getLogger(DBManager.class.getName());
+	
     private DataSource dataSource; // DataSource respresening DB
     private Connection conn;       // DB connection
 
@@ -30,6 +33,7 @@ public class DBManager implements Closeable {
             InitialContext initContext = new InitialContext();
             dataSource = (DataSource) initContext.lookup("jdbc/_NOTUS");
         } catch (NamingException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot retrieve jdbc/_NOTUS", exc);
         }
         conn = this.getConnection();
@@ -46,6 +50,7 @@ public class DBManager implements Closeable {
             PreparedStatement prStatement = conn.prepareStatement(query, generatedColumns);
             return new Statement(prStatement);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
@@ -54,6 +59,7 @@ public class DBManager implements Closeable {
         try {
             conn.commit();
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot execute commit", exc);
         }
     }
@@ -62,6 +68,7 @@ public class DBManager implements Closeable {
         try {
             conn.rollback();
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot execute rollback", exc);
         }
     }
@@ -76,6 +83,7 @@ public class DBManager implements Closeable {
             conn.setAutoCommit(false);
             return conn;
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot obtain connection", exc);
         }
     }
@@ -87,6 +95,7 @@ public class DBManager implements Closeable {
         try {
             conn.close();
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot close connection", exc);
         }
     }
@@ -97,8 +106,7 @@ public class DBManager implements Closeable {
     public void close() {
         try {
             this.releaseConnection();
-        } catch (DBManagerException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DBManagerException exc) {
         }
     }
 }
