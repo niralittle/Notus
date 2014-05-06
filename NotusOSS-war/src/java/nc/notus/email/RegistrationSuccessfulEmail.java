@@ -19,6 +19,13 @@ public class RegistrationSuccessfulEmail extends Email {
     String login;
     String password;
 
+    /**
+     *
+     * @param firstName name of the user
+     * @param login user's login
+     * @param password user's password
+     * @throws IOException
+     */
     public RegistrationSuccessfulEmail(String firstName,
             String login, String password) 
             throws IOException {
@@ -27,7 +34,7 @@ public class RegistrationSuccessfulEmail extends Email {
         this.firstName = firstName;
         this.login = login;
         this.password = password;
-        subject = String.format("Congratulation, %s, you are registred!", firstName);
+        subject = String.format("Congratulation, %s, you are registered!", firstName);
         message = String.format(message, firstName, login, password);
     }
 }
