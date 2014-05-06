@@ -7,6 +7,9 @@ package nc.notus.filters;
 
 import java.io.IOException;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,13 +30,15 @@ public class AuthServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-
+	
+	private static Logger logger=Logger.getLogger(AuthServlet.class.getName());
 	private static final String LOGIN_ERROR_PAGE = "loginError.jsp";
 	
 	protected void processRequest(HttpServletRequest request,
                 HttpServletResponse response)
                 throws ServletException, IOException {
 		
+		logger.log(Level.INFO, "Test loger");
 		String username = request.getParameter("j_username");
 		String password = request.getParameter("j_password");
 		
