@@ -155,20 +155,22 @@ public class CustomerUserServlet extends HttpServlet {
      * Get userID from the session; if there is none - get one from DB,
      * put it in the session and return the value
      */
-    private int getUserID(HttpServletRequest request) {
+    private int getUserID(HttpServletRequest request) throws DBManagerException {
 		if (request.isUserInRole("SUPPORT_ENGINEER")) {
 			int id = Integer.parseInt(request.getParameter("userID"));
 			return id;
 		} else {
 			session = request.getSession();
-			if (session.getAttribute("userID") == null) {
-				OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-				String login = request.getUserPrincipal().getName();
-				OSSUser user = userDAO.getUserByLogin(login);
-				session.setAttribute("userID", user.getId());
-				return user.getId();
-			}
-			return (Integer) session.getAttribute("userID");
+			
+				if (session.getAttribute("userID") == null) {
+					OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+					String login = request.getUserPrincipal().getName();
+					OSSUser user = userDAO.getUserByLogin(login);
+					session.setAttribute("userID", user.getId());
+					return user.getId();
+				}
+				return (Integer) session.getAttribute("userID");
+			
 		}
     }
     /**

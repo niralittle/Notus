@@ -1,5 +1,7 @@
 package nc.notus.dao.impl;
 
+import org.apache.log4j.Logger;
+
 import nc.notus.dao.DAOException;
 import nc.notus.dao.TaskStatusDAO;
 import nc.notus.dbmanager.DBManager;
@@ -15,6 +17,8 @@ import nc.notus.states.TaskState;
  */
 public class TaskStatusDAOImpl extends GenericDAOImpl<TaskStatus> implements TaskStatusDAO {
 
+	private static Logger logger = Logger.getLogger(TaskStatusDAOImpl.class.getName());
+	
     public TaskStatusDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
@@ -26,15 +30,31 @@ public class TaskStatusDAOImpl extends GenericDAOImpl<TaskStatus> implements Tas
      */
     @Override
     public int getTaskStatusID(TaskState taskState) throws DBManagerException {
-        String query = "SELECT ts.id, ts.status " +
-                       "FROM taskstatus ts WHERE ts.status = ?";
-        Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, taskState.toString());
-        ResultIterator ri = statement.executeQuery();
-        if (ri.next()) {
-            return ri.getInt("id");
-        } else {
-            throw new DAOException("Task status was not found");
-        }
+    	if (taskState == null) {
+    		logger.error("Passed parameter <taskState> is null. ");
+    		throw new DBManagerException("Passed parameter <taskState> is null."
+    				+ " Can't proccess null reference!");
+    	} 
+    	Statement statement = null;
+    	ResultIterator ri = null;
+		
+    	try {
+			String query = "SELECT ts.id, ts.status "
+					     + "FROM taskstatus ts WHERE ts.status = ?";
+			statement = dbManager.prepareStatement(query);
+			statement.setString(1, taskState.toString());
+			
+			ri = statement.executeQuery();
+			if (ri.next()) {
+				return ri.getInt("id");
+			} else {
+				throw new DBManagerException("Task status was not found");
+			}
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
     }
 }

@@ -3,8 +3,6 @@ package nc.notus.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import nc.notus.dao.CableDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -18,8 +16,6 @@ import nc.notus.entity.Cable;
  */
 public class CableDAOImpl extends GenericDAOImpl<Cable> implements CableDAO {
 
-	private static Logger logger = Logger.getLogger(CableDAOImpl.class.getName());
-	
     public CableDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
@@ -27,9 +23,10 @@ public class CableDAOImpl extends GenericDAOImpl<Cable> implements CableDAO {
     /**
      * Method returns a list of unique type(names) of unused in Port cables
      * @return list of unique type(names) of unused in Port cables
+     * @throws DBManagerException 
      */
     @Override
-    public List<String> getUniqueTypeFreeCables() {
+    public List<String> getUniqueTypeFreeCables() throws DBManagerException {
     	List<String> freeCables = null;
     	Statement statement = null;
     	ResultIterator ri = null;
@@ -48,7 +45,8 @@ public class CableDAOImpl extends GenericDAOImpl<Cable> implements CableDAO {
 				freeCables.add(ri.getString("cable"));
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException("The error was occured, " + ""
+					+ "contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -63,7 +61,7 @@ public class CableDAOImpl extends GenericDAOImpl<Cable> implements CableDAO {
      * if there is no available one
      */
     @Override
-    public Cable getFreeCable() {
+    public Cable getFreeCable() throws DBManagerException {
         Cable freeCable = null;
         Statement statement = null;
         String query  = "SELECT c.id, c.cable " +
@@ -80,7 +78,8 @@ public class CableDAOImpl extends GenericDAOImpl<Cable> implements CableDAO {
 				freeCable.setCable(ri.getString("cable"));
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException("The error was occured, " + ""
+					+ "contact the administrator");
 		} finally {
 			statement.close();
 		}

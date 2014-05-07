@@ -1,6 +1,8 @@
 package nc.notus.dao;
 
 import java.util.List;
+
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Device;
 
 /**
@@ -12,6 +14,7 @@ public interface DeviceDAO extends GenericDAO<Device> {
     /**
      * Gets a list of devices (routers) in system
      * @return list of Device objects
+     * @throws DBManagerException 
      */
-    List<Device> getAllDevices();
+    List<Device> getAllDevices() throws DBManagerException;
 }

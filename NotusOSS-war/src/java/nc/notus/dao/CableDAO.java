@@ -1,6 +1,8 @@
 package nc.notus.dao;
 
 import java.util.List;
+
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Cable;
 
 /**
@@ -14,12 +16,13 @@ public interface CableDAO extends GenericDAO<Cable> {
      * @return list of unique type(names) of unused in Port cables
      * or NULL
      * if there is no available one
+     * @throws DBManagerException 
      */
-    public List<String> getUniqueTypeFreeCables();
+    public List<String> getUniqueTypeFreeCables() throws DBManagerException;
     
     /**
      * Method returns first unused in Port cable
      * @return cable wich is unused in Port cable
      */
-    public Cable getFreeCable();
+    public Cable getFreeCable() throws DBManagerException;
 }

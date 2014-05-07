@@ -1,6 +1,8 @@
 package nc.notus.dao;
 
 import java.util.List;
+
+import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ProviderLocation;
 
 /**
@@ -14,7 +16,8 @@ public interface ProviderLocationDAO extends GenericDAO<ProviderLocation> {
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of providerLocations
+     * @throws DBManagerException 
      */
-    public List<ProviderLocation> getProviderLocations(int offset, int numberOfRecords);
+    public List<ProviderLocation> getProviderLocations(int offset, int numberOfRecords) throws DBManagerException;
 
 }

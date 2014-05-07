@@ -2,7 +2,6 @@ package nc.notus.dao.impl;
 
 import org.apache.log4j.Logger;
 
-import nc.notus.dao.DAOException;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -27,10 +26,15 @@ public class ScenarioDAOImpl extends GenericDAOImpl<Scenario> implements Scenari
      * Method returns ID of given Scenario
      * @param scenario Scenario to search ID for
      * @return ID of Scenario
-     * @throws DAOException if Scenario was not found
+     * @throws DBManagerException 
      */
     @Override
-    public int getScenarioID(WorkflowScenario scenario) {
+    public int getScenarioID(WorkflowScenario scenario) throws DBManagerException {
+    	if (scenario == null) {
+    		logger.error("Passed parameter <scenario> is null. ");
+    		throw new DBManagerException("Passed parameter <scenario> is null. "
+    				+ " Can't proccess the request!");
+    	} 
     	Statement statement = null;
     	ResultIterator ri = null;
     	int scenarioId = 0;
@@ -46,7 +50,8 @@ public class ScenarioDAOImpl extends GenericDAOImpl<Scenario> implements Scenari
 				scenarioId = ri.getInt("id");
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}

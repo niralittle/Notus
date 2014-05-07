@@ -1,6 +1,7 @@
 package nc.notus.dao.impl;
 
-import nc.notus.dao.DAOException;
+import org.apache.log4j.Logger;
+
 import nc.notus.dao.ServiceInstanceStatusDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -16,6 +17,8 @@ import nc.notus.states.InstanceStatus;
 public class ServiceInstanceStatusDAOImpl extends GenericDAOImpl<ServiceInstanceStatus> 
         implements ServiceInstanceStatusDAO {
 
+	private static Logger logger = Logger.getLogger(ServiceInstanceStatusDAOImpl.class.getName());
+	
     public ServiceInstanceStatusDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
@@ -27,18 +30,30 @@ public class ServiceInstanceStatusDAOImpl extends GenericDAOImpl<ServiceInstance
      */
     @Override
     public int getServiceInstanceStatusID(InstanceStatus status) throws DBManagerException {
-        String serviceInstanceStatusName = status.toString();
-    	String queryString = "SELECT sis.id, sis.status " +
-                             "FROM ServiceInstanceStatus sis " +
-                             "WHERE sis.status = ?";
-	Statement statement = dbManager.prepareStatement(queryString);
-	statement.setString(1, serviceInstanceStatusName);
-	ResultIterator ri = statement.executeQuery();
-        if (ri.next()){
-            return ri.getInt("id");
-        } else {
-            throw new DAOException("Given SI Status was not found in DB: " +
-                    status.toString());
-        }
-    }
+    	if (status == null) {
+    		logger.error("Passed parameter <status> is null. ");
+    		throw new DBManagerException("Passed parameter <status> is null "
+    				+ " Can't proccess the request!");
+    	} 
+    	Statement statement = null;
+    	ResultIterator ri = null;
+    	String serviceInstanceStatusName = status.toString();
+		String queryString = "SELECT sis.id, sis.status "
+				+ "FROM ServiceInstanceStatus sis " + "WHERE sis.status = ?";
+		try {
+			statement = dbManager.prepareStatement(queryString);
+			statement.setString(1, serviceInstanceStatusName);
+			ri = statement.executeQuery();
+			if (ri.next()) {
+				return ri.getInt("id");
+			} else {
+				throw new DBManagerException("Passed service instance id don't exist!");
+			}
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
+	}
 }

@@ -3,7 +3,6 @@ package nc.notus.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 
 import nc.notus.dao.DeviceDAO;
 import nc.notus.dbmanager.DBManager;
@@ -18,8 +17,6 @@ import nc.notus.entity.Device;
  */
 public class DeviceDAOImpl extends GenericDAOImpl<Device> implements DeviceDAO {
 
-	private static Logger logger = Logger.getLogger(CableDAOImpl.class.getName());
-	
     public DeviceDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
@@ -27,9 +24,10 @@ public class DeviceDAOImpl extends GenericDAOImpl<Device> implements DeviceDAO {
     /**
      * Gets a list of devices (routers) in system                              
      * @return list of Device objects
+     * @throws DBManagerException 
      */
     @Override
-    public List<Device> getAllDevices() {
+    public List<Device> getAllDevices() throws DBManagerException {
     	List<Device> deviceList = null;
     	Device device = null;
     	Statement statement = null;
@@ -48,7 +46,8 @@ public class DeviceDAOImpl extends GenericDAOImpl<Device> implements DeviceDAO {
 				deviceList.add(device);
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException("The error was occured," + 
+								"contact the administrator");
 		} finally {
 			statement.close();
 		}      

@@ -29,9 +29,15 @@ public class ProviderLocationDAOImpl extends GenericDAOImpl<ProviderLocation> im
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of providerLocations
+     * @throws DBManagerException 
      */
     @Override
-    public List<ProviderLocation> getProviderLocations(int offset, int numberOfRecords) {
+    public List<ProviderLocation> getProviderLocations(int offset, int numberOfRecords) throws DBManagerException {
+    	if(numberOfRecords < 1 || offset < 1) {
+    		logger.error("Illegal argument in paging - less than 1.");
+    		throw new DBManagerException("Illegal argument in paging - less than 1. "
+    				+ " Can't proccess the request!");
+    	}
     	Statement statement = null;
     	ResultIterator ri = null;
     	List<ProviderLocation> providerLocations = null;
@@ -56,7 +62,8 @@ public class ProviderLocationDAOImpl extends GenericDAOImpl<ProviderLocation> im
 				providerLocations.add(provLoc);
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}

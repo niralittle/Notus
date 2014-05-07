@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import nc.notus.dao.DAOException;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -26,13 +25,19 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     public OSSUserDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
-
+    
     /**
      * Blocking user procedure (update of db)
      * @param user user to be blocked
+     * @throws DBManagerException 
      */
     @Override
-    public void blockUser(OSSUser user) {
+    public void blockUser(OSSUser user) throws DBManagerException {
+    	if (user == null) {
+    		logger.error("Passed parameter <user> is null. ");
+    		throw new DBManagerException("Passed parameter <user> is null."
+    				+ " Can't proccess null reference!");
+    	} 
 		Statement statement = null;
 		String query = "UPDATE OSSUser SET blocked = 1 WHERE id = ?";
 		try {
@@ -40,7 +45,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 			statement.setInt(1, user.getId());
 			statement.executeUpdate();
 		} catch (DBManagerException exc) {
-			throw new DAOException("Can't update user: " + exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+						"contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -52,9 +58,20 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @param numberOfRecords - quantity of records to fetch
      * @param login of user
      * @return list of users with similar login
+     * @throws DBManagerException 
      */
     @Override
-    public List<OSSUser> getUsersByLogin(String login,  int numberOfRecords, int offset) {
+    public List<OSSUser> getUsersByLogin(String login,  int numberOfRecords, int offset) throws DBManagerException {
+    	if (login == null || login.isEmpty()) {
+    		logger.error("Passed parameter <login> is null or empty. ");
+    		throw new DBManagerException("Passed parameter <login> is null or empty"
+    				+ " Can't proccess the request!");
+    	} 
+    	if(numberOfRecords < 1 || offset < 1) {
+    		logger.error("Illegal argument in paging - less than 1.");
+    		throw new DBManagerException("Illegal argument in paging - less than 1. "
+    				+ " Can't proccess the request!");
+    	}
     	Statement statement = null;
     	List<OSSUser> users = null;
     	ResultIterator ri  = null;
@@ -90,7 +107,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				users.add(us);
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -101,10 +119,21 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of users with similar login
+     * @throws DBManagerException 
      */
 
     @Override
-    public List<OSSUser> getUsersByLastName(String lastname,  int numberOfRecords, int offset) {
+    public List<OSSUser> getUsersByLastName(String lastname,  int numberOfRecords, int offset) throws DBManagerException {
+    	if (lastname == null || lastname.isEmpty()) {
+    		logger.error("Passed parameter <lastname> is null or empty. ");
+    		throw new DBManagerException("Passed parameter <lastname> is null or empty"
+    				+ " Can't proccess the request!");
+    	} 
+    	if(numberOfRecords < 1 || offset < 1) {
+    		logger.error("Illegal argument in paging - less than 1.");
+    		throw new DBManagerException("Illegal argument in paging - less than 1. "
+    				+ " Can't proccess the request!");
+    	}
     	Statement statement = null;
     	List<OSSUser> users = null;
     	ResultIterator ri  = null;
@@ -140,7 +169,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				users.add(us);
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -157,9 +187,15 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @throws NullPointerException
      *             if null reference passes
      * @author Panchenko Dmytro
+     * @throws DBManagerException 
      */
     @Override
-    public boolean isExist(String login) {
+    public boolean isExist(String login) throws DBManagerException {
+    	if (login == null || login.isEmpty()) {
+    		logger.error("Passed parameter <login> is null or empty. ");
+    		throw new DBManagerException("Passed parameter <login> is null or empty"
+    				+ " Can't proccess the request!");
+    	} 
     	Statement statement = null;
     	ResultIterator ri = null;
     	boolean isExist = false;
@@ -178,8 +214,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				isExist = false;		// login not exists
 			}
 		} catch (DBManagerException exc) {
-			isExist = true;
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -196,9 +232,15 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      *             if null reference passes
      *
      * @author Panchenko Dmytro
+     * @throws DBManagerException 
      */
     @Override
-    public boolean isEmailDuplicate(String email) {
+    public boolean isEmailDuplicate(String email) throws DBManagerException {
+    	if (email == null || email.isEmpty()) {
+    		logger.error("Passed parameter <email> is null or empty. ");
+    		throw new DBManagerException("Passed parameter <email> is null or empty"
+    				+ " Can't proccess the request!");
+    	} 
     	Statement statement = null;
     	ResultIterator ri = null;
     	boolean isExist = false;
@@ -217,17 +259,22 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				isExist = false;		// email not exists
 			}
 		} catch (DBManagerException exc) {
-			isExist = true;
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}
 		return isExist;
     }
 
-    // TODO: documentation
     @Override
-    public List<String> getGroupEmails(UserRole role) {
+    public List<String> getGroupEmails(UserRole role) throws DBManagerException {
+    	if (role == null) {
+    		logger.error("Passed parameter <role> is null.");
+    		throw new DBManagerException("Passed parameter <role> is null. "
+    				+ " Can't proccess the request!");
+    	} 
+    	
     	Statement statement = null;
     	List<String> emailList = null;
     	
@@ -244,7 +291,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				emailList.add(ri.getString("email"));
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -257,8 +305,19 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @param numberOfRecords - quantity of records to fetch
      * @param email of user
      * @return list of users with similar email
+     * @throws DBManagerException 
      */
-    public List<OSSUser> getUsersByEmail(String email,  int numberOfRecords, int offset) {
+    public List<OSSUser> getUsersByEmail(String email,  int numberOfRecords, int offset) throws DBManagerException {
+    	if (email == null || email.isEmpty()) {
+    		logger.error("Passed parameter <email> is null or empty. ");
+    		throw new DBManagerException("Passed parameter <email> is null or empty"
+    				+ " Can't proccess the request!");
+    	} 
+    	if(numberOfRecords < 1 || offset < 1) {
+    		logger.error("Illegal argument in paging - less than 1.");
+    		throw new DBManagerException("Illegal argument in paging - less than 1. "
+    				+ " Can't proccess the request!");
+    	}
     	Statement statement = null;
     	ResultIterator ri = null;
     	List<OSSUser> users = null;
@@ -294,7 +353,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				users.add(us);
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -306,9 +366,15 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @param login - login
      * @return users with specific login
      * or NULL if not found
+     * @throws DBManagerException 
      */
     @Override
-    public OSSUser getUserByLogin(String login) {
+    public OSSUser getUserByLogin(String login) throws DBManagerException {
+    	if (login == null || login.isEmpty()) {
+    		logger.error("Passed parameter <login> is null or empty. ");
+    		throw new DBManagerException("Passed parameter <login> is null or empty"
+    				+ " Can't proccess the request!");
+    	} 
     	Statement statement = null;
     	ResultIterator ri = null;
     	OSSUser user = null;
@@ -333,7 +399,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				user.setRoleID(ri.getInt("roleid"));
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -341,7 +408,12 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     }
 
 	@Override
-	public boolean isBlocked(String login) {
+	public boolean isBlocked(String login) throws DBManagerException {
+		if (login == null || login.isEmpty()) {
+    		logger.error("Passed parameter <login> is null or empty. ");
+    		throw new DBManagerException("Passed parameter <login> is null or empty"
+    				+ " Can't proccess the request!");
+    	} 
 		boolean isBlocked = false;
 		int blockId = 1;
 		Statement statement = null;
@@ -364,7 +436,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				isBlocked = false;
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -377,9 +450,16 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @param offset - offset from start position in paging
      * @param numberOfRecords - quantity of records to fetch
      * @return list of users with similar login
+     * @throws DBManagerException 
      */
     @Override
-    public List<OSSUser> getUsersByRoleID(int roleID, int offset, int numberOfRecords) {
+    public List<OSSUser> getUsersByRoleID(int roleID, int offset, int numberOfRecords) throws DBManagerException {
+    	if(numberOfRecords < 1 || offset < 1) {
+    		logger.error("Illegal argument in paging - less than 1.");
+    		throw new DBManagerException("Illegal argument in paging - less than 1. "
+    				+ " Can't proccess the request!");
+    	}
+    	
     	Statement statement = null;
     	ResultIterator ri = null;
     	List<OSSUser> users = null;
@@ -413,7 +493,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				users.add(us);
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}
@@ -424,9 +505,10 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * Method returns count of users by specific role
      * @param roleID - specific role id
      * @return count of users
+     * @throws DBManagerException 
      */
     @Override
-    public long countAssignedByRoleID(int roleID) {
+    public long countAssignedByRoleID(int roleID) throws DBManagerException {
         long count = 0;
         Statement statement = null;
         ResultIterator ri = null;
@@ -443,7 +525,8 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 				count = ri.getLong("total");
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}

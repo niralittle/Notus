@@ -41,10 +41,8 @@ import nc.notus.email.EmailSender;
 import nc.notus.email.RegistrationSuccessfulEmail;
 
 /**
- * Provides registration in system for new user and allow ADMINISTRATOT only
- * create new acount of engineer in system.
- * Also creates new scenario workflow for order with status "Entering" for
- * customer user.
+ * Provides registration in system for new user and creates new scenario
+ * workflow for order with status "Entering"
  * 
  * @author Dmytro Panchenko & Igor Litvinenko
  */
@@ -185,7 +183,7 @@ public class RegistrationServlet extends HttpServlet {
 		return;
 	}
 
-	private boolean validateParams(DBManager dbManager, StringBuilder errMessage) {
+	private boolean validateParams(DBManager dbManager, StringBuilder errMessage) throws DBManagerException {
 
 		OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 		Pattern pattern;

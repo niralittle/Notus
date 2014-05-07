@@ -1,5 +1,7 @@
 package nc.notus.dao.impl;
 
+import org.apache.log4j.Logger;
+
 import nc.notus.dao.DAOException;
 import nc.notus.dao.ServiceOrderStatusDAO;
 import nc.notus.dbmanager.DBManager;
@@ -11,10 +13,12 @@ import nc.notus.states.OrderStatus;
 
 /**
  * Implementation of DAO for entity ServiceOrderStatus
- * @author Vladimir Ermolenko
+ * @author Vladimir Ermolenko & Pacnhenko Dmytro
  */
 public class ServiceOrderStatusDAOImpl extends GenericDAOImpl<ServiceOrderStatus> implements ServiceOrderStatusDAO {
 
+	private static Logger logger = Logger.getLogger(ServiceOrderStatusDAOImpl.class.getName());
+	
     public ServiceOrderStatusDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
@@ -27,17 +31,34 @@ public class ServiceOrderStatusDAOImpl extends GenericDAOImpl<ServiceOrderStatus
      */
     @Override
     public int getServiceOrderStatusID(OrderStatus status) throws DBManagerException {
-        String serviceOrderStatusName = status.toString();
+    	if (status == null) {
+    		logger.error("Passed parameter <status> is null. ");
+    		throw new DBManagerException("Passed parameter <status> is null."
+    				+ " Can't proccess null reference!");
+    	} 
+    	Statement statement = null;
+    	ResultIterator ri = null;
+    	
+    	String serviceOrderStatusName = status.toString();
         String queryString = "SELECT sos.id, sos.status " +
-                "FROM serviceorderstatus sos WHERE sos.status = ?";
-        Statement statement = dbManager.prepareStatement(queryString);
-        statement.setString(1, serviceOrderStatusName);
-        ResultIterator ri = statement.executeQuery();
-        if (ri.next()) {
-            return ri.getInt("id");
-        } else {
-            throw new DAOException("Given Order Status was not found in DB: " +
-                    status.toString());
-        }
+                			  "FROM serviceorderstatus sos WHERE sos.status = ?";
+		try {
+			statement = dbManager.prepareStatement(queryString);
+			statement.setString(1, serviceOrderStatusName);
+			
+			ri = statement.executeQuery();
+			if (ri.next()) {
+				return ri.getInt("id");
+			} else {
+				throw new DBManagerException(
+						"Given Order Status was not found in DB: "
+								+ status.toString());
+			}
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
     }
 }

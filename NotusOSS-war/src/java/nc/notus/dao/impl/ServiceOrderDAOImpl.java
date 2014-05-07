@@ -2,6 +2,9 @@ package nc.notus.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -16,6 +19,8 @@ import nc.notus.entity.ServiceOrder;
 public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         implements ServiceOrderDAO {
 
+	private static Logger logger = Logger.getLogger(ServiceOrderDAOImpl.class.getName());
+	
     public ServiceOrderDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
@@ -30,7 +35,23 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     @Override
     public List<ServiceOrder> getServiceOrdersByStatus(String serviceOrderStatus,
                                         int offset, int numberOfRecords) throws DBManagerException {
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
+        
+    	if (serviceOrderStatus == null || serviceOrderStatus.isEmpty()) {
+    		logger.error("Passed parameter <serviceOrderStatus> is null or empty. ");
+    		throw new DBManagerException("Passed parameter <serviceOrderStatus> "
+    				+ "is null or empty.  Can't proccess the request!");
+    	} 
+    	if(numberOfRecords < 1 || offset < 1) {
+    		logger.error("Illegal argument in paging - less than 1.");
+    		throw new DBManagerException("Illegal argument in paging - less than 1. "
+    				+ " Can't proccess the request!");
+    	}
+    	
+    	Statement statement = null;
+    	List<ServiceOrder> serviceOrders = null;
+    	ResultIterator ri = null;
+    	
+    	String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                         "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
                         "so.scenarioid, so.userid, so.servicecatalogid, " +
                         "so.serviceinstanceid, so.servicelocation " +
@@ -41,25 +62,34 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                         "ORDER BY so.serviceorderdate " +
                         ") a where ROWNUM <= ? ) " +
                         "WHERE rnum  >= ?";
-        Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, serviceOrderStatus);
-        statement.setInt(2, numberOfRecords);
-        statement.setInt(3, offset);
-        ResultIterator ri = statement.executeQuery();
-        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
-        while (ri.next()){
-            ServiceOrder servOrder = new ServiceOrder();
-            servOrder.setId(ri.getInt("id"));
-            servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
-            servOrder.setServiceOrderStatusID(ri.getInt("serviceorderstatusid"));
-            servOrder.setScenarioID(ri.getInt("scenarioid"));
-            servOrder.setUserID(ri.getInt("userid"));
-            servOrder.setServiceCatalogID(ri.getInt("servicecatalogid"));
-            servOrder.setServiceInstanceID(ri.getInt("serviceinstanceid"));
-            servOrder.setServiceLocation(ri.getString("servicelocation"));
-            serviceOrders.add(servOrder);
-        }
-        return serviceOrders;
+    	
+		try {
+			statement = dbManager.prepareStatement(query);
+			statement.setString(1, serviceOrderStatus);
+			statement.setInt(2, numberOfRecords);
+			statement.setInt(3, offset);
+			
+			ri = statement.executeQuery();
+			serviceOrders = new ArrayList<ServiceOrder>();
+			while (ri.next()) {
+				ServiceOrder servOrder = new ServiceOrder();
+				servOrder.setId(ri.getInt("id"));
+				servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
+				servOrder.setServiceOrderStatusID(ri.getInt("serviceorderstatusid"));
+				servOrder.setScenarioID(ri.getInt("scenarioid"));
+				servOrder.setUserID(ri.getInt("userid"));
+				servOrder.setServiceCatalogID(ri.getInt("servicecatalogid"));
+				servOrder.setServiceInstanceID(ri.getInt("serviceinstanceid"));
+				servOrder.setServiceLocation(ri.getString("servicelocation"));
+				serviceOrders.add(servOrder);
+			}
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
+		return serviceOrders;
     }
 
     /**
@@ -72,7 +102,24 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     @Override
     public List<ServiceOrder> getServiceOrdersByScenario(String scenario,
                                         int offset, int numberOfRecords) throws DBManagerException {
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
+        
+    	if (scenario == null || scenario.isEmpty()) {
+    		logger.error("Passed parameter <scenario> is null or empty. ");
+    		throw new DBManagerException("Passed parameter <scenario> "
+    				+ "is null or empty.  Can't proccess the request!");
+    	} 
+    	if(numberOfRecords < 1 || offset < 1) {
+    		logger.error("Illegal argument in paging - less than 1.");
+    		throw new DBManagerException("Illegal argument in paging - less than 1. "
+    				+ " Can't proccess the request!");
+    	}
+    	
+    	Statement statement = null;
+    	List<ServiceOrder> serviceOrders = null;
+    	ResultIterator ri = null;
+    	
+    	
+    	String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                         "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid, " +
                         "so.scenarioid, so.userid, so.servicecatalogid, " +
                         "so.serviceinstanceid, so.servicelocation " +
@@ -82,24 +129,32 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                         "ORDER BY so.serviceorderdate " +
                         ") a where ROWNUM <= ? ) " +
                         "WHERE rnum  >= ?";
-        Statement statement = dbManager.prepareStatement(query);
-        statement.setString(1, scenario);
-        statement.setInt(2, numberOfRecords);
-        statement.setInt(3, offset);
-        ResultIterator ri = statement.executeQuery();
-        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
-        while (ri.next()){
-            ServiceOrder servOrder = new ServiceOrder();
-            servOrder.setId(ri.getInt("id"));
-            servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
-            servOrder.setServiceOrderStatusID(ri.getInt("serviceorderstatusid"));
-            servOrder.setScenarioID(ri.getInt("scenarioid"));
-            servOrder.setUserID(ri.getInt("userid"));
-            servOrder.setServiceCatalogID(ri.getInt("servicecatalogid"));
-            servOrder.setServiceInstanceID(ri.getInt("serviceinstanceid"));
-            servOrder.setServiceLocation(ri.getString("servicelocation"));
-            serviceOrders.add(servOrder);
-        }
+		try {
+			statement = dbManager.prepareStatement(query);
+			statement.setString(1, scenario);
+			statement.setInt(2, numberOfRecords);
+			statement.setInt(3, offset);
+			ri = statement.executeQuery();
+			serviceOrders = new ArrayList<ServiceOrder>();
+			while (ri.next()) {
+				ServiceOrder servOrder = new ServiceOrder();
+				servOrder.setId(ri.getInt("id"));
+				servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
+				servOrder.setServiceOrderStatusID(ri
+						.getInt("serviceorderstatusid"));
+				servOrder.setScenarioID(ri.getInt("scenarioid"));
+				servOrder.setUserID(ri.getInt("userid"));
+				servOrder.setServiceCatalogID(ri.getInt("servicecatalogid"));
+				servOrder.setServiceInstanceID(ri.getInt("serviceinstanceid"));
+				servOrder.setServiceLocation(ri.getString("servicelocation"));
+				serviceOrders.add(servOrder);
+			}
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
         return serviceOrders;
     }
 
@@ -113,7 +168,16 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
      */
     @Override
     public List<ServiceOrder> getSOByStatus(int userID, int serviceOrderStatus, int offset, int numberOfRecords) throws DBManagerException {
-        String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
+    	if(numberOfRecords < 1 || offset < 1) {
+    		logger.error("Illegal argument in paging - less than 1.");
+    		throw new DBManagerException("Illegal argument in paging - less than 1. "
+    				+ " Can't proccess the request!");
+    	}
+    	Statement statement = null;
+    	List<ServiceOrder> serviceOrders = null;
+    	ResultIterator ri = null;
+    	
+    	String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                         "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid," +
                         "so.scenarioid, so.userid, so.servicecatalogid," +
                         "so.serviceinstanceid, so.servicelocation " +
@@ -122,25 +186,33 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                         "ORDER BY so.serviceorderdate) a " +
                         "WHERE ROWNUM <= ? )  " +
                         "WHERE rnum  >= ? ";
-        Statement statement = dbManager.prepareStatement(query);
-        statement.setInt(1, userID);
-        statement.setInt(2, serviceOrderStatus);
-        statement.setInt(3, numberOfRecords);
-        statement.setInt(4, offset);
-        ResultIterator ri = statement.executeQuery();
-        List<ServiceOrder> serviceOrders = new ArrayList<ServiceOrder>();
-        while (ri.next()){
-            ServiceOrder servOrder = new ServiceOrder();
-            servOrder.setId(ri.getInt("id"));
-            servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
-            servOrder.setServiceOrderStatusID(ri.getInt("serviceorderstatusid"));
-            servOrder.setScenarioID(ri.getInt("scenarioid"));
-            servOrder.setUserID(ri.getInt("userid"));
-            servOrder.setServiceCatalogID(ri.getInt("servicecatalogid"));
-            servOrder.setServiceInstanceID(ri.getInt("serviceinstanceid"));
-            servOrder.setServiceLocation(ri.getString("servicelocation"));
-            serviceOrders.add(servOrder);
-        }
+		try {
+			statement = dbManager.prepareStatement(query);
+			statement.setInt(1, userID);
+			statement.setInt(2, serviceOrderStatus);
+			statement.setInt(3, numberOfRecords);
+			statement.setInt(4, offset);
+			ri = statement.executeQuery();
+			serviceOrders = new ArrayList<ServiceOrder>();
+			while (ri.next()) {
+				ServiceOrder servOrder = new ServiceOrder();
+				servOrder.setId(ri.getInt("id"));
+				servOrder.setServiceOrderDate(ri.getDate("serviceorderdate"));
+				servOrder.setServiceOrderStatusID(ri
+						.getInt("serviceorderstatusid"));
+				servOrder.setScenarioID(ri.getInt("scenarioid"));
+				servOrder.setUserID(ri.getInt("userid"));
+				servOrder.setServiceCatalogID(ri.getInt("servicecatalogid"));
+				servOrder.setServiceInstanceID(ri.getInt("serviceinstanceid"));
+				servOrder.setServiceLocation(ri.getString("servicelocation"));
+				serviceOrders.add(servOrder);
+			}
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
         return serviceOrders;
     }
     
@@ -155,6 +227,8 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     @Override
     public ServiceOrder getServiceOrderBySIId(int serviceInstanceId) throws DBManagerException {
     	ServiceOrder serviceOrder = null;
+    	Statement statement = null;
+    	ResultIterator ri = null;
     	
     	StringBuilder query = new StringBuilder();
     	query.append("SELECT so.id, so.serviceOrderDate, so.scenarioID, ");
@@ -162,22 +236,28 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     	query.append("so.serviceOrderStatusId ");
     	query.append("FROM SERVICEORDER so ");
     	query.append("WHERE so.serviceInstanceId = ?");
-    	
-        Statement statement = dbManager.prepareStatement(query.toString());
-        statement.setInt(1, serviceInstanceId);
-        ResultIterator ri = statement.executeQuery();
-        while(ri.next()) {
-        	serviceOrder = new ServiceOrder();
-        	
-        	serviceOrder.setId(ri.getInt("id"));
-        	serviceOrder.setServiceOrderDate(ri.getDate("serviceOrderDate"));
-        	serviceOrder.setScenarioID(ri.getInt("scenarioID"));
-        	serviceOrder.setServiceOrderStatusID(ri.getInt("serviceOrderStatusId"));
-        	serviceOrder.setUserID(ri.getInt("userId"));
-        	serviceOrder.setServiceCatalogID(ri.getInt("serviceCatalogID"));
-        	serviceOrder.setServiceLocation(ri.getString("serviceLocation"));
-        	serviceOrder.setServiceInstanceID(serviceInstanceId);  	
-        }
+		try {
+			statement = dbManager.prepareStatement(query.toString());
+			statement.setInt(1, serviceInstanceId);
+			ri = statement.executeQuery();
+			while (ri.next()) {
+				serviceOrder = new ServiceOrder();
+
+				serviceOrder.setId(ri.getInt("id"));
+				serviceOrder.setServiceOrderDate(ri.getDate("serviceOrderDate"));
+				serviceOrder.setScenarioID(ri.getInt("scenarioID"));
+				serviceOrder.setServiceOrderStatusID(ri.getInt("serviceOrderStatusId"));
+				serviceOrder.setUserID(ri.getInt("userId"));
+				serviceOrder.setServiceCatalogID(ri.getInt("serviceCatalogID"));
+				serviceOrder.setServiceLocation(ri.getString("serviceLocation"));
+				serviceOrder.setServiceInstanceID(serviceInstanceId);
+			}
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
         return serviceOrder;
     }
 

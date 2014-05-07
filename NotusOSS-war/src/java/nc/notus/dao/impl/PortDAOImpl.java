@@ -1,7 +1,5 @@
 package nc.notus.dao.impl;
 
-import org.apache.log4j.Logger;
-
 import nc.notus.dao.PortDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -14,8 +12,6 @@ import nc.notus.entity.Port;
  * @author Vladimir Ermolenko
  */
 public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
-
-	private static Logger logger = Logger.getLogger(PortDAOImpl.class.getName());
 	
     public PortDAOImpl(DBManager dbManager) {
         super(dbManager);
@@ -27,9 +23,10 @@ public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
     * '0' for an available port and '1' for a connected port
     * @return one free port (Port instance) or NULL
     * if there is no available one
+ * @throws DBManagerException 
     */ 
     @Override
-    public Port getFreePort() {                                           
+    public Port getFreePort() throws DBManagerException {                                           
         Port  port = null;
         Statement statement = null;
         ResultIterator ri = null;
@@ -48,7 +45,8 @@ public class PortDAOImpl extends GenericDAOImpl<Port> implements PortDAO {
 				port.setCableID(ri.getInt("cableID"));
 			}
 		} catch (DBManagerException exc) {
-			logger.error(exc.getMessage(), exc);
+			throw new DBManagerException ("The error was occured, " + 
+					"contact the administrator");
 		} finally {
 			statement.close();
 		}

@@ -2,6 +2,9 @@ package nc.notus.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -16,6 +19,8 @@ import nc.notus.entity.ServiceInstance;
 public class ServiceInstanceDAOImpl extends GenericDAOImpl<ServiceInstance>
         implements ServiceInstanceDAO {
 
+	private static Logger logger = Logger.getLogger(ServiceInstanceDAOImpl.class.getName());
+	
     public ServiceInstanceDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
@@ -29,7 +34,16 @@ public class ServiceInstanceDAOImpl extends GenericDAOImpl<ServiceInstance>
      */
     @Override
     public List<ServiceInstance> getServiceInstancesByUserID(int userID, int offset, int numberOfRecords) throws DBManagerException {
-            String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
+    	if(numberOfRecords < 1 || offset < 1) {
+    		logger.error("Illegal argument in paging - less than 1.");
+    		throw new DBManagerException("Illegal argument in paging - less than 1. "
+    				+ " Can't proccess the request!");
+    	}    
+    	Statement statement = null;
+    	List<ServiceInstance> serviceInstances = null;
+    	ResultIterator ri = null;
+    	
+    	String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM ( " +
                             "SELECT si.id, si.serviceinstancedate, " +
                             "si.serviceinstancestatusid, si.circuitid, si.portid " +
                             "FROM serviceinstance si " +
@@ -40,22 +54,30 @@ public class ServiceInstanceDAOImpl extends GenericDAOImpl<ServiceInstance>
                             "ORDER BY so.serviceorderdate " +
                             ") a where ROWNUM <= ? ) " +
                             "WHERE rnum  >= ?";
-        Statement statement = dbManager.prepareStatement(query);
-        statement.setInt(1, userID);
-        statement.setInt(2, numberOfRecords);
-        statement.setInt(3, offset);
-        ResultIterator ri = statement.executeQuery();
-        List<ServiceInstance> serviceInstances = new ArrayList<ServiceInstance>();
-        while (ri.next()){
-            ServiceInstance servInstance = new ServiceInstance();
-            servInstance.setId(ri.getInt("id"));
-            servInstance.setServiceInstanceDate(ri.getDate("serviceinstancedate"));
-            servInstance.setServiceInstanceStatusID(ri.getInt("serviceinstancestatusid"));
-            servInstance.setCircuitID(ri.getInt("circuitid"));
-            servInstance.setPortID(ri.getInt("portid"));
-            serviceInstances.add(servInstance);
-        }
-        return serviceInstances;
-    }
+		try {
+			statement = dbManager.prepareStatement(query);
+			statement.setInt(1, userID);
+			statement.setInt(2, numberOfRecords);
+			statement.setInt(3, offset);
+
+			ri = statement.executeQuery();
+			serviceInstances = new ArrayList<ServiceInstance>();
+			while (ri.next()) {
+				ServiceInstance servInstance = new ServiceInstance();
+				servInstance.setId(ri.getInt("id"));
+				servInstance.setServiceInstanceDate(ri.getDate("serviceinstancedate"));
+				servInstance.setServiceInstanceStatusID(ri.getInt("serviceinstancestatusid"));
+				servInstance.setCircuitID(ri.getInt("circuitid"));
+				servInstance.setPortID(ri.getInt("portid"));
+				serviceInstances.add(servInstance);
+			}
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
+		return serviceInstances;
+	}
 
 }
