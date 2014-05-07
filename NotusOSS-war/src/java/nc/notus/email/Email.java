@@ -15,7 +15,8 @@ public abstract class Email {
 
     public Email(String template) throws IOException {
         BufferedReader br = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream(template)));
+                new InputStreamReader(getClass().getResourceAsStream(template),
+                "UTF-8"));
         try {
             StringBuilder sb = new StringBuilder();
             int c = 0;
