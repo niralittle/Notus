@@ -90,7 +90,7 @@
 	<%
 		for (OSSUser user : users) {
 	%>
-	<form method="post" action="ChangeUserPassword">
+	<form method="post" action="Support">
 		<tr>
 			<td><%=user.getLogin()%></td>
 			<td><%=user.getEmail()%></td>
@@ -107,12 +107,12 @@
 			</td>
 			<% if (!isAdmin){ %>
 			<td><input type="text" name="newPassword" value="" /></td>
-			<td><input type="submit" value="Change password" /></td>
+			<td><input type="submit" value="Change password" name="action"/></td>
 			<td><a href="CustomerUser?userID=<%=user.getId()%>" target="_blank">View information about SO and SI</a></td>
 			<% } else { %>
-				<td><input type="submit" value="Block user" /></td>
+				<td><input type="submit" value="Block user" name="action"/></td>
 			<% } %>
-			<%--<td><input type="hidden" value="<%=user.getId()%>" name="userId" /></td> --%>
+			<td><input type="hidden" value="<%=user.getId()%>" name="userId" /></td>
 		</tr>
 
 	</form>

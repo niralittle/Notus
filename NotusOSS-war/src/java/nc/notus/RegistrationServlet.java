@@ -3,8 +3,6 @@ package nc.notus;
 import java.sql.Date;
 import java.util.Calendar;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceOrderDAO;
@@ -23,14 +21,18 @@ import nc.notus.states.UserState;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.NewScenarioWorkflow;
 import nc.notus.workflow.Workflow;
+import nc.notus.workflow.WorkflowException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,128 +41,128 @@ import nc.notus.email.EmailSender;
 import nc.notus.email.RegistrationSuccessfulEmail;
 
 /**
- * Provides registration in system for new user and creates new scenario
- * workflow for order with status "Entering"
+ * Provides registration in system for new user and allow ADMINISTRATOT only
+ * create new acount of engineer in system.
+ * Also creates new scenario workflow for order with status "Entering" for
+ * customer user.
  * 
  * @author Dmytro Panchenko & Igor Litvinenko
  */
 public class RegistrationServlet extends HttpServlet {
 
-    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private static final String LOGIN_PATTERN = "^[A-Za-z0-9_-]{3,40}$";
-    private static final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
+	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	private static final String LOGIN_PATTERN = "^[A-Za-z0-9_-]{3,40}$";
+	private static final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
 
-    private static final String CUSTOMER_REGISTRATION_PAGE = "registration.jsp";
-    private static final String ENGINEER_REGISTRATION_PAGE = "registerEngineer.jsp";
-    private static final String CONGRATULATION_PAGE = "orderRecieved.jsp";
+	private static Logger logger=Logger.getLogger(RegistrationServlet.class.getName());
+	
+	// pages to redirect
+	private static final String CUSTOMER_REGISTRATION_PAGE = "registration.jsp";
+	private static final String ENGINEER_REGISTRATION_PAGE = "registerEngineer.jsp";
+	private static final String CONGRATULATION_PAGE = "orderRecieved.jsp";
 
-    private String login;
-    private String inputtedCaptcha;
-    private String password;
-    private String passwordConf;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private int groupID;
-    private int catalogID;
-    private String serviceLocation;
-    private boolean isAdmin;
+	//User credentials
+	private String login;
+	private String password;
+	private String passwordConf;
+	private String email;
+	private String firstName;
+	private String lastName;
+	
+	//for register new engineer in ADMIN dashboard
+	private int groupID;
+	
+	//captcha
+	private String inputtedCaptcha;
+	private String generatedCaptcha;
+	
+	//chosen service and location
+	private int catalogID;
+	private String serviceLocation;
+	
+	//keep true if ADMIN register new user
+	private boolean isAdmin;
 
     protected void processRequest(HttpServletRequest request,
                     HttpServletResponse response)
                     throws ServletException, IOException, DBManagerException {
-        //declaration of variables
-        DBManager dbManager = new DBManager();
-        ServiceOrder newOrder = null;
-        Integer userID = null;
-        boolean paramsValid = false;
-        StringBuilder errMessage = new StringBuilder();
-        isAdmin = request.isUserInRole("ADMINISTRATOR");
-        //read values inputted by user in text fields
-        readParamaters(request);
+    	//local variable derclaration
+		DBManager dbManager = null;
+		ServiceOrder newOrder = null;
+		Integer userID = null;
+		boolean isParamsValid = false;
+		StringBuilder errMessage = new StringBuilder();
 
-        // if user is ADMINISTRATOR then we register a new engineer
-        if (isAdmin) {
+		// logic actions
+		isAdmin = request.isUserInRole("ADMINISTRATOR");
+		readParamaters(request);
 
-                //server-side data validation
-                paramsValid = validateParams(dbManager, errMessage);
+		try {
+			dbManager = new DBManager();
+			isParamsValid = validateParams(dbManager, errMessage);
 
-                //if data is valid then register new engineer
-                if (paramsValid) {
-                        createUser(dbManager, groupID);
+			if (!isParamsValid && isAdmin) {
+				redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
+			}
+			if (!isParamsValid && !isAdmin) {
+				redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
+			}
 
-                        // commit change in DB
-                        dbManager.commit();
+			// if user is ADMINISTRATOR we only register new engineer
+			// NC.KYIV.2014.WIND.REG.3
+			if (isAdmin) {
+				createUser(dbManager, groupID);
+				dbManager.commit();
 
-                        errMessage.append("New employee successfully registred! ");
-                }
+				request.setAttribute("success",
+						"New engineer successfully registered!");
+				redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
+			} else {
+				userID = createUser(dbManager, UserRole.CUSTOMER_USER.toInt());
+				newOrder = createOrder(dbManager, userID);
+				dbManager.commit();
 
-                // redirect to register page with appropriate message
-                request.setAttribute("errMessage", errMessage.toString());
-                redirect(request, response, ENGINEER_REGISTRATION_PAGE);
+				Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
+				wf.proceedOrder();
 
-        } else {
+				// sendEmail(userID);
 
-        	//check if inputted captcha equals to generated captcha
-            if (!request.getSession().getAttribute("captcha").equals(inputtedCaptcha)) {
-                    errMessage.append("Codes not matches!");
-                    request.setAttribute("errMessage", errMessage.toString());
-                    redirect(request, response, CUSTOMER_REGISTRATION_PAGE);
-            }
-            
-            // register CUSTOMER_USER
-                try {
-                    paramsValid = validateParams(dbManager, errMessage);
-                    if (paramsValid) {
-
-                        //if data is valid then register new user and create service order
-                        // for specified service location and
-                        userID = createUser(dbManager,UserRole.CUSTOMER_USER.toInt());
-                        newOrder = createOrder(dbManager, userID);
-                        dbManager.commit();
-                    }
-                } finally {
-                    dbManager.close();
-                }
-
-                if (paramsValid) {
-                    // proceed Order
-                    Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
-                    wf.proceedOrder();
-                    dbManager.commit();
-/*	
-                     // send email to user
-                     RegistrationSuccessfulEmail notificationEmail =
-                             new RegistrationSuccessfulEmail(firstName,
-                             login, password);
-                    EmailSender emailSender = new EmailSender();
-                    emailSender.sendEmail(userID, notificationEmail);
-*/
-                    // redirect to congratulation page
-                    redirect(request, response, CONGRATULATION_PAGE);
-                } else {
-                        request.setAttribute("errMessage", errMessage.toString());
-                        redirect(request, response, CUSTOMER_REGISTRATION_PAGE);
-                }
-            }
+				redirectTo(CONGRATULATION_PAGE, request, response);
+			}
+		} catch (WorkflowException wfExc) {
+			dbManager.rollback();
+			logger.error(wfExc.getMessage(), wfExc);
+			redirectTo(CONGRATULATION_PAGE, request, response);
+		} finally {
+			dbManager.close();
+		}
 
 	}
 	
+
+	/**
+	 * Read inputted params from request scope.
+	 * 
+	 * @param request
+	 */
 	private void readParamaters(HttpServletRequest request) {
+
 		login = request.getParameter("login");
 		password = request.getParameter("password");
 		passwordConf = request.getParameter("passwordConf");
 		email = request.getParameter("email");
 		firstName = request.getParameter("firstName");
 		lastName = request.getParameter("lastName");
+		
+		// read captcha
 		inputtedCaptcha = request.getParameter("code");
-
+		generatedCaptcha = (String) request.getSession().getAttribute("captcha");
+		
 		if (isAdmin) {
 			groupID = Integer.parseInt(request.getParameter("employeeGroup"));
 		} else {
-			catalogID = Integer.parseInt(request
-					.getParameter("serviceCatalogID"));
+			catalogID = Integer.parseInt(request.getParameter("serviceCatalogID"));
 			serviceLocation = request.getParameter("serviceLocationID");
 		}
 	}
@@ -175,20 +177,27 @@ public class RegistrationServlet extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void redirect(HttpServletRequest request,
-			HttpServletResponse response, String page) throws ServletException,
+	private void redirectTo(String page, HttpServletRequest request,
+			HttpServletResponse response) throws ServletException,
 			IOException {
 		RequestDispatcher view = request.getRequestDispatcher(page);
 		view.forward(request, response);
+		return;
 	}
 
 	private boolean validateParams(DBManager dbManager, StringBuilder errMessage) {
 
+		OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 		Pattern pattern;
 		Matcher matcher;
 
 		boolean isValid = true;
 
+		if(!generatedCaptcha.equals(inputtedCaptcha)) {
+			isValid = true;
+			errMessage.append(" - Code don't matches. <br />");
+		}
+		
 		pattern = Pattern.compile(LOGIN_PATTERN);
 		matcher = pattern.matcher(login);
 		if (!matcher.matches()) {
@@ -200,14 +209,16 @@ public class RegistrationServlet extends HttpServlet {
 		matcher = pattern.matcher(lastName);
 		if (!matcher.matches()) {
 			isValid = false;
-			errMessage.append("- Provide correct last name. Spaces are not allowed.<br />");
+			errMessage
+					.append("- Provide correct last name. Spaces are not allowed.<br />");
 
 		}
 
 		matcher = pattern.matcher(firstName);
 		if (!matcher.matches()) {
 			isValid = false;
-			errMessage.append("- Provide correct first name. Spaces not allowed.<br />");
+			errMessage
+					.append("- Provide correct first name. Spaces not allowed.<br />");
 		}
 
 		pattern = Pattern.compile(EMAIL_PATTERN);
@@ -221,7 +232,8 @@ public class RegistrationServlet extends HttpServlet {
 		matcher = pattern.matcher(password);
 		if (!matcher.matches()) {
 			isValid = false;
-			errMessage.append("- Provide correct password. Minimum length - 6 chars.<br />");
+			errMessage
+					.append("- Provide correct password. Minimum length - 6 chars.<br />");
 		}
 
 		if (!password.equals(passwordConf)) {
@@ -229,7 +241,6 @@ public class RegistrationServlet extends HttpServlet {
 			errMessage.append("- Password doesn't match confirmation.<br />");
 		}
 
-		OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 		if (userDAO.isExist(login)) {
 			errMessage.append("- User with specified login already exist. "
 					+ "Choose other login.<br />");
@@ -243,16 +254,21 @@ public class RegistrationServlet extends HttpServlet {
 			isValid = false;
 		}
 
+		
 		if (!isAdmin) {
 			try {
 				serviceLocation = java.net.URLDecoder.decode(serviceLocation,
 						"UTF-8");
-			} catch (Exception exc) {
-				isValid = false;
-				errMessage.append("- Wrong location specified.<br />");
+			} catch (UnsupportedEncodingException exc) {
+				//isValid = false;
+				//errMessage.append("- Wrong location specified.<br />");
+				//
+			} catch (IllegalArgumentException exc) {
+				//isValid = false;
+				//errMessage.append("- Wrong location specified.<br />");
 			}
 		}
-		 
+		
 
 		return isValid;
 	}
@@ -296,6 +312,17 @@ public class RegistrationServlet extends HttpServlet {
 		so.setId(orderID);
 		return so;
 	}
+	
+	private void sendEmail(Integer userID) {
+		try {
+			RegistrationSuccessfulEmail notificationEmail = 
+					new RegistrationSuccessfulEmail(firstName, login, password);
+			EmailSender emailSender = new EmailSender();
+			emailSender.sendEmail(userID, notificationEmail);
+		} catch (IOException exc) {
+			logger.error(exc.getMessage(), exc);
+		}
+	}
 
 	@Override
 	protected void doGet(HttpServletRequest request,
@@ -303,7 +330,7 @@ public class RegistrationServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (DBManagerException ex) {
-            Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 	}
 
@@ -325,7 +352,7 @@ public class RegistrationServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (DBManagerException ex) {
-            Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
+           // Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 	}
 
