@@ -1,4 +1,4 @@
-package controllers;
+package nc.notus.controllers;
 
 import org.apache.log4j.Logger;
 
@@ -13,12 +13,12 @@ public class AdministratorController {
 	
 	private String actionSuccess;
 	private DBManager dbManager;
-	
-	public AdministratorController() {
 
-	}
 	public AdministratorController(DBManager dbManager) {
 		this.dbManager = dbManager;
+	}
+	public AdministratorController() {
+
 	}
 	
 	private static Logger logger = Logger.getLogger(DBManager.class.getName());

@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import controllers.AdministratorController;
-import controllers.SupportEngineerController;
+import nc.notus.controllers.AdministratorController;
+import nc.notus.controllers.SupportEngineerController;
 import nc.notus.dbmanager.DBManagerException;
 
 

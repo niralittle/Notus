@@ -1,5 +1,7 @@
 package nc.notus;
 
+import nc.notus.controllers.AdministratorController;
+import nc.notus.controllers.CustomerUserController;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 
@@ -13,9 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
-import controllers.AdministratorController;
-import controllers.CustomerUserController;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -112,7 +111,7 @@ public class RegistrationServlet extends HttpServlet {
 		} catch (DBManagerException exc) {
 			dbManager.rollback();
 			request.setAttribute("errMessage", exc.getMessage());
-			redirectTo(CONGRATULATION_PAGE, request, response);
+			throw new DBManagerException("Error", exc);
 		} finally {
 			dbManager.close();
 		}

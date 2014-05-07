@@ -1,4 +1,4 @@
-package controllers;
+package nc.notus.controllers;
 
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;

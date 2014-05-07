@@ -1,4 +1,4 @@
-package controllers;
+package nc.notus.controllers;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -24,12 +24,66 @@ import nc.notus.states.OrderStatus;
 import nc.notus.states.UserRole;
 import nc.notus.states.UserState;
 import nc.notus.states.WorkflowScenario;
+import nc.notus.workflow.DisconnectScenarioWorkflow;
 import nc.notus.workflow.NewScenarioWorkflow;
 import nc.notus.workflow.Workflow;
 
 public class CustomerUserController {
 	
 	private static Logger logger = Logger.getLogger(DBManager.class.getName());
+	
+	private DBManager dbManager;
+	
+	public CustomerUserController(DBManager dbManager) {
+		this.dbManager = dbManager;
+	}
+	
+	public CustomerUserController() {
+		
+	}
+	
+	/**
+	 * Proceed order to disconnect.
+	 * [Implementation note: Used in external transaction ]
+	 * 
+	 * @param serviceInstanceID
+	 * @throws DBManagerException
+	 */
+	public void proceedToDisconnect(int serviceInstanceID) throws DBManagerException {
+
+		ServiceOrder serviceOrder = null;
+		ServiceOrderDAOImpl soDAO = null;
+		boolean isInternal = false;
+	
+
+		DisconnectScenarioWorkflow disconnectWF = null;
+		try {
+			if(dbManager == null) {
+				dbManager = new DBManager();
+				isInternal = true;
+			}
+			// get order by SI
+			soDAO = new ServiceOrderDAOImpl(dbManager);
+			serviceOrder = soDAO.getServiceOrderBySIId(serviceInstanceID);
+
+			// change scenario of got order
+			serviceOrder.setScenarioID(WorkflowScenario.DISCONNECT.toInt());
+			serviceOrder.setServiceOrderStatusID(OrderStatus.ENTERING.toInt());
+
+			disconnectWF = new DisconnectScenarioWorkflow(serviceOrder, dbManager);
+			disconnectWF.proceedOrder();
+			
+			if(isInternal) {
+				dbManager.commit();
+			}
+		} catch (DBManagerException wfExc) {
+			throw new DBManagerException("");
+		} finally {
+			if(isInternal) {
+				dbManager.close();
+			}
+		}
+	}
 	
 	
 	/**
@@ -78,7 +132,7 @@ public class CustomerUserController {
 			dbManager.commit();
 			//sendEmail(userID, firstName, login, password);
 		} catch (DBManagerException exc) {
-			throw new DBManagerException("Error while register in system.");
+			throw new DBManagerException("Error while register in system.", exc);
 		}
 		return userID;
 
