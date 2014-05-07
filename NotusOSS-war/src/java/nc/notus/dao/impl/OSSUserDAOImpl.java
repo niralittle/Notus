@@ -3,7 +3,6 @@ package nc.notus.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dbmanager.DBManager;
@@ -20,8 +19,6 @@ import nc.notus.states.UserState;
  */
 public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDAO {
 
-	private static Logger logger = Logger.getLogger(OSSUserDAOImpl.class.getName());
-	
     public OSSUserDAOImpl(DBManager dbManager) {
         super(dbManager);
     }
@@ -34,7 +31,6 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     @Override
     public void blockUser(OSSUser user) throws DBManagerException {
     	if (user == null) {
-    		logger.error("Passed parameter <user> is null. ");
     		throw new DBManagerException("Passed parameter <user> is null."
     				+ " Can't proccess null reference!");
     	} 
@@ -63,12 +59,10 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     @Override
     public List<OSSUser> getUsersByLogin(String login,  int numberOfRecords, int offset) throws DBManagerException {
     	if (login == null || login.isEmpty()) {
-    		logger.error("Passed parameter <login> is null or empty. ");
     		throw new DBManagerException("Passed parameter <login> is null or empty"
     				+ " Can't proccess the request!");
     	} 
     	if(numberOfRecords < 1 || offset < 1) {
-    		logger.error("Illegal argument in paging - less than 1.");
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -125,12 +119,10 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     @Override
     public List<OSSUser> getUsersByLastName(String lastname,  int numberOfRecords, int offset) throws DBManagerException {
     	if (lastname == null || lastname.isEmpty()) {
-    		logger.error("Passed parameter <lastname> is null or empty. ");
     		throw new DBManagerException("Passed parameter <lastname> is null or empty"
     				+ " Can't proccess the request!");
     	} 
     	if(numberOfRecords < 1 || offset < 1) {
-    		logger.error("Illegal argument in paging - less than 1.");
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -192,7 +184,6 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     @Override
     public boolean isExist(String login) throws DBManagerException {
     	if (login == null || login.isEmpty()) {
-    		logger.error("Passed parameter <login> is null or empty. ");
     		throw new DBManagerException("Passed parameter <login> is null or empty"
     				+ " Can't proccess the request!");
     	} 
@@ -237,7 +228,6 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     @Override
     public boolean isEmailDuplicate(String email) throws DBManagerException {
     	if (email == null || email.isEmpty()) {
-    		logger.error("Passed parameter <email> is null or empty. ");
     		throw new DBManagerException("Passed parameter <email> is null or empty"
     				+ " Can't proccess the request!");
     	} 
@@ -270,7 +260,6 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     @Override
     public List<String> getGroupEmails(UserRole role) throws DBManagerException {
     	if (role == null) {
-    		logger.error("Passed parameter <role> is null.");
     		throw new DBManagerException("Passed parameter <role> is null. "
     				+ " Can't proccess the request!");
     	} 
@@ -309,12 +298,10 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      */
     public List<OSSUser> getUsersByEmail(String email,  int numberOfRecords, int offset) throws DBManagerException {
     	if (email == null || email.isEmpty()) {
-    		logger.error("Passed parameter <email> is null or empty. ");
     		throw new DBManagerException("Passed parameter <email> is null or empty"
     				+ " Can't proccess the request!");
     	} 
     	if(numberOfRecords < 1 || offset < 1) {
-    		logger.error("Illegal argument in paging - less than 1.");
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -371,7 +358,6 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     @Override
     public OSSUser getUserByLogin(String login) throws DBManagerException {
     	if (login == null || login.isEmpty()) {
-    		logger.error("Passed parameter <login> is null or empty. ");
     		throw new DBManagerException("Passed parameter <login> is null or empty"
     				+ " Can't proccess the request!");
     	} 
@@ -410,7 +396,6 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
 	@Override
 	public boolean isBlocked(String login) throws DBManagerException {
 		if (login == null || login.isEmpty()) {
-    		logger.error("Passed parameter <login> is null or empty. ");
     		throw new DBManagerException("Passed parameter <login> is null or empty"
     				+ " Can't proccess the request!");
     	} 
@@ -455,7 +440,6 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     @Override
     public List<OSSUser> getUsersByRoleID(int roleID, int offset, int numberOfRecords) throws DBManagerException {
     	if(numberOfRecords < 1 || offset < 1) {
-    		logger.error("Illegal argument in paging - less than 1.");
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}

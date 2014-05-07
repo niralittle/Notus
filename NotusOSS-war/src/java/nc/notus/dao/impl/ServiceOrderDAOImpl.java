@@ -3,8 +3,6 @@ package nc.notus.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -18,8 +16,6 @@ import nc.notus.entity.ServiceOrder;
  */
 public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         implements ServiceOrderDAO {
-
-	private static Logger logger = Logger.getLogger(ServiceOrderDAOImpl.class.getName());
 	
     public ServiceOrderDAOImpl(DBManager dbManager) {
         super(dbManager);
@@ -37,12 +33,10 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                                         int offset, int numberOfRecords) throws DBManagerException {
         
     	if (serviceOrderStatus == null || serviceOrderStatus.isEmpty()) {
-    		logger.error("Passed parameter <serviceOrderStatus> is null or empty. ");
     		throw new DBManagerException("Passed parameter <serviceOrderStatus> "
     				+ "is null or empty.  Can't proccess the request!");
     	} 
     	if(numberOfRecords < 1 || offset < 1) {
-    		logger.error("Illegal argument in paging - less than 1.");
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -104,12 +98,10 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                                         int offset, int numberOfRecords) throws DBManagerException {
         
     	if (scenario == null || scenario.isEmpty()) {
-    		logger.error("Passed parameter <scenario> is null or empty. ");
     		throw new DBManagerException("Passed parameter <scenario> "
     				+ "is null or empty.  Can't proccess the request!");
     	} 
     	if(numberOfRecords < 1 || offset < 1) {
-    		logger.error("Illegal argument in paging - less than 1.");
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -169,7 +161,6 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     @Override
     public List<ServiceOrder> getSOByStatus(int userID, int serviceOrderStatus, int offset, int numberOfRecords) throws DBManagerException {
     	if(numberOfRecords < 1 || offset < 1) {
-    		logger.error("Illegal argument in paging - less than 1.");
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}

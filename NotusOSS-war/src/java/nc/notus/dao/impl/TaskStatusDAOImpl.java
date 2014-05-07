@@ -1,8 +1,5 @@
 package nc.notus.dao.impl;
 
-import org.apache.log4j.Logger;
-
-import nc.notus.dao.DAOException;
 import nc.notus.dao.TaskStatusDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -16,8 +13,6 @@ import nc.notus.states.TaskState;
  * @author Igor Litvinenko & Vladimir Ermolenko
  */
 public class TaskStatusDAOImpl extends GenericDAOImpl<TaskStatus> implements TaskStatusDAO {
-
-	private static Logger logger = Logger.getLogger(TaskStatusDAOImpl.class.getName());
 	
     public TaskStatusDAOImpl(DBManager dbManager) {
         super(dbManager);
@@ -31,7 +26,6 @@ public class TaskStatusDAOImpl extends GenericDAOImpl<TaskStatus> implements Tas
     @Override
     public int getTaskStatusID(TaskState taskState) throws DBManagerException {
     	if (taskState == null) {
-    		logger.error("Passed parameter <taskState> is null. ");
     		throw new DBManagerException("Passed parameter <taskState> is null."
     				+ " Can't proccess null reference!");
     	} 

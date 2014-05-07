@@ -1,7 +1,5 @@
 package nc.notus.dao.impl;
 
-import org.apache.log4j.Logger;
-
 import nc.notus.dao.ServiceInstanceStatusDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -16,8 +14,6 @@ import nc.notus.states.InstanceStatus;
  */
 public class ServiceInstanceStatusDAOImpl extends GenericDAOImpl<ServiceInstanceStatus> 
         implements ServiceInstanceStatusDAO {
-
-	private static Logger logger = Logger.getLogger(ServiceInstanceStatusDAOImpl.class.getName());
 	
     public ServiceInstanceStatusDAOImpl(DBManager dbManager) {
         super(dbManager);
@@ -31,7 +27,6 @@ public class ServiceInstanceStatusDAOImpl extends GenericDAOImpl<ServiceInstance
     @Override
     public int getServiceInstanceStatusID(InstanceStatus status) throws DBManagerException {
     	if (status == null) {
-    		logger.error("Passed parameter <status> is null. ");
     		throw new DBManagerException("Passed parameter <status> is null "
     				+ " Can't proccess the request!");
     	} 

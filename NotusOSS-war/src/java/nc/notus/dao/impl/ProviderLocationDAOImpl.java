@@ -3,7 +3,6 @@ package nc.notus.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 
 import nc.notus.dao.ProviderLocationDAO;
 import nc.notus.dbmanager.DBManager;
@@ -17,8 +16,6 @@ import nc.notus.entity.ProviderLocation;
  * @author Vladimir Ermolenko
  */
 public class ProviderLocationDAOImpl extends GenericDAOImpl<ProviderLocation> implements ProviderLocationDAO {
-
-	private static Logger logger = Logger.getLogger(ProviderLocationDAOImpl.class.getName());
 	
     public ProviderLocationDAOImpl(DBManager dbManager) {
         super(dbManager);
@@ -34,7 +31,6 @@ public class ProviderLocationDAOImpl extends GenericDAOImpl<ProviderLocation> im
     @Override
     public List<ProviderLocation> getProviderLocations(int offset, int numberOfRecords) throws DBManagerException {
     	if(numberOfRecords < 1 || offset < 1) {
-    		logger.error("Illegal argument in paging - less than 1.");
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}

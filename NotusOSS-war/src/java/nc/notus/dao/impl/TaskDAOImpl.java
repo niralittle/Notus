@@ -3,8 +3,6 @@ package nc.notus.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import nc.notus.dao.TaskDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -17,8 +15,6 @@ import nc.notus.entity.Task;
  * @author Vladimir Ermolenko & Panchenko Dmytro
  */
 public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
-
-	private static Logger logger = Logger.getLogger(TaskDAOImpl.class.getName());
 
 	public TaskDAOImpl(DBManager dbManager) {
 		super(dbManager);
@@ -41,7 +37,6 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 			throws DBManagerException {
 
 		if (numberOfRecords < 1 || offset < 1) {
-			logger.error("Illegal argument in paging - less than 1.");
 			throw new DBManagerException(
 					"Illegal argument in paging - less than 1. "
 							+ " Can't proccess the request!");
@@ -100,7 +95,6 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 			throws DBManagerException {
 		
 		if (numberOfRecords < 1 || offset < 1) {
-			logger.error("Illegal argument in paging - less than 1.");
 			throw new DBManagerException(
 					"Illegal argument in paging - less than 1. "
 							+ " Can't proccess the request!");
@@ -157,7 +151,6 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 			throws DBManagerException {
 		
 		if (numberOfRecords < 1 || offset < 1) {
-			logger.error("Illegal argument in paging - less than 1.");
 			throw new DBManagerException(
 					"Illegal argument in paging - less than 1. "
 							+ " Can't proccess the request!");

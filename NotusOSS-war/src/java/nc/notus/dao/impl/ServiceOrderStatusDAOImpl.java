@@ -1,8 +1,5 @@
 package nc.notus.dao.impl;
 
-import org.apache.log4j.Logger;
-
-import nc.notus.dao.DAOException;
 import nc.notus.dao.ServiceOrderStatusDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -16,8 +13,6 @@ import nc.notus.states.OrderStatus;
  * @author Vladimir Ermolenko & Pacnhenko Dmytro
  */
 public class ServiceOrderStatusDAOImpl extends GenericDAOImpl<ServiceOrderStatus> implements ServiceOrderStatusDAO {
-
-	private static Logger logger = Logger.getLogger(ServiceOrderStatusDAOImpl.class.getName());
 	
     public ServiceOrderStatusDAOImpl(DBManager dbManager) {
         super(dbManager);
@@ -32,7 +27,6 @@ public class ServiceOrderStatusDAOImpl extends GenericDAOImpl<ServiceOrderStatus
     @Override
     public int getServiceOrderStatusID(OrderStatus status) throws DBManagerException {
     	if (status == null) {
-    		logger.error("Passed parameter <status> is null. ");
     		throw new DBManagerException("Passed parameter <status> is null."
     				+ " Can't proccess null reference!");
     	} 

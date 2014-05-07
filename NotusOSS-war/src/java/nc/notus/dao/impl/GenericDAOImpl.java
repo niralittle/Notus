@@ -8,8 +8,9 @@ import java.sql.Date;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import nc.notus.dao.GenericDAO;
-import nc.notus.dao.DAOException;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 import nc.notus.dbmanager.ResultIterator;
@@ -27,6 +28,8 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     private Class<T> type;          // here all type information about the given type is stored
     protected DBManager dbManager;  // instance of DBManager that incapsulates connection to DB
 
+    private static Logger logger = Logger.getLogger(DBManager.class.getName());
+    
     @SuppressWarnings("unchecked")
 	public GenericDAOImpl(DBManager dbManager) {
         this.dbManager = dbManager;
@@ -43,7 +46,12 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      */
     @Override
     public long countAll(Map<String, Object> params) throws DBManagerException {
-        // form SQL query
+    	if (params == null) {
+    		throw new DBManagerException("Passed parameter <params> is null."
+    				+ " Can't proccess null reference!");
+    	} 
+    	
+    	// form SQL query
         StringBuilder query = new StringBuilder();
         query.append("SELECT COUNT(*) FROM " + type.getSimpleName());
 
@@ -51,7 +59,9 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
             query.append(" WHERE ");
             boolean notFirst = false; //not adding " AND " before the first param
             for (Map.Entry<String, Object> entry : params.entrySet()) {
-                if (notFirst) query.append(" AND ");
+                if (notFirst) {
+                	query.append(" AND ");
+                }
                 if (entry.getValue() != null) {
                     query.append(entry.getKey() + " = ?");
                 } else {
@@ -60,19 +70,27 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
                 notFirst = true;
             }
         }
+        Statement statement = null;
+		try {
+			statement = dbManager.prepareStatement(query.toString());
+			// fill in statement
+			int paramIndex = 1;
+			for (Object value : params.values()) {
+				if (value != null) {
+					statement.setObject(paramIndex++, value);
+				}
+			}
 
-        Statement statement = dbManager.prepareStatement(query.toString());
-        // fill in statement
-        int paramIndex = 1;
-        for (Object value : params.values()) {
-            if (value != null) {
-                statement.setObject(paramIndex++, value);
-            }
-        }
-
-        ResultIterator ri = statement.executeQuery();
-        ri.next();
-        return ri.getLong(1);  // element at position (1,1)
+			ResultIterator ri = statement.executeQuery();
+			ri.next();
+			return ri.getLong(1); // element at position (1,1)
+			
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
     }
 
 /**
@@ -83,7 +101,11 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      */
     @Override
     public long countAllWithLikeCause(Map<String, Object> params) throws DBManagerException {
-        // form SQL query
+    	if (params == null) {
+    		throw new DBManagerException("Passed parameter <params> is null."
+    				+ " Can't proccess null reference!");
+    	} 
+    	// form SQL query
         StringBuilder query = new StringBuilder();
         query.append("SELECT COUNT(*) FROM " + type.getSimpleName());
 
@@ -100,19 +122,27 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
                 notFirst = true;
             }
         }
+        Statement statement = null;
+		try {
+			statement = dbManager.prepareStatement(query.toString());
+			// fill in statement
+			int paramIndex = 1;
+			for (Object value : params.values()) {
+				if (value != null) {
+					statement.setObject(paramIndex++, value);
+				}
+			}
 
-        Statement statement = dbManager.prepareStatement(query.toString());
-        // fill in statement
-        int paramIndex = 1;
-        for (Object value : params.values()) {
-            if (value != null) {
-                statement.setObject(paramIndex++, value);
-            }
-        }
-
-        ResultIterator ri = statement.executeQuery();
-        ri.next();
-        return ri.getLong(1);  // element at position (1,1)
+			ResultIterator ri = statement.executeQuery();
+			ri.next();
+			return ri.getLong(1); // element at position (1,1)
+			
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
     }
     
     /**
@@ -122,7 +152,7 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      */
     @Override
     public Object add(T t) throws DBManagerException {
-        StringBuilder query = new StringBuilder();
+    	StringBuilder query = new StringBuilder();
         query.append("INSERT INTO ").append(type.getSimpleName()).append('(');
         Map<String, Object> fields = getFieldsList(t);
         for (String fieldName : fields.keySet()) {
@@ -140,18 +170,25 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         }
         query.delete(query.length()-2, query.length()); // trim last ", "
         query.append(')');
-
-        Statement statement = dbManager.prepareStatement(query.toString());
-        // fill in statement
-        int paramIndex = 1;
-        for (Object value : fields.values()) {
-            if (value != null) {
-                statement.setObject(paramIndex++, value);
-            }
-        }
-        statement.executeUpdate();
-        Object primaryKey = statement.getGeneratedPrimaryKey();
-        return primaryKey;
+        Statement statement = null;
+		try {
+			statement = dbManager.prepareStatement(query.toString());
+			// fill in statement
+			int paramIndex = 1;
+			for (Object value : fields.values()) {
+				if (value != null) {
+					statement.setObject(paramIndex++, value);
+				}
+			}
+			statement.executeUpdate();
+			Object primaryKey = statement.getGeneratedPrimaryKey();
+			return primaryKey;
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
     }
 
     /**
@@ -160,16 +197,24 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
      */
     @Override
     public void delete(Object id) throws DBManagerException {
-        if (id instanceof Number) {
-            String queryString =
-                    "DELETE FROM " + type.getSimpleName() + " WHERE id = ?";
-            Statement statement = dbManager.prepareStatement(queryString);
-            statement.setObject(1, id);
-            statement.executeUpdate();
-            statement.close();
-        } else {
-            throw new DAOException("Wrong primary key type");
-        }
+    	Statement statement = null;
+		try {
+			if (id instanceof Number) {
+				String queryString = "DELETE FROM " + type.getSimpleName()
+										+ " WHERE id = ?";
+				statement = dbManager.prepareStatement(queryString);
+				statement.setObject(1, id);
+				statement.executeUpdate();
+				statement.close();
+			} else {
+				throw new DBManagerException("Wrong primary key type");
+			}
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
     }
 
     /**
@@ -183,60 +228,71 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     @Override
     public T find(Object id) throws DBManagerException {
         if (!(id instanceof Number)) {
-            throw new DAOException("Wrong primary key type");
+            throw new DBManagerException("Wrong primary key type!");
         }
 
         String queryString =
                 "SELECT * FROM " + type.getSimpleName() + " WHERE id = ?";
-        Statement statement = dbManager.prepareStatement(queryString);
-        statement.setObject(1, id);
-        ResultIterator ri = statement.executeQuery();
-        if (!ri.next()) {
-            throw new DAOException("No record found for given primary key");
-        }
+        Statement statement = null;
+		try {
+			statement = dbManager.prepareStatement(queryString);
+			statement.setObject(1, id);
+			ResultIterator ri = statement.executeQuery();
+			if (!ri.next()) {
+				throw new DBManagerException("No record found for given primary key");
+			}
 
-        try {
-            T t = type.newInstance();
-            Map<String, Object> fields = getFieldsList(t);
-            for (String fieldName : fields.keySet()) {
-                String methodName = "set" +
-                        fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-                Field field = type.getDeclaredField(fieldName);
-                Method method = type.getDeclaredMethod(methodName, field.getType());
-                if (field.getType() == int.class) {
-                    method.invoke(t, ri.getInt(fieldName));
-                } else if (field.getType() == long.class) {
-                    method.invoke(t, ri.getLong(fieldName));
-                } else if (field.getType() == boolean.class) {
-                    method.invoke(t, ri.getBoolean(fieldName));
-                } else if (field.getType() == String.class) {
-                    method.invoke(t, ri.getString(fieldName));
-                } else if(field.getType() == Integer.class) {
-                    Integer val;
-                    if(ri.getObject(fieldName) != null) {
-                        val = ri.getInt(fieldName);
-                    } else {
-                        val = null;
-                    }
-                    method.invoke(t, val);
-                } else if(field.getType() == Date.class) {
-                    Date date;
-                    if(ri.getObject(fieldName) != null) {
-                        date = ri.getDate(fieldName);
-                    } else {
-                        date = null;
-                    }
-                    method.invoke(t, date);
-                } else {
-                    throw new DAOException("Incompatible field type");
-                }
-            }
-            return t;
-        } catch (InstantiationException exc) {
-            throw new DAOException("Cannot create entity instance", exc);
-        } catch (Exception exc) {
-            throw new DAOException("Cannot invoke setter", exc);
-        }
+			T t = type.newInstance();
+			Map<String, Object> fields = getFieldsList(t);
+			for (String fieldName : fields.keySet()) {
+				String methodName = "set"
+						+ fieldName.substring(0, 1).toUpperCase()
+						+ fieldName.substring(1);
+				Field field = type.getDeclaredField(fieldName);
+				Method method = type.getDeclaredMethod(methodName,
+						field.getType());
+				if (field.getType() == int.class) {
+					method.invoke(t, ri.getInt(fieldName));
+				} else if (field.getType() == long.class) {
+					method.invoke(t, ri.getLong(fieldName));
+				} else if (field.getType() == boolean.class) {
+					method.invoke(t, ri.getBoolean(fieldName));
+				} else if (field.getType() == String.class) {
+					method.invoke(t, ri.getString(fieldName));
+				} else if (field.getType() == Integer.class) {
+					Integer val;
+					if (ri.getObject(fieldName) != null) {
+						val = ri.getInt(fieldName);
+					} else {
+						val = null;
+					}
+					method.invoke(t, val);
+				} else if (field.getType() == Date.class) {
+					Date date;
+					if (ri.getObject(fieldName) != null) {
+						date = ri.getDate(fieldName);
+					} else {
+						date = null;
+					}
+					method.invoke(t, date);
+				} else {
+					throw new DBManagerException("Incompatible field type");
+				}
+			}
+			return t;
+		} catch (InstantiationException exc) {
+			throw new DBManagerException("Cannot create entity instance", exc);
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} catch (Exception e) {
+			logger.error("Error occured at :", e);
+			throw new DBManagerException("No access to method or field, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
+        
     }
 
     /**
@@ -250,11 +306,11 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         try {
             id = type.getMethod("getId").invoke(t);
         } catch (Exception exc) {
-            throw new DAOException("Cannot invoke getId() method", exc);
+            throw new DBManagerException("Cannot invoke getId() method", exc);
         }
 
         if (!(id instanceof Number)) {
-            throw new DAOException("Wrong primary key type");
+            throw new DBManagerException("Wrong primary key type");
         }
 
         // form SQL query
@@ -263,7 +319,9 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         Map<String, Object> fieldsList = getFieldsList(t);
         boolean notFirst = false;
         for (Map.Entry<String, Object> entry : fieldsList.entrySet()) {
-            if (notFirst) query.append(", ");
+            if (notFirst) { 
+            	query.append(", ");
+            }
             if (entry.getValue() != null) {
                 query.append(entry.getKey()).append(" = ?");
             } else {
@@ -273,17 +331,25 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
         }
         query.append(" WHERE id = ?");
 
-        Statement statement = dbManager.prepareStatement(query.toString());
-        // fill in statement
-        int paramIndex = 1;
-        for (Object value : fieldsList.values()) {
-            if(value != null) {
-                statement.setObject(paramIndex++, value);
-            }
-        }
-        statement.setObject(paramIndex, id);
-        statement.executeUpdate();
-        statement.close();
+        Statement statement = null;
+		try {
+			statement = dbManager.prepareStatement(query.toString());
+			// fill in statement
+			int paramIndex = 1;
+			for (Object value : fieldsList.values()) {
+				if (value != null) {
+					statement.setObject(paramIndex++, value);
+				}
+			}
+			statement.setObject(paramIndex, id);
+			statement.executeUpdate();
+			statement.close();
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("The error was occured, "
+					+ "contact the administrator");
+		} finally {
+			statement.close();
+		}
     }
 
     /**
@@ -304,7 +370,8 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
                         fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
                 map.put(fieldName, type.getMethod(methodName).invoke(t));
             } catch (Exception exc) {
-                throw new DAOException("Cannot obtain fields of entity", exc);
+            	logger.error("Error occured at :", exc);
+                throw new DBManagerException("Cannot obtain fields of entity", exc);
             }
         }
         return map;

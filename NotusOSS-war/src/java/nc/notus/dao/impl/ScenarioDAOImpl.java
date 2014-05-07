@@ -1,7 +1,5 @@
 package nc.notus.dao.impl;
 
-import org.apache.log4j.Logger;
-
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -15,8 +13,6 @@ import nc.notus.states.WorkflowScenario;
  * @author Vladimir Ermolenko & Panchenko Dmytro
  */
 public class ScenarioDAOImpl extends GenericDAOImpl<Scenario> implements ScenarioDAO {
-
-	private static Logger logger = Logger.getLogger(ScenarioDAOImpl.class.getName());
 	
     public ScenarioDAOImpl(DBManager dbManager) {
         super(dbManager);
@@ -31,7 +27,6 @@ public class ScenarioDAOImpl extends GenericDAOImpl<Scenario> implements Scenari
     @Override
     public int getScenarioID(WorkflowScenario scenario) throws DBManagerException {
     	if (scenario == null) {
-    		logger.error("Passed parameter <scenario> is null. ");
     		throw new DBManagerException("Passed parameter <scenario> is null. "
     				+ " Can't proccess the request!");
     	} 

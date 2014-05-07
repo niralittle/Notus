@@ -3,8 +3,6 @@ package nc.notus.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -18,8 +16,6 @@ import nc.notus.entity.ServiceCatalog;
  */
 public class ServiceCatalogDAOImpl extends GenericDAOImpl<ServiceCatalog>
         implements ServiceCatalogDAO {
-
-	private static Logger logger = Logger.getLogger(ServiceCatalogDAOImpl.class.getName());
 	
     public ServiceCatalogDAOImpl(DBManager dbManager) {
         super(dbManager);
@@ -37,7 +33,6 @@ public class ServiceCatalogDAOImpl extends GenericDAOImpl<ServiceCatalog>
             int offset, int numberOfRecords) throws DBManagerException  {
        
 		if (numberOfRecords < 1 || offset < 1) {
-			logger.error("Illegal argument in paging - less than 1.");
 			throw new DBManagerException("Illegal argument in paging - less than 1. "
 							+ " Can't proccess the request!");
 		}
