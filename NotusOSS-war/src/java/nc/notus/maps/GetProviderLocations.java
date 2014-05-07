@@ -10,7 +10,7 @@ import nc.notus.entity.ProviderLocation;
 
 /**
  * Class for getting Provider Locations via DAO
- * @author Roman
+ * @author Roman, Alina
  */
 public class GetProviderLocations {
 

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package nc.notus.reports;
 
 import java.io.IOException;
@@ -15,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import nc.notus.dbmanager.DBManagerException;
 
 /**
- *
+ *                                                                              //REVIEW: documentation here
  * @author Andrey Ilin
  */
 public class ReportPagingServlet extends HttpServlet {
