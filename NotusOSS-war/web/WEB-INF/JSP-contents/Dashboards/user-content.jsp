@@ -6,6 +6,7 @@
 
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
+<script src="assets/user-content.js"></script>
 
 
 
