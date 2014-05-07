@@ -5,16 +5,18 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
+
 
 /**
  * Wraps <code>PreparedStatement</code> class to handle SQL exceptions and
  * hide <code>Connection</code> from user.
- * @author Igor Litvinenko
+ * @author Igor Litvinenko & Panchenko Dmytro
  */
 public class Statement implements Closeable {                                   // REVIEW: documentation on every public function expected
 
+	private static Logger logger = Logger.getLogger(DBManager.class.getName());
     private PreparedStatement prStatement;
 
     public Statement(PreparedStatement prStatement) {
@@ -25,6 +27,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setInt(parameterIndex, value);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
@@ -33,6 +36,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setString(parameterIndex, value);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
@@ -41,6 +45,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setDate(parameterIndex, value);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
@@ -49,6 +54,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setObject(parameterIndex, value);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
@@ -63,6 +69,7 @@ public class Statement implements Closeable {                                   
             ResultIterator ri = new ResultIterator(rs);
             return ri;
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Can't execute query.", exc);
         }
     }
@@ -76,6 +83,7 @@ public class Statement implements Closeable {                                   
             int rowsAffected = prStatement.executeUpdate();
             return rowsAffected;
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Can't execute query.", exc);
         }
     }
@@ -92,9 +100,11 @@ public class Statement implements Closeable {                                   
                 int primaryKey = generatedKeys.getInt(1);
                 return primaryKey;
             } else {
-                throw new DBManagerException("No PK were generated");
+            	logger.error("Primary key not generated!");
+                throw new DBManagerException("Primary key not generated!");
             }
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot get generated PK", exc);
         }
     }
@@ -104,11 +114,7 @@ public class Statement implements Closeable {                                   
         try {
             prStatement.close();
         } catch (SQLException exc) {
-            try {
-                throw new DBManagerException("SQL Exception", exc);
-            } catch (DBManagerException ex) {
-                Logger.getLogger(Statement.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        	logger.error(exc.getMessage(), exc);
         }
     }
 
@@ -116,6 +122,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setLong(parameterIndex, value);
         } catch (SQLException exc) {
+        	logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }

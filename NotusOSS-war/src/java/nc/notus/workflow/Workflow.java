@@ -38,9 +38,11 @@ import nc.notus.states.UserRole;
 public abstract class Workflow {
 
     protected ServiceOrder order; // Service Order for which workflow was created
+    protected DBManager dbManager;
 
-    public Workflow(ServiceOrder order) {
+    public Workflow(ServiceOrder order, DBManager dbManager) {
         this.order = order;
+        this.dbManager = dbManager;
     }
 
     /**
@@ -57,14 +59,14 @@ public abstract class Workflow {
      * @throws WorkflowException if task is not valid
      */
     public void assignTask(int taskID, int userID) throws DBManagerException {
-        DBManager dbManager = new DBManager();
-        try {
+        
+    	try {
             TaskDAO taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 
             Task task = taskDAO.find(taskID);
             OSSUser user = userDAO.find(userID);
-            if (isTaskValid(dbManager, taskID, user.getRoleID())) {
+            if (isTaskValid(taskID, user.getRoleID())) {
                 task.setEmployeeID(userID);
                 taskDAO.update(task);
             } else {
@@ -85,10 +87,9 @@ public abstract class Workflow {
      * This method is used to create tasks and assign it to user groups.
      * Method is <code>protected</code> because it can only be invoked in
      * Workflow methods.
-     * @param dbManager connection to database encapsulated in DBManager class
      * @param userRole identifies user group to create task for
      */
-    protected void createTask(DBManager dbManager, UserRole userRole, String name) throws DBManagerException {
+    protected void createTask(UserRole userRole, String name) throws DBManagerException {
         TaskDAOImpl taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
@@ -105,10 +106,9 @@ public abstract class Workflow {
      * This method sets task status to "Completed".
      * Method is <code>protected</code> because it can only be invoked in
      * Workflow methods.
-     * @param dbManager connection to database encapsulated in DBManager class
      * @param taskID ID of task
      */
-    protected void completeTask(DBManager dbManager, int taskID) throws DBManagerException {
+    protected void completeTask(int taskID) throws DBManagerException {
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 
@@ -118,22 +118,21 @@ public abstract class Workflow {
         taskDAO.update(task);
     }
 
-    protected String getOrderStatus(DBManager dbManager) throws DBManagerException {
+    protected String getOrderStatus() throws DBManagerException {
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
         int statusID = order.getServiceOrderStatusID();
         ServiceOrderStatus status = orderStatusDAO.find(statusID);
         return status.getStatus();
     }
 
-    protected String getOrderScenario(DBManager dbManager) throws DBManagerException {
+    protected String getOrderScenario() throws DBManagerException {
         ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
         int scenarioID = order.getScenarioID();
         Scenario scenario = scenarioDAO.find(scenarioID);
         return scenario.getScenario();
     }
 
-    protected void changeServiceInstanceStatus(DBManager dbManager,
-            InstanceStatus status) throws DBManagerException {
+    protected void changeServiceInstanceStatus(InstanceStatus status) throws DBManagerException {
         ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
         ServiceInstanceStatusDAO sisDAO = new ServiceInstanceStatusDAOImpl(dbManager);
 
@@ -143,7 +142,7 @@ public abstract class Workflow {
         siDAO.update(si);
     }
 
-    protected void changeOrderStatus(DBManager dbManager, OrderStatus status) throws DBManagerException {
+    protected void changeOrderStatus(OrderStatus status) throws DBManagerException {
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
 
@@ -155,13 +154,12 @@ public abstract class Workflow {
     /**
      * This method checks whether given Task is active, connected with
      * current Order and was created for given User Role
-     * @param dbManager class representing the connection to DB
      * @param taskID ID of Task to validate
      * @param userRoleID ID of User Role the Task was created for
      * @return <code>true</code> if Task is valid for execution and
      * <code>false</code> otherwise
      */
-    protected boolean isTaskValid(DBManager dbManager, int taskID, int userRoleID) throws DBManagerException {
+    protected boolean isTaskValid(int taskID, int userRoleID) throws DBManagerException {
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
         TaskStatusDAO taskStatusDAO = new TaskStatusDAOImpl(dbManager);
 

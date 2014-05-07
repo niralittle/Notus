@@ -86,11 +86,12 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
             ServiceOrder so = soDAO.find(soID);
             ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
             ServiceInstance si = siDAO.find(so.getServiceInstanceID());
-            DisconnectScenarioWorkflow dwf = new DisconnectScenarioWorkflow(so);
+            DisconnectScenarioWorkflow dwf = new DisconnectScenarioWorkflow(so,dbManager);
 
             //Action "Disconnect Cable from Port" and redirect to personal tasks page
             if (request.getParameter("action") != null && "Disconnect Cable from Port".equals(request.getParameter("action"))){
                 dwf.unplugCableFromPort(taskID, cable.getId(), port.getId(), si.getId());
+                dbManager.commit();
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int startPage = 1;
                 int numbOfRecords = 10;

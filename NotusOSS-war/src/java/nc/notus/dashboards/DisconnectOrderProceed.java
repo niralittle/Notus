@@ -1,9 +1,9 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.mail.Session;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +18,7 @@ import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.DisconnectScenarioWorkflow;
+import nc.notus.workflow.WorkflowException;
 
 /**
  * Disconnect scenario workflow
@@ -39,19 +40,25 @@ public class DisconnectOrderProceed extends HttpServlet {
 		
 		//get order
 		ServiceOrder serviceOrder = getServiceOrder(serviceInstanceId);
-			serviceOrder.setScenarioID(WorkflowScenario.DISCONNECT.toInt());
-			serviceOrder.setServiceOrderStatusID(OrderStatus.ENTERING.toInt());
+		serviceOrder.setScenarioID(WorkflowScenario.DISCONNECT.toInt());
+		serviceOrder.setServiceOrderStatusID(OrderStatus.ENTERING.toInt());
+		
 		DisconnectScenarioWorkflow disconnectWF = null;
+		DBManager dbManager = null;
 		try{
-			disconnectWF = new DisconnectScenarioWorkflow(serviceOrder);
+			dbManager = new DBManager();
+			disconnectWF = new DisconnectScenarioWorkflow(serviceOrder,dbManager);
 			disconnectWF.proceedOrder();
-			
+			dbManager.commit();
+	
 			/*
 			request.getSession().setAttribute("success", "Your request to disconnect service on location " 
 					+ serviceOrder.getServiceLocation() + " accepted!");
 			*/
-		} finally {
+		} catch(WorkflowException wfExc) {
 			
+		} finally {
+			dbManager.close();
 		}
 		response.sendRedirect(CUSTOMER_USER_PAGE);
 		//redirect(request, response, CUSTOMER_USER_PAGE);

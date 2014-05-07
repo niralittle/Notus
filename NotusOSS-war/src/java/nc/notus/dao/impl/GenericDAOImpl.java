@@ -27,11 +27,12 @@ public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
     private Class<T> type;          // here all type information about the given type is stored
     protected DBManager dbManager;  // instance of DBManager that incapsulates connection to DB
 
+    @SuppressWarnings("unckecked")
     public GenericDAOImpl(DBManager dbManager) {
         this.dbManager = dbManager;
         Type t = getClass().getGenericSuperclass();
         ParameterizedType pt = (ParameterizedType) t;
-        type = (Class) pt.getActualTypeArguments()[0];
+        type = (Class<T>) pt.getActualTypeArguments()[0];
     }
 
     /**

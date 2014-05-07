@@ -98,13 +98,11 @@ public class CustomerUserServlet extends HttpServlet {
             newOrder = createOrder(dbManager, userID);
             dbManager.commit();
             // proceed Service Order
-            Workflow wf = new NewScenarioWorkflow(newOrder);
+            Workflow wf = new NewScenarioWorkflow(newOrder,dbManager);
             wf.proceedOrder();
+            dbManager.commit();
             }
             
-
-            
-
 
             request.setAttribute("activeInstances",
                     getActiveInstancesList(userID, startpage, numbOfRecords));

@@ -152,9 +152,10 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 					int taskID = Integer.parseInt(request.getParameter("d_taskid"));
 
 					ServiceOrder order = orderDAO.find(orderID);
-					wf = new DisconnectScenarioWorkflow(order);
+					wf = new DisconnectScenarioWorkflow(order,dbManager);
 					wf.removeCurcuitFromSI(taskID);
 
+					dbManager.commit();	
 					request.setAttribute("success","Circuit successfully deleted!");
 					request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
 				}
