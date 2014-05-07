@@ -66,6 +66,7 @@ function addMarker(location) {
         });
     }
     codeLatLng(location);
+    document.getElementById("addressSelect").style.display = "none";
 }
 
 //geocode from coordinates to address
