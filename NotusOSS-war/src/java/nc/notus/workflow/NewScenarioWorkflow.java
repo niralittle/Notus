@@ -57,8 +57,9 @@ public class NewScenarioWorkflow extends Workflow {
 			throws DBManagerException {
 		super(order, dbManager);
 
-		if (!getOrderScenario().equals(WorkflowScenario.NEW.toString())) {
-			throw new DBManagerException("Cannot proceed Order: wrong order scenario");
+		int scID = order.getScenarioID();
+		if (scID != WorkflowScenario.NEW.toInt()) {
+			throw new DBManagerException( "Cannot proceed Order: wrong order scenario");
 		}
 
 	}

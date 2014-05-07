@@ -1,26 +1,7 @@
 package nc.notus;
 
-import java.sql.Date;
-import java.util.Calendar;
-
-import nc.notus.dao.OSSUserDAO;
-import nc.notus.dao.ScenarioDAO;
-import nc.notus.dao.ServiceOrderDAO;
-import nc.notus.dao.ServiceOrderStatusDAO;
-import nc.notus.dao.impl.OSSUserDAOImpl;
-import nc.notus.dao.impl.ScenarioDAOImpl;
-import nc.notus.dao.impl.ServiceOrderDAOImpl;
-import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
-import nc.notus.entity.OSSUser;
-import nc.notus.entity.ServiceOrder;
-import nc.notus.states.OrderStatus;
-import nc.notus.states.UserRole;
-import nc.notus.states.UserState;
-import nc.notus.states.WorkflowScenario;
-import nc.notus.workflow.NewScenarioWorkflow;
-import nc.notus.workflow.Workflow;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,11 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import controllers.AdministratorController;
+import controllers.CustomerUserController;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import nc.notus.email.EmailSender;
-import nc.notus.email.RegistrationSuccessfulEmail;
 
 /**
  * Provides registration in system for new user and creates new scenario
@@ -86,8 +67,6 @@ public class RegistrationServlet extends HttpServlet {
                     throws ServletException, IOException, DBManagerException {
     	//local variable derclaration
 		DBManager dbManager = null;
-		ServiceOrder newOrder = null;
-		Integer userID = null;
 		boolean isParamsValid = false;
 		StringBuilder errMessage = new StringBuilder();
 
@@ -95,41 +74,44 @@ public class RegistrationServlet extends HttpServlet {
 		isAdmin = request.isUserInRole("ADMINISTRATOR");
 		readParamaters(request);
 
+		isParamsValid = validateParams(errMessage);
+
+		if (!isParamsValid && isAdmin) {
+			redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
+		}
+		if (!isParamsValid && !isAdmin) {
+			redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
+		}
+
 		try {
 			dbManager = new DBManager();
-			isParamsValid = validateParams(dbManager, errMessage);
-
-			if (!isParamsValid && isAdmin) {
-				redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
-			}
-			if (!isParamsValid && !isAdmin) {
-				redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
-			}
-
+			
 			// if user is ADMINISTRATOR we only register new engineer
 			// NC.KYIV.2014.WIND.REG.3
 			if (isAdmin) {
-				createUser(dbManager, groupID);
+				AdministratorController adminControl = null;
+
+				adminControl = new AdministratorController(dbManager);
+				adminControl.registerNewEngineer(login, password, email,
+						firstName, lastName, groupID);
 				dbManager.commit();
 
-				request.setAttribute("success",
-						"New engineer successfully registered!");
+				request.setAttribute("success", adminControl.getActionSuccess());
 				redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
 			} else {
-				userID = createUser(dbManager, UserRole.CUSTOMER_USER.toInt());
-				newOrder = createOrder(dbManager, userID);
+				CustomerUserController userControl = null;
+
+				userControl = new CustomerUserController();
+
+				userControl.register(login, password, email, firstName,
+						lastName, catalogID, serviceLocation, dbManager);
+
 				dbManager.commit();
-
-				Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
-				wf.proceedOrder();
-
-				// sendEmail(userID);
-
 				redirectTo(CONGRATULATION_PAGE, request, response);
 			}
-		} catch (DBManagerException wfExc) {
+		} catch (DBManagerException exc) {
 			dbManager.rollback();
-			logger.error(wfExc.getMessage(), wfExc);
+			request.setAttribute("errMessage", exc.getMessage());
 			redirectTo(CONGRATULATION_PAGE, request, response);
 		} finally {
 			dbManager.close();
@@ -182,9 +164,8 @@ public class RegistrationServlet extends HttpServlet {
 		return;
 	}
 
-	private boolean validateParams(DBManager dbManager, StringBuilder errMessage) throws DBManagerException {
+	private boolean validateParams(StringBuilder errMessage) throws DBManagerException {
 
-		OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 		Pattern pattern;
 		Matcher matcher;
 
@@ -238,20 +219,7 @@ public class RegistrationServlet extends HttpServlet {
 			errMessage.append("- Password doesn't match confirmation.<br />");
 		}
 
-		if (userDAO.isExist(login)) {
-			errMessage.append("- User with specified login already exist. "
-					+ "Choose other login.<br />");
-			isValid = false;
-		}
-
-		if (userDAO.isEmailDuplicate(email)) {
-			errMessage.append("- User with specified email already exist "
-					+ "in system. Try write to administrator for "
-					+ "restoring you account.<br />");
-			isValid = false;
-		}
-
-		
+			
 		if (!isAdmin) {
 			try {
 				serviceLocation = java.net.URLDecoder.decode(serviceLocation,
@@ -266,60 +234,9 @@ public class RegistrationServlet extends HttpServlet {
 			}
 		}
 		
-
 		return isValid;
 	}
 
-	
-	private int createUser(DBManager dbManager, int roleID) throws DBManagerException {
-		OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-		OSSUser user = new OSSUser();
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setEmail(email);
-		user.setLogin(login);
-		user.setPassword(password);
-		user.setBlocked(UserState.ACTIVE.toInt());
-		user.setRoleID(roleID);
-		int userID = (Integer) userDAO.add(user);
-		return userID;
-	}
-
-	private ServiceOrder createOrder(DBManager dbManager, int userID) throws DBManagerException  {
-
-		ServiceOrderStatusDAO statusDAO = new ServiceOrderStatusDAOImpl(dbManager);
-		ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
-		ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
-
-		// create new order with status ENTERING
-		ServiceOrder so = new ServiceOrder();
-		int orderStatusID = statusDAO.getServiceOrderStatusID(OrderStatus.ENTERING);
-			so.setServiceOrderStatusID(orderStatusID);
-			so.setScenarioID(scenarioDAO.getScenarioID(WorkflowScenario.NEW));
-			so.setServiceCatalogID(catalogID);
-			so.setServiceInstanceID(null);
-			so.setServiceLocation(serviceLocation);
-			so.setUserID(userID);
-
-		Calendar cal = java.util.Calendar.getInstance();
-		Date date = new Date(cal.getTimeInMillis());
-			so.setServiceOrderDate(date);
-
-		int orderID = (Integer) orderDAO.add(so);
-		so.setId(orderID);
-		return so;
-	}
-	
-	private void sendEmail(Integer userID) {
-		try {
-			RegistrationSuccessfulEmail notificationEmail = 
-					new RegistrationSuccessfulEmail(firstName, login, password);
-			EmailSender emailSender = new EmailSender();
-			emailSender.sendEmail(userID, notificationEmail);
-		} catch (IOException exc) {
-			logger.error(exc.getMessage(), exc);
-		}
-	}
 
 	@Override
 	protected void doGet(HttpServletRequest request,
