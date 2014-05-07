@@ -28,6 +28,9 @@ import nc.notus.states.WorkflowScenario;
  */
 public class DisconnectScenarioWorkflow extends Workflow {
 
+	//private static Logger logger = Logger.getLogger(DisconnectScenarioWorkflow.class.getName());
+
+	
     /**
      * This method creates DisconnectScenarioWorkflow for given Order. It
      * doesn't proceed Order to execution(See {@link Workflow#proceedOrder()})
@@ -41,10 +44,9 @@ public class DisconnectScenarioWorkflow extends Workflow {
     public DisconnectScenarioWorkflow(ServiceOrder order, DBManager dbManager) throws DBManagerException {
         super(order, dbManager);
 		if (!getOrderScenario().equals(WorkflowScenario.DISCONNECT.toString())) {
-			throw new WorkflowException("Cannot proceed Order: "
+			throw new DBManagerException("Cannot proceed Order: "
 											+ "wrong order scenario");
 		}
-		
     }
 
     /**
@@ -56,14 +58,16 @@ public class DisconnectScenarioWorkflow extends Workflow {
     public void proceedOrder() throws DBManagerException {
 		try {
 			if (!getOrderStatus().equals(OrderStatus.ENTERING.toString())) {
-				throw new WorkflowException("Cannot proceed Order: "
+				throw new DBManagerException("Cannot proceed Order: "
 													+ "wrong order state");
 			}
 			changeOrderStatus(OrderStatus.PROCESSING);
 			createTask(UserRole.PROVISION_ENGINEER, "Remove circuit from SI");
-		} catch (Exception ex) {
-			dbManager.rollback();
-		}
+		} catch(DBManagerException ex) {
+	          // logger.error("Error while proceed the order!", ex);
+	           dbManager.rollback();
+	           throw new DBManagerException("Error was occured, contact to administrator!");
+	        }
     }
 
     /**This method unassigns given Port from given Service Instance.
@@ -83,7 +87,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
        
     	try {
             if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
-                throw new WorkflowException("Given Task is not valid");
+                throw new DBManagerException("Given Task is not valid");
             }
 
             PortDAO portDAO = new PortDAOImpl(dbManager);
@@ -108,17 +112,17 @@ public class DisconnectScenarioWorkflow extends Workflow {
             changeOrderStatus(OrderStatus.COMPLETED);
             // TODO: send email here
            // dbManager.commit();
-        } catch(Exception ex) {
-            // need to be logged like:
-            //log.error("SQLException", ex);
+        } catch(DBManagerException ex) {
+            // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-        }
+            throw new DBManagerException("Error was occured, contact to administrator!");
+         }
     }
 
     public void removeCurcuitFromSI(int taskID) throws DBManagerException {
         try {
             if (!isTaskValid(taskID, UserRole.PROVISION_ENGINEER.toInt())) {
-                throw new WorkflowException("Given Task is not valid");
+                throw new DBManagerException("Given Task is not valid");
             }
             ServiceInstanceDAOImpl siDAO = new ServiceInstanceDAOImpl(dbManager);
             CircuitDAO ciDAO = new CircuitDAOImpl(dbManager);
@@ -136,9 +140,10 @@ public class DisconnectScenarioWorkflow extends Workflow {
             createTask(UserRole.INSTALLATION_ENGINEER, "Remove port and cable from SI");
            // dbManager.commit();
 
-        } catch (Exception ex) {
+        } catch(DBManagerException ex) {
+            // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-            throw new WorkflowException(" ", ex);
-        } 
+            throw new DBManagerException("Error was occured, contact to administrator!");
+         }
     }
 }

@@ -21,7 +21,6 @@ import nc.notus.states.UserState;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.NewScenarioWorkflow;
 import nc.notus.workflow.Workflow;
-import nc.notus.workflow.WorkflowException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -128,7 +127,7 @@ public class RegistrationServlet extends HttpServlet {
 
 				redirectTo(CONGRATULATION_PAGE, request, response);
 			}
-		} catch (WorkflowException wfExc) {
+		} catch (DBManagerException wfExc) {
 			dbManager.rollback();
 			logger.error(wfExc.getMessage(), wfExc);
 			redirectTo(CONGRATULATION_PAGE, request, response);

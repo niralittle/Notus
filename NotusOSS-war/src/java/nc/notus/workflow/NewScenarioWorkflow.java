@@ -1,6 +1,7 @@
 package nc.notus.workflow;
 
 import java.sql.Date;
+
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dbmanager.DBManager;
@@ -8,7 +9,11 @@ import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
+
 import java.util.Calendar;
+
+import org.apache.log4j.Logger;
+
 import nc.notus.dao.CableDAO;
 import nc.notus.dao.CircuitDAO;
 import nc.notus.dao.DeviceDAO;
@@ -36,6 +41,8 @@ import nc.notus.entity.Circuit;
  */
 public class NewScenarioWorkflow extends Workflow {
 
+	//private static Logger logger = Logger.getLogger(NewScenarioWorkflow.class.getName());
+	
     /**
 	 * This method creates NewScenarioWorkflow for given Order. It doesn't
 	 * proceed Order to execution(See {@link Workflow#proceedOrder()})
@@ -51,8 +58,9 @@ public class NewScenarioWorkflow extends Workflow {
 		super(order, dbManager);
 
 		if (!getOrderScenario().equals(WorkflowScenario.NEW.toString())) {
-			throw new WorkflowException("Cannot proceed Order: wrong order scenario");
+			throw new DBManagerException("Cannot proceed Order: wrong order scenario");
 		}
+
 	}
 
     /**
@@ -64,7 +72,7 @@ public class NewScenarioWorkflow extends Workflow {
     public void proceedOrder() throws DBManagerException {
         try {
             if (!getOrderStatus().equals(OrderStatus.ENTERING.toString())) {
-                throw new WorkflowException("Cannot proceed Order: wrong order state");
+                throw new DBManagerException("Cannot proceed Order: wrong order state");
             }
             ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
 
@@ -82,11 +90,11 @@ public class NewScenarioWorkflow extends Workflow {
              */
             createTask(UserRole.INSTALLATION_ENGINEER, "Proceed new order");
 
-            dbManager.commit();
-        } catch(Exception ex) {
-            // need to be logged like:
-            //log.error("SQLException", ex);
-            dbManager.rollback();
+           // dbManager.commit();
+        } catch(DBManagerException ex) {
+          // logger.error("Error while proceed the order!", ex);
+           dbManager.rollback();
+           throw new DBManagerException("Error was occured, contact to administrator!");
         } 
     }
 
@@ -116,14 +124,14 @@ public class NewScenarioWorkflow extends Workflow {
     public void createRouter(int taskID, int portQuantity) throws DBManagerException {
         try {
             if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
-                throw new WorkflowException("Given Task is not valid");
+                throw new DBManagerException("Given Task is not valid");
             }
 
             DeviceDAO deviceDAO = new DeviceDAOImpl(dbManager);
             PortDAO portDAO = new PortDAOImpl(dbManager);
 
             if (portDAO.getFreePort() != null) {
-                throw new WorkflowException("Router creation is not allowed: " +
+                throw new DBManagerException("Router creation is not allowed: " +
                         "free ports available");
             }
 
@@ -141,12 +149,12 @@ public class NewScenarioWorkflow extends Workflow {
                 portDAO.add(port);
             }
 
-            dbManager.commit();
-        } catch(Exception ex) {
-            // need to be logged like:
-            //log.error("SQLException", ex);
+            //dbManager.commit();
+        } catch(DBManagerException ex) {
+            // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-        } 
+            throw new DBManagerException("Error was occured, contact to administrator!");
+         } 
     }
 
     /**
@@ -156,7 +164,7 @@ public class NewScenarioWorkflow extends Workflow {
     public void createCable(int taskID, String cableType) throws DBManagerException {
         try {
             if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
-                throw new WorkflowException("Given Task is not valid");
+                throw new DBManagerException("Given Task is not valid");
             }
 
             CableDAO cableDAO = new CableDAOImpl(dbManager);
@@ -165,12 +173,12 @@ public class NewScenarioWorkflow extends Workflow {
             cable.setCable(cableType);
             cableDAO.add(cable);
 
-            dbManager.commit();
-        } catch(Exception ex) {
-            // need to be logged like:
-            //log.error("SQLException", ex);
+            //dbManager.commit();
+        } catch(DBManagerException ex) {
+            // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-        } 
+            throw new DBManagerException("Error was occured, contact to administrator!");
+         } 
     }
 
     /**
@@ -184,13 +192,13 @@ public class NewScenarioWorkflow extends Workflow {
     public void plugCableToPort(int taskID, int cableID, int portID) throws DBManagerException {
         try {
             if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
-                throw new WorkflowException("Given Task is not valid");
+                throw new DBManagerException("Given Task is not valid");
             }
             PortDAO portDAO = new PortDAOImpl(dbManager);
 
             Port port = portDAO.find(portID);
             if (port.getPortStatus() == PortState.BUSY.toInt()) {
-                throw new WorkflowException("Port is busy");
+                throw new DBManagerException("Port is busy");
             }
             port.setCableID(cableID);
             port.setPortStatus(PortState.BUSY.toInt());
@@ -203,12 +211,12 @@ public class NewScenarioWorkflow extends Workflow {
 
             this.completeTask(taskID);
             this.createTask(UserRole.PROVISION_ENGINEER, "Create curcuit");
-            dbManager.commit();
-        } catch(Exception ex) {
-            // need to be logged like:
-            //log.error("SQLException", ex);
+            //dbManager.commit();
+        } catch(DBManagerException ex) {
+            // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-        } 
+            throw new DBManagerException("Error was occured, contact to administrator!");
+         } 
     }
 
     /**
@@ -219,7 +227,7 @@ public class NewScenarioWorkflow extends Workflow {
     public void createCircuit(int taskID, String circuitConfig) throws DBManagerException {
         try {
             if (!isTaskValid(taskID, UserRole.PROVISION_ENGINEER.toInt())) {
-                throw new WorkflowException("Given Task is not valid");
+                throw new DBManagerException("Given Task is not valid");
             }
             CircuitDAO circuitDAO = new CircuitDAOImpl(dbManager);
             ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
@@ -235,12 +243,12 @@ public class NewScenarioWorkflow extends Workflow {
 
             this.completeTask(taskID);
             this.createTask(UserRole.SUPPORT_ENGINEER, "Approve bill");
-            dbManager.commit();
-        } catch(Exception ex) {
-            // need to be logged like:
-            //log.error("SQLException", ex);
+           // dbManager.commit();
+        } catch(DBManagerException ex) {
+            // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-        } 
+            throw new DBManagerException("Error was occured, contact to administrator!");
+         } 
     }
 
     /**
@@ -252,7 +260,7 @@ public class NewScenarioWorkflow extends Workflow {
     public void approveBill(int taskID) throws DBManagerException {
         try {
             if (!isTaskValid(taskID, UserRole.SUPPORT_ENGINEER.toInt())) {
-                throw new WorkflowException("Given Task is not valid");
+                throw new DBManagerException("Given Task is not valid");
             }
 
             completeTask(taskID);
@@ -261,12 +269,12 @@ public class NewScenarioWorkflow extends Workflow {
             changeServiceInstanceStatus(InstanceStatus.ACTIVE);
             changeOrderStatus(OrderStatus.COMPLETED);
             // TODO: send email here
-            dbManager.commit();
-        } catch(Exception ex) {
-            // need to be logged like:
-            //log.error("SQLException", ex);
+           // dbManager.commit();
+        } catch(DBManagerException ex) {
+            // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-        } 
+            throw new DBManagerException("Error was occured, contact to administrator!");
+         } 
     }
 
     /**

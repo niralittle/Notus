@@ -1,6 +1,5 @@
 package nc.notus.workflow;
 
-import java.sql.SQLException;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceInstanceDAO;
@@ -59,8 +58,7 @@ public abstract class Workflow {
      * @throws WorkflowException if task is not valid
      */
     public void assignTask(int taskID, int userID) throws DBManagerException {
-        
-    	try {
+        try {
             TaskDAO taskDAO = new TaskDAOImpl(dbManager);
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
 
@@ -70,7 +68,7 @@ public abstract class Workflow {
                 task.setEmployeeID(userID);
                 taskDAO.update(task);
             } else {
-                throw new WorkflowException("Given Task is not valid");
+                throw new DBManagerException("Given Task is not valid");
             }
             dbManager.commit();
         } catch(Exception ex) {

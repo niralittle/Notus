@@ -18,7 +18,6 @@ import nc.notus.entity.ServiceOrder;
 import nc.notus.states.OrderStatus;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.DisconnectScenarioWorkflow;
-import nc.notus.workflow.WorkflowException;
 
 /**
  * Disconnect scenario workflow
@@ -55,7 +54,7 @@ public class DisconnectOrderProceed extends HttpServlet {
 			request.getSession().setAttribute("success", "Your request to disconnect service on location " 
 					+ serviceOrder.getServiceLocation() + " accepted!");
 			*/
-		} catch(WorkflowException wfExc) {
+		} catch(DBManagerException wfExc) {
 			
 		} finally {
 			dbManager.close();
