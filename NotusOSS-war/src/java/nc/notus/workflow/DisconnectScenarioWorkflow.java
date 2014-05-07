@@ -61,6 +61,13 @@ public class DisconnectScenarioWorkflow extends Workflow {
 				throw new DBManagerException("Cannot proceed Order: "
 													+ "wrong order state");
 			}
+			
+			ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+			ServiceInstance si = siDAO.find(order.getServiceInstanceID());
+			
+			si.setServiceInstanceStatusID(InstanceStatus.PENDING_TO_DISCONNECT.toInt());
+			siDAO.update(si);
+			
 			changeOrderStatus(OrderStatus.PROCESSING);
 			createTask(UserRole.PROVISION_ENGINEER, "Remove circuit from SI");
 		} catch(DBManagerException ex) {

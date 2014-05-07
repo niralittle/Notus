@@ -7,9 +7,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import nc.notus.controllers.CustomerUserController;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceCatalogDAO;
@@ -51,6 +52,7 @@ public class CustomerUserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     private static final String USER_INFO_PAGE = "userSOandSI.jsp";
+    private static final String CUSTOMER_USER_PAGE = "CustomerUser";
     
     private DBManager dbManager = null;
 
@@ -77,7 +79,7 @@ public class CustomerUserServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         int startpage = 1;
-        int numbOfRecords = 100;
+        int numbOfRecords = 30;
         try {
             dbManager = new DBManager();
         } catch (DBManagerException ex) {
@@ -91,17 +93,18 @@ public class CustomerUserServlet extends HttpServlet {
             if (session.getAttribute("serviceCatalogID") != null) {
                 catalogID = (Integer) session.getAttribute("serviceCatalogID");
             }
-            if (session.getAttribute("serviceLocationID") != null) {
-                serviceLocation = (String) session.getAttribute("serviceLocationID");
-                serviceLocation = java.net.URLDecoder.decode(serviceLocation,"UTF-8");
-                // create new Service Order
-            newOrder = createOrder(dbManager, userID);
-            dbManager.commit();
-            // proceed Service Order
-            Workflow wf = new NewScenarioWorkflow(newOrder,dbManager);
-            wf.proceedOrder();
-            dbManager.commit();
-            }
+			if (session.getAttribute("serviceLocationID") != null) {
+				serviceLocation = (String) session.getAttribute("serviceLocationID");
+				serviceLocation = java.net.URLDecoder.decode(serviceLocation,
+						"UTF-8");
+				// create new Service Order
+				newOrder = createOrder(dbManager, userID);
+				dbManager.commit();
+				// proceed Service Order
+				Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
+				wf.proceedOrder();
+				dbManager.commit();
+			}
             
 
             request.setAttribute("activeInstances",
@@ -123,7 +126,8 @@ public class CustomerUserServlet extends HttpServlet {
             dbManager.close();
         }
     }
-    //<editor-fold>
+ 
+	//<editor-fold>
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -139,6 +143,23 @@ public class CustomerUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request,
                     HttpServletResponse response) throws ServletException, IOException {
+		if ("Disconnect".equals(request.getParameter("action"))) {
+			if (request.getParameter("serviceInstanceID") != null) {
+				int serviceInstanceId;
+				CustomerUserController userControl = null;
+
+				serviceInstanceId = Integer.parseInt(
+									request.getParameter("serviceInstanceID"));
+
+				try {
+					userControl = new CustomerUserController();
+					userControl.proceedToDisconnect(serviceInstanceId);
+				} catch (DBManagerException wfExc) {
+
+				}
+			} 
+				response.sendRedirect(CUSTOMER_USER_PAGE);
+    	}
     }
 
     /**

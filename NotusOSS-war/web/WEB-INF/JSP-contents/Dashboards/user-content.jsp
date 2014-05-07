@@ -36,7 +36,7 @@
                 <td><%= m.get("orderDate") %></td>
                 <td><%= m.get("price") %></td>
                 <td>  
-                    <form action="DisconnectOrderProceed" method="POST">
+                    <form action="CustomerUser" method="POST">
                         <input type="hidden" name="serviceInstanceID"
                                value="<%= m.get("instanceID") %>"/> 
                         <input type="submit" name="action" value="Disconnect" />
