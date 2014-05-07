@@ -2,41 +2,81 @@ package nc.notus.dashboards;
 
 import java.io.IOException;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import nc.notus.dao.TaskDAO;
-import nc.notus.dao.impl.ServiceOrderDAOImpl;
-import nc.notus.dao.impl.TaskDAOImpl;
+import controllers.SupportEngineerController;
+import nc.notus.dao.OSSUserDAO;
+import nc.notus.dao.impl.OSSUserDAOImpl;
+
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
-import nc.notus.entity.ServiceOrder;
-import nc.notus.entity.Task;
-import nc.notus.workflow.NewScenarioWorkflow;
+import nc.notus.entity.OSSUser;
 
+import nc.notus.states.UserState;
+
+
+/**
+ * Change password for specified user.
+ * 
+ * @author Panchenko Dmytro
+ */
 public class SupportEngineerServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String SUPPORT_PAGE = "supportEngineer.jsp";
 
-	void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
+	private static final String SUPPORT_PAGE = "supportEngineer.jsp";
+	// page to redirect
+	private static final String CHANGE_PASSWORD_PAGE = "passwordChanging.jsp";
+
+
+	/**
+	 * Redirect to passes page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @param page
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void redirectTo(String page, HttpServletRequest request,
+			HttpServletResponse response) throws ServletException,
+			IOException {
+		RequestDispatcher view = request.getRequestDispatcher(page);
+		view.forward(request, response);
+		return;
+	}
+
+	private void blockUser(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException,
+			DBManagerException {
+
+		int userID = Integer.parseInt(request.getParameter("userId"));
+		DBManager dbManager = null;
+		try {
+			dbManager = new DBManager();
+
+			OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+			OSSUser user = userDAO.find(userID);
+
+			user.setBlocked(UserState.BLOCKED.toInt());
+			userDAO.update(user);
+			dbManager.commit();
+
+			request.setAttribute("success", "User, " + user.getLogin()
+					+ ", successfully blocked!");
+
+			redirectTo(CHANGE_PASSWORD_PAGE, request, response);
+		} finally {
+			dbManager.close();
+		}
 	}
 
 	
-
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
-	}
-
 	/**
 	 * Handles the HTTP <code>POST</code> method.
 	 * 
@@ -53,38 +93,38 @@ public class SupportEngineerServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-	if ("Send bill".equalsIgnoreCase(request.getParameter("action"))) {
-		if (request.getParameter("taskid") != null) {
-			int taskID = Integer.parseInt(request.getParameter("taskid"));
-			
-			DBManager dbManager = null;
-			NewScenarioWorkflow wf = null;
-			ServiceOrderDAOImpl orderDAO = null;
-			TaskDAO taskDAO = null;
-			try {
-				dbManager = new DBManager();
+		SupportEngineerController supportControl = null;
+		
+		if ("Send bill".equalsIgnoreCase(request.getParameter("action"))) {
+			if (request.getParameter("taskid") != null) {
+				int taskID = Integer.parseInt(request.getParameter("taskid"));
 
-				taskDAO = new TaskDAOImpl(dbManager);
-				Task task = taskDAO.find(taskID);
-				int orderID = task.getServiceOrderID();
-
-				orderDAO = new ServiceOrderDAOImpl(dbManager);
-				ServiceOrder order = orderDAO.find(orderID);
-
-				wf = new NewScenarioWorkflow(order, dbManager);
-				wf.approveBill(taskID);
-				dbManager.commit();
-				request.setAttribute("success", "Bill was sent!");
-			} catch (DBManagerException ex) {
-                    Logger.getLogger(SupportEngineerServlet.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-				dbManager.close();
+				supportControl = new SupportEngineerController();
+				supportControl.sendBillToCustomer(taskID);
+				request.setAttribute("success", supportControl.getActionStatus());
+				redirectTo(SUPPORT_PAGE, request, response);
 			}
 
-			RequestDispatcher view = request.getRequestDispatcher(SUPPORT_PAGE);
-			view.forward(request, response);
+		} else if ("Change password".equals(request.getParameter("action"))) {
+			// read necessary parameters from request scope
+			String newPassword = request.getParameter("newPassword");
+			int userID = Integer.parseInt(request.getParameter("userId"));
+
+			supportControl = new SupportEngineerController();
+			supportControl.changeCustomerPassword(userID, newPassword);
+			request.setAttribute("success", supportControl.getActionStatus());
+
+			redirectTo(SUPPORT_PAGE, request, response);
+		} else if ("Block user".equals(request.getParameter("action"))) {
+
+			if (request.isUserInRole("ADMINISTRATOR")) {
+				try {
+					blockUser(request, response);
+				} catch (DBManagerException ex) {
+				}
+			} 
 		}
-	    }
+	
 	}
 
 	/**
