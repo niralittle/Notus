@@ -27,7 +27,7 @@ public class NewPasswordEmail extends Email {
     public NewPasswordEmail(String firstName, String password)
             throws IOException {
 
-        super("/newPasswordSuccess.html");
+        super("/changePasswordSuccess.html");
         this.firstName = firstName;
         this.password = password;
         subject = "Your password has been changed -- NOTUS Internet Provider";
