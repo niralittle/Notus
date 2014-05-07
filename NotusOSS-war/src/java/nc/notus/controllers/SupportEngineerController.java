@@ -15,7 +15,14 @@ public class SupportEngineerController {
 	
 	private String actionStatus;
 	
-	public void sendBillToCustomer(int taskID) {
+	/**
+	 * Send bill to customer user.
+	 * (Implementation note: Commit changes in the DB after updating user)
+	 * 
+	 * @param taskID
+	 * @throws DBManagerException 
+	 */
+	public void sendBillToCustomer(int taskID) throws DBManagerException {
 		DBManager dbManager = null;
 		NewScenarioWorkflow wf = null;
 		ServiceOrderDAOImpl orderDAO = null;
@@ -35,13 +42,21 @@ public class SupportEngineerController {
 			dbManager.commit();
 			actionStatus = "Bill successfully sent!";
 		} catch (DBManagerException ex) {
-			actionStatus = "Oops, some error happened! ";
+			throw new DBManagerException("Error was occured while sending bill.");
 		} finally {
 			dbManager.close();
 		}
 	}
 	
-	public void sendBillToCustomer(int taskID, DBManager dbManager) {
+	/**
+	 * Send bill to customer user.
+	 * (Implementation note: Not commit changes in the DB after updating user)
+	 * 
+	 * @param taskID
+	 * @param dbManager
+	 * @throws DBManagerException 
+	 */
+	public void sendBillToCustomer(int taskID, DBManager dbManager) throws DBManagerException {
 		NewScenarioWorkflow wf = null;
 		ServiceOrderDAOImpl orderDAO = null;
 		TaskDAO taskDAO = null;
@@ -57,11 +72,11 @@ public class SupportEngineerController {
 			wf.approveBill(taskID);
 			actionStatus = "Bill successfully sent!";
 		} catch (DBManagerException ex) {
-			actionStatus = "Oops, some error happened! ";
+			throw new DBManagerException("Error was occured while sending bill.");
 		} 
 	}
 	
-	public void changeCustomerPassword(int userID, String newPassword) {
+	public void changeCustomerPassword(int userID, String newPassword) throws DBManagerException {
 		OSSUserDAOImpl userDAO = null;
 		DBManager dbManager = null;
 		try {
@@ -76,10 +91,29 @@ public class SupportEngineerController {
 			dbManager.commit();
 			actionStatus = "Password successfully changed!";
 		} catch (DBManagerException exc) {
-			actionStatus = "Oops, some error happened! ";
+			throw new DBManagerException("Error was occured while"
+							+ " changing password.");
 		} finally {
 			dbManager.close();
 		}
+	}
+	
+	public void changeCustomerPassword(int userID, String newPassword, DBManager dbManager) throws DBManagerException {
+		OSSUserDAOImpl userDAO = null;
+		try {
+			dbManager = new DBManager();
+			userDAO = new OSSUserDAOImpl(dbManager);
+
+			// get user by id and set him new password
+			OSSUser user = userDAO.find(userID);
+			user.setPassword(newPassword);
+			userDAO.update(user);
+
+			actionStatus = "Password successfully changed!";
+		} catch (DBManagerException exc) {
+			throw new DBManagerException("Error was occured while"
+					+ " changing password.");
+		} 
 	}
 
 	public String getActionStatus() {

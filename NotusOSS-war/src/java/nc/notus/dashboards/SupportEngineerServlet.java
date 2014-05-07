@@ -9,15 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controllers.AdministratorController;
 import controllers.SupportEngineerController;
-import nc.notus.dao.OSSUserDAO;
-import nc.notus.dao.impl.OSSUserDAOImpl;
-
-import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
-import nc.notus.entity.OSSUser;
 
-import nc.notus.states.UserState;
 
 
 /**
@@ -50,32 +45,72 @@ public class SupportEngineerServlet extends HttpServlet {
 		view.forward(request, response);
 		return;
 	}
+	
+	private void blockUser(HttpServletRequest request) {
+		AdministratorController adminControl = null;
+		
+		if (request.isUserInRole("ADMINISTRATOR")) {
+			
+			if (request.getParameter("userId") != null) {
+				try { // try block user
+					int userID = Integer.parseInt(request.getParameter("userId"));
 
-	private void blockUser(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException,
-			DBManagerException {
-
-		int userID = Integer.parseInt(request.getParameter("userId"));
-		DBManager dbManager = null;
-		try {
-			dbManager = new DBManager();
-
-			OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-			OSSUser user = userDAO.find(userID);
-
-			user.setBlocked(UserState.BLOCKED.toInt());
-			userDAO.update(user);
-			dbManager.commit();
-
-			request.setAttribute("success", "User, " + user.getLogin()
-					+ ", successfully blocked!");
-
-			redirectTo(CHANGE_PASSWORD_PAGE, request, response);
-		} finally {
-			dbManager.close();
+					adminControl = new AdministratorController();
+					adminControl.blockUser(userID);
+					request.setAttribute("success", adminControl.getActionSuccess());
+				} catch (DBManagerException exc) {
+					request.setAttribute("errMessage", exc.getMessage());
+				}
+				
+			} else {
+				request.setAttribute("errMessage", "TaskID not passed!");
+			}
+			
+		} else {
+			request.setAttribute("errMessage", "To perfrom this action you must be"
+					+ " logged in as Administrator! ");
 		}
 	}
-
+	
+	private void sendBill(HttpServletRequest request) {
+		
+		SupportEngineerController supportControl = null;
+		if (request.getParameter("taskid") != null) {
+			int taskID = Integer.parseInt(request.getParameter("taskid"));
+			
+			try { 		//try send bill
+				supportControl = new SupportEngineerController();
+				supportControl.sendBillToCustomer(taskID);
+				request.setAttribute("success",
+						supportControl.getActionStatus());
+			} catch (DBManagerException exc) {
+				request.setAttribute("errMessage", exc.getMessage());
+			}
+		} else {
+			request.setAttribute("success", "TaskID not passed!");
+		}
+	}
+	
+	private void changePassword(HttpServletRequest request) {
+		
+		SupportEngineerController supportControl = null;
+		// read necessary parameters from request scope
+		if (request.getParameter("userId") != null) {
+			
+			String newPassword = request.getParameter("newPassword");
+			int userID = Integer.parseInt(request.getParameter("userId"));
+			
+			try {		//try change password
+				supportControl = new SupportEngineerController();
+				supportControl.changeCustomerPassword(userID, newPassword);
+				request.setAttribute("success",
+						supportControl.getActionStatus());
+			} catch (DBManagerException exc) {
+				request.setAttribute("errMessage", exc.getMessage());
+			}
+		}
+		
+	}
 	
 	/**
 	 * Handles the HTTP <code>POST</code> method.
@@ -93,36 +128,17 @@ public class SupportEngineerServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		SupportEngineerController supportControl = null;
-		
 		if ("Send bill".equalsIgnoreCase(request.getParameter("action"))) {
-			if (request.getParameter("taskid") != null) {
-				int taskID = Integer.parseInt(request.getParameter("taskid"));
-
-				supportControl = new SupportEngineerController();
-				supportControl.sendBillToCustomer(taskID);
-				request.setAttribute("success", supportControl.getActionStatus());
-				redirectTo(SUPPORT_PAGE, request, response);
-			}
-
-		} else if ("Change password".equals(request.getParameter("action"))) {
-			// read necessary parameters from request scope
-			String newPassword = request.getParameter("newPassword");
-			int userID = Integer.parseInt(request.getParameter("userId"));
-
-			supportControl = new SupportEngineerController();
-			supportControl.changeCustomerPassword(userID, newPassword);
-			request.setAttribute("success", supportControl.getActionStatus());
-
+			sendBill(request);
 			redirectTo(SUPPORT_PAGE, request, response);
+			
+		} else if ("Change password".equals(request.getParameter("action"))) {
+			changePassword(request);
+			redirectTo(CHANGE_PASSWORD_PAGE, request, response);
+			
 		} else if ("Block user".equals(request.getParameter("action"))) {
-
-			if (request.isUserInRole("ADMINISTRATOR")) {
-				try {
-					blockUser(request, response);
-				} catch (DBManagerException ex) {
-				}
-			} 
+			blockUser(request);
+			redirectTo(CHANGE_PASSWORD_PAGE, request, response);
 		}
 	
 	}

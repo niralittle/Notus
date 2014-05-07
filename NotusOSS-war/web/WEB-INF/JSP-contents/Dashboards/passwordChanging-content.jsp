@@ -25,8 +25,8 @@
  	boolean isAdmin = request.isUserInRole("ADMINISTRATOR");
  %>
 
-<h3><%=request.getAttribute("errMessage") == null ? "" : request.getAttribute("errMessage")%></h3>
-<h3><%=request.getAttribute("success") == null ? "" : request.getAttribute("success")%></h3>
+<h3 style="color:red;"><%=request.getAttribute("errMessage") == null ? "" : request.getAttribute("errMessage")%></h3>
+<h3 style="color:green;"><%=request.getAttribute("success") == null ? "" : request.getAttribute("success")%></h3>
 
 <form id="get_users" method="get" action="GetUsers">
 	<div id="passChange">
@@ -67,7 +67,6 @@
 	<input type="submit" value="Find user" />
 </form>
 
-<h3><%=request.getAttribute("success") == null ? "" : request.getAttribute("success")%></h3>
 <%
 	if (request.getAttribute("findedUsers") != null) {
 		List<OSSUser> users = (List<OSSUser>) request.getAttribute("findedUsers");
@@ -124,7 +123,7 @@
 			int currPage = (Integer) request.getAttribute("page");
 
 			for (long i = 1; i <= noOfPages; i++) {
-				if (i == (currPage + 1)) {
+				if (i == (currPage)) {
 	%>
 	<a
 		href="GetUsers?page=<%=i%>&lastName=<%=lastName%>&login=<%=login%>&email=<%=email%>"

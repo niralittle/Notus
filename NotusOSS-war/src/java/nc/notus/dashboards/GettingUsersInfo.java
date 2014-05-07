@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,28 +59,22 @@ public class GettingUsersInfo extends HttpServlet {
 			userDAO = new OSSUserDAOImpl(dbManager);
 
 			if (request.getParameter("page") == null) {
-				page = 0;
-			} else {
-				page = Integer.parseInt(request.getParameter("page"));
-				
-				if (page == 1) {
-					page = 0;
-				} else {
-					page = page - 1;
-				}
-			}
-			offset = page + RECORDS_PER_PAGE;
+                page = 1;
+            } else {
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+            offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
 			
 			request.setAttribute("noOfPages", getPageCount(userDAO));
 			request.setAttribute("page", page);
 
 			// search user for one criteria only:
 			if (!lastName.isEmpty()) {
-				users = userDAO.getUsersByLastName(lastName, offset, page);
+				users = userDAO.getUsersByLastName(lastName, offset, (page-1) * RECORDS_PER_PAGE+1);
 			} else if (!login.isEmpty()) {
-				users = userDAO.getUsersByLogin(login, offset, page);
+				users = userDAO.getUsersByLogin(login, offset, (page-1) * RECORDS_PER_PAGE+1);
 			} else {
-				users = userDAO.getUsersByEmail(email, offset, page);
+				users = userDAO.getUsersByEmail(email, offset, (page-1) * RECORDS_PER_PAGE+1);
 			}
 
 			request.setAttribute("findedUsers", users);
