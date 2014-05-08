@@ -2,8 +2,6 @@ package nc.notus.reports;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import nc.notus.dbmanager.DBManagerException;
 
 /**
- *                                                                              //REVIEW: documentation here
+ * Servlet, that handles paging functionality of system reports
  * @author Andrey Ilin
  */
 public class ReportPagingServlet extends HttpServlet {
@@ -24,36 +22,41 @@ public class ReportPagingServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, DBManagerException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String reportGenId = request.getParameter("objectId");
-        if (reportGenId != null) {
-            Object a = request.getSession().getAttribute(reportGenId.toString());
-            ReportGenerator rg = (ReportGenerator) a;
-            if (request.getParameter("nextpage") != null) {
-                rg.getReport().getNextDataPage();
-                if (!rg.getReport().checkNextPage()) {
-                    request.setAttribute("nextpage", "disabled");
-                } else {
-                    request.setAttribute("nextpage", "enabled");
+        try {
+            if (reportGenId != null) {
+                Object a = request.getSession().getAttribute(reportGenId.toString());
+                ReportGenerator rg = (ReportGenerator) a;
+                if (request.getParameter("nextpage") != null) {
+                    rg.getReport().getNextDataPage();
+                    if (!rg.getReport().checkNextPage()) {
+                        request.setAttribute("nextpage", "disabled");
+                    } else {
+                        request.setAttribute("nextpage", "enabled");
+                    }
+                } else if (request.getParameter("prevpage") != null) {
+                    if (!rg.getReport().getPreviousDataPage()) {
+                        request.setAttribute("prevpage", "disabled");
+                    } else {
+                        request.setAttribute("prevpage", "enabled");
+                    }
                 }
-            } else if (request.getParameter("prevpage") != null) {
-                if (!rg.getReport().getPreviousDataPage()) {
-                    request.setAttribute("prevpage", "disabled");
-                } else {
-                    request.setAttribute("prevpage", "enabled");
-                }
+
+                request.getSession().setAttribute("table", rg.getReportHTML());
+                String objectId = UUID.randomUUID().toString();
+
+                request.getSession().setAttribute(objectId, request);
+                request.getSession().setAttribute("objectId", objectId);
+                request.getSession().setAttribute(objectId, (Object) rg);
+                request.getSession().setAttribute("title", rg.getReportName());
+
+                request.getRequestDispatcher("report.jsp").forward(request, response);
             }
-
-            request.getSession().setAttribute("table", rg.getReportHTML());
-            String objectId = UUID.randomUUID().toString();
-
-            request.getSession().setAttribute(objectId, request);
-            request.getSession().setAttribute("objectId", objectId);
-            request.getSession().setAttribute(objectId, (Object) rg);
-            request.getSession().setAttribute("title", rg.getReportName());
-
-            request.getRequestDispatcher("report.jsp").forward(request, response);
+        } catch (DBManagerException exc) {
+            request.setAttribute("ErrorString", exc.getMessage());
+            request.getRequestDispatcher("errorPage.jsp").forward(request, response);
         }
 
     }
@@ -69,11 +72,7 @@ public class ReportPagingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(ReportPagingServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /** 
@@ -86,11 +85,7 @@ public class ReportPagingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(ReportPagingServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /** 
@@ -99,6 +94,6 @@ public class ReportPagingServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Handles report paging functionality";
     }// </editor-fold>
 }

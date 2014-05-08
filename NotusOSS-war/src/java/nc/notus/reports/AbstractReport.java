@@ -1,6 +1,4 @@
 package nc.notus.reports;
-
-import java.io.IOException;
 import java.io.Writer;
 import nc.notus.dbmanager.DBManagerException;
 
@@ -14,9 +12,10 @@ public abstract class AbstractReport {
     /**
      * Returns report data as string array with specific strings.
      * This strings are representation of report row.
-     * They are separetad with COLUMN_SEPARATOR, that is specified for
+     * They are separated with COLUMN_SEPARATOR, that is specified for
      * each report and report generator.
      * @return report data as string array
+     * @throws DBManagerException
      */
     public abstract String[] getReportData() throws DBManagerException;
 
@@ -27,18 +26,21 @@ public abstract class AbstractReport {
     public abstract String getReportName();
 
     /**
-     * Writes all emount of report data to character stream.
+     * Writes all amount of report data to character stream.
      * Then data can be written to file.
+     * Strings written at Writer are representation of report row.
+     * Report rows are separated to columns with fileSeparator.
      * @param writer Writer object
      * @param fileSeparator data column separator
+     * @throws DBManagerException
      */
     public abstract void getFileData(Writer writer, String fileSeparator)
-            throws IOException, DBManagerException;
+            throws DBManagerException;
 
     /*
      * This methods should be overridden if report has paging functionality.
      * Return value of methods below specified for reports that don't have
-     * paging functionality.
+     * paging functionality. Documentation given with implementations.
      *
      */
     protected boolean checkNextPage() throws DBManagerException {

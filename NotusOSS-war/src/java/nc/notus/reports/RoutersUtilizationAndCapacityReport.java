@@ -1,6 +1,5 @@
 package nc.notus.reports;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import nc.notus.dao.ReportDAO;
@@ -34,6 +33,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
     /**
      * Creates a report instance with given name
      * @param reportName report name
+     * @throws DBManagerException
      */
     public RoutersUtilizationAndCapacityReport(String reportName) throws DBManagerException {
         this.reportName = reportName;
@@ -89,6 +89,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
      * Gets a next data page for report
      * @return true - if this page is complete with specified number of records
      * and false - if not.
+     * @throws DBManagerException
      */
     @Override
     public boolean getNextDataPage() throws DBManagerException {
@@ -104,6 +105,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
     /**
      * Gets a previous data page for report
      * @return true - if this page isn't last and false - if not.
+     * @throws DBManagerException
      */
     @Override
     public boolean getPreviousDataPage() throws DBManagerException {
@@ -123,6 +125,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
     /**
      * Sets a current page of report selected
      * @param pageIndex page to select
+     * @throws DBManagerException 
      */
     @Override
     public void setCurrentPageIndex(int pageIndex) throws DBManagerException {
@@ -159,14 +162,17 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
     }
 
     /**
-     * Writes all emount of report data to character stream.
+     * Writes all amount of report data to character stream.
      * Then data can be written to file.
+     * Strings written at Writer are representation of report row.
+     * Report rows are separated to columns with fileSeparator.
      * @param writer Writer object
      * @param fileSeparator data column separator
+     * @throws DBManagerException
      */
     @Override
     public void getFileData(Writer writer, String fileSeparator)
-            throws IOException, DBManagerException {
+            throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);

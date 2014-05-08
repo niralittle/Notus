@@ -27,6 +27,7 @@ public class DBManager implements Closeable {
     /**
      * Creates new instance of <code>DBManager</code>.
      * Uses JNDI lookup to obtain DataSource.
+     * @throws DBManagerException
      */
     public DBManager() throws DBManagerException {
         try {
@@ -43,6 +44,7 @@ public class DBManager implements Closeable {
      * Creates new <code>Statement</code> from given SQL query.
      * @param query SQL query to form statement from
      * @return Statement of given query
+     * @throws DBManagerException 
      */
     public Statement prepareStatement(String query) throws DBManagerException {
         try {

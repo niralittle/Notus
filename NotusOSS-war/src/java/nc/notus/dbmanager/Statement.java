@@ -8,15 +8,14 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-
 /**
  * Wraps <code>PreparedStatement</code> class to handle SQL exceptions and
  * hide <code>Connection</code> from user.
  * @author Igor Litvinenko & Panchenko Dmytro
  */
-public class Statement implements Closeable {                                   // REVIEW: documentation on every public function expected
+public class Statement implements Closeable {
 
-	private static Logger logger = Logger.getLogger(DBManager.class.getName());
+    private static Logger logger = Logger.getLogger(DBManager.class.getName());
     private PreparedStatement prStatement;
 
     public Statement(PreparedStatement prStatement) {
@@ -27,7 +26,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setInt(parameterIndex, value);
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
@@ -36,7 +35,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setString(parameterIndex, value);
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
@@ -45,7 +44,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setDate(parameterIndex, value);
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
@@ -54,7 +53,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setObject(parameterIndex, value);
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
@@ -62,6 +61,7 @@ public class Statement implements Closeable {                                   
     /**
      * Executes query on created statement.
      * @return ResultIterator that represents result of query
+     * @throws DBManagerException 
      */
     public ResultIterator executeQuery() throws DBManagerException {
         try {
@@ -69,7 +69,7 @@ public class Statement implements Closeable {                                   
             ResultIterator ri = new ResultIterator(rs);
             return ri;
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Can't execute query.", exc);
         }
     }
@@ -77,21 +77,23 @@ public class Statement implements Closeable {                                   
     /**
      * Executes update query on created statement.
      * @return number of affected rows
+     * @throws DBManagerException
      */
     public int executeUpdate() throws DBManagerException {
         try {
             int rowsAffected = prStatement.executeUpdate();
             return rowsAffected;
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Can't execute query.", exc);
         }
     }
 
     /**
-     * Method returns primary key that was genereted in Statement execution
+     * Method returns primary key that was generated in Statement execution
      * process.
      * @return generated primary key
+     * @throws DBManagerException
      */
     public Object getGeneratedPrimaryKey() throws DBManagerException {
         try {
@@ -100,11 +102,11 @@ public class Statement implements Closeable {                                   
                 int primaryKey = generatedKeys.getInt(1);
                 return primaryKey;
             } else {
-            	logger.error("Primary key not generated!");
+                logger.error("Primary key not generated!");
                 throw new DBManagerException("Primary key not generated!");
             }
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot get generated PK", exc);
         }
     }
@@ -114,7 +116,7 @@ public class Statement implements Closeable {                                   
         try {
             prStatement.close();
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
         }
     }
 
@@ -122,7 +124,7 @@ public class Statement implements Closeable {                                   
         try {
             this.prStatement.setLong(parameterIndex, value);
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }

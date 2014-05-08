@@ -2,9 +2,8 @@ package nc.notus.reports;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nc.notus.dbmanager.DBManagerException;
+import org.apache.log4j.Logger;
 
 /**
  * This class contains operations to manipulate with system report object.
@@ -12,6 +11,7 @@ import nc.notus.dbmanager.DBManagerException;
  */
 public class ReportGenerator {
 
+    private static Logger logger = Logger.getLogger(ReportGenerator.class.getName());
     /* Separates columns in reportData row strings */
     private final String COLUMN_SEPARATOR = "#";
 
@@ -25,9 +25,7 @@ public class ReportGenerator {
 
     /**
      * Creates a new instance of ReportGenerator for specific report 
-     * @param type report's type
-     * @param startDateString  date report term starts with
-     * @param finishDateString date report term ends with
+     * @param report that would be generated
      */
     public ReportGenerator(AbstractReport report) {
         this.reportRef = report;
@@ -52,6 +50,7 @@ public class ReportGenerator {
     /**
      * Returns a report as html format string
      * @return html format string
+     * @throws DBManagerException 
      */
     public String getReportHTML() throws DBManagerException {
         StringBuilder HTMLReportBuilder = new StringBuilder();
@@ -82,9 +81,9 @@ public class ReportGenerator {
     }
 
     /**
-     * Returns a string that represents CSV report with separator specified
-     * in COLUMN_SEPARATOR field
-     * @return string that represents CSV report
+     * Writes report data to the Writer object
+     * @param writer
+     * @throws DBManagerException
      */
     public void getReportCSV(Writer writer) throws DBManagerException {
         try {
@@ -98,10 +97,8 @@ public class ReportGenerator {
             CSVReportHeaderBuilder.append("\n");
             writer.write(CSVReportHeaderBuilder.toString());
             reportRef.getFileData(writer, COLUMN_SEPARATOR);
-        } catch (IOException ex) {
-            Logger.getLogger(ReportGenerator.class.getName()).log(Level.SEVERE,
-                    "Work with writer in getReportCSV method went wrong",
-                    ex);
+        } catch (IOException exc) {
+            logger.error(exc.getMessage(), exc);
         }
     }
 }

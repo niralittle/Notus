@@ -32,6 +32,7 @@ public class MostProfitableRouterReport extends AbstractReport {
     /**
      * Creates a report instance with given name
      * @param reportName
+     * @throws DBManagerException 
      */
     public MostProfitableRouterReport(String reportName) throws DBManagerException {
         this.reportName = reportName;
@@ -90,14 +91,17 @@ public class MostProfitableRouterReport extends AbstractReport {
     }
 
     /**
-     * Writes all emount of report data to character stream.
+     * Writes all amount of report data to character stream.
      * Then data can be written to file.
+     * Strings written at Writer are representation of report row.
+     * Report rows are separated to columns with fileSeparator.
      * @param writer Writer object
      * @param fileSeparator data column separator
+     * @throws DBManagerException
      */
     @Override
     public void getFileData(Writer writer, String fileSeparator)
-            throws IOException, DBManagerException {
+            throws DBManagerException {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);

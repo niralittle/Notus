@@ -4,7 +4,7 @@
     Author     : Andrey Ilin
 --%>
 <jsp:include page="/WEB-INF/dashboardsTemplate.jsp">
-    <jsp:param name="content" value="noreport-content"/>
-    <jsp:param name="title" value='No such report'/>
+    <jsp:param name="content" value="errorPage-content"/>
+    <jsp:param name="title" value='(¬_¬) Problems'/>
 </jsp:include>
 

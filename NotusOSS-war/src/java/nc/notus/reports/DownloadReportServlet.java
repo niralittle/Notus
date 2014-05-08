@@ -1,8 +1,6 @@
 package nc.notus.reports;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,27 +21,28 @@ public class DownloadReportServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, DBManagerException {
+            throws ServletException, IOException {
         String reportGenId = request.getParameter("objectId");
         Object a = request.getSession().getAttribute(reportGenId.toString());
         ReportGenerator rg = (ReportGenerator) a;
-        rg.getReportCSV(response.getWriter());
-//        PrintWriter pw = response.getWriter();
         if (request.getParameter("type").equals("xls")) {
+
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment; filename=" +
                     rg.getReportName() + ".xls");
-//            pw.write(rg.getReportCSV());
         }
         if (request.getParameter("type").equals("csv")) {
 
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=" +
                     rg.getReportName() + ".csv");
-//            pw.write(rg.getReportCSV());
         }
-
-
+        try {
+            rg.getReportCSV(response.getWriter());
+        } catch (DBManagerException exc) {
+            request.getSession().setAttribute("ErrorString", exc.getMessage());
+            response.sendRedirect("errorPage.jsp");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -57,11 +56,7 @@ public class DownloadReportServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(DownloadReportServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -74,11 +69,7 @@ public class DownloadReportServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(DownloadReportServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -87,6 +78,6 @@ public class DownloadReportServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Handles system report download requests";
     }// </editor-fold>
 }

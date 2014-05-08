@@ -1,8 +1,6 @@
 package nc.notus.reports;
 
-import java.io.IOException;
 import java.io.Writer;
-import java.sql.Date;
 import java.util.List;
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
@@ -21,10 +19,6 @@ public class ProfitabilityByMonthReport extends AbstractReport {
 
     /* Separates columns in reportData row strings */
     private final String COLUMN_SEPARATOR = "#";
-
-    /* Dates for report request */
-    private Date month = null;
-
     /*
      * Report data stored here
      * Data is stored as strings that represents table rows
@@ -36,9 +30,9 @@ public class ProfitabilityByMonthReport extends AbstractReport {
     /**
      * Creates a report instance with given name
      * @param reportName report name
+     * @throws DBManagerException
      */
-    public ProfitabilityByMonthReport(String reportName, String month) throws DBManagerException {
-        this.month = Date.valueOf(month);
+    public ProfitabilityByMonthReport(String reportName) throws DBManagerException {
         this.reportName = reportName;
         getDataFromDatabase();
     }
@@ -48,7 +42,7 @@ public class ProfitabilityByMonthReport extends AbstractReport {
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             this.reportName = "Profitability by month";
-            List<ProfitInMonth> profit = reportDAO.getProfitByMonth(month);
+            List<ProfitInMonth> profit = reportDAO.getProfitByMonth();
             this.reportData = new String[profit.size() + 1];
 
             /* Column headers */
@@ -83,7 +77,14 @@ public class ProfitabilityByMonthReport extends AbstractReport {
     }
 
     @Override
-    public void getFileData(Writer writer, String fileSeparator) throws IOException {
-        
+    public void getFileData(Writer writer, String fileSeparator)
+            throws DBManagerException {
+        DBManager dbManager = new DBManager();
+        try {
+            ReportDAO reportDAO = new ReportDAOImpl(dbManager);
+            reportDAO.getProfitByMonth(writer, fileSeparator);
+        } finally {
+            dbManager.close();
+        }
     }
 }

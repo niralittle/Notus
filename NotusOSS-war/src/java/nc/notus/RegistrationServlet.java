@@ -27,256 +27,240 @@ import java.util.regex.Pattern;
  */
 public class RegistrationServlet extends HttpServlet {
 
-	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-			+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	private static final String LOGIN_PATTERN = "^[A-Za-z0-9_-]{3,40}$";
-	private static final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
-
-	private static Logger logger=Logger.getLogger(RegistrationServlet.class.getName());
-	
-	// pages to redirect
-	private static final String CUSTOMER_REGISTRATION_PAGE = "registration.jsp";
-	private static final String ENGINEER_REGISTRATION_PAGE = "registerEngineer.jsp";
-	private static final String CONGRATULATION_PAGE = "orderRecieved.jsp";
-
-	//User credentials
-	private String login;
-	private String password;
-	private String passwordConf;
-	private String email;
-	private String firstName;
-	private String lastName;
-	
-	//for register new engineer in ADMIN dashboard
-	private int groupID;
-	
-	//captcha
-	private String inputtedCaptcha;
-	private String generatedCaptcha;
-	
-	//chosen service and location
-	private int catalogID;
-	private String serviceLocation;
-	
-	//keep true if ADMIN register new user
-	private boolean isAdmin;
+    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final String LOGIN_PATTERN = "^[A-Za-z0-9_-]{3,40}$";
+    private static final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
+    private static Logger logger = Logger.getLogger(RegistrationServlet.class.getName());
+    // pages to redirect
+    private static final String CUSTOMER_REGISTRATION_PAGE = "registration.jsp";
+    private static final String ENGINEER_REGISTRATION_PAGE = "registerEngineer.jsp";
+    private static final String CONGRATULATION_PAGE = "orderRecieved.jsp";
+    //User credentials
+    private String login;
+    private String password;
+    private String passwordConf;
+    private String email;
+    private String firstName;
+    private String lastName;
+    //for register new engineer in ADMIN dashboard
+    private int groupID;
+    //captcha
+    private String inputtedCaptcha;
+    private String generatedCaptcha;
+    //chosen service and location
+    private int catalogID;
+    private String serviceLocation;
+    //keep true if ADMIN register new user
+    private boolean isAdmin;
 
     protected void processRequest(HttpServletRequest request,
-                    HttpServletResponse response)
-                    throws ServletException, IOException, DBManagerException {
-    	//local variable derclaration
-		DBManager dbManager = null;
-		boolean isParamsValid = false;
-		StringBuilder errMessage = new StringBuilder();
+            HttpServletResponse response)
+            throws ServletException, IOException, DBManagerException {
+        //local variable derclaration
+        DBManager dbManager = null;
+        boolean isParamsValid = false;
+        StringBuilder errMessage = new StringBuilder();
 
-		// logic actions
-		isAdmin = request.isUserInRole("ADMINISTRATOR");
-		readParamaters(request);
+        // logic actions
+        isAdmin = request.isUserInRole("ADMINISTRATOR");
+        readParamaters(request);
 
-		isParamsValid = validateParams(errMessage);
+        isParamsValid = validateParams(errMessage);
 
-		if (!isParamsValid && isAdmin) {
-			redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
-		}
-		if (!isParamsValid && !isAdmin) {
-			redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
-		}
+        if (!isParamsValid && isAdmin) {
+            redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
+        }
+        if (!isParamsValid && !isAdmin) {
+            redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
+        }
 
-		try {
-			dbManager = new DBManager();
-			
-			// if user is ADMINISTRATOR we only register new engineer
-			// NC.KYIV.2014.WIND.REG.3
-			if (isAdmin) {
-				AdministratorController adminControl = null;
+        try {
+            dbManager = new DBManager();
 
-				adminControl = new AdministratorController(dbManager);
-				adminControl.registerNewEngineer(login, password, email,
-						firstName, lastName, groupID);
-				dbManager.commit();
+            // if user is ADMINISTRATOR we only register new engineer
+            // NC.KYIV.2014.WIND.REG.3
+            if (isAdmin) {
+                AdministratorController adminControl = null;
 
-				request.setAttribute("success", adminControl.getActionSuccess());
-				redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
-			} else {
-				CustomerUserController userControl = null;
+                adminControl = new AdministratorController(dbManager);
+                adminControl.registerNewEngineer(login, password, email,
+                        firstName, lastName, groupID);
+                dbManager.commit();
 
-				userControl = new CustomerUserController();
+                request.setAttribute("success", adminControl.getActionSuccess());
+                redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
+            } else {
+                CustomerUserController userControl = null;
 
-				userControl.register(login, password, email, firstName,
-						lastName, catalogID, serviceLocation, dbManager);
+                userControl = new CustomerUserController();
 
-				dbManager.commit();
-				redirectTo(CONGRATULATION_PAGE, request, response);
-			}
-		} catch (DBManagerException exc) {
-			dbManager.rollback();
-			request.setAttribute("errMessage", exc.getMessage());
-			throw new DBManagerException("Error", exc);
-		} finally {
-			dbManager.close();
-		}
+                userControl.register(login, password, email, firstName,
+                        lastName, catalogID, serviceLocation, dbManager);
 
-	}
-	
+                dbManager.commit();
+                redirectTo(CONGRATULATION_PAGE, request, response);
+            }
+        } catch (DBManagerException exc) {
+            dbManager.rollback();
+            request.setAttribute("errMessage", exc.getMessage());
+            throw new DBManagerException("Error", exc);
+        } finally {
+            dbManager.close();
+        }
 
-	/**
-	 * Read inputted params from request scope.
-	 * 
-	 * @param request
-	 */
-	private void readParamaters(HttpServletRequest request) {
+    }
 
-		login = request.getParameter("login");
-		password = request.getParameter("password");
-		passwordConf = request.getParameter("passwordConf");
-		email = request.getParameter("email");
-		firstName = request.getParameter("firstName");
-		lastName = request.getParameter("lastName");
-		
-		// read captcha
-		inputtedCaptcha = request.getParameter("code");
-		generatedCaptcha = (String) request.getSession().getAttribute("captcha");
-		
-		if (isAdmin) {
-			groupID = Integer.parseInt(request.getParameter("employeeGroup"));
-		} else {
-			catalogID = Integer.parseInt(request.getParameter("serviceCatalogID"));
-			serviceLocation = request.getParameter("serviceLocationID");
-		}
-	}
+    /**
+     * Read inputted params from request scope.
+     *
+     * @param request
+     */
+    private void readParamaters(HttpServletRequest request) {
 
+        login = request.getParameter("login");
+        password = request.getParameter("password");
+        passwordConf = request.getParameter("passwordConf");
+        email = request.getParameter("email");
+        firstName = request.getParameter("firstName");
+        lastName = request.getParameter("lastName");
 
-	/**
-	 * Redirect to passes page.
-	 * 
-	 * @param request
-	 * @param response
-	 * @param page
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void redirectTo(String page, HttpServletRequest request,
-			HttpServletResponse response) throws ServletException,
-			IOException {
-		RequestDispatcher view = request.getRequestDispatcher(page);
-		view.forward(request, response);
-		return;
-	}
+        // read captcha
+        inputtedCaptcha = request.getParameter("code");
+        generatedCaptcha = (String) request.getSession().getAttribute("captcha");
 
-	private boolean validateParams(StringBuilder errMessage) throws DBManagerException {
+        if (isAdmin) {
+            groupID = Integer.parseInt(request.getParameter("employeeGroup"));
+        } else {
+            catalogID = Integer.parseInt(request.getParameter("serviceCatalogID"));
+            serviceLocation = request.getParameter("serviceLocationID");
+        }
+    }
 
-		Pattern pattern;
-		Matcher matcher;
+    /**
+     * Redirect to passes page.
+     *
+     * @param request
+     * @param response
+     * @param page
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void redirectTo(String page, HttpServletRequest request,
+            HttpServletResponse response) throws ServletException,
+            IOException {
+        RequestDispatcher view = request.getRequestDispatcher(page);
+        view.forward(request, response);
+        return;
+    }
 
-		boolean isValid = true;
+    private boolean validateParams(StringBuilder errMessage) throws DBManagerException {
 
-		if(!generatedCaptcha.equals(inputtedCaptcha)) {
-			isValid = true;
-			errMessage.append(" - Code don't matches. <br />");
-		}
-		
-		pattern = Pattern.compile(LOGIN_PATTERN);
-		matcher = pattern.matcher(login);
-		if (!matcher.matches()) {
-			isValid = false;
-			errMessage.append("- Provide correct login. Spaces not allowed. "
-					+ "Minimum length - 3 chars, maximum - 40.<br />");
-		}
+        Pattern pattern;
+        Matcher matcher;
 
-		matcher = pattern.matcher(lastName);
-		if (!matcher.matches()) {
-			isValid = false;
-			errMessage
-					.append("- Provide correct last name. Spaces are not allowed.<br />");
+        boolean isValid = true;
 
-		}
+        if (!generatedCaptcha.equals(inputtedCaptcha)) {
+            isValid = true;
+            errMessage.append(" - Code don't matches. <br />");
+        }
 
-		matcher = pattern.matcher(firstName);
-		if (!matcher.matches()) {
-			isValid = false;
-			errMessage
-					.append("- Provide correct first name. Spaces not allowed.<br />");
-		}
+        pattern = Pattern.compile(LOGIN_PATTERN);
+        matcher = pattern.matcher(login);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct login. Spaces not allowed. " + "Minimum length - 3 chars, maximum - 40.<br />");
+        }
 
-		pattern = Pattern.compile(EMAIL_PATTERN);
-		matcher = pattern.matcher(email);
-		if (!matcher.matches()) {
-			isValid = false;
-			errMessage.append("- Provide correct email.<br />");
-		}
+        matcher = pattern.matcher(lastName);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct last name. Spaces are not allowed.<br />");
 
-		pattern = Pattern.compile(PASSWORD_PATTERN);
-		matcher = pattern.matcher(password);
-		if (!matcher.matches()) {
-			isValid = false;
-			errMessage
-					.append("- Provide correct password. Minimum length - 6 chars.<br />");
-		}
+        }
 
-		if (!password.equals(passwordConf)) {
-			isValid = false;
-			errMessage.append("- Password doesn't match confirmation.<br />");
-		}
+        matcher = pattern.matcher(firstName);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct first name. Spaces not allowed.<br />");
+        }
 
-			
-		if (!isAdmin) {
-			try {
-				serviceLocation = java.net.URLDecoder.decode(serviceLocation,
-						"UTF-8");
-			} catch (UnsupportedEncodingException exc) {
-				//isValid = false;
-				//errMessage.append("- Wrong location specified.<br />");
-				//
-			} catch (IllegalArgumentException exc) {
-				//isValid = false;
-				//errMessage.append("- Wrong location specified.<br />");
-			}
-		}
-		
-		return isValid;
-	}
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = pattern.matcher(email);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct email.<br />");
+        }
+
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+        if (!matcher.matches()) {
+            isValid = false;
+            errMessage.append("- Provide correct password. Minimum length - 6 chars.<br />");
+        }
+
+        if (!password.equals(passwordConf)) {
+            isValid = false;
+            errMessage.append("- Password doesn't match confirmation.<br />");
+        }
 
 
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+        if (!isAdmin) {
+            try {
+                serviceLocation = java.net.URLDecoder.decode(serviceLocation,
+                        "UTF-8");
+            } catch (UnsupportedEncodingException exc) {
+                //isValid = false;
+                //errMessage.append("- Wrong location specified.<br />");
+                //
+            } catch (IllegalArgumentException exc) {
+                //isValid = false;
+                //errMessage.append("- Wrong location specified.<br />");
+            }
+        }
+
+        return isValid;
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
         try {
             processRequest(request, response);
         } catch (DBManagerException ex) {
             //Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-	}
+    }
 
-	/**
-	 * Handles the HTTP <code>POST</code> method.
-	 * 
-	 * @param request
-	 *            servlet request
-	 * @param response
-	 *            servlet response
-	 * @throws ServletException
-	 *             if a servlet-specific error occurs
-	 * @throws IOException
-	 *             if an I/O error occurs
-	 */
-	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request
+     *            servlet request
+     * @param response
+     *            servlet response
+     * @throws ServletException
+     *             if a servlet-specific error occurs
+     * @throws IOException
+     *             if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
         try {
             processRequest(request, response);
         } catch (DBManagerException ex) {
-           // Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
+            // Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-	}
+    }
 
-	/**
-	 * Returns a short description of the servlet.
-	 * 
-	 * @return a String containing servlet description
-	 */
-	@Override
-	public String getServletInfo() {
-		return "Registers user in the system, creates a new order "
-				+ "and executes it ('New' scenario workflow).";
-	}// </editor-fold>
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Registers user in the system, creates a new order " + "and executes it ('New' scenario workflow).";
+    }// </editor-fold>
 }
