@@ -1,4 +1,4 @@
- package nc.notus.email;
+package nc.notus.email;
 
 import java.io.IOException;
 
@@ -19,13 +19,10 @@ public class NewPasswordEmail extends Email {
     String password;
 
     /**
-     *
      * @param firstName user's name
      * @param password user's new password
-     * @throws IOException
      */
-    public NewPasswordEmail(String firstName, String password)
-            throws IOException {
+    public NewPasswordEmail(String firstName, String password) {
 
         super("/changePasswordSuccess.html");
         this.firstName = firstName;
@@ -33,5 +30,4 @@ public class NewPasswordEmail extends Email {
         subject = "Your password has been changed -- NOTUS Internet Provider";
         message = String.format(message, firstName, password);
     }
-
 }

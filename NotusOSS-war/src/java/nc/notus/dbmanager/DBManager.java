@@ -19,8 +19,7 @@ import org.apache.log4j.Logger;
  */
 public class DBManager implements Closeable {
 
-	private static Logger logger = Logger.getLogger(DBManager.class.getName());
-	
+    private static Logger logger = Logger.getLogger(DBManager.class.getName());
     private DataSource dataSource; // DataSource respresening DB
     private Connection conn;       // DB connection
 
@@ -34,7 +33,7 @@ public class DBManager implements Closeable {
             InitialContext initContext = new InitialContext();
             dataSource = (DataSource) initContext.lookup("jdbc/_NOTUS");
         } catch (NamingException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot retrieve jdbc/_NOTUS", exc);
         }
         conn = this.getConnection();
@@ -48,29 +47,31 @@ public class DBManager implements Closeable {
      */
     public Statement prepareStatement(String query) throws DBManagerException {
         try {
-            String generatedColumns[] = { "ID" }; // primary key column for Statement.getGeneratedPrimaryKey()
+            String generatedColumns[] = {"ID"}; // primary key column for Statement.getGeneratedPrimaryKey()
             PreparedStatement prStatement = conn.prepareStatement(query, generatedColumns);
             return new Statement(prStatement);
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("SQL Exception", exc);
         }
     }
-                                                                                // REVIEW: documentation expected
+    // REVIEW: documentation expected
+
     public void commit() throws DBManagerException {
         try {
             conn.commit();
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot execute commit", exc);
         }
     }
-                                                                                // REVIEW: documentation expected
+    // REVIEW: documentation expected
+
     public void rollback() throws DBManagerException {
         try {
             conn.rollback();
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot execute rollback", exc);
         }
     }
@@ -85,7 +86,7 @@ public class DBManager implements Closeable {
             conn.setAutoCommit(false);
             return conn;
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot obtain connection", exc);
         }
     }
@@ -97,7 +98,7 @@ public class DBManager implements Closeable {
         try {
             conn.close();
         } catch (SQLException exc) {
-        	logger.error(exc.getMessage(), exc);
+            logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot close connection", exc);
         }
     }

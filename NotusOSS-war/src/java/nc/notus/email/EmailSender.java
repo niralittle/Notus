@@ -2,8 +2,6 @@ package nc.notus.email;
 
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -20,6 +18,7 @@ import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.states.UserRole;
+import org.apache.log4j.Logger;
 
 /**
  * Class sends emails using method sendEmail().
@@ -31,11 +30,12 @@ import nc.notus.states.UserRole;
  */
 public class EmailSender {
 
-    private final String username = "notus.noreply@gmail.com";
-    private final String password = "notusnotus";
+    private final String USERNAME = "notus.noreply@gmail.com";
+    private final String PASSWORD = "notusnotus";
     private static Properties props;
-
+    private static Logger logger = Logger.getLogger(EmailSender.class.getName());
     /*SMTP parameters*/
+
     static {
         props = new Properties();
         /*Parameters for Gmail (Shoud be changed)*/
@@ -85,49 +85,53 @@ public class EmailSender {
         @Override
         public void run() {
 
-        /*Send mail*/
+            /*Send mail*/
+            DBManager dbManager = null;
+            Address[] address = null;
             try {
-                DBManager dbManager = new DBManager();
-                Address[] address = null;
-                try {
-                    OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-                    if (role == null) {
-                        address = new Address[1];
-                        OSSUser user = userDAO.find(userID);
-                        address[0] = new InternetAddress(user.getEmail());
-                    } else {
-                        List<String> userEmails = userDAO.getGroupEmails(role);
-                        address = new Address[userEmails.size()];
-                        for (int i = 0; i < userEmails.size(); i++) {
-                            address[i] = new InternetAddress(userEmails.get(i));
-                        }
+                dbManager = new DBManager();
+                OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+                if (role == null) {
+                    address = new Address[1];
+                    OSSUser user = userDAO.find(userID);
+                    address[0] = new InternetAddress(user.getEmail());
+                } else {
+                    List<String> userEmails = userDAO.getGroupEmails(role);
+                    address = new Address[userEmails.size()];
+                    for (int i = 0; i < userEmails.size(); i++) {
+                        address[i] = new InternetAddress(userEmails.get(i));
                     }
-                } catch (AddressException ex) {
-                    Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    dbManager.close();
                 }
-                /*Authentication to mail service */
-                Session session = Session.getInstance(props, new Authenticator() {
-
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
-                    }
-                });
-                /*Send mail*/
-                try {
-                    Message message = new MimeMessage(session);
-                    message.setFrom(new InternetAddress(username));
-                    message.setRecipients(Message.RecipientType.BCC, address);
-                    message.setSubject(mail.getSubject());
-                    message.setContent(mail.getMessage(), "text/html");
-                    Transport.send(message);
-                } catch (MessagingException e) {
-                    throw new RuntimeException(e);
-                }
+            } catch (AddressException ex) {
+                logger.error(ex.getMessage(), ex);
             } catch (DBManagerException ex) {
-                Logger.getLogger(EmailSender.class.getName()).log(Level.SEVERE, null, ex);
+                /*
+                 * This exception is thrown by DAO.
+                 * Information about it has already been logged
+                 * in the lower level. So this catch is empty.
+                 */
+            } finally {
+                dbManager.close();
+            }
+
+            /*Authentication to mail service */
+            Session session = Session.getInstance(props, new Authenticator() {
+
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(USERNAME, PASSWORD);
+                }
+            });
+            /*Send mail*/
+            try {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(USERNAME));
+                message.setRecipients(Message.RecipientType.BCC, address);
+                message.setSubject(mail.getSubject());
+                message.setContent(mail.getMessage(), "text/html");
+                Transport.send(message);
+            } catch (MessagingException e) {
+                logger.error(e.getMessage(), e);
             }
         }
     }

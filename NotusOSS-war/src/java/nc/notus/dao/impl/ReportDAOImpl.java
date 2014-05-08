@@ -64,7 +64,6 @@ public class ReportDAOImpl implements ReportDAO {
                 data.setProfit(ri.getInt("total"));
             }
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DISPLAY_STRING);
         } finally {
             statement.close();
@@ -122,7 +121,6 @@ public class ReportDAOImpl implements ReportDAO {
                 orders.add(serviceOrderData);
             }
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DISPLAY_STRING);
         } finally {
             statement.close();
@@ -179,7 +177,6 @@ public class ReportDAOImpl implements ReportDAO {
                 orders.add(serviceOrderData);
             }
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DISPLAY_STRING);
         } finally {
             statement.close();
@@ -223,7 +220,6 @@ public class ReportDAOImpl implements ReportDAO {
                 routersUtilizationCapacity.add(routUtCap);
             }
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DISPLAY_STRING);
         } finally {
             statement.close();
@@ -258,7 +254,6 @@ public class ReportDAOImpl implements ReportDAO {
                 profitByMonth.add(profInMonth);
             }
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DISPLAY_STRING);
         } finally {
             statement.close();
@@ -300,10 +295,8 @@ public class ReportDAOImpl implements ReportDAO {
             storage.write(String.valueOf(ri.getFloat("total")));
             storage.write("\n");
         } catch (IOException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } finally {
             statement.close();
@@ -356,10 +349,8 @@ public class ReportDAOImpl implements ReportDAO {
                 storage.write("\n");
             }
         } catch (IOException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } finally {
             statement.close();
@@ -412,10 +403,8 @@ public class ReportDAOImpl implements ReportDAO {
                 storage.write("\n");
             }
         } catch (IOException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } finally {
             statement.close();
@@ -453,10 +442,8 @@ public class ReportDAOImpl implements ReportDAO {
                 storage.write("\n");
             }
         } catch (IOException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } finally {
             statement.close();
@@ -490,10 +477,8 @@ public class ReportDAOImpl implements ReportDAO {
             storage.write(String.valueOf(ri.getInt("profit")));
             storage.write("\n");
         } catch (IOException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } catch (DBManagerException exc) {
-            logger.error(exc.getMessage(), exc);
             throw new DBManagerException(ERROR_DOWNLOAD_STRING);
         } finally {
             statement.close();

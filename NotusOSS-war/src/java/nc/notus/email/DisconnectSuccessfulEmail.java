@@ -1,4 +1,4 @@
- package nc.notus.email;
+package nc.notus.email;
 
 import java.io.IOException;
 
@@ -24,11 +24,9 @@ public class DisconnectSuccessfulEmail extends Email {
      * @param firstName user's name
      * @param orderId ID of the completed order
      * @param location address of the connection
-     * @throws IOException
      */
-    public DisconnectSuccessfulEmail(String firstName,
-            int orderId, String location) 
-            throws IOException {
+    public DisconnectSuccessfulEmail(String firstName, int orderId,
+            String location) {
 
         super("/disconnectSuccess.html");
         this.firstName = firstName;
@@ -37,5 +35,4 @@ public class DisconnectSuccessfulEmail extends Email {
         subject = "Your disconnect order has been completed ";
         message = String.format(message, firstName, orderId, location);
     }
-
 }

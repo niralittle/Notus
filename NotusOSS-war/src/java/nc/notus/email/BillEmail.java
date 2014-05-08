@@ -1,7 +1,5 @@
 package nc.notus.email;
 
-import java.io.IOException;
-
 /**
  * Instances of this class represent billing email messages to be sent to
  * a user by a customer support engineer.
@@ -24,11 +22,9 @@ public class BillEmail extends Email {
      * @param firstName name of the user
      * @param serviceName name of the service (e.i. Golden Internet)
      * @param price price of the service
-     * @throws IOException
      */
     public BillEmail(String firstName,
-            String serviceName, String price)
-            throws IOException {
+            String serviceName, String price) {
 
         super("/bill.html");
         this.firstName = firstName;

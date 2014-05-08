@@ -17,15 +17,24 @@ import org.apache.log4j.Logger;
 import nc.notus.dao.CableDAO;
 import nc.notus.dao.CircuitDAO;
 import nc.notus.dao.DeviceDAO;
+import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.PortDAO;
+import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceInstanceStatusDAO;
+import nc.notus.dao.ServiceTypeDAO;
 import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.dao.impl.CircuitDAOImpl;
 import nc.notus.dao.impl.DeviceDAOImpl;
+import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
+import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceStatusDAOImpl;
+import nc.notus.dao.impl.ServiceTypeDAOImpl;
+import nc.notus.email.BillEmail;
+import nc.notus.email.Email;
+import nc.notus.email.EmailSender;
 import nc.notus.entity.Device;
 import nc.notus.entity.Port;
 import nc.notus.states.InstanceStatus;
@@ -34,6 +43,9 @@ import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.entity.Cable;
 import nc.notus.entity.Circuit;
+import nc.notus.entity.OSSUser;
+import nc.notus.entity.ServiceCatalog;
+import nc.notus.entity.ServiceType;
 
 /**
  * This class provides functionality for "New" scenario workflow
@@ -41,33 +53,30 @@ import nc.notus.entity.Circuit;
  */
 public class NewScenarioWorkflow extends Workflow {
 
-	//private static Logger logger = Logger.getLogger(NewScenarioWorkflow.class.getName());
-	
+    //private static Logger logger = Logger.getLogger(NewScenarioWorkflow.class.getName());
     /**
-	 * This method creates NewScenarioWorkflow for given Order. It doesn't
-	 * proceed Order to execution(See {@link Workflow#proceedOrder()})
-	 * 
-	 * @param order
-	 *            Order to create Workflow for
-	 * @throws Workflow
-	 *             exception if Order scenario doesn't match "New" scenario
-	 *             workflow
-	 */
-	public NewScenarioWorkflow(ServiceOrder order, DBManager dbManager)
-			throws DBManagerException {
-		super(order, dbManager);
+     * This method creates NewScenarioWorkflow for given Order. It doesn't
+     * proceed Order to execution(See {@link Workflow#proceedOrder()})
+     * @param order Order to create Workflow for
+     * @param dbManager 
+     * @throws DBManagerException
+     */
+    public NewScenarioWorkflow(ServiceOrder order, DBManager dbManager)
+            throws DBManagerException {
+        super(order, dbManager);
 
-		int scID = order.getScenarioID();
-		if (scID != WorkflowScenario.NEW.toInt()) {
-			throw new DBManagerException( "Cannot proceed Order: wrong order scenario");
-		}
+        int scID = order.getScenarioID();
+        if (scID != WorkflowScenario.NEW.toInt()) {
+            throw new DBManagerException("Cannot proceed Order: wrong order scenario");
+        }
 
-	}
+    }
 
     /**
      * This method proceeds Order by creating tasks for
      * corresponding user groups which take part in Order execution.
      * Order should have status "Entering" and workflow scenario "New"
+     * @throws DBManagerException
      */
     @Override
     public void proceedOrder() throws DBManagerException {
@@ -91,12 +100,12 @@ public class NewScenarioWorkflow extends Workflow {
              */
             createTask(UserRole.INSTALLATION_ENGINEER, "Proceed new order");
 
-           // dbManager.commit();
-        } catch(DBManagerException ex) {
-          // logger.error("Error while proceed the order!", ex);
-           dbManager.rollback();
-           throw new DBManagerException("Error was occured, contact to administrator!");
-        } 
+            // dbManager.commit();
+        } catch (DBManagerException ex) {
+            // logger.error("Error while proceed the order!", ex);
+            dbManager.rollback();
+            throw new DBManagerException("Error was occured, contact an administrator!");
+        }
     }
 
     private ServiceInstance createServiceInstance() throws DBManagerException {
@@ -120,7 +129,8 @@ public class NewScenarioWorkflow extends Workflow {
      * This method creates new Router in system. It also creates Ports
      * and links them with Router.
      * @param portQuantity amount of Ports that Router accommodates
-     * @param taskID ID of task for installation engineer                  
+     * @param taskID ID of task for installation engineer
+     * @throws DBManagerException
      */
     public void createRouter(int taskID, int portQuantity) throws DBManagerException {
         try {
@@ -151,16 +161,18 @@ public class NewScenarioWorkflow extends Workflow {
             }
 
             //dbManager.commit();
-        } catch(DBManagerException ex) {
+        } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-            throw new DBManagerException("Error was occured, contact to administrator!");
-         } 
+            throw new DBManagerException("Error was occured, contact an administrator!");
+        }
     }
 
     /**
      * This method creates Cable entity
      * @param taskID ID of task for installation engineer
+     * @param cableType
+     * @throws DBManagerException
      */
     public void createCable(int taskID, String cableType) throws DBManagerException {
         try {
@@ -175,11 +187,11 @@ public class NewScenarioWorkflow extends Workflow {
             cableDAO.add(cable);
 
             //dbManager.commit();
-        } catch(DBManagerException ex) {
+        } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-            throw new DBManagerException("Error was occured, contact to administrator!");
-         } 
+            throw new DBManagerException("Error was occured, contact an administrator!");
+        }
     }
 
     /**
@@ -213,17 +225,18 @@ public class NewScenarioWorkflow extends Workflow {
             this.completeTask(taskID);
             this.createTask(UserRole.PROVISION_ENGINEER, "Create curcuit");
             //dbManager.commit();
-        } catch(DBManagerException ex) {
+        } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-            throw new DBManagerException("Error was occured, contact to administrator!");
-         } 
+            throw new DBManagerException("Error was occured, contact an administrator!");
+        }
     }
 
     /**
      * Creates new Circuit Instance
-     * @param dbManager class representing connection to DB                     // TODO: update documentation
-     * @return ID of created Circuit instance
+     * @param taskID
+     * @param circuitConfig
+     * @throws DBManagerException 
      */
     public void createCircuit(int taskID, String circuitConfig) throws DBManagerException {
         try {
@@ -244,12 +257,12 @@ public class NewScenarioWorkflow extends Workflow {
 
             this.completeTask(taskID);
             this.createTask(UserRole.SUPPORT_ENGINEER, "Approve bill");
-           // dbManager.commit();
-        } catch(DBManagerException ex) {
+            // dbManager.commit();
+        } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-            throw new DBManagerException("Error was occured, contact to administrator!");
-         } 
+            throw new DBManagerException("Error was occured, contact an administrator!");
+        }
     }
 
     /**
@@ -257,6 +270,7 @@ public class NewScenarioWorkflow extends Workflow {
      * by changing it's status to "Active". It also changes Order status to
      * "Completed"
      * @param taskID ID of Task for Support Engineer
+     * @throws DBManagerException
      */
     public void approveBill(int taskID) throws DBManagerException {
         try {
@@ -269,13 +283,25 @@ public class NewScenarioWorkflow extends Workflow {
             updateServiceInstanceDate(order.getServiceInstanceID());
             changeServiceInstanceStatus(InstanceStatus.ACTIVE);
             changeOrderStatus(OrderStatus.COMPLETED);
-            // TODO: send email here
-           // dbManager.commit();
-        } catch(DBManagerException ex) {
+
+            /* Sending bill email */
+            EmailSender emailSender = new EmailSender();
+            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+            ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
+            ServiceTypeDAO serviceTypeDAO = new ServiceTypeDAOImpl(dbManager);
+
+            OSSUser user = userDAO.find(order.getUserID());
+            ServiceCatalog catalog = catalogDAO.find(order.getServiceCatalogID());
+            ServiceType serviceType = serviceTypeDAO.find(catalog.getServiceTypeID());
+            Email mail = new BillEmail(user.getFirstName(),
+                    serviceType.getService(), String.valueOf(catalog.getPrice()));
+            emailSender.sendEmail(order.getUserID(), mail);
+            // dbManager.commit();
+        } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
-            throw new DBManagerException("Error was occured, contact to administrator!");
-         } 
+            throw new DBManagerException("Error was occured, contact an administrator!");
+        }
     }
 
     /**

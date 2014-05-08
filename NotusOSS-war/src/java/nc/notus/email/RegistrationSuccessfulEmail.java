@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class RegistrationSuccessfulEmail extends Email {
 
-    String firstName; 
+    String firstName;
     String login;
     String password;
 
@@ -27,8 +27,7 @@ public class RegistrationSuccessfulEmail extends Email {
      * @throws IOException
      */
     public RegistrationSuccessfulEmail(String firstName,
-            String login, String password) 
-            throws IOException {
+            String login, String password) {
 
         super("/registrationSuccess.html");
         this.firstName = firstName;
