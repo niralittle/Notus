@@ -161,7 +161,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
     @Override
     public List<ServiceOrder> getSOByStatus(int userID, int serviceOrderStatus,
             int offset, int numberOfRecords) throws DBManagerException {
-        if (numberOfRecords < 1 || offset < 1) {
+        if (numberOfRecords < 1 || offset < 0) {
             throw new DBManagerException("Illegal argument in paging - less " +
                     "than 1. Can't proccess the request!");
         }
@@ -177,12 +177,12 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                 "WHERE so.userid = ? AND so.serviceorderstatusid = ? " +
                 "ORDER BY so.serviceorderdate) a " +
                 "WHERE ROWNUM <= ? )  " +
-                "WHERE rnum  >= ? ";
+                "WHERE rnum  > ? ";
         try {
             statement = dbManager.prepareStatement(query);
             statement.setInt(1, userID);
             statement.setInt(2, serviceOrderStatus);
-            statement.setInt(3, numberOfRecords);
+            statement.setInt(3, offset + numberOfRecords);
             statement.setInt(4, offset);
             ri = statement.executeQuery();
             serviceOrders = new ArrayList<ServiceOrder>();

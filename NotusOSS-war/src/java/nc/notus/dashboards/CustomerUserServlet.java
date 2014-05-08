@@ -216,7 +216,7 @@ public class CustomerUserServlet extends HttpServlet {
      * 
      */
     public List<Map<String, String>> getActiveInstancesList(int userID,
-            int startpage, int numbOfRecords) throws DBManagerException {
+            int page, int numbOfRecords) throws DBManagerException {
         ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
         ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
@@ -224,7 +224,7 @@ public class CustomerUserServlet extends HttpServlet {
                new ArrayList<Map<String, String>>();
         List<ServiceOrder> completeOrders = orderDAO.getSOByStatus(userID,
                             OrderStatus.COMPLETED.toInt(),
-                            startpage, numbOfRecords);
+                           (numbOfRecords * (page - 1)), numbOfRecords);
         for (ServiceOrder o: completeOrders) {
             Map<String,String> row = new HashMap<String, String>();
             int catalogID = o.getServiceCatalogID();
@@ -255,7 +255,7 @@ public class CustomerUserServlet extends HttpServlet {
      *
      */
     public List<Map<String, String>> getProcessingOrdersList(int userID,
-            int startpage, int numbOfRecords) throws DBManagerException {
+            int page, int numbOfRecords) throws DBManagerException {
         ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
         ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
         ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
@@ -264,7 +264,7 @@ public class CustomerUserServlet extends HttpServlet {
                new ArrayList<Map<String, String>>();
         List<ServiceOrder> orders = orderDAO.getSOByStatus(userID,
                            OrderStatus.PROCESSING.toInt(),
-                           startpage, numbOfRecords);
+                           (numbOfRecords * (page - 1)), numbOfRecords);
         for (ServiceOrder o: orders) {
             Map<String,String> row = new HashMap<String, String>();
             int catalogID = o.getServiceCatalogID();
