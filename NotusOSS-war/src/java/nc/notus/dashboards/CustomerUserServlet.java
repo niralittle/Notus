@@ -64,11 +64,11 @@ public class CustomerUserServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
-        String siPageAttr = (String) request.getAttribute("siPage");
-        String soPageAttr = (String) request.getAttribute("soPage");
+        String siPageAttr = (String) request.getParameter("siPage");
+        String soPageAttr = (String) request.getParameter("soPage");
         int siPage = (siPageAttr == null) ? 1 : Integer.parseInt(siPageAttr);
         int soPage = (soPageAttr == null) ? 1 : Integer.parseInt(soPageAttr);
-        int numbOfRecords = 50;
+        int numbOfRecords = 5;
 
         try {
             dbManager = new DBManager();
@@ -223,7 +223,7 @@ public class CustomerUserServlet extends HttpServlet {
         List<Map<String, String>> activeInstances =
                new ArrayList<Map<String, String>>();
         List<ServiceOrder> completeOrders = orderDAO.getSOByStatus(userID,
-                            OrderStatus.COMPLETED.ordinal() + 1,
+                            OrderStatus.COMPLETED.toInt(),
                             startpage, numbOfRecords);
         for (ServiceOrder o: completeOrders) {
             Map<String,String> row = new HashMap<String, String>();
@@ -263,7 +263,7 @@ public class CustomerUserServlet extends HttpServlet {
         List<Map<String, String>> processingOrders =
                new ArrayList<Map<String, String>>();
         List<ServiceOrder> orders = orderDAO.getSOByStatus(userID,
-                           OrderStatus.PROCESSING.ordinal() + 1,
+                           OrderStatus.PROCESSING.toInt(),
                            startpage, numbOfRecords);
         for (ServiceOrder o: orders) {
             Map<String,String> row = new HashMap<String, String>();

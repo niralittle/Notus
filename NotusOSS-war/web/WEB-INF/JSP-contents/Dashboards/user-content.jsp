@@ -13,7 +13,20 @@
             "</h2>");
     }
 %>
+<!-- Paging -->
+<%
+   int currentSIPage = 1;
+   int currentSOPage = 1;
 
+   if (request.getParameter("siPage") != null) {
+       currentSIPage = Integer.parseInt((String) request.getParameter("siPage"));
+   }
+   if (request.getParameter("soPage") != null) {
+       currentSOPage = Integer.parseInt((String) request.getParameter("soPage"));
+   }
+%>
+
+<!-- End of Paging -->
 <!-- Processing orders block -->
 
 <%  List<Map<String, String>> activeInstances =
@@ -21,7 +34,20 @@
     List<Map<String, String>> processingOrders =
             (List<Map<String, String>>) request.getAttribute("processingOrders");
 
-    if (activeInstances != null && activeInstances.size() > 0) { %>
+    if (activeInstances != null && !activeInstances.isEmpty()) { %>
+<div class="paging" style="width: 100px; float: left;">
+<%
+   String currentSI = "<strong>" + currentSIPage + "</strong>\t|\t";
+   out.println("Page number: <br>");
+   if (currentSIPage != 1) {
+       out.println("<a href='CustomerUser?siPage=" + (currentSIPage - 1) +
+           "&soPage=" + currentSOPage + "'>" + (currentSIPage - 1) + "</a>\t|\t");
+   }
+   out.println(currentSI);
+   out.println("<a href='CustomerUser?siPage=" + (currentSIPage + 1) +
+           "&soPage=" + currentSOPage + "'>" + (currentSIPage + 1) + "</a>");
+%>
+</div>
         <table class='activeInstances' border='1'>
             <thead>
                <tr>
@@ -59,7 +85,23 @@
 <!-- End of active instances block -->
 <!-- Processing orders block -->
 
-<%  if (processingOrders != null && processingOrders.size() > 0) { %>
+<%  if (processingOrders != null && !processingOrders.isEmpty()) { %>
+
+<div class="paging" style="width: 100px; float: left;">
+<% 
+   String currentSO = "<strong>" + currentSOPage + "</strong>\t|\t";
+   out.println("Page number: <br>");
+   if (currentSOPage != 1) {
+       out.println("<a href='CustomerUser?siPage=" + currentSIPage +
+           "&soPage=" + (currentSOPage - 1) + "'>" +
+            (currentSOPage - 1) + "</a>\t|\t");
+   }
+   out.println(currentSO);
+   out.println("<a href='CustomerUser?siPage=" + currentSIPage +
+           "&soPage=" + (currentSOPage + 1) + "'>" +
+            (currentSOPage + 1) + "</a>");
+%>
+</div>
         <h2>Orders being processed:</h2>
         <table class='processingOrders' border="1">
             <thead>
