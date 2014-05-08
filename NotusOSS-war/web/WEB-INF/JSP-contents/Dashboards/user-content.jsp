@@ -8,7 +8,11 @@
 <%@page import="java.util.Map"%>
 <script src="assets/user-content.js"></script>
 
-
+<% if (request.getParameter("user") != null) {
+    out.println("<h2>Viewing info of " + request.getParameter("user") +
+            "</h2>");
+    }
+%>
 
 <!-- Processing orders block -->
 
@@ -20,12 +24,14 @@
     if (activeInstances != null && activeInstances.size() > 0) { %>
         <table class='activeInstances' border='1'>
             <thead>
-        `       <tr>
+               <tr>
                     <td>Location</td>
                     <td>Type of Service</td>
                     <td>Since</td>
                     <td>Price</td>
+                <% if (request.isUserInRole("CUSTOMER_USER")) { %>
                     <td>Options</td>
+                <% } %>
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +41,7 @@
                 <td><%= m.get("serviceDescription") %></td>
                 <td><%= m.get("orderDate") %></td>
                 <td><%= m.get("price") %></td>
+            <% if (request.isUserInRole("CUSTOMER_USER")) { %>
                 <td>  
                     <form action="CustomerUser" method="POST">
                         <input type="hidden" name="serviceInstanceID"
@@ -42,6 +49,7 @@
                         <input type="submit" name="action" value="Disconnect" />
                     </form>
                 </td>
+            <% } %>
             </tr>
     <%  } /*end of 'for' statement*/ %>
             </tbody>
