@@ -1,6 +1,5 @@
 package nc.notus.controllers;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.util.Calendar;
 
@@ -16,6 +15,7 @@ import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
+import nc.notus.email.Email;
 import nc.notus.email.EmailSender;
 import nc.notus.email.RegistrationSuccessfulEmail;
 import nc.notus.entity.OSSUser;
@@ -106,7 +106,6 @@ public class CustomerUserController extends AbstractController {
                 dbManager = new DBManager();
             }
             userDAO = new OSSUserDAOImpl(dbManager);
-
             // check inputted login
             if (userDAO.isExist(login)) {
                 throw new DBManagerException("User with specified login - " + login + " already exist. Choose another.");
@@ -115,7 +114,6 @@ public class CustomerUserController extends AbstractController {
             if (userDAO.isEmailDuplicate(email)) {
                 throw new DBManagerException("User with specified email - " + email + " already exist. Input another email. ");
             }
-
             // create new user if unique login and email
             OSSUser user = new OSSUser();
             user.setFirstName(firstName);
@@ -133,13 +131,12 @@ public class CustomerUserController extends AbstractController {
             if (isInternal) {
                 dbManager.commit();
             }
-
-            //sendEmail(userID, firstName, login, password);
+            sendEmail(userID, firstName, login, password);
         } catch (DBManagerException exc) {
             if (isInternal) {
                 dbManager.rollback();
             }
-            throw new DBManagerException("Error while register in system.", exc);
+            throw new DBManagerException(exc.getMessage());
         } finally {
             if (isInternal) {
                 dbManager.close();
@@ -151,7 +148,7 @@ public class CustomerUserController extends AbstractController {
     }
 
     private void sendEmail(int userID, String firstName, String login, String password) {
-        RegistrationSuccessfulEmail notificationEmail =
+        Email notificationEmail =
                 new RegistrationSuccessfulEmail(firstName, login, password);
         EmailSender emailSender = new EmailSender();
         emailSender.sendEmail(userID, notificationEmail);

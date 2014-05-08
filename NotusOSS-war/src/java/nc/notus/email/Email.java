@@ -15,10 +15,14 @@ public abstract class Email {
     protected String message;
     private static Logger logger = Logger.getLogger(Email.class.getName());
 
+    /**
+     *
+     * @param template
+     */
     public Email(String template) {
         BufferedReader br = null;
         try {
-            new BufferedReader(new InputStreamReader(getClass().
+            br = new BufferedReader(new InputStreamReader(getClass().
                     getResourceAsStream(template), "UTF-8"));
             StringBuilder sb = new StringBuilder();
             int c = 0;

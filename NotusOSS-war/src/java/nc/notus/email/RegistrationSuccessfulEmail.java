@@ -24,7 +24,6 @@ public class RegistrationSuccessfulEmail extends Email {
      * @param firstName name of the user
      * @param login user's login
      * @param password user's password
-     * @throws IOException
      */
     public RegistrationSuccessfulEmail(String firstName,
             String login, String password) {

@@ -55,9 +55,8 @@ public class RegistrationServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request,
             HttpServletResponse response)
-            throws ServletException, IOException, DBManagerException {
+            throws ServletException, IOException {
         //local variable derclaration
-        DBManager dbManager = null;
         boolean isParamsValid = false;
         StringBuilder errMessage = new StringBuilder();
 
@@ -79,37 +78,29 @@ public class RegistrationServlet extends HttpServlet {
             // NC.KYIV.2014.WIND.REG.3
             if (isAdmin) {
                 AdministratorController adminControl = null;
-
                 adminControl = new AdministratorController();
                 adminControl.registerNewEngineer(login, password, email,
                         firstName, lastName, groupID);
-
                 request.setAttribute("success", adminControl.getActionStatus());
                 redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
             } else {
                 CustomerUserController userControl = null;
-
                 userControl = new CustomerUserController();
-
                 userControl.register(login, password, email, firstName,
                         lastName, catalogID, serviceLocation);
-
                 redirectTo(CONGRATULATION_PAGE, request, response);
             }
         } catch (DBManagerException exc) {
             request.setAttribute("errMessage", exc.getMessage());
-            if(isAdmin) {
-            	redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
+            if (isAdmin) {
+                redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
             }
-            redirectTo(CONGRATULATION_PAGE, request, response);
-            //throw new DBManagerException("Error");
-        } 
-
+            redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
+        }
     }
 
     /**
      * Read inputted params from request scope.
-     *
      * @param request
      */
     private void readParamaters(HttpServletRequest request) {
@@ -150,58 +141,49 @@ public class RegistrationServlet extends HttpServlet {
         return;
     }
 
-    private boolean validateParams(StringBuilder errMessage) throws DBManagerException {
+    private boolean validateParams(StringBuilder errMessage) {
 
         Pattern pattern;
         Matcher matcher;
 
         boolean isValid = true;
-
         if (!generatedCaptcha.equals(inputtedCaptcha)) {
             isValid = false;
             errMessage.append(" - Code don't matches. <br />");
         }
-
         pattern = Pattern.compile(LOGIN_PATTERN);
         matcher = pattern.matcher(login);
         if (!matcher.matches()) {
             isValid = false;
             errMessage.append("- Provide correct login. Spaces not allowed. " + "Minimum length - 3 chars, maximum - 40.<br />");
         }
-
         matcher = pattern.matcher(lastName);
         if (!matcher.matches()) {
             isValid = false;
             errMessage.append("- Provide correct last name. Spaces are not allowed.<br />");
 
         }
-
         matcher = pattern.matcher(firstName);
         if (!matcher.matches()) {
             isValid = false;
             errMessage.append("- Provide correct first name. Spaces not allowed.<br />");
         }
-
         pattern = Pattern.compile(EMAIL_PATTERN);
         matcher = pattern.matcher(email);
         if (!matcher.matches()) {
             isValid = false;
             errMessage.append("- Provide correct email.<br />");
         }
-
         pattern = Pattern.compile(PASSWORD_PATTERN);
         matcher = pattern.matcher(password);
         if (!matcher.matches()) {
             isValid = false;
             errMessage.append("- Provide correct password. Minimum length - 6 chars.<br />");
         }
-
         if (!password.equals(passwordConf)) {
             isValid = false;
             errMessage.append("- Password doesn't match confirmation.<br />");
         }
-
-
         if (!isAdmin) {
             try {
                 serviceLocation = java.net.URLDecoder.decode(serviceLocation,
@@ -215,45 +197,32 @@ public class RegistrationServlet extends HttpServlet {
                 //errMessage.append("- Wrong location specified.<br />");
             }
         }
-
         return isValid;
     }
 
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            //Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param request
-     *            servlet request
-     * @param response
-     *            servlet response
-     * @throws ServletException
-     *             if a servlet-specific error occurs
-     * @throws IOException
-     *             if an I/O error occurs
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            // Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
+
     }
 
     /**
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override
