@@ -75,19 +75,16 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         try {
-            dbManager = new DBManager();
-
             // if user is ADMINISTRATOR we only register new engineer
             // NC.KYIV.2014.WIND.REG.3
             if (isAdmin) {
                 AdministratorController adminControl = null;
 
-                adminControl = new AdministratorController(dbManager);
+                adminControl = new AdministratorController();
                 adminControl.registerNewEngineer(login, password, email,
                         firstName, lastName, groupID);
-                dbManager.commit();
 
-                request.setAttribute("success", adminControl.getActionSuccess());
+                request.setAttribute("success", adminControl.getActionStatus());
                 redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
             } else {
                 CustomerUserController userControl = null;
@@ -95,18 +92,18 @@ public class RegistrationServlet extends HttpServlet {
                 userControl = new CustomerUserController();
 
                 userControl.register(login, password, email, firstName,
-                        lastName, catalogID, serviceLocation, dbManager);
+                        lastName, catalogID, serviceLocation);
 
-                dbManager.commit();
                 redirectTo(CONGRATULATION_PAGE, request, response);
             }
         } catch (DBManagerException exc) {
-            dbManager.rollback();
             request.setAttribute("errMessage", exc.getMessage());
-            throw new DBManagerException("Error", exc);
-        } finally {
-            dbManager.close();
-        }
+            if(isAdmin) {
+            	redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
+            }
+            redirectTo(CONGRATULATION_PAGE, request, response);
+            //throw new DBManagerException("Error");
+        } 
 
     }
 
@@ -161,7 +158,7 @@ public class RegistrationServlet extends HttpServlet {
         boolean isValid = true;
 
         if (!generatedCaptcha.equals(inputtedCaptcha)) {
-            isValid = true;
+            isValid = false;
             errMessage.append(" - Code don't matches. <br />");
         }
 

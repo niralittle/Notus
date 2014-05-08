@@ -6,14 +6,16 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import nc.notus.controllers.ProvisioningEngineerController;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.ScenarioDAOImpl;
@@ -34,6 +36,8 @@ import nc.notus.workflow.DisconnectScenarioWorkflow;
  */
 public class ProvisionEngineerTasksServlet extends HttpServlet {
 
+	private static final String PROVISIONING_PAGE = "provisioningEngineerWorkflow.jsp";
+	
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
 	 * methods.
@@ -118,6 +122,82 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
             Logger.getLogger(ProvisionEngineerTasksServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 	}
+	
+	/**
+	 * Create circuit!
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void createCircuit(HttpServletRequest request, 
+			HttpServletResponse response) throws ServletException, IOException {
+		
+		ProvisioningEngineerController provControl = null;
+		try {
+			if (request.getParameter("taskid") == null
+					|| request.getParameter("serviceorderid") == null
+					|| request.getParameter("circuit") == null) {
+				
+				request.setAttribute("errMessage", 
+						"Parameters not passes. Try again.");
+			} else {
+				// getting ServiceOrder id, Task id and circuit
+				int orderID = Integer.parseInt(request
+						.getParameter("serviceorderid"));
+				int taskID = Integer.parseInt(request
+						.getParameter("taskid"));
+				
+				String circuit = request.getParameter("circuit");
+				
+				provControl = new ProvisioningEngineerController();
+				provControl.createCircuit(orderID, taskID, circuit);
+				request.setAttribute("success",
+						provControl.getActionStatus());
+
+			}
+			redirectTo(PROVISIONING_PAGE, request, response);
+
+		} catch (DBManagerException e) {
+			request.setAttribute("errMessage", "Error was occured. ");
+			redirectTo(PROVISIONING_PAGE, request, response);
+		}
+	
+	}
+	
+	
+	private void removeCircuit(HttpServletRequest request, 
+			HttpServletResponse response) throws ServletException, IOException {
+		
+		ProvisioningEngineerController provControl = null;
+		try {
+			if (request.getParameter("d_orderid") == null
+					|| request.getParameter("d_taskid") == null) {
+				
+				request.setAttribute("errMessage", 
+						"Parameters not passes. Try again.");
+			} else {
+				// getting ServiceOrder id and Task id
+				int orderID = Integer.parseInt(request
+						.getParameter("d_orderid"));
+				int taskID = Integer.parseInt(request
+						.getParameter("d_taskid"));
+
+				provControl = new ProvisioningEngineerController();
+				provControl.removeCircuit(orderID, taskID);
+				request.setAttribute("success",
+						provControl.getActionStatus());
+
+			}
+			redirectTo(PROVISIONING_PAGE, request, response);
+
+		} catch (DBManagerException e) {
+			request.setAttribute("errMessage", "Error was occured. ");
+			redirectTo(PROVISIONING_PAGE, request, response);
+		}
+	
+	}
 
 	/**
 	 * Handles the HTTP <code>POST</code> method.
@@ -135,37 +215,32 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		if ("Delete Circuit from SI".equals(request.getParameter("action"))) {
-
-			DBManager dbManager = null;
-			try {
-				dbManager = new DBManager();
-				ServiceOrderDAOImpl orderDAO = new ServiceOrderDAOImpl(dbManager);
-				
-				DisconnectScenarioWorkflow wf = null;
-				if (request.getParameter("d_orderid") == null
-						| request.getParameter("d_taskid") == null) {
-					request.setAttribute("success", "Parameters not passes");
-				} else {
-					// getting ServiceOrder id and Task id
-					int orderID = Integer.parseInt(request.getParameter("d_orderid"));
-					int taskID = Integer.parseInt(request.getParameter("d_taskid"));
-
-					ServiceOrder order = orderDAO.find(orderID);
-					wf = new DisconnectScenarioWorkflow(order,dbManager);
-					wf.removeCurcuitFromSI(taskID);
-
-					dbManager.commit();	
-					request.setAttribute("success","Circuit successfully deleted!");
-					request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
-				}
-			} catch (DBManagerException ex) {
-                Logger.getLogger(ProvisionEngineerTasksServlet.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-				dbManager.close();
-			}
+		if("Create Circuit".equals(request.getParameter("action"))) {
+			createCircuit(request, response);
+		} else 
+			if ("Delete Circuit from SI".equals(request.getParameter("action"))) {
+				removeCircuit(request, response);		
 		}
 	}
+	
+
+	/**
+	 * Redirect to passes page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @param page
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void redirectTo(String page, HttpServletRequest request,
+			HttpServletResponse response) throws ServletException,
+			IOException {
+		RequestDispatcher view = request.getRequestDispatcher(page);
+		view.forward(request, response);
+		return;
+	}
+	
 
 	/**
 	 * Returns a short description of the servlet.

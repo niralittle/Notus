@@ -28,18 +28,16 @@ import nc.notus.workflow.DisconnectScenarioWorkflow;
 import nc.notus.workflow.NewScenarioWorkflow;
 import nc.notus.workflow.Workflow;
 
-public class CustomerUserController {
+public class CustomerUserController extends AbstractController {
 	
 	private static Logger logger = Logger.getLogger(DBManager.class.getName());
 	
-	private DBManager dbManager;
-	
 	public CustomerUserController(DBManager dbManager) {
-		this.dbManager = dbManager;
+		super(dbManager);
 	}
 	
 	public CustomerUserController() {
-		
+		super();
 	}
 	
 	/**
@@ -53,14 +51,10 @@ public class CustomerUserController {
 
 		ServiceOrder serviceOrder = null;
 		ServiceOrderDAOImpl soDAO = null;
-		boolean isInternal = false;
-	
-
 		DisconnectScenarioWorkflow disconnectWF = null;
 		try {
-			if(dbManager == null) {
+			if(isInternal) {
 				dbManager = new DBManager();
-				isInternal = true;
 			}
 			// get order by SI
 			soDAO = new ServiceOrderDAOImpl(dbManager);
@@ -77,7 +71,10 @@ public class CustomerUserController {
 				dbManager.commit();
 			}
 		} catch (DBManagerException wfExc) {
-			throw new DBManagerException("");
+			if(isInternal) {
+				dbManager.rollback();
+			}
+			throw new DBManagerException("Error while proceed to disconnect",wfExc);
 		} finally {
 			if(isInternal) {
 				dbManager.close();
@@ -98,11 +95,14 @@ public class CustomerUserController {
 	 */
 	public int register(String login, String password, String email,
 			String firstName, String lastName, int catalogID,
-			String serviceLocation, DBManager dbManager) throws DBManagerException {
+			String serviceLocation) throws DBManagerException {
 		
 		OSSUserDAO userDAO = null;
 		int userID;
 		try {
+			if(isInternal) {
+				dbManager = new DBManager();
+			}
 			userDAO = new OSSUserDAOImpl(dbManager);
 
 			// check inputted login
@@ -128,12 +128,24 @@ public class CustomerUserController {
 
 			userID = (Integer) userDAO.add(user);
 			
-			proceedNewOrder(dbManager, userID, catalogID, serviceLocation);
-			dbManager.commit();
+			proceedNewOrder(userID, catalogID, serviceLocation);
+			
+			if(isInternal) {
+				dbManager.commit();
+			}
+			
 			//sendEmail(userID, firstName, login, password);
 		} catch (DBManagerException exc) {
+			if(isInternal) {
+				dbManager.rollback();
+			}
 			throw new DBManagerException("Error while register in system.", exc);
+		} finally {
+			if (isInternal) {
+				dbManager.close();
+			}
 		}
+		
 		return userID;
 
 	}
@@ -149,17 +161,17 @@ public class CustomerUserController {
 		}
 	}
 
-	private void proceedNewOrder(DBManager dbManager, int userID, int catalogID,
+	private void proceedNewOrder(int userID, int catalogID,
 			String serviceLocation) throws DBManagerException {
 
-		ServiceOrder newOrder = createOrder(dbManager, userID, catalogID,
+		ServiceOrder newOrder = createOrder(userID, catalogID,
 				serviceLocation);
 
 		Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
 		wf.proceedOrder();
 	}
 
-	private ServiceOrder createOrder(DBManager dbManager, int userID,
+	private ServiceOrder createOrder(int userID,
 			int catalogID, String serviceLocation) throws DBManagerException {
 
 		ServiceOrderStatusDAO statusDAO = null;

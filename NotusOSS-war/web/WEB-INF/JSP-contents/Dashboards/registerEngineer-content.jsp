@@ -1,4 +1,6 @@
   <%= request.getAttribute("errMessage") == null ? "" : request.getAttribute("errMessage")%>
+  <h3 style="color:green;"><%=request.getAttribute("success") == null ? "" : request.getAttribute("success")%></h3>   
+       
         <form name="Register" method="post" onsubmit="return validate()" action="Register">
         <table border="0" cellpadding="5">
             <tr>

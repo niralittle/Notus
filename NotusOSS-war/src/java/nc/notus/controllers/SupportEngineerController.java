@@ -11,10 +11,18 @@ import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
 import nc.notus.workflow.NewScenarioWorkflow;
 
-public class SupportEngineerController {
+public class SupportEngineerController extends AbstractController {
 	
-	private String actionStatus;
+	/**
+	 * Default constructor. Used to internal transactions.
+	 */
+	public SupportEngineerController() {
+		super();
+	}
 	
+	public SupportEngineerController(DBManager dbManager) {
+		super(dbManager);
+	}
 	/**
 	 * Send bill to customer user.
 	 * (Implementation note: Commit changes in the DB after updating user)
@@ -23,13 +31,14 @@ public class SupportEngineerController {
 	 * @throws DBManagerException 
 	 */
 	public void sendBillToCustomer(int taskID) throws DBManagerException {
-		DBManager dbManager = null;
+		
 		NewScenarioWorkflow wf = null;
 		ServiceOrderDAOImpl orderDAO = null;
 		TaskDAO taskDAO = null;
 		try {
-			dbManager = new DBManager();
-
+			if(isInternal) {
+				dbManager = new DBManager();
+			}
 			taskDAO = new TaskDAOImpl(dbManager);
 			Task task = taskDAO.find(taskID);
 			int orderID = task.getServiceOrderID();
@@ -39,48 +48,32 @@ public class SupportEngineerController {
 
 			wf = new NewScenarioWorkflow(order, dbManager);
 			wf.approveBill(taskID);
-			dbManager.commit();
+			
+			if(isInternal) {
+				dbManager.commit();
+			}
 			actionStatus = "Bill successfully sent!";
 		} catch (DBManagerException ex) {
-			throw new DBManagerException("Error was occured while sending bill.");
+			if(isInternal) {
+				dbManager.rollback();
+			}
+			
+			throw new DBManagerException("Error was occured while sending bill.", ex);
 		} finally {
-			dbManager.close();
+			if(isInternal) {
+				dbManager.close();
+			}		
 		}
 	}
 	
-	/**
-	 * Send bill to customer user.
-	 * (Implementation note: Not commit changes in the DB after updating user)
-	 * 
-	 * @param taskID
-	 * @param dbManager
-	 * @throws DBManagerException 
-	 */
-	public void sendBillToCustomer(int taskID, DBManager dbManager) throws DBManagerException {
-		NewScenarioWorkflow wf = null;
-		ServiceOrderDAOImpl orderDAO = null;
-		TaskDAO taskDAO = null;
-		try {
-			taskDAO = new TaskDAOImpl(dbManager);
-			Task task = taskDAO.find(taskID);
-			int orderID = task.getServiceOrderID();
-
-			orderDAO = new ServiceOrderDAOImpl(dbManager);
-			ServiceOrder order = orderDAO.find(orderID);
-
-			wf = new NewScenarioWorkflow(order, dbManager);
-			wf.approveBill(taskID);
-			actionStatus = "Bill successfully sent!";
-		} catch (DBManagerException ex) {
-			throw new DBManagerException("Error was occured while sending bill.");
-		} 
-	}
 	
 	public void changeCustomerPassword(int userID, String newPassword) throws DBManagerException {
 		OSSUserDAOImpl userDAO = null;
-		DBManager dbManager = null;
+		
 		try {
-			dbManager = new DBManager();
+			if(isInternal) {
+				dbManager = new DBManager();
+			}
 			userDAO = new OSSUserDAOImpl(dbManager);
 
 			// get user by id and set him new password
@@ -88,39 +81,23 @@ public class SupportEngineerController {
 			user.setPassword(newPassword);
 			userDAO.update(user);
 
-			dbManager.commit();
-			actionStatus = "Password successfully changed!";
-		} catch (DBManagerException exc) {
-			throw new DBManagerException("Error was occured while"
-							+ " changing password.");
+			if(isInternal) {
+				dbManager.commit();
+			}
+			actionStatus = "Password for user, " + user.getLogin() 
+							+ " successfully changed!";
+		} catch (DBManagerException ex) {
+			if(isInternal) {
+				dbManager.rollback();
+			}
+			
+			throw new DBManagerException(
+					"Error was occured while changing password.", ex);
 		} finally {
-			dbManager.close();
+			if(isInternal) {
+				dbManager.close();
+			}		
 		}
 	}
 	
-	public void changeCustomerPassword(int userID, String newPassword, DBManager dbManager) throws DBManagerException {
-		OSSUserDAOImpl userDAO = null;
-		try {
-			dbManager = new DBManager();
-			userDAO = new OSSUserDAOImpl(dbManager);
-
-			// get user by id and set him new password
-			OSSUser user = userDAO.find(userID);
-			user.setPassword(newPassword);
-			userDAO.update(user);
-
-			actionStatus = "Password successfully changed!";
-		} catch (DBManagerException exc) {
-			throw new DBManagerException("Error was occured while"
-					+ " changing password.");
-		} 
-	}
-
-	public String getActionStatus() {
-		return actionStatus;
-	}
-
-	public void setActionStatus(String actionStatus) {
-		this.actionStatus = actionStatus;
-	}
 }
