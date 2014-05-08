@@ -57,7 +57,7 @@ public class SupportEngineerServlet extends HttpServlet {
 
 					adminControl = new AdministratorController();
 					adminControl.blockUser(userID);
-					request.setAttribute("success", adminControl.getActionSuccess());
+					request.setAttribute("success", adminControl.getActionStatus());
 				} catch (DBManagerException exc) {
 					request.setAttribute("errMessage", exc.getMessage());
 				}
@@ -81,6 +81,7 @@ public class SupportEngineerServlet extends HttpServlet {
 			try { 		//try send bill
 				supportControl = new SupportEngineerController();
 				supportControl.sendBillToCustomer(taskID);
+				
 				request.setAttribute("success",
 						supportControl.getActionStatus());
 			} catch (DBManagerException exc) {
@@ -103,6 +104,7 @@ public class SupportEngineerServlet extends HttpServlet {
 			try {		//try change password
 				supportControl = new SupportEngineerController();
 				supportControl.changeCustomerPassword(userID, newPassword);
+				
 				request.setAttribute("success",
 						supportControl.getActionStatus());
 			} catch (DBManagerException exc) {

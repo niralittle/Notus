@@ -18,7 +18,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-
+<h3 style="color:red;"><%=request.getAttribute("errMessage") == null ? "" : request.getAttribute("errMessage")%></h3>
+<h3 style="color:green;"><%=request.getAttribute("success") == null ? "" : request.getAttribute("success")%></h3>
+	
+	<form action="TasksAssignment?type=personal" method="POST">
+		<input type="submit" name="action" value="Back to Tasks" />
+	</form>
+	
 	<%
 		if ("NEW".equalsIgnoreCase((String) request.getAttribute("wfScenario"))) {
 			Task task = (Task) request.getAttribute("task");
@@ -26,7 +32,7 @@
 			Integer soID = task.getServiceOrderID();
 	%>
 
-	<form action="CreateCircuit" method="POST">
+	<form action="ProvisionEngineerTasksServlet" method="POST">
 		<table border="1" id="table">
 			<caption>NEW SCENARIO TASK</caption>
 			<tbody>
@@ -54,9 +60,7 @@
 			Integer taskID = task.getId();
 			Integer soID = task.getServiceOrderID();
 	%>
-	<form action="TasksAssignment?type=personal" method="POST">
-		<input type="submit" name="action" value="Back to Tasks" />
-	</form>
+	
 	<form method="Post" action="ProvisionEngineerTasksServlet">
 		<table id="tablename2">
 			<caption>DISCONNECT SCENARIO TASK</caption>
