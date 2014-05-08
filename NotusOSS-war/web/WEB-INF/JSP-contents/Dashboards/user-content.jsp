@@ -48,6 +48,7 @@
            "&soPage=" + currentSOPage + "'>" + (currentSIPage + 1) + "</a>");
 %>
 </div>
+    <h2>Currently active connections:</h2>
         <table class='activeInstances' border='1'>
             <thead>
                <tr>
