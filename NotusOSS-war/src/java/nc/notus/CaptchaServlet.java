@@ -49,13 +49,13 @@ public class CaptchaServlet extends HttpServlet {
 
 		g2d.setRenderingHints(rh);
 
-		GradientPaint gp = new GradientPaint(0, 0, Color.red, 0, height / 2,
-				Color.black, true);
+		GradientPaint gp = new GradientPaint(0, 0, Color.white, 0, height / 2,
+				Color.blue, true);
 
 		g2d.setPaint(gp);
 		g2d.fillRect(0, 0, width, height);
 
-		g2d.setColor(new Color(255, 153, 0));
+		g2d.setColor(Color.white);
 
 		Random r = new Random();
 		int index = Math.abs(r.nextInt()) % 5;
