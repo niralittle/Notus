@@ -29,7 +29,15 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
      * @return list ServiceOrders with selected status
      */
     List<ServiceOrder> getSOByStatus(int userID, int serviceOrderStatus,
-                                        int offset, int numberOfRecords) throws DBManagerException;
+                                     int offset, int numberOfRecords) throws DBManagerException;
+
+    /**
+     * Method that returns number of ServiceOrders with specified status and userID
+     * @param userID
+     * @param serviceOrderStatus for searching
+     * @return number of ServiceOrders with specified status and userID
+     */
+    int countAllSOByStatus(int userID, int serviceOrderStatus) throws DBManagerException;
 
     /**
      * Method that returns list of ServiceOrders with selected scenario

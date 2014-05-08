@@ -70,14 +70,23 @@ public class CustomerUserServlet extends HttpServlet {
         int soPage = (soPageAttr == null) ? 1 : Integer.parseInt(soPageAttr);
         int numbOfRecords = 5;
 
+
         try {
             dbManager = new DBManager();
         } catch (DBManagerException ex) {
             Logger.getLogger(CustomerUserServlet.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
+
         try {
             int userID = getUserID(request);
+            ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
+            int numbOfSORecords = orderDAO.countAllSOByStatus(userID, OrderStatus.PROCESSING.toInt());
+            int numbOfSIRecords = orderDAO.countAllSOByStatus(userID, OrderStatus.COMPLETED.toInt());
+            Integer numbOfSOPages = (numbOfSORecords - 1) / numbOfRecords + 1;
+            Integer numbOfSIPages = (numbOfSIRecords - 1) / numbOfRecords + 1;
+            request.setAttribute("numbOfSOPages", numbOfSOPages);
+            request.setAttribute("numbOfSIPages", numbOfSIPages);
             HttpSession session = request.getSession();
             //if need to create new SO
             if (session.getAttribute("serviceLocationID") != null 

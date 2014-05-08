@@ -207,6 +207,34 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         return serviceOrders;
     }
 
+    @Override
+    public int countAllSOByStatus(int userID, int serviceOrderStatus) throws DBManagerException {
+        Statement statement = null;
+        ResultIterator ri;
+
+        String query = "SELECT COUNT(*) total FROM ( SELECT a.*, ROWNUM rnum FROM (" +
+                "SELECT so.id, so.serviceorderdate, so.serviceorderstatusid," +
+                "so.scenarioid, so.userid, so.servicecatalogid," +
+                "so.serviceinstanceid, so.servicelocation " +
+                "FROM serviceorder so " +
+                "WHERE so.userid = ? AND so.serviceorderstatusid = ? " +
+                "ORDER BY so.serviceorderdate) a )";
+        try {
+            statement = dbManager.prepareStatement(query);
+            statement.setInt(1, userID);
+            statement.setInt(2, serviceOrderStatus);
+            ri = statement.executeQuery();
+            if (ri.next()) {
+                return ri.getInt("total");
+            }
+            return 0;
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+        }
+    }
+
     /**
      * Return service order by specified SI id.
      * 

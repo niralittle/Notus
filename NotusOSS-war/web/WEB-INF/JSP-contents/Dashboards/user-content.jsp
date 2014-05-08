@@ -24,6 +24,9 @@
    if (request.getParameter("soPage") != null) {
        currentSOPage = Integer.parseInt((String) request.getParameter("soPage"));
    }
+
+   int numbOfSIPages = (Integer) request.getAttribute("numbOfSIPages");
+   int numbOfSOPages = (Integer) request.getAttribute("numbOfSOPages");
 %>
 
 <!-- End of Paging -->
@@ -44,8 +47,10 @@
            "&soPage=" + currentSOPage + "'>" + (currentSIPage - 1) + "</a>\t|\t");
    }
    out.println(currentSI);
-   out.println("<a href='CustomerUser?siPage=" + (currentSIPage + 1) +
-           "&soPage=" + currentSOPage + "'>" + (currentSIPage + 1) + "</a>");
+   if (currentSIPage < numbOfSIPages) {
+       out.println("<a href='CustomerUser?siPage=" + (currentSIPage + 1) +
+               "&soPage=" + currentSOPage + "'>" + (currentSIPage + 1) + "</a>");
+   }
 %>
 </div>
     <h2>Currently active connections:</h2>
@@ -99,9 +104,11 @@
             (currentSOPage - 1) + "</a>\t|\t");
    }
    out.println(currentSO);
-   out.println("<a href='CustomerUser?siPage=" + currentSIPage +
-           "&soPage=" + (currentSOPage + 1) + "'>" +
-            (currentSOPage + 1) + "</a>");
+   if (currentSOPage < numbOfSOPages) {
+       out.println("<a href='CustomerUser?siPage=" + currentSIPage +
+               "&soPage=" + (currentSOPage + 1) + "'>" +
+               (currentSOPage + 1) + "</a>");
+   }
 %>
 </div>
         <h2>Orders being processed:</h2>
