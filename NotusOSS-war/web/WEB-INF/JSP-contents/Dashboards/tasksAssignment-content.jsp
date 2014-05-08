@@ -66,7 +66,7 @@
                 </tbody>
             </table>
             
-
+<div id="pagination">
         <%
 			if (request.getAttribute("noOfPages") != null && request.getAttribute("page") != null) {
 			long noOfPages = (Long) request.getAttribute("noOfPages");
@@ -81,11 +81,11 @@
 			}
 			boolean isPrevious = false;
 			if(currentPage > 1) {
-							isPrevious = true;
-				%>
-		<a style="font-size: 14pt;"  href="<%=url%>page=<%=(currentPage-1)%>">Previous</a>
-		<%
-		}
+                            isPrevious = true;
+	%>
+	<a style="font-size: 14pt;"  href="<%=url%>page=<%=(currentPage-1)%>">Previous</a>
+	<%
+	}
 			boolean previousPageIsEllipsis = false;
 			
 			for (long i = 1; i <= noOfPages; i++) {
@@ -97,7 +97,7 @@
 					}
 			%>
 
-			<label style="font-size: 12pt;">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;</label>
+			<label id="pagination_label" style="font-size: 12pt;">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;</label>
 			<%
 		} else {
 		if( i == 1
@@ -139,3 +139,4 @@
 					}
 				}
 	%>
+</div>

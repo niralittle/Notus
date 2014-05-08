@@ -498,14 +498,14 @@ a.button28:active {
 }
 
 #suppDash{
-    
+
     color: #325EBD;
     font-size: 16px;
     font-weight: bold;
 }
 
 #suppDash a{
-    
+
     text-decoration: none;
 }
 
@@ -517,4 +517,53 @@ a.button28:active {
     text-decoration: none;
     font-size: 16px;
     color: #000;
+}
+
+/*Pagination*/
+#pagination{
+    padding: 3px;
+    margin: 3px;
+    text-align:center;
+    color:#a0a0a0;
+    font-size:80%;
+}
+#pagination a {
+    border: 1px solid #909090;
+    border-radius: 10px;
+    margin-right:3px;
+    padding:2px 5px;
+    background-position:bottom;
+    text-decoration: none;
+    color: #c7ffff;
+    background: #87e0fd; /* Old browsers */
+    background: -moz-linear-gradient(top, #22A9D6 0%,#1F7692 40%,#2382A0 100%); /* FF3.6+ */
+    background: -webkit-linear-gradient(top, #22A9D6 0%,#1F7692 40%,#2382A0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #22A9D6 0%,#1F7692 40%,#2382A0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #22A9D6 0%,#1F7692 40%,#2382A0 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #22A9D6 0%,#1F7692 40%,#2382A0 100%); /* W3C */
+}
+#pagination a:hover, div.meneame a:active {
+    border: 1px solid #f0f0f0;
+    background-color:#464646;
+    color: #ffffff;
+}
+#pagination span.current {
+    margin-right:3px;
+    padding:2px 5px;
+    border: 1px solid #ffffff;
+    font-weight: bold;
+    background-color: #606060;
+    color: #ffffff;
+}
+#pagination span.disabled {
+    margin-right:3px;
+    padding:2px 5px;
+    border: 1px solid #606060;
+    color: #808080;
+}
+#pagination_label{
+    color:#c7ffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    background-color:#464646;
 }
