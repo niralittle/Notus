@@ -56,7 +56,8 @@
                     <td>Type of Service</td>
                     <td>Since</td>
                     <td>Price</td>
-                <% if (request.isUserInRole("CUSTOMER_USER")) { %>
+                <% boolean showOptions = request.isUserInRole("CUSTOMER_USER");
+                if (showOptions) { %>
                     <td>Options</td>
                 <% } %>
                 </tr>
@@ -68,7 +69,7 @@
                 <td><%= m.get("serviceDescription") %></td>
                 <td><%= m.get("orderDate") %></td>
                 <td><%= m.get("price") %></td>
-            <% if (request.isUserInRole("CUSTOMER_USER")) { %>
+            <% if (showOptions) { %>
                 <td>  
                     <form action="CustomerUser" method="POST">
                         <input type="hidden" name="serviceInstanceID"
