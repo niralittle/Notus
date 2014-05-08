@@ -1,6 +1,7 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class GettingUsersInfo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String CHANGE_PASSWORD_PAGE = "passwordChanging.jsp";
-	private static int RECORDS_PER_PAGE = 10;
+	private static int RECORDS_PER_PAGE = 5;
 
 	private List<OSSUser> users = null;
 	private String login;
@@ -85,7 +86,7 @@ public class GettingUsersInfo extends HttpServlet {
 
 		redirect(request, response, CHANGE_PASSWORD_PAGE);
 	}
-
+	
 	private void readInputtedData(HttpServletRequest request) {
 		email = request.getParameter("email");
 		login = request.getParameter("login");

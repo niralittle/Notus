@@ -68,27 +68,74 @@
             
 
         <%
-		if (request.getAttribute("noOfPages") != null && request.getAttribute("page") != null) {
-			String url;
+			if (request.getAttribute("noOfPages") != null && request.getAttribute("page") != null) {
 			long noOfPages = (Long) request.getAttribute("noOfPages");
 			if(noOfPages > 1) {
-			int currPage = (Integer) request.getAttribute("page");
+
+			int currentPage = (Integer) request.getAttribute("page");
+			String url;
 			if(personal) {
 				url = "TasksAssignment?type=personal&";
 			} else {
 				url = "TasksAssignment?";
 			}
+			boolean isPrevious = false;
+			if(currentPage > 1) {
+							isPrevious = true;
+				%>
+		<a style="font-size: 14pt;"  href="<%=url%>page=<%=(currentPage-1)%>">Previous</a>
+		<%
+		}
+			boolean previousPageIsEllipsis = false;
+			
 			for (long i = 1; i <= noOfPages; i++) {
-				if (i == (currPage )) {
-		%>
-		<a href="<%=url%>page=<%=i%>" style="font-size: 12pt; font-weight: bold;"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+				if (i == currentPage) {
+					if(!isPrevious) {
+					%>
+					<label style="font-size: 14pt;">Previous</label>
+					<%
+					}
+			%>
+
+			<label style="font-size: 12pt;">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;</label>
+			<%
+		} else {
+		if( i == 1
+		            || i == 2
+		            || i == currentPage - 2
+		            || i == currentPage - 1
+		            || i == currentPage + 1
+		            || i == currentPage + 2
+		            || i == noOfPages - 1
+		            || i == noOfPages)
+		        {
+		         previousPageIsEllipsis = false;
+	%>
+	<a  href="<%=url%>page=<%=i%>">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;</a>
 	<%
 		} else {
+									if (previousPageIsEllipsis) {
+										//an ellipsis was already added. Do not add it again. Do nothing.
+										continue;
+									} else { %>
+										<label style="font-size: 12pt;">&nbsp;&nbsp;...&nbsp;&nbsp;</label>
+									<%
+										previousPageIsEllipsis = true;
+									}
+								}
+							}
+						}
+					if(currentPage != noOfPages) {
+				%>
+			<a style="font-size: 14pt;"  href="<%=url%>page=<%=(currentPage+1)%>">Next</a>
+			<%
+			} else {
+			%>
+			<label style="font-size: 14pt;">&nbsp;&nbsp;Next&nbsp;&nbsp;</label>
+			<%
+			}
+				
+					
+					}
+				}
 	%>
-		<a href="<%=url%>page=<%=i%>"><%=i%>&nbsp;&nbsp;&nbsp;&nbsp;</a>
-	<%
-		}
-					}
-					}
-					}
-					 %>
