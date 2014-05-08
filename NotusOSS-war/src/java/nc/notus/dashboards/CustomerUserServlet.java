@@ -22,13 +22,11 @@ import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dao.ServiceOrderDAO;
-import nc.notus.dao.ServiceOrderStatusDAO;
 import nc.notus.dao.ServiceTypeDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
-import nc.notus.dao.impl.ServiceOrderStatusDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -49,20 +47,7 @@ import nc.notus.workflow.Workflow;
  */
 public class CustomerUserServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
-    
-    private static final String USER_INFO_PAGE = "userSOandSI.jsp";
-    private static final String CUSTOMER_USER_PAGE = "CustomerUser";
-    
     private DBManager dbManager = null;
-
-    private int catalogID;
-
-    private ServiceOrder newOrder;
-
-    private String serviceLocation;
-
-    private HttpSession session;
 
     /**
      * Puts data into request and forwards it to user.jsp
@@ -77,51 +62,53 @@ public class CustomerUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, 
             HttpServletResponse response) throws ServletException, IOException {
+
         response.setContentType("text/html;charset=UTF-8");
-        int startpage = 1;
-        int numbOfRecords = 30;
+        String siPageAttr = (String) request.getAttribute("siPage");
+        String soPageAttr = (String) request.getAttribute("soPage");
+        int siPage = (siPageAttr == null) ? 1 : Integer.parseInt(siPageAttr);
+        int soPage = (soPageAttr == null) ? 1 : Integer.parseInt(soPageAttr);
+        int numbOfRecords = 50;
+
         try {
             dbManager = new DBManager();
         } catch (DBManagerException ex) {
-            Logger.getLogger(CustomerUserServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerUserServlet.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }
         try {
             int userID = getUserID(request);
-
-            session = request.getSession();
+            HttpSession session = request.getSession();
             //if need to create new SO
-            if (session.getAttribute("serviceCatalogID") != null) {
-                catalogID = (Integer) session.getAttribute("serviceCatalogID");
+            if (session.getAttribute("serviceLocationID") != null 
+                    && session.getAttribute("serviceCatalogID") != null) {
+                int catalogID = (Integer) session.getAttribute("serviceCatalogID");
+                String serviceLocation =
+                        (String) session.getAttribute("serviceLocationID");
+                serviceLocation = java.net.URLDecoder.decode(serviceLocation,
+                        "UTF-8"); 
+                ServiceOrder newOrder = createOrder(dbManager, userID,
+                        serviceLocation, catalogID);
+                dbManager.commit();
+                Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
+                wf.proceedOrder();
+                dbManager.commit();
             }
-			if (session.getAttribute("serviceLocationID") != null) {
-				serviceLocation = (String) session.getAttribute("serviceLocationID");
-				serviceLocation = java.net.URLDecoder.decode(serviceLocation,
-						"UTF-8");
-				// create new Service Order
-				newOrder = createOrder(dbManager, userID);
-				dbManager.commit();
-				// proceed Service Order
-				Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
-				wf.proceedOrder();
-				dbManager.commit();
-			}
-            
 
             request.setAttribute("activeInstances",
-                    getActiveInstancesList(userID, startpage, numbOfRecords));
+                    getActiveInstancesList(userID, siPage, numbOfRecords));
             request.setAttribute("processingOrders",
-                    getProcessingOrdersList(userID, startpage, numbOfRecords));
+                    getProcessingOrdersList(userID, soPage, numbOfRecords));
             
-            if (request.isUserInRole("SUPPORT_ENGINEER")) {
-            	RequestDispatcher view = request.getRequestDispatcher(USER_INFO_PAGE);
-            	view.forward(request, response);
-            	return;
-            } else {
-            	RequestDispatcher view = request.getRequestDispatcher("user.jsp");
-            	view.forward(request, response);
-            }
+            RequestDispatcher view =
+                (request.isUserInRole("SUPPORT_ENGINEER")) ? 
+                 request.getRequestDispatcher("userSOandSI.jsp") :
+                 request.getRequestDispatcher("user.jsp");
+            view.forward(request, response);
+
         } catch (DBManagerException ex) {
-            Logger.getLogger(CustomerUserServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CustomerUserServlet.class.getName())
+                    .log(Level.SEVERE, null, ex);
         } finally {
             dbManager.close();
         }
@@ -142,24 +129,21 @@ public class CustomerUserServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request,
-                    HttpServletResponse response) throws ServletException, IOException {
-		if ("Disconnect".equals(request.getParameter("action"))) {
-			if (request.getParameter("serviceInstanceID") != null) {
-				int serviceInstanceId;
-				CustomerUserController userControl = null;
-
-				serviceInstanceId = Integer.parseInt(
-									request.getParameter("serviceInstanceID"));
-
-				try {
-					userControl = new CustomerUserController();
-					userControl.proceedToDisconnect(serviceInstanceId);
-				} catch (DBManagerException wfExc) {
-
-				}
-			} 
-				response.sendRedirect(CUSTOMER_USER_PAGE);
-    	}
+            HttpServletResponse response) throws ServletException, IOException {
+        if ("Disconnect".equals(request.getParameter("action"))) {
+            if (request.getParameter("serviceInstanceID") != null) {
+                int serviceInstanceId;
+                CustomerUserController userControl = null;
+                serviceInstanceId = Integer.parseInt(request
+                        .getParameter("serviceInstanceID"));
+                try {
+                    userControl = new CustomerUserController();
+                    userControl.proceedToDisconnect(serviceInstanceId);
+                } catch (DBManagerException wfExc) {
+                }
+            }
+            response.sendRedirect("CustomerUser");
+        }
     }
 
     /**
@@ -173,57 +157,48 @@ public class CustomerUserServlet extends HttpServlet {
     }// </editor-fold>
 
     /*
-     * Get userID from the session; if there is none - get one from DB,
-     * put it in the session and return the value
+     * Get userID from request; if there is none - get one from DB,
+     * put it in there and return the value
      */
     private int getUserID(HttpServletRequest request) throws DBManagerException {
-		if (request.isUserInRole("SUPPORT_ENGINEER")) {
-			int id = Integer.parseInt(request.getParameter("userID"));
-			return id;
-		} else {
-			session = request.getSession();
-			
-				if (session.getAttribute("userID") == null) {
-					OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-					String login = request.getUserPrincipal().getName();
-					OSSUser user = userDAO.getUserByLogin(login);
-					session.setAttribute("userID", user.getId());
-					return user.getId();
-				}
-				return (Integer) session.getAttribute("userID");
-			
-		}
+        if (request.getParameter("userID") == null) {
+            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+            String login = request.getUserPrincipal().getName();
+            OSSUser user = userDAO.getUserByLogin(login);
+            request.setAttribute("userID", user.getId());
+            return user.getId();
+        }
+        return Integer.parseInt(request.getParameter("userID").toString());
     }
-    /**
-     * Create new Service Order with status ENTERING
+
+    /*
+     * Creates new Service Order with status ENTERING
      * @param dbManager
      * @param userID
-     * @return so  - new Service Order
+     * @return so - new Service Order
      */
-    private ServiceOrder createOrder(DBManager dbManager, int userID) throws DBManagerException {
+    private ServiceOrder createOrder(DBManager dbManager, int userID,
+            String serviceLocation, int catalogID)
+            throws DBManagerException {
 
-		ServiceOrderStatusDAO statusDAO = new ServiceOrderStatusDAOImpl(dbManager);
-		ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
-		ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
+        ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
 
-		// create new order with status ENTERING
-		ServiceOrder so = new ServiceOrder();
-		int orderStatusID = statusDAO.getServiceOrderStatusID(OrderStatus.ENTERING);
-			so.setServiceOrderStatusID(orderStatusID);
-			so.setScenarioID(scenarioDAO.getScenarioID(WorkflowScenario.NEW));
-			so.setServiceCatalogID(catalogID);
-			so.setServiceInstanceID(null);
-			so.setServiceLocation(serviceLocation);
-			so.setUserID(userID);
+        ServiceOrder so = new ServiceOrder();
+        so.setServiceOrderStatusID(OrderStatus.ENTERING.toInt());
+        so.setScenarioID(WorkflowScenario.NEW.toInt());
+        so.setServiceCatalogID(catalogID);
+        so.setServiceInstanceID(null);
+        so.setServiceLocation(serviceLocation);
+        so.setUserID(userID);
 
-		Calendar cal = java.util.Calendar.getInstance();
-		Date date = new Date(cal.getTimeInMillis());
-			so.setServiceOrderDate(date);
+        Calendar cal = java.util.Calendar.getInstance();
+        Date date = new Date(cal.getTimeInMillis());
+                so.setServiceOrderDate(date);
 
-		int orderID = (Integer) orderDAO.add(so);
-		so.setId(orderID);
-		return so;
-	}
+        int orderID = (Integer) orderDAO.add(so);
+        so.setId(orderID);
+        return so;
+    }
 
 
     /**
@@ -261,8 +236,7 @@ public class CustomerUserServlet extends HttpServlet {
             row.put("price", Integer.toString(sc.getPrice()));
             row.put("instanceID", Integer.toString(o.getServiceInstanceID()));
             activeInstances.add(row);
-        }
-        
+        } 
         return activeInstances;
     }
 
@@ -303,7 +277,6 @@ public class CustomerUserServlet extends HttpServlet {
             row.put("orderDate", o.getServiceOrderDate().toString());
             processingOrders.add(row);
         }
-           
         return processingOrders;
     }
 
