@@ -123,6 +123,7 @@
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
         <servlet-class>nc.notus.ReassigTaskToEngineerServlet</servlet-class>
     </servlet>
+    <servlet>
         <servlet-name>DisconnectOrderProceed</servlet-name>
         <servlet-class>nc.notus.dashboards.DisconnectOrderProceed</servlet-class>
     </servlet>
