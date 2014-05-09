@@ -15,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import nc.notus.controllers.CustomerUserController;
 import nc.notus.dao.OSSUserDAO;
@@ -136,6 +135,8 @@ public class CustomerUserServlet extends HttpServlet {
                     userControl = new CustomerUserController();
                     userControl.proceedToDisconnect(serviceInstanceId);
                 } catch (DBManagerException wfExc) {
+                    Logger.getLogger(CustomerUserServlet.class.getName())
+                            .log(Level.SEVERE, null, wfExc);
                 }
             }
             response.sendRedirect("CustomerUser");
