@@ -86,7 +86,7 @@
     <a href="index.jsp"><input type="button" value="Home" name="submit"/> </a>
 
 </form>
-<form id="login" method="post" action="LoggedChecking">
+<form id="login" method="post" action="CustomerUser">
     <input id="serviceLocationID" name="serviceLocationID" type='hidden' value ="<%=request.getParameter("serviceLocationID") == null ? "" : request.getParameter("serviceLocationID")%>">
     <input id="serviceCatalogID" name="serviceCatalogID" type='hidden' value ="<%=request.getParameter("serviceCatalogID") == null ? "" : request.getParameter("serviceCatalogID")%>">
     <h4>Already registered!? </h4><a href="" onclick="this.parentNode.submit(); return false;">Login Here</a>

@@ -35,7 +35,11 @@
                 <tbody id ="services"><tr><td></td></tr></tbody>
             </table>
         </form>
-         <form id='postForm' method='post' action='registration.jsp'>
+         <%
+            String  url = request.isUserInRole("CUSTOMER_USER") ?
+                "CustomerUser" : "registration.jsp";
+         %>
+         <form  id="postForm" method="post" action='<%=url%>'>
             <input id="serviceLocationID" name="serviceLocationID" type='hidden'>
             <input id="serviceCatalogID" name="serviceCatalogID" type='hidden'>
          </form>
