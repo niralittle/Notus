@@ -38,32 +38,18 @@
             (List<Map<String, String>>) request.getAttribute("processingOrders");
 
     if (activeInstances != null && !activeInstances.isEmpty()) { %>
-<div class="paging" style="width: 100px; float: left;">
-<%
-   String currentSI = "<strong>" + currentSIPage + "</strong>\t|\t";
-   out.println("Page number: <br>");
-   if (currentSIPage != 1) {
-       out.println("<a href='CustomerUser?siPage=" + (currentSIPage - 1) +
-           "&soPage=" + currentSOPage + "'>" + (currentSIPage - 1) + "</a>\t|\t");
-   }
-   out.println(currentSI);
-   if (currentSIPage < numbOfSIPages) {
-       out.println("<a href='CustomerUser?siPage=" + (currentSIPage + 1) +
-               "&soPage=" + currentSOPage + "'>" + (currentSIPage + 1) + "</a>");
-   }
-%>
-</div>
     <h2>Currently active connections:</h2>
-        <table class='activeInstances' border='1'>
+
+        <table class='activeInstances table table-striped table-hover'>
             <thead>
                <tr>
-                    <td>Location</td>
-                    <td>Type of Service</td>
-                    <td>Since</td>
-                    <td>Price</td>
+                    <th>Location</th>
+                    <th>Type of Service</th>
+                    <th>Since</th>
+                    <th>Price</th>
                 <% boolean showOptions = request.isUserInRole("CUSTOMER_USER");
                 if (showOptions) { %>
-                    <td>Options</td>
+                    <th>Options</th>
                 <% } %>
                 </tr>
             </thead>
@@ -79,7 +65,7 @@
                     <form action="CustomerUser" method="POST">
                         <input type="hidden" name="serviceInstanceID"
                                value="<%= m.get("instanceID") %>"/> 
-                        <input type="submit" name="action" value="Disconnect" />
+                        <input class="btn btn-danger" type="submit" name="action" value="Disconnect" />
                     </form>
                 </td>
             <% } %>
@@ -87,38 +73,41 @@
     <%  } /*end of 'for' statement*/ %>
             </tbody>
         </table>
+<ul class="pagination">
+<%  if (numbOfSIPages > 1) {
+        String buttonTemplate = "<li><a href='CustomerUser?siPage="
+                    + "%d&soPage="+ currentSOPage + "'>%d</a></li>";
+
+        for (int i = 1; i < currentSIPage; i++) {
+            out.println(String.format(buttonTemplate, i, i));
+        }
+%><li class ="active"><a href="#"><span><%=currentSIPage%></span></a></li> <%
+        for (int i = currentSIPage + 1; i <= numbOfSIPages; i++) {
+            out.println(String.format(buttonTemplate, i, i));
+        }
+    }
+%>
+</ul>
  <%  } /*end of 'if' statement */%>
 
 <!-- End of active instances block -->
 <!-- Processing orders block -->
 
 <%  if (processingOrders != null && !processingOrders.isEmpty()) { %>
+<hr style="height: 5px;
+  background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
+  background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
+  background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
+  background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));">
 
-<div class="paging" style="width: 100px; float: left;">
-<% 
-   String currentSO = "<strong>" + currentSOPage + "</strong>\t|\t";
-   out.println("Page number: <br>");
-   if (currentSOPage != 1) {
-       out.println("<a href='CustomerUser?siPage=" + currentSIPage +
-           "&soPage=" + (currentSOPage - 1) + "'>" +
-            (currentSOPage - 1) + "</a>\t|\t");
-   }
-   out.println(currentSO);
-   if (currentSOPage < numbOfSOPages) {
-       out.println("<a href='CustomerUser?siPage=" + currentSIPage +
-               "&soPage=" + (currentSOPage + 1) + "'>" +
-               (currentSOPage + 1) + "</a>");
-   }
-%>
-</div>
-        <h2>Orders being processed:</h2>
-        <table class='processingOrders' border="1">
+<h2>Orders being processed:</h2>
+        <table class='processingOrders table table-striped table-hover'>
             <thead>
                 <tr>
-                    <td>Scenario</td>
-                    <td>Location</td>
-                    <td>Type of Service</td>
-                    <td>Order Date</td>
+                    <th>Scenario</th>
+                    <th>Location</th>
+                    <th>Type of Service</th>
+                    <th>Order Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -133,4 +122,19 @@
             </tbody>
         </table>
 <!-- End of rocessing orders block -->
+<ul class="pagination">
+<%  if (numbOfSOPages > 1) {
+        String buttonTemplate = "<li><a href='CustomerUser?siPage="
+                    + currentSIPage +"&soPage=%d'>%d</a></li>";
+
+        for (int i = 1; i < currentSOPage; i++) {
+            out.println(String.format(buttonTemplate, i, i));
+        }
+%><li class ="active"><a href="#"><span><%=currentSOPage%></span></a></li> <%
+        for (int i = currentSOPage + 1; i <= numbOfSOPages; i++) {
+            out.println(String.format(buttonTemplate, i, i));
+        }
+    }
+%>
+</ul>
  <%  } %>
