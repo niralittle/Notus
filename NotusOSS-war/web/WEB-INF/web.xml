@@ -270,11 +270,40 @@
     </error-page>
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Admin Page</web-resource-name>
+            <web-resource-name>Report Page</web-resource-name>
             <description/>
             <url-pattern>/adminDashboard.jsp</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+            </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Register Engineer</web-resource-name>
+            <description/>
+            <url-pattern>/registerEngineer.jsp</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+            </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Reassign Task</web-resource-name>
+            <description/>
+            <url-pattern>/Reassign</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
         </web-resource-collection>
         <auth-constraint>
             <role-name>ADMINISTRATOR</role-name>
@@ -315,6 +344,8 @@
             <role-name>SUPPORT_ENGINEER</role-name>
             </auth-constraint>
     </security-constraint>
+
+
 
     <login-config>
         <auth-method>FORM</auth-method>

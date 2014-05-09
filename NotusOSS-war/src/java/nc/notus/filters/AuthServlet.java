@@ -47,7 +47,7 @@ public class AuthServlet extends HttpServlet {
             dbManager = new DBManager();
             userDAO = new OSSUserDAOImpl(dbManager);
             if (!userDAO.isExist(username)) {
-                sb.append("Wrong login and/or password");
+                sb.append("Invalid username and/or password");
                 request.setAttribute("errMessage", sb.toString());
                 redirect(request, response, LOGIN_ERROR_PAGE);
             } else {

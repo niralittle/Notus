@@ -6,13 +6,13 @@
 <%
 	if (request.getAttribute("errMessage") == null) {
 %>
-<h2 style="color: red;">Invalid user name or password.</h2>
+<h2 style="color: red;">Invalid user name and/or password.</h2>
 <%
 	} else {
 %>
-<div style="color: red;">
+<h2 style="color: red;">
 	<%=request.getAttribute("errMessage")%>
-</div>
+</h2>
 <%
 	}
 %>
