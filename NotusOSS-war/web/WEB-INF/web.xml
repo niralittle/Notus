@@ -123,11 +123,6 @@
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
         <servlet-class>nc.notus.ReassigTaskToEngineerServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>LoggedChecking</servlet-name>
-        <servlet-class>nc.notus.LoggedChecking</servlet-class>
-        </servlet>
-    <servlet>
         <servlet-name>DisconnectOrderProceed</servlet-name>
         <servlet-class>nc.notus.dashboards.DisconnectOrderProceed</servlet-class>
     </servlet>
@@ -236,10 +231,6 @@
     <servlet-mapping>
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
         <url-pattern>/ReassigTaskToEngineerServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LoggedChecking</servlet-name>
-        <url-pattern>/LoggedChecking</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DisconnectOrderProceed</servlet-name>
