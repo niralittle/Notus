@@ -1,12 +1,9 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -29,177 +26,163 @@ import nc.notus.states.UserRole;
  */
 public class GettingUsersInfo extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private static final String CHANGE_PASSWORD_PAGE = "passwordChanging.jsp";
+    private static int RECORDS_PER_PAGE = 5;
+    private List<OSSUser> users = null;
+    private String login;
+    private String email;
+    private String lastName;
+    private int offset;
+    private int page;
 
-	private static final String CHANGE_PASSWORD_PAGE = "passwordChanging.jsp";
-	private static int RECORDS_PER_PAGE = 5;
+    void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
 
-	private List<OSSUser> users = null;
-	private String login;
-	private String email;
-	private String lastName;
-	
-	private int offset;
-	private int page;
-	
+        DBManager dbManager = null;
+        OSSUserDAO userDAO = null;
 
-	void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException, DBManagerException {
-		response.setContentType("text/html;charset=UTF-8");
-		
-		DBManager dbManager = null;
-		OSSUserDAO userDAO = null;
-		
-		readInputtedData(request);
-		if (!isValidParams(request)) {
-			redirect(request, response, CHANGE_PASSWORD_PAGE);
-		}
-	
-		try {
-			dbManager = new DBManager();
-			userDAO = new OSSUserDAOImpl(dbManager);
+        readInputtedData(request);
+        if (!isValidParams(request)) {
+            redirect(request, response, CHANGE_PASSWORD_PAGE);
+        }
+        try {
+            dbManager = new DBManager();
+            userDAO = new OSSUserDAOImpl(dbManager);
 
-			if (request.getParameter("page") == null) {
+            if (request.getParameter("page") == null) {
                 page = 1;
             } else {
                 page = Integer.parseInt(request.getParameter("page"));
             }
-            offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
-			
-			request.setAttribute("noOfPages", getPageCount(userDAO));
-			request.setAttribute("page", page);
+            offset = (page - 1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
 
-			// search user for one criteria only:
-			if (!lastName.isEmpty()) {
-				users = userDAO.getUsersByLastName(lastName, offset, (page-1) * RECORDS_PER_PAGE+1);
-			} else if (!login.isEmpty()) {
-				users = userDAO.getUsersByLogin(login, offset, (page-1) * RECORDS_PER_PAGE+1);
-			} else {
-				users = userDAO.getUsersByEmail(email, offset, (page-1) * RECORDS_PER_PAGE+1);
-			}
+            request.setAttribute("noOfPages", getPageCount(userDAO));
+            request.setAttribute("page", page);
 
-			request.setAttribute("findedUsers", users);
+            // search user for one criteria only:
+            if (!lastName.isEmpty()) {
+                users = userDAO.getUsersByLastName(lastName, offset, (page - 1) * RECORDS_PER_PAGE + 1);
+            } else if (!login.isEmpty()) {
+                users = userDAO.getUsersByLogin(login, offset, (page - 1) * RECORDS_PER_PAGE + 1);
+            } else {
+                users = userDAO.getUsersByEmail(email, offset, (page - 1) * RECORDS_PER_PAGE + 1);
+            }
 
-		} finally {
-			dbManager.close();
-		}
-
-		redirect(request, response, CHANGE_PASSWORD_PAGE);
-	}
-	
-	private void readInputtedData(HttpServletRequest request) {
-		email = request.getParameter("email");
-		login = request.getParameter("login");
-		lastName = request.getParameter("lastName");
-	}
-
-	private boolean isValidParams(HttpServletRequest request) {
-		if (login.isEmpty() & email.isEmpty() & lastName.isEmpty()) {
-			request.setAttribute("errMessage",
-					"Specify at least one parameter to search user!");
-			return false;
-		}
-		if (!login.isEmpty() & !email.isEmpty() & !lastName.isEmpty()) {
-			request.setAttribute("errMessage",
-					"Specify only one parameter to search user!");
-			return false;
-		}
-		
-		//check combination
-		if (!login.isEmpty() & !email.isEmpty()) {
-			request.setAttribute("errMessage",
-					"Specify only one parameter to search user!");
-			return false;
-		}
-		if (!login.isEmpty() & !lastName.isEmpty()) {
-			request.setAttribute("errMessage",
-					"Specify only one parameter to search user!");
-			return false;
-		}
-		if (!email.isEmpty() & !lastName.isEmpty()) {
-			request.setAttribute("errMessage",
-					"Specify only one parameter to search user!");
-			return false;
-		}
-		
-		return true;
-	}
-
-	private long getPageCount(OSSUserDAO userDAO) throws DBManagerException {
-		Map<String, Object> params = new HashMap<String, Object>();
-		
-		if (!lastName.isEmpty()) {
-			params.put("lastname", "%" + lastName + "%");
-		} else if (!login.isEmpty()) {
-			params.put("login", "%" + login + "%");
-		} else {
-			params.put("email", "%" + email + "%");
-		}
-		params.put("roleid", UserRole.CUSTOMER_USER.toInt());
-		
-		long quantityOfRecords = userDAO.countAllWithLikeCause(params);
-		long quantityOfPages = (long) Math.ceil(quantityOfRecords * 1.0/ RECORDS_PER_PAGE);
-		return quantityOfPages;
-	}
-
-	/**
-	 * Redirect to passes page.
-	 * 
-	 * @param request
-	 * @param response
-	 * @param page
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void redirect(HttpServletRequest request,
-			HttpServletResponse response, String page) throws ServletException,
-			IOException {
-		RequestDispatcher view = request.getRequestDispatcher(page);
-		view.forward(request, response);
-		return;
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(GettingUsersInfo.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("findedUsers", users);
+        } catch (DBManagerException exc) {
+            request.setAttribute("errMessage", "Service is temporarily unavailable");
+        } finally {
+            dbManager.close();
         }
-	}
 
-	/**
-	 * Handles the HTTP <code>POST</code> method.
-	 * 
-	 * @param request
-	 *            servlet request
-	 * @param response
-	 *            servlet response
-	 * @throws ServletException
-	 *             if a servlet-specific error occurs
-	 * @throws IOException
-	 *             if an I/O error occurs
-	 */
-	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(GettingUsersInfo.class.getName()).log(Level.SEVERE, null, ex);
+        redirect(request, response, CHANGE_PASSWORD_PAGE);
+    }
+
+    private void readInputtedData(HttpServletRequest request) {
+        email = request.getParameter("email");
+        login = request.getParameter("login");
+        lastName = request.getParameter("lastName");
+    }
+
+    private boolean isValidParams(HttpServletRequest request) {
+        if (login.isEmpty() & email.isEmpty() & lastName.isEmpty()) {
+            request.setAttribute("errMessage",
+                    "Specify at least one parameter to search user!");
+            return false;
         }
-	}
+        if (!login.isEmpty() & !email.isEmpty() & !lastName.isEmpty()) {
+            request.setAttribute("errMessage",
+                    "Specify only one parameter to search user!");
+            return false;
+        }
 
-	/**
-	 * Returns a short description of the servlet.
-	 * 
-	 * @return a String containing servlet description
-	 */
-	@Override
-	public String getServletInfo() {
-		return "Registers user in the system, creates a new order "
-				+ "and executes it ('New' scenario workflow).";
-	}// </editor-fold>
+        //check combination
+        if (!login.isEmpty() & !email.isEmpty()) {
+            request.setAttribute("errMessage",
+                    "Specify only one parameter to search user!");
+            return false;
+        }
+        if (!login.isEmpty() & !lastName.isEmpty()) {
+            request.setAttribute("errMessage",
+                    "Specify only one parameter to search user!");
+            return false;
+        }
+        if (!email.isEmpty() & !lastName.isEmpty()) {
+            request.setAttribute("errMessage",
+                    "Specify only one parameter to search user!");
+            return false;
+        }
 
+        return true;
+    }
+
+    private long getPageCount(OSSUserDAO userDAO) throws DBManagerException {
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        if (!lastName.isEmpty()) {
+            params.put("lastname", "%" + lastName + "%");
+        } else if (!login.isEmpty()) {
+            params.put("login", "%" + login + "%");
+        } else {
+            params.put("email", "%" + email + "%");
+        }
+        params.put("roleid", UserRole.CUSTOMER_USER.toInt());
+
+        long quantityOfRecords = userDAO.countAllWithLikeCause(params);
+        long quantityOfPages = (long) Math.ceil(quantityOfRecords * 1.0 / RECORDS_PER_PAGE);
+        return quantityOfPages;
+    }
+
+    /**
+     * Redirect to passes page.
+     *
+     * @param request
+     * @param response
+     * @param page
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void redirect(HttpServletRequest request,
+            HttpServletResponse response, String page) throws ServletException,
+            IOException {
+        RequestDispatcher view = request.getRequestDispatcher(page);
+        view.forward(request, response);
+        return;
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request
+     *            servlet request
+     * @param response
+     *            servlet response
+     * @throws ServletException
+     *             if a servlet-specific error occurs
+     * @throws IOException
+     *             if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Registers user in the system, creates a new order " + "and executes it ('New' scenario workflow).";
+    }// </editor-fold>
 }

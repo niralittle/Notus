@@ -83,8 +83,12 @@
         <th>FIRST NAME</th>
         <th>LAST NAME</th>
         <th>STATUS</th>
+        <% if (isAdmin) { %>
+        <th>BLOCK USER</th>
+        <% } else { %>
         <th>NEW PASSWORD</th>
         <th colspan="2">ACTION</th>
+        <% } %>
     </tr>
     <%
                 for (OSSUser user : users) {
@@ -111,9 +115,8 @@
             <% } else {%>
             <td><input type="submit" value="Block user" name="action"/></td>
                 <% }%>
-            <td><input type="hidden" value="<%=user.getId()%>" name="userId" /></td>
+            <input type="hidden" value="<%=user.getId()%>" name="userId" />
         </tr>
-
     </form>
     <%
             }
