@@ -64,8 +64,8 @@ public class CustomerUserServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
-        String siPageAttr = (String) request.getParameter("siPage");
-        String soPageAttr = (String) request.getParameter("soPage");
+        String siPageAttr = request.getParameter("siPage");
+        String soPageAttr = request.getParameter("soPage");
         int siPage = (siPageAttr == null) ? 1 : Integer.parseInt(siPageAttr);
         int soPage = (soPageAttr == null) ? 1 : Integer.parseInt(soPageAttr);
         int numbOfRecords = 5;
@@ -142,7 +142,7 @@ public class CustomerUserServlet extends HttpServlet {
         if ("Disconnect".equals(request.getParameter("action"))) {
             if (request.getParameter("serviceInstanceID") != null) {
                 int serviceInstanceId;
-                CustomerUserController userControl = null;
+                CustomerUserController userControl;
                 serviceInstanceId = Integer.parseInt(request
                         .getParameter("serviceInstanceID"));
                 try {
@@ -177,7 +177,7 @@ public class CustomerUserServlet extends HttpServlet {
             request.setAttribute("userID", user.getId());
             return user.getId();
         }
-        return Integer.parseInt(request.getParameter("userID").toString());
+        return Integer.parseInt(request.getParameter("userID"));
     }
 
     /*
@@ -202,7 +202,7 @@ public class CustomerUserServlet extends HttpServlet {
 
         Calendar cal = java.util.Calendar.getInstance();
         Date date = new Date(cal.getTimeInMillis());
-                so.setServiceOrderDate(date);
+        so.setServiceOrderDate(date);
 
         int orderID = (Integer) orderDAO.add(so);
         so.setId(orderID);
@@ -215,7 +215,7 @@ public class CustomerUserServlet extends HttpServlet {
      *
      * @param userID
      *      id of the user whose info we are getting
-     * @param startpage
+     * @param page
      *      number of the page (used in paging)
      * @param numbOfRecords
      *      amount of records to get (used in paging)
@@ -254,7 +254,7 @@ public class CustomerUserServlet extends HttpServlet {
      *
      * @param userID
      *      id of the user whose info we are getting
-     * @param startpage
+     * @param page
      *      number of the page (used in paging)
      * @param numbOfRecords
      *      amount of records to get (used in paging)
