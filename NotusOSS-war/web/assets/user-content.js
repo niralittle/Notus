@@ -7,7 +7,7 @@ function handleForms() {
     });
     
     function init() {
-        $('form[action="DisconnectOrderProceed"]').each(function() {
+        $('form[action="CustomerUser"]').each(function() {
             var $form = $(this);
 
             $form.on('submit', function() {
