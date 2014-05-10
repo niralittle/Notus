@@ -126,7 +126,9 @@ public class EmailSender {
             try {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(USERNAME));
-                message.setRecipients(Message.RecipientType.BCC, address);
+                Message.RecipientType recipientType = address.length == 1 ?
+                        Message.RecipientType.TO : Message.RecipientType.BCC;
+                message.setRecipients(recipientType, address);
                 message.setSubject(mail.getSubject());
                 message.setContent(mail.getMessage(), "text/html");
                 Transport.send(message);
