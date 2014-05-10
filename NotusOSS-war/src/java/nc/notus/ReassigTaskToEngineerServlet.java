@@ -70,9 +70,8 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
                 }
             }
             request.setAttribute("page", page);
-            int offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
-            
-            List<OSSUser> engineers = userDAO.getUsersByRoleID(roleID, (page-1) * RECORDS_PER_PAGE+1, offset);
+            int offset = (page-1) * RECORDS_PER_PAGE;
+            List<OSSUser> engineers = userDAO.getUsersByRoleID(roleID, offset, RECORDS_PER_PAGE);
             request.setAttribute("listOfEngineers", engineers);
             request.setAttribute("taskID", taskID);
             

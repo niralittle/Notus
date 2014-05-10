@@ -108,10 +108,10 @@ public class SubmitTask extends HttpServlet {
                 dbManager.commit();
 
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-                int startpage = 1;
+                int offset = 0;
                 int numbOfRecords = 10;
                 boolean personal = true;
-                List<Task> tasks = taskDAO.getTasksByID(startpage, numbOfRecords, userID);
+                List<Task> tasks = taskDAO.getTasksByID(offset, numbOfRecords, userID);
                 request.setAttribute("userid", userID);
                 request.setAttribute("tasks", tasks);
                 request.setAttribute("type", personal);

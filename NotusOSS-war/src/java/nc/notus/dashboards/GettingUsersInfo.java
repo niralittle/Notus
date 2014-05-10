@@ -65,18 +65,18 @@ public class GettingUsersInfo extends HttpServlet {
                 	page = 1;            	
                 }
             }
-            offset = (page - 1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
+            offset = (page - 1) * RECORDS_PER_PAGE;
 
             request.setAttribute("noOfPages", noOfPages);
             request.setAttribute("page", page);
 
             // search user for one criteria only:
             if (!lastName.isEmpty()) {
-                users = userDAO.getUsersByLastName(lastName, offset, (page - 1) * RECORDS_PER_PAGE + 1);
+                users = userDAO.getUsersByLastName(lastName, offset, RECORDS_PER_PAGE);
             } else if (!login.isEmpty()) {
-                users = userDAO.getUsersByLogin(login, offset, (page - 1) * RECORDS_PER_PAGE + 1);
+                users = userDAO.getUsersByLogin(login, offset, RECORDS_PER_PAGE);
             } else {
-                users = userDAO.getUsersByEmail(email, offset, (page - 1) * RECORDS_PER_PAGE + 1);
+                users = userDAO.getUsersByEmail(email, offset, RECORDS_PER_PAGE);
             }
 
             request.setAttribute("findedUsers", users);

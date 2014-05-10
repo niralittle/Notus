@@ -62,7 +62,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     		throw new DBManagerException("Passed parameter <login> is null or empty"
     				+ " Can't proccess the request!");
     	} 
-    	if(numberOfRecords < 1 || offset < 1) {
+    	if (numberOfRecords < 1 || offset < 0) {
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -78,11 +78,11 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "AND u.login LIKE ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setString(1, ("%" + login + "%"));
-			statement.setInt(2, numberOfRecords);
+			statement.setInt(2, offset + numberOfRecords);
 			statement.setInt(3, offset);
 			
 			ri = statement.executeQuery();
@@ -122,7 +122,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     		throw new DBManagerException("Passed parameter <lastname> is null or empty"
     				+ " Can't proccess the request!");
     	} 
-    	if(numberOfRecords < 1 || offset < 1) {
+    	if (numberOfRecords < 1 || offset < 0) {
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -138,11 +138,11 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "AND u.lastname LIKE ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setString(1, ("%" + lastname + "%"));
-			statement.setInt(2, numberOfRecords);
+			statement.setInt(2, offset + numberOfRecords);
 			statement.setInt(3, offset);
 
 			ri = statement.executeQuery();
@@ -301,7 +301,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
     		throw new DBManagerException("Passed parameter <email> is null or empty"
     				+ " Can't proccess the request!");
     	} 
-    	if(numberOfRecords < 1 || offset < 1) {
+    	if (numberOfRecords < 1 || offset < 0) {
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -317,11 +317,11 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "AND u.email LIKE ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setString(1, ("%" + email + "%"));
-			statement.setInt(2, numberOfRecords);
+			statement.setInt(2, offset + numberOfRecords);
 			statement.setInt(3, offset);
 			
 			ri = statement.executeQuery();
@@ -439,7 +439,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      */
     @Override
     public List<OSSUser> getUsersByRoleID(int roleID, int offset, int numberOfRecords) throws DBManagerException {
-    	if(numberOfRecords < 1 || offset < 1) {
+    	if (numberOfRecords < 1 || offset < 0) {
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -454,11 +454,11 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "WHERE u.roleid  = ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
-                        "WHERE rnum  >= ?";
+                        "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setInt(1, roleID);
-			statement.setInt(2, numberOfRecords);
+			statement.setInt(2, offset + numberOfRecords);
 			statement.setInt(3, offset);
 			
 			ri = statement.executeQuery();

@@ -78,9 +78,8 @@ public class TasksForReassignmentServlet extends HttpServlet {
                 }
             }
             request.setAttribute("page", page);
-            int offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
-            
-            List<Task> tasks = taskDAO.getAssignedTasks((page-1) * RECORDS_PER_PAGE+1, offset);
+            int offset = (page-1) * RECORDS_PER_PAGE;
+            List<Task> tasks = taskDAO.getAssignedTasks(offset, RECORDS_PER_PAGE);
             
             request.setAttribute("listOfTasks", tasks);
             request.getRequestDispatcher("tasksForReasignment.jsp").forward(request, response);

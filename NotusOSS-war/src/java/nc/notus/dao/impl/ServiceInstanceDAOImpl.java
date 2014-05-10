@@ -31,7 +31,7 @@ public class ServiceInstanceDAOImpl extends GenericDAOImpl<ServiceInstance>
      */
     @Override
     public List<ServiceInstance> getServiceInstancesByUserID(int userID, int offset, int numberOfRecords) throws DBManagerException {
-    	if(numberOfRecords < 1 || offset < 1) {
+    	if(numberOfRecords < 1 || offset < 0) {
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}    
@@ -49,11 +49,11 @@ public class ServiceInstanceDAOImpl extends GenericDAOImpl<ServiceInstance>
                             "AND sis.status = 'Active' " +
                             "ORDER BY so.serviceorderdate " +
                             ") a where ROWNUM <= ? ) " +
-                            "WHERE rnum  >= ?";
+                            "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setInt(1, userID);
-			statement.setInt(2, numberOfRecords);
+			statement.setInt(2, offset + numberOfRecords);
 			statement.setInt(3, offset);
 
 			ri = statement.executeQuery();
@@ -85,7 +85,7 @@ public class ServiceInstanceDAOImpl extends GenericDAOImpl<ServiceInstance>
      */
     @Override
     public List<ServiceInstance> getPendingToDisconnect(int userID, int offset, int numberOfRecords) throws DBManagerException {
-    	if(numberOfRecords < 1 || offset < 1) {
+    	if(numberOfRecords < 1 || offset < 0) {
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}    
@@ -103,11 +103,11 @@ public class ServiceInstanceDAOImpl extends GenericDAOImpl<ServiceInstance>
                             "AND sis.status = 'Pending to disconnect' " +
                             "ORDER BY so.serviceorderdate " +
                             ") a where ROWNUM <= ? ) " +
-                            "WHERE rnum  >= ?";
+                            "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setInt(1, userID);
-			statement.setInt(2, numberOfRecords);
+			statement.setInt(2, offset + numberOfRecords);
 			statement.setInt(3, offset);
 
 			ri = statement.executeQuery();

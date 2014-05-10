@@ -181,13 +181,13 @@ public class TasksAssignment extends HttpServlet {
                     page = 1;
                 }
             }
-            offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
+            offset = (page-1) * RECORDS_PER_PAGE ;
 
             request.setAttribute("noOfPages", getPageCount(taskDAO, user, personal));
             request.setAttribute("page", page);
 			
             if (!personal) {
-                tasksEng = taskDAO.getEngTasks((page-1) * RECORDS_PER_PAGE+1, offset, user.getRoleID());
+                tasksEng = taskDAO.getEngTasks(offset, RECORDS_PER_PAGE, user.getRoleID());
 //            }
 //                tasksEngFull = new ArrayList<Map<String, String>>();
 //                for (Task t: tasksEng) {
@@ -206,7 +206,7 @@ public class TasksAssignment extends HttpServlet {
 //                    tasksEngFull.add(row);
 //                }
             } else {
-                tasksEng = taskDAO.getTasksByID((page-1) * RECORDS_PER_PAGE+1, offset, user.getId());
+                tasksEng = taskDAO.getTasksByID(offset, RECORDS_PER_PAGE, user.getId());
             }
                 tasksEngFull = new ArrayList<Map<String, String>>();
                 for (Task t: tasksEng) {

@@ -36,7 +36,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	public List<Task> getEngTasks(int offset, int numberOfRecords, int roleID)
 			throws DBManagerException {
 
-		if (numberOfRecords < 1 || offset < 1) {
+		if (numberOfRecords < 1 || offset < 0) {
 			throw new DBManagerException(
 					"Illegal argument in paging - less than 1. "
 							+ " Can't proccess the request!");
@@ -51,11 +51,11 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 				+ "JOIN taskstatus ts ON t.taskstatusid = ts.id "
 				+ "WHERE t.roleid = ? " + "AND ts.status = 'Active' "
 				+ "AND t.employeeid IS NULL " + "ORDER BY t.id "
-				+ ") a where ROWNUM <= ? )" + "WHERE rnum  >= ?";
+				+ ") a where ROWNUM <= ? )" + "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setInt(1, roleID);
-			statement.setInt(2, numberOfRecords);
+			statement.setInt(2, offset + numberOfRecords);
 			statement.setInt(3, offset);
 			
 			ri = statement.executeQuery();
@@ -94,7 +94,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	public List<Task> getTasksByID(int offset, int numberOfRecords, int userID)
 			throws DBManagerException {
 		
-		if (numberOfRecords < 1 || offset < 1) {
+		if (numberOfRecords < 1 || offset < 0) {
 			throw new DBManagerException(
 					"Illegal argument in paging - less than 1. "
 							+ " Can't proccess the request!");
@@ -109,11 +109,11 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 				+ "JOIN taskstatus ts ON t.taskstatusid = ts.id "
 				+ "WHERE ts.status = 'Active' " + "AND t.employeeid = ? "
 				+ "ORDER BY t.id " + ") a where ROWNUM <= ? )"
-				+ "WHERE rnum  >= ?";
+				+ "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setInt(1, userID);
-			statement.setInt(2, numberOfRecords);
+			statement.setInt(2, offset + numberOfRecords);
 			statement.setInt(3, offset);
 			
 			ri = statement.executeQuery();
@@ -150,7 +150,7 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 	public List<Task> getAssignedTasks(int offset, int numberOfRecords)
 			throws DBManagerException {
 		
-		if (numberOfRecords < 1 || offset < 1) {
+		if (numberOfRecords < 1 || offset < 0) {
 			throw new DBManagerException(
 					"Illegal argument in paging - less than 1. "
 							+ " Can't proccess the request!");
@@ -165,10 +165,10 @@ public class TaskDAOImpl extends GenericDAOImpl<Task> implements TaskDAO {
 				+ "JOIN taskstatus ts ON t.taskstatusid = ts.id "
 				+ "WHERE ts.status = 'Active' "
 				+ "AND t.employeeid IS NOT NULL " + "ORDER BY t.id "
-				+ ") a where ROWNUM <= ? )" + "WHERE rnum  >= ?";
+				+ ") a where ROWNUM <= ? )" + "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
-			statement.setInt(1, numberOfRecords);
+			statement.setInt(1, offset + numberOfRecords);
 			statement.setInt(2, offset);
 			ri = statement.executeQuery();
 			tasks = new ArrayList<Task>();
