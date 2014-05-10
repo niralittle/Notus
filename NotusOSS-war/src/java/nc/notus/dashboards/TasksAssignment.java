@@ -176,7 +176,7 @@ public class TasksAssignment extends HttpServlet {
                 try {
                     //if page number is integer
                     page = Integer.parseInt(request.getParameter("page"));
-                } catch (Exception ex) {
+                } catch (NumberFormatException ex) {
                     //if page number is incorrect
                     page = 1;
                 }
