@@ -44,7 +44,7 @@ if(tasks != null){
 </table>
 <input type="hidden" name="taskID" id="taskID">
 </form>
-<form action="Reassign" method="get" id="pagesForm">
+<form action="Reassign" method="post" id="pagesForm">
     <% for(int i=1;i<=numberOfPages;i++){%>
     <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;"><%=i%></a>
     <% }%>

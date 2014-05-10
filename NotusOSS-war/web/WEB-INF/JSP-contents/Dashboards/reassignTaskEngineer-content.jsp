@@ -42,7 +42,7 @@ Integer numberOfPages = (Integer)request.getAttribute("pages");
 <input type="hidden" id="engineerID" name="engineerID">
 <input type="hidden" name="taskID" value="<%=request.getParameter("taskID")%>">
 </form>
-<form action="ReassigTaskToEngineerServlet" method="GET" id="pagesForm">
+<form action="ReassigTaskToEngineerServlet" method="POST" id="pagesForm">
     <% for(int i=1;i<=numberOfPages;i++){%>
     <a href="" onclick="document.getElementById('page').setAttribute('value', <%=i%>);this.parentNode.submit(); return false;">
     <%=i%>
