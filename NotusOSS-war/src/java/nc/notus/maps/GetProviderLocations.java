@@ -14,7 +14,7 @@ import nc.notus.entity.ProviderLocation;
  */
 public class GetProviderLocations {
 
-    private final int START = 1;
+    private final int OFFSET = 0;
     private final int NUMBER_OF_RECORDS = 5;
 
     /**
@@ -26,7 +26,7 @@ public class GetProviderLocations {
         List<ProviderLocation> providerList = new ArrayList<ProviderLocation>();
         try {                                         
             ProviderLocationDAO locDAO = new ProviderLocationDAOImpl(dbManager);
-            providerList = locDAO.getProviderLocations(START, NUMBER_OF_RECORDS);
+            providerList = locDAO.getProviderLocations(OFFSET, NUMBER_OF_RECORDS);
         } finally {
             dbManager.close();
         }

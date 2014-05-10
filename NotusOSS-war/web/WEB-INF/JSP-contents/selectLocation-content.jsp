@@ -36,13 +36,9 @@
             </table>
         </form>
          <%
-            String url;
-            if(request.getUserPrincipal() != null){
-                url="CustomerUser";
-            }else{
-                url="registration.jsp";
-            }%>
-         <form id='postForm' method='post' action=<%=url%>>
+           String  url = request.isUserInRole("CUSTOMER_USER") ?
+                "CustomerUser" : "registration.jsp";%>
+         <form  id="postForm" method="post" action='<%=url%>'>
             <input id="serviceLocationID" name="serviceLocationID" type='hidden'>
             <input id="serviceCatalogID" name="serviceCatalogID" type='hidden'>
          </form>

@@ -30,7 +30,7 @@ public class ProviderLocationDAOImpl extends GenericDAOImpl<ProviderLocation> im
      */
     @Override
     public List<ProviderLocation> getProviderLocations(int offset, int numberOfRecords) throws DBManagerException {
-    	if(numberOfRecords < 1 || offset < 1) {
+    	if (numberOfRecords < 1 || offset < 0) {
     		throw new DBManagerException("Illegal argument in paging - less than 1. "
     				+ " Can't proccess the request!");
     	}
@@ -41,10 +41,10 @@ public class ProviderLocationDAOImpl extends GenericDAOImpl<ProviderLocation> im
     	String query  = "SELECT * FROM ( SELECT a.*, ROWNUM rnum FROM (" +
                 "SELECT pl.id, pl.name, pl.location FROM providerlocation pl" +
                 ") a where ROWNUM <= ? )" +
-                "WHERE rnum  >= ?";
+                "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
-			statement.setInt(1, numberOfRecords);
+			statement.setInt(1, offset + numberOfRecords);
 			statement.setInt(2, offset);
 
 			ri = statement.executeQuery();

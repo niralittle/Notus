@@ -124,10 +124,6 @@
         <servlet-class>nc.notus.ReassigTaskToEngineerServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>LoggedChecking</servlet-name>
-        <servlet-class>nc.notus.LoggedChecking</servlet-class>
-        </servlet>
-    <servlet>
         <servlet-name>DisconnectOrderProceed</servlet-name>
         <servlet-class>nc.notus.dashboards.DisconnectOrderProceed</servlet-class>
     </servlet>
@@ -238,10 +234,6 @@
         <url-pattern>/ReassigTaskToEngineerServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>LoggedChecking</servlet-name>
-        <url-pattern>/LoggedChecking</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>DisconnectOrderProceed</servlet-name>
         <url-pattern>/DisconnectOrderProceed</url-pattern>
     </servlet-mapping>
@@ -269,6 +261,7 @@
         <location>/404.html</location>
     </error-page>
     <security-constraint>
+        <display-name>Admin Dash</display-name>
         <web-resource-collection>
             <web-resource-name>Report Page</web-resource-name>
             <description/>
@@ -347,6 +340,26 @@
 
 
 
+    <security-constraint>
+        <display-name>AdminSupportUserActions</display-name>
+        <web-resource-collection>
+            <web-resource-name>User password changing or user blocking</web-resource-name>
+            <description/>
+            <url-pattern>/passwordChanging.jsp</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <description/>
+            <role-name>ADMINISTRATOR</role-name>
+            <role-name>SUPPORT_ENGINEER</role-name>
+            </auth-constraint>
+        </security-constraint>
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>jdbcNotusRealm</realm-name>

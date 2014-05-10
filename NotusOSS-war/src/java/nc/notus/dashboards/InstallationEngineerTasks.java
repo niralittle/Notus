@@ -38,14 +38,14 @@ public class InstallationEngineerTasks extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
-        int startpage = 1;
+        int page = 1;
         int numbOfRecords = 10;
         DBManager dbManager = new DBManager();
         String login = "";
         int userID = 0;
         try {
             if (request.getParameter("startpage") != null) {
-                startpage = Integer.parseInt(request.getParameter("startpage"));
+                page = Integer.parseInt(request.getParameter("startpage"));
             }
             if (request.getParameter("numbOfRecords") != null) {
                 numbOfRecords = Integer.parseInt(request.getParameter("numbOfRecords"));
@@ -58,7 +58,7 @@ public class InstallationEngineerTasks extends HttpServlet {
                 userID = userDAO.getUserByLogin(login).getId();
             }
             TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-            List<Task> tasks = taskDAO.getTasksByID(startpage, numbOfRecords, userID);
+            List<Task> tasks = taskDAO.getTasksByID((page - 1) * numbOfRecords, numbOfRecords, userID);
             request.setAttribute("tasks", tasks);
             request.setAttribute("userid", userID);
             request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);

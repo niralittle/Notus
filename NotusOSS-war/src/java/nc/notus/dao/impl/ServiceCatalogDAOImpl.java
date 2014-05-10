@@ -32,7 +32,7 @@ public class ServiceCatalogDAOImpl extends GenericDAOImpl<ServiceCatalog>
     public List<ServiceCatalog> getServiceCatalogByProviderLocationID(int id, 
             int offset, int numberOfRecords) throws DBManagerException  {
        
-		if (numberOfRecords < 1 || offset < 1) {
+		if (numberOfRecords < 1 || offset < 0) {
 			throw new DBManagerException("Illegal argument in paging - less than 1. "
 							+ " Can't proccess the request!");
 		}
@@ -45,11 +45,11 @@ public class ServiceCatalogDAOImpl extends GenericDAOImpl<ServiceCatalog>
 				+ "SELECT sc.id, sc.providerlocationid, sc.servicetypeid, sc.price "
 				+ "FROM servicecatalog sc "
 				+ "WHERE sc.providerlocationid = ?) a where ROWNUM <= ? )"
-				+ "WHERE rnum  >= ?";
+				+ "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setInt(1, id);
-			statement.setInt(2, numberOfRecords);
+			statement.setInt(2, offset + numberOfRecords);
 			statement.setInt(3, offset);
 			ri = statement.executeQuery();
 			serviceCatalogs = new ArrayList<ServiceCatalog>();

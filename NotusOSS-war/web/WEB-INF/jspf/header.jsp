@@ -17,7 +17,7 @@
 
         <a href="adminDashboard.jsp">Reports</a>
         <div class="separator"></div>
-        <%  } else if (request.isUserInRole("CUSTOMER_USER") ||
+        <%  } else if (request.isUserInRole("PROVISION_ENGINEER") ||
           request.isUserInRole("SUPPORT_ENGINEER") ||
           request.isUserInRole("INSTALLATION_ENGINEER")) {%>
 
@@ -25,8 +25,10 @@
         <div class="separator"></div>
         <a href="TasksAssignment?type=personal">Personal Tasks</a>
         <div class="separator"></div>
+        <% if (request.isUserInRole("SUPPORT_ENGINEER")) {%>
         <a href="passwordChanging.jsp">View user information</a>
         <div class="separator"></div>
+        <%  }%>
         <%  }%>
 
         <%  if (request.getUserPrincipal() == null) {%>
@@ -46,7 +48,10 @@
                     </a>
                 </div>
             </li>
-            <%  if (request.isUserInRole("CUSTOMER_USER")) {%>
+            <%  if (!(request.isUserInRole("SUPPORT_ENGINEER") ||
+                    request.isUserInRole("PROVISION_ENGINEER") ||
+                    request.isUserInRole("INSTALLATION_ENGINEER") ||
+                    request.isUserInRole("ADMINISTRATOR"))) {%>
             <li><a href="selectLocation.jsp">SELECT SERVICE</a></li>
             <li><a href="serviceCatalog.jsp">OUR SERVICES</a> </li>
             <%  }%>

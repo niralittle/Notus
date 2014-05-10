@@ -6,10 +6,11 @@
 
 
 <%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <%@page import="nc.notus.entity.Task"%>
 <%@page import="nc.notus.entity.OSSUser"%>
 
-        <%List<Task> tasksEng = (List) request.getAttribute("tasksEng");
+        <%List<Map<String, String>> tasksEngFull = (List<Map<String, String>>) request.getAttribute("tasksEngFull");
         boolean personal = (Boolean) request.getAttribute("type");
         String title = "Group";
         if (personal){
@@ -32,26 +33,38 @@
                         Task Number
                     </td>
                     <td>
-                        Service Order ID
+                        Task name
                     </td>
                     <td>
-                        Task name
+                        Service Location
+                    </td>
+                    <td>
+                        Type of Service
+                    </td>
+                    <td>
+                        Price
                     </td>
                     <td>
                         Action
                     </td>
                 </tr>
-                <%for (Task task : tasksEng) {%>
+                <%for (Map<String, String> m: tasksEngFull) {%>
                 <form action="TasksAssignment" method="POST">
                     <tr>
                         <td>
-                            <input type="text" name="taskid" value="<%=task.getId()%>" readonly/>
+                            <input type="text" name="taskid" value="<%=m.get("taskID")%>" readonly/>
                         </td>
                         <td>
-                            <input type="text" name="serviceorderid" value="<%=task.getServiceOrderID()%>" readonly/>
+                            <%= m.get("taskName") %>
                         </td>
                         <td>
-                        	<input type="text"  value="<%=(task.getName() != null) ? task.getName() : ""%>" readonly/>
+                        	<%= m.get("serviceLocation") %>
+                        </td>
+                        <td>
+                        	<%= m.get("serviceDescription") %>
+                        </td>
+                        <td>
+                        	<%= m.get("price") %>
                         </td>
                         <td>
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>

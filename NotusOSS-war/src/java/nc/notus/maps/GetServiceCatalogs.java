@@ -17,7 +17,7 @@ import nc.notus.entity.ServiceType;
  */
 public class GetServiceCatalogs {
 
-    private final int START = 1;
+    private final int OFFSET = 0;
     private final int NUMBER_OF_RECORDS = 20;
     private int providerLocationID;
 
@@ -35,7 +35,7 @@ public class GetServiceCatalogs {
         try {
             ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
             serviceCatalogs =
-                    catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, START, NUMBER_OF_RECORDS);
+                    catalogDAO.getServiceCatalogByProviderLocationID(providerLocationID, OFFSET, NUMBER_OF_RECORDS);
         } finally {
             dbManager.close();
         }

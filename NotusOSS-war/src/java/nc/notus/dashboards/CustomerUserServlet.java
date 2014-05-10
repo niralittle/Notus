@@ -15,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import nc.notus.controllers.CustomerUserController;
 import nc.notus.dao.OSSUserDAO;
@@ -48,6 +47,7 @@ import nc.notus.workflow.Workflow;
 public class CustomerUserServlet extends HttpServlet {
 
     private DBManager dbManager = null;
+    private static final int NUMBER_OF_RECORDS = 10;
 
     /**
      * Puts data into request and forwards it to user.jsp
@@ -68,7 +68,6 @@ public class CustomerUserServlet extends HttpServlet {
         String soPageAttr = request.getParameter("soPage");
         int siPage = (siPageAttr == null) ? 1 : Integer.parseInt(siPageAttr);
         int soPage = (soPageAttr == null) ? 1 : Integer.parseInt(soPageAttr);
-        int numbOfRecords = 5;
 
 
         try {
@@ -78,36 +77,23 @@ public class CustomerUserServlet extends HttpServlet {
                     .log(Level.SEVERE, null, ex);
         }
 
+
         try {
             int userID = getUserID(request);
             ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
             int numbOfSORecords = orderDAO.countAllSOByStatus(userID, OrderStatus.PROCESSING.toInt());
             int numbOfSIRecords = orderDAO.countAllSOByStatus(userID, OrderStatus.COMPLETED.toInt());
-            Integer numbOfSOPages = (numbOfSORecords - 1) / numbOfRecords + 1;
-            Integer numbOfSIPages = (numbOfSIRecords - 1) / numbOfRecords + 1;
+            
+            Integer numbOfSOPages = (numbOfSORecords - 1) / NUMBER_OF_RECORDS + 1;
+            Integer numbOfSIPages = (numbOfSIRecords - 1) / NUMBER_OF_RECORDS + 1;
+            
             request.setAttribute("numbOfSOPages", numbOfSOPages);
             request.setAttribute("numbOfSIPages", numbOfSIPages);
-            HttpSession session = request.getSession();
-            //if need to create new SO
-            if (session.getAttribute("serviceLocationID") != null 
-                    && session.getAttribute("serviceCatalogID") != null) {
-                int catalogID = (Integer) session.getAttribute("serviceCatalogID");
-                String serviceLocation =
-                        (String) session.getAttribute("serviceLocationID");
-                serviceLocation = java.net.URLDecoder.decode(serviceLocation,
-                        "UTF-8"); 
-                ServiceOrder newOrder = createOrder(dbManager, userID,
-                        serviceLocation, catalogID);
-                dbManager.commit();
-                Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
-                wf.proceedOrder();
-                dbManager.commit();
-            }
 
             request.setAttribute("activeInstances",
-                    getActiveInstancesList(userID, siPage, numbOfRecords));
+                    getActiveInstancesList(userID, siPage, NUMBER_OF_RECORDS));
             request.setAttribute("processingOrders",
-                    getProcessingOrdersList(userID, soPage, numbOfRecords));
+                    getProcessingOrdersList(userID, soPage, NUMBER_OF_RECORDS));
             
             RequestDispatcher view =
                 (request.isUserInRole("SUPPORT_ENGINEER")) ? 
@@ -149,10 +135,19 @@ public class CustomerUserServlet extends HttpServlet {
                     userControl = new CustomerUserController();
                     userControl.proceedToDisconnect(serviceInstanceId);
                 } catch (DBManagerException wfExc) {
+                    Logger.getLogger(CustomerUserServlet.class.getName())
+                            .log(Level.SEVERE, null, wfExc);
                 }
             }
             response.sendRedirect("CustomerUser");
+            return;
         }
+               
+        //if need to create new SO
+        if (request.getParameter("serviceLocationID") != null
+                && request.getParameter("serviceCatalogID") != null) {
+            processOrder(request, response);
+        } 
     }
 
     /**
@@ -178,6 +173,33 @@ public class CustomerUserServlet extends HttpServlet {
             return user.getId();
         }
         return Integer.parseInt(request.getParameter("userID"));
+    }
+
+    private void processOrder(HttpServletRequest request, 
+            HttpServletResponse response) 
+            throws IOException {
+        try {
+            dbManager = new DBManager();
+            int userID = getUserID(request);
+            int catalogID =
+                    Integer.parseInt(request.getParameter("serviceCatalogID"));
+            String serviceLocation =
+                    request.getParameter("serviceLocationID");
+            serviceLocation = java.net.URLDecoder.decode(serviceLocation,
+                        "UTF-8");
+            ServiceOrder newOrder = createOrder(dbManager, userID,
+                    serviceLocation, catalogID);
+            dbManager.commit();
+            Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
+            wf.proceedOrder();
+            dbManager.commit();
+            response.sendRedirect("CustomerUser");
+        } catch (DBManagerException ex) {
+            Logger.getLogger(CustomerUserServlet.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        } finally {
+            dbManager.close();
+        }
     }
 
     /*
