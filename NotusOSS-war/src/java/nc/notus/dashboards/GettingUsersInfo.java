@@ -42,6 +42,7 @@ public class GettingUsersInfo extends HttpServlet {
 
         DBManager dbManager = null;
         OSSUserDAO userDAO = null;
+        long noOfPages;
 
         readInputtedData(request);
         if (!isValidParams(request)) {
@@ -50,15 +51,23 @@ public class GettingUsersInfo extends HttpServlet {
         try {
             dbManager = new DBManager();
             userDAO = new OSSUserDAOImpl(dbManager);
-
+            
+            noOfPages = getPageCount(userDAO); 		
             if (request.getParameter("page") == null) {
                 page = 1;
             } else {
-                page = Integer.parseInt(request.getParameter("page"));
+            	try{
+            		page = Integer.parseInt(request.getParameter("page"));
+            	} catch(NumberFormatException e) {
+            		page = 1;
+            	}
+                if (page < 1 || page > noOfPages) {
+                	page = 1;            	
+                }
             }
             offset = (page - 1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
 
-            request.setAttribute("noOfPages", getPageCount(userDAO));
+            request.setAttribute("noOfPages", noOfPages);
             request.setAttribute("page", page);
 
             // search user for one criteria only:

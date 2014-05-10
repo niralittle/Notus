@@ -53,17 +53,29 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
             int roleID = task.getRoleID();
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("roleID", roleID);
+            
             long countAll = userDAO.countAssignedByRoleID(roleID);
             Integer numberOfPages = Math.round(countAll/RECORDS_PER_PAGE);
             request.setAttribute("pages", numberOfPages);
+            
             int page = 1;
             if(request.getParameter("page") != null){
-                page = Integer.parseInt(request.getParameter("page"));
+            	try{
+            		page = Integer.parseInt(request.getParameter("page"));
+            	} catch(NumberFormatException e) {
+            		page = 1;
+            	}
+                if (page < 1 || page > numberOfPages) {
+                	page = 1;            	
+                }
             }
+            request.setAttribute("page", page);
             int offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
+            
             List<OSSUser> engineers = userDAO.getUsersByRoleID(roleID, (page-1) * RECORDS_PER_PAGE+1, offset);
             request.setAttribute("listOfEngineers", engineers);
             request.setAttribute("taskID", taskID);
+            
             request.getRequestDispatcher("reassignTaskEngineer.jsp").forward(request, response);
         } finally { 
             out.close();
@@ -99,11 +111,12 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(ReassigTaskToEngineerServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            try {
+				processRequest(request, response);
+			} catch (DBManagerException e) {
+				// redirect to page with error message
+			}
+        
     }
 
     /** 
