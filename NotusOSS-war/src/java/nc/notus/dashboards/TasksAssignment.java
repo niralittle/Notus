@@ -107,7 +107,7 @@ public class TasksAssignment extends HttpServlet {
             }
 
             //Action "Assign" tasks from group to personal or choose task from personal to execute it
-            if (request.getParameter("action") != null ){
+            if (request.getParameter("action") != null && !"Back to Tasks".equals(request.getParameter("action"))){
                 if (request.getParameter("taskid") != null){
                     taskID  = Integer.parseInt(request.getParameter("taskid"));
                     task = taskDAO.find(taskID);
