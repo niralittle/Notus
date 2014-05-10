@@ -107,7 +107,7 @@ public class TasksAssignment extends HttpServlet {
             }
 
             //Action "Assign" tasks from group to personal or choose task from personal to execute it
-            if (request.getParameter("action") != null && "Submit".equals(request.getParameter("action"))){
+            if (request.getParameter("action") != null ){
                 if (request.getParameter("taskid") != null){
                     taskID  = Integer.parseInt(request.getParameter("taskid"));
                     task = taskDAO.find(taskID);
@@ -188,23 +188,6 @@ public class TasksAssignment extends HttpServlet {
 			
             if (!personal) {
                 tasksEng = taskDAO.getEngTasks((page-1) * RECORDS_PER_PAGE+1, offset, user.getRoleID());
-//            }
-//                tasksEngFull = new ArrayList<Map<String, String>>();
-//                for (Task t: tasksEng) {
-//                    Map<String,String> row = new HashMap<String, String>();
-//                    ServiceOrderDAOImpl soDAO = new ServiceOrderDAOImpl(dbManager);
-//                    ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
-//                    ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
-//                    ServiceOrder order = soDAO.find(t.getServiceOrderID());
-//                    ServiceCatalog sc  = catalogDAO.find(order.getServiceCatalogID());
-//                    ServiceType st = typeDAO.find(sc.getServiceTypeID());
-//                    row.put("taskID", Integer.toString(t.getId()));
-//                    row.put("taskName", t.getName());
-//                    row.put("serviceLocation", order.getServiceLocation());
-//                    row.put("serviceDescription", st.getService());
-//                    row.put("price", Integer.toString(sc.getPrice()));
-//                    tasksEngFull.add(row);
-//                }
             } else {
                 tasksEng = taskDAO.getTasksByID((page-1) * RECORDS_PER_PAGE+1, offset, user.getId());
             }
@@ -224,12 +207,10 @@ public class TasksAssignment extends HttpServlet {
                     row.put("price", Integer.toString(sc.getPrice()));
                     tasksEngFull.add(row);
                 }
-            //}
             request.setAttribute("tasksEngFull", tasksEngFull);
             request.setAttribute("type", personal);
             request.setAttribute("user", user);
             request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
-            //return;
         } finally {
             dbManager.close();
         }

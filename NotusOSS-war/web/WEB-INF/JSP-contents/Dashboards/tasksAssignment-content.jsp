@@ -70,8 +70,10 @@
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
                             <% if(personal) { %>
                             <input type="hidden" name="type" value="personal"/>
-                            <% } %>
-                            <input type="submit" name="action" id="button" value="Submit" />
+                            <input type="submit" name="action" id="button" value="Execute" />
+                            <% } else { %>
+                            <input type="submit" name="action" id="button" value="Assign to myself" />
+                            <% }  %>
                         </td>
                     </tr>
                     </form>
