@@ -73,16 +73,11 @@
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
                             <% if(personal) { %>
                             <input type="hidden" name="type" value="personal"/>
-<<<<<<< HEAD
                             <input type="submit" name="action" id="button" value="Execute" />
                             <% } else { %>
                             <input type="submit" name="action" id="button" value="Assign to myself" />
                             <% }  %>
-=======
-                            <% } %>
-                            <input type="submit" value="Submit" name="action" class="btn btn-primary">
                         </form>
->>>>>>> ddd765296205ad497feb9fe5dac21040fddfae13
                         </td>
                     </tr>
                     <% } %>
