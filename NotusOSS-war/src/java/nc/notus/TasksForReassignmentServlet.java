@@ -12,10 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
@@ -29,8 +31,9 @@ import nc.notus.entity.Task;
  */
 public class TasksForReassignmentServlet extends HttpServlet {
     //private final int OFFSET = 1;
-    private final int NUMBER_OF_RECORDS = 100;
+ //   private final int NUMBER_OF_RECORDS = 100;
     private final int RECORDS_PER_PAGE  = 10;
+   
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -48,23 +51,36 @@ public class TasksForReassignmentServlet extends HttpServlet {
         try {
             String taskID = request.getParameter("taskID");
             String engineerID = request.getParameter("engineerID");
+            
             if(taskID != null && engineerID != null){
                 Task task = taskDAO.find(Integer.parseInt(taskID));
                 task.setEmployeeID(Integer.parseInt(engineerID));
                 taskDAO.update(task);
                 dbManager.commit();
             }
+            
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("taskStatusID", "1");
+           
             long countAll = taskDAO.countAllAssigned();
             int numberOfPages = (int) Math.ceil(countAll * 1.0/ RECORDS_PER_PAGE);
             request.setAttribute("pages", numberOfPages);
+            
             int page = 1;
             if(request.getParameter("page") != null){
-                page = Integer.parseInt(request.getParameter("page"));
+            	try{
+            		page = Integer.parseInt(request.getParameter("page"));
+            	} catch(NumberFormatException e) {
+            		page = 1;
+            	}
+                if (page < 1 || page > numberOfPages) {
+                	page = 1;            	
+                }
             }
-            int offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
-            List<Task> tasks = taskDAO.getAssignedTasks((page-1) * RECORDS_PER_PAGE+1, offset);
+            request.setAttribute("page", page);
+            int offset = (page-1) * RECORDS_PER_PAGE;
+            List<Task> tasks = taskDAO.getAssignedTasks(offset, RECORDS_PER_PAGE);
+            
             request.setAttribute("listOfTasks", tasks);
             request.getRequestDispatcher("tasksForReasignment.jsp").forward(request, response);
         } finally { 

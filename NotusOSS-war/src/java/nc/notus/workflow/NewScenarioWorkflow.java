@@ -223,7 +223,7 @@ public class NewScenarioWorkflow extends Workflow {
             siDAO.update(si);
 
             this.completeTask(taskID);
-            this.createTask(UserRole.PROVISION_ENGINEER, "Create curcuit");
+            this.createTask(UserRole.PROVISION_ENGINEER, "Create circuit");
             //dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);

@@ -37,7 +37,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                     "<serviceOrderStatus> is null or empty.  " +
                     "Can't proccess the request!");
         }
-        if (numberOfRecords < 1 || offset < 1) {
+        if (numberOfRecords < 1 || offset < 0) {
             throw new DBManagerException("Illegal argument in paging - " +
                     "less than 1. " + " Can't proccess the request!");
         }
@@ -56,12 +56,12 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                 "WHERE sos.status = ? " +
                 "ORDER BY so.serviceorderdate " +
                 ") a where ROWNUM <= ? ) " +
-                "WHERE rnum  >= ?";
+                "WHERE rnum  > ?";
 
         try {
             statement = dbManager.prepareStatement(query);
             statement.setString(1, serviceOrderStatus);
-            statement.setInt(2, numberOfRecords);
+            statement.setInt(2, offset + numberOfRecords);
             statement.setInt(3, offset);
 
             ri = statement.executeQuery();
@@ -102,7 +102,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
             throw new DBManagerException("Passed parameter <scenario> " +
                     "is null or empty.  Can't proccess the request!");
         }
-        if (numberOfRecords < 1 || offset < 1) {
+        if (numberOfRecords < 1 || offset < 0) {
             throw new DBManagerException("Illegal argument in paging - " +
                     "less than 1. Can't proccess the request!");
         }
@@ -121,11 +121,11 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                 "WHERE s.scenario = ? " +
                 "ORDER BY so.serviceorderdate " +
                 ") a where ROWNUM <= ? ) " +
-                "WHERE rnum  >= ?";
+                "WHERE rnum  > ?";
         try {
             statement = dbManager.prepareStatement(query);
             statement.setString(1, scenario);
-            statement.setInt(2, numberOfRecords);
+            statement.setInt(2, offset + numberOfRecords);
             statement.setInt(3, offset);
             ri = statement.executeQuery();
             serviceOrders = new ArrayList<ServiceOrder>();

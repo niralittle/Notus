@@ -40,7 +40,7 @@ public class ProvisioningEngineerController extends AbstractController {
 			if (isInternal) {
 				dbManager.commit();
 			}
-			actionStatus = "Curcuit for location, " + order.getServiceLocation() +
+			actionStatus = "Circuit for location, " + order.getServiceLocation() +
 					", successfully created!";
 		} catch (DBManagerException wfExc) {
 			if (isInternal) {
@@ -74,7 +74,7 @@ public class ProvisioningEngineerController extends AbstractController {
 			if (isInternal) {
 				dbManager.commit();
 			}
-			actionStatus = "Curcuit for location, " + order.getServiceLocation() +
+			actionStatus = "Circuit for location, " + order.getServiceLocation() +
 					", successfully removed!";
 		} catch (DBManagerException wfExc) {
 			if (isInternal) {

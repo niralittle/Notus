@@ -37,7 +37,7 @@ public class ServiceCatalogServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private final int START = 1;
+    private final int OFFSET = 0;
     private final int NUMBER_OF_RECORDS = 20;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
@@ -47,7 +47,7 @@ public class ServiceCatalogServlet extends HttpServlet {
         StringBuffer sb = new StringBuffer();
         try {
             ProviderLocationDAO locationsDAO = new ProviderLocationDAOImpl(dbManager);
-            List<ProviderLocation> locations = locationsDAO.getProviderLocations(START, NUMBER_OF_RECORDS);
+            List<ProviderLocation> locations = locationsDAO.getProviderLocations(OFFSET, NUMBER_OF_RECORDS);
             for(ProviderLocation location : locations){
                 sb.append("<location>");
                 sb.append("<name>"+location.getName()+"</name>");
@@ -55,7 +55,7 @@ public class ServiceCatalogServlet extends HttpServlet {
                 sb.append("<catalogs>");
                 ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
                 List<ServiceCatalog> serviceCatalogs =
-                        catalogDAO.getServiceCatalogByProviderLocationID(location.getId(), START, NUMBER_OF_RECORDS);
+                        catalogDAO.getServiceCatalogByProviderLocationID(location.getId(), OFFSET, NUMBER_OF_RECORDS);
                 for(ServiceCatalog serviceCatalog : serviceCatalogs){
                     sb.append("<catalog>");
                     ServiceTypeDAO type = new ServiceTypeDAOImpl(dbManager);

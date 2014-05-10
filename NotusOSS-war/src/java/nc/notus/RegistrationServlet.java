@@ -59,7 +59,6 @@ public class RegistrationServlet extends HttpServlet {
         //local variable derclaration
         boolean isParamsValid = false;
         StringBuilder errMessage = new StringBuilder();
-
         // logic actions
         isAdmin = request.isUserInRole("ADMINISTRATOR");
         readParamaters(request);
@@ -147,10 +146,12 @@ public class RegistrationServlet extends HttpServlet {
         Matcher matcher;
 
         boolean isValid = true;
-        if (!generatedCaptcha.equals(inputtedCaptcha)) {
-            isValid = false;
-            errMessage.append(" - Code don't matches. <br />");
-        }
+		if (!isAdmin) {
+			if (!generatedCaptcha.equals(inputtedCaptcha)) {
+				isValid = false;
+				errMessage.append(" - Code don't matches. <br />");
+			}
+		}
         pattern = Pattern.compile(LOGIN_PATTERN);
         matcher = pattern.matcher(login);
         if (!matcher.matches()) {

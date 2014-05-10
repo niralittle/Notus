@@ -106,7 +106,7 @@
         <table class='processingOrders table table-striped table-hover'>
             <thead>
                 <tr>
-                    <th>Scenario</th>
+                    <th>Status</th>
                     <th>Location</th>
                     <th>Type of Service</th>
                     <th>Order Date</th>
