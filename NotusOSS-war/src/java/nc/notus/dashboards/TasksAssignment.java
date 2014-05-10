@@ -165,7 +165,11 @@ public class TasksAssignment extends HttpServlet {
             if (request.getParameter("page") == null) {
                 page = 1;
             } else {
-                page = Integer.parseInt(request.getParameter("page"));
+                try {
+                    page = Integer.parseInt(request.getParameter("page"));
+                } catch (Exception ex) {
+                    page = 1;
+                }
             }
             offset = (page-1) * RECORDS_PER_PAGE + RECORDS_PER_PAGE;
 
