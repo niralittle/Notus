@@ -20,11 +20,13 @@ import nc.notus.controllers.CustomerUserController;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.ScenarioDAO;
 import nc.notus.dao.ServiceCatalogDAO;
+import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.ServiceTypeDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.ScenarioDAOImpl;
 import nc.notus.dao.impl.ServiceCatalogDAOImpl;
+import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dbmanager.DBManager;
@@ -32,8 +34,10 @@ import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Scenario;
 import nc.notus.entity.ServiceCatalog;
+import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.ServiceType;
+import nc.notus.states.InstanceStatus;
 import nc.notus.states.OrderStatus;
 import nc.notus.states.WorkflowScenario;
 import nc.notus.workflow.NewScenarioWorkflow;
@@ -258,15 +262,19 @@ public class CustomerUserServlet extends HttpServlet {
                            (numbOfRecords * (page - 1)), numbOfRecords);
         for (ServiceOrder o: completeOrders) {
             Map<String,String> row = new HashMap<String, String>();
-            int catalogID = o.getServiceCatalogID();
-            ServiceCatalog sc = catalogDAO.find(catalogID);
-            ServiceType st = typeDAO.find(sc.getServiceTypeID());
-            row.put("serviceLocation", o.getServiceLocation());
-            row.put("serviceDescription", st.getService());
-            row.put("orderDate", o.getServiceOrderDate().toString());
-            row.put("price", Integer.toString(sc.getPrice()));
-            row.put("instanceID", Integer.toString(o.getServiceInstanceID()));
-            activeInstances.add(row);
+            ServiceInstanceDAO instanceDAO = new ServiceInstanceDAOImpl(dbManager);
+            ServiceInstance instance = instanceDAO.find(o.getServiceInstanceID());
+            if (instance.getServiceInstanceStatusID() == InstanceStatus.ACTIVE.toInt()) {
+                int catalogID = o.getServiceCatalogID();
+                ServiceCatalog sc = catalogDAO.find(catalogID);
+                ServiceType st = typeDAO.find(sc.getServiceTypeID());
+                row.put("serviceLocation", o.getServiceLocation());
+                row.put("serviceDescription", st.getService());
+                row.put("orderDate", o.getServiceOrderDate().toString());
+                row.put("price", Integer.toString(sc.getPrice()));
+                row.put("instanceID", Integer.toString(o.getServiceInstanceID()));
+                activeInstances.add(row);
+            }
         } 
         return activeInstances;
     }
