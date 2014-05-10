@@ -57,7 +57,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @throws DBManagerException 
      */
     @Override
-    public List<OSSUser> getUsersByLogin(String login,  int numberOfRecords, int offset) throws DBManagerException {
+    public List<OSSUser> getUsersByLogin(String login, int offset, int numberOfRecords) throws DBManagerException {
     	if (login == null || login.isEmpty()) {
     		throw new DBManagerException("Passed parameter <login> is null or empty"
     				+ " Can't proccess the request!");
@@ -117,7 +117,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      */
 
     @Override
-    public List<OSSUser> getUsersByLastName(String lastname,  int numberOfRecords, int offset) throws DBManagerException {
+    public List<OSSUser> getUsersByLastName(String lastname, int offset, int numberOfRecords) throws DBManagerException {
     	if (lastname == null || lastname.isEmpty()) {
     		throw new DBManagerException("Passed parameter <lastname> is null or empty"
     				+ " Can't proccess the request!");
@@ -296,7 +296,7 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
      * @return list of users with similar email
      * @throws DBManagerException 
      */
-    public List<OSSUser> getUsersByEmail(String email,  int numberOfRecords, int offset) throws DBManagerException {
+    public List<OSSUser> getUsersByEmail(String email, int offset, int numberOfRecords) throws DBManagerException {
     	if (email == null || email.isEmpty()) {
     		throw new DBManagerException("Passed parameter <email> is null or empty"
     				+ " Can't proccess the request!");
