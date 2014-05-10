@@ -24,6 +24,8 @@
    if (request.getParameter("soPage") != null) {
        currentSOPage = Integer.parseInt((String) request.getParameter("soPage"));
    }
+   String userIDparam =  request.getParameter("userID") != null
+           ? "&userID=" + request.getParameter("userID") : "";
 
    int numbOfSIPages = (Integer) request.getAttribute("numbOfSIPages");
    int numbOfSOPages = (Integer) request.getAttribute("numbOfSOPages");
@@ -76,7 +78,7 @@
 <ul class="pagination">
 <%  if (numbOfSIPages > 1) {
         String buttonTemplate = "<li><a href='CustomerUser?siPage="
-                    + "%d&soPage="+ currentSOPage + "'>%d</a></li>";
+                    + "%d&soPage="+ currentSOPage + userIDparam +"'>%d</a></li>";
 
         for (int i = 1; i < currentSIPage; i++) {
             out.println(String.format(buttonTemplate, i, i));
@@ -125,7 +127,7 @@
 <ul class="pagination">
 <%  if (numbOfSOPages > 1) {
         String buttonTemplate = "<li><a href='CustomerUser?siPage="
-                    + currentSIPage +"&soPage=%d'>%d</a></li>";
+                    + currentSIPage + userIDparam + "&soPage=%d'>%d</a></li>";
 
         for (int i = 1; i < currentSOPage; i++) {
             out.println(String.format(buttonTemplate, i, i));
