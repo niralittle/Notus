@@ -6,6 +6,7 @@
 package nc.notus.dashboards;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,15 +23,19 @@ import nc.notus.dao.CableDAO;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.PortDAO;
 import nc.notus.dao.ScenarioDAO;
+import nc.notus.dao.ServiceCatalogDAO;
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceOrderDAO;
+import nc.notus.dao.ServiceTypeDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.CableDAOImpl;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dao.impl.PortDAOImpl;
 import nc.notus.dao.impl.ScenarioDAOImpl;
+import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
+import nc.notus.dao.impl.ServiceTypeDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
@@ -38,8 +43,10 @@ import nc.notus.entity.Cable;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.Port;
 import nc.notus.entity.Scenario;
+import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceInstance;
 import nc.notus.entity.ServiceOrder;
+import nc.notus.entity.ServiceType;
 import nc.notus.entity.Task;
 import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
@@ -74,6 +81,7 @@ public class TasksAssignment extends HttpServlet {
         TaskDAO taskDAO = null;
         int taskID;
         List<Task> tasksEng;
+        List<Map<String, String>> tasksEngFull;
         Cable cable = null;
         Port port = null;
         boolean personal = false;
@@ -90,7 +98,7 @@ public class TasksAssignment extends HttpServlet {
                 return;
             }
 
-            if (request.getParameter("type") != null && request.getParameter("type").equals("personal")){
+            if (request.getParameter("type") != null && "personal".equals(request.getParameter("type"))){
                 personal = true;
             }
 
@@ -180,14 +188,48 @@ public class TasksAssignment extends HttpServlet {
 			
             if (!personal) {
                 tasksEng = taskDAO.getEngTasks((page-1) * RECORDS_PER_PAGE+1, offset, user.getRoleID());
+//            }
+//                tasksEngFull = new ArrayList<Map<String, String>>();
+//                for (Task t: tasksEng) {
+//                    Map<String,String> row = new HashMap<String, String>();
+//                    ServiceOrderDAOImpl soDAO = new ServiceOrderDAOImpl(dbManager);
+//                    ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
+//                    ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
+//                    ServiceOrder order = soDAO.find(t.getServiceOrderID());
+//                    ServiceCatalog sc  = catalogDAO.find(order.getServiceCatalogID());
+//                    ServiceType st = typeDAO.find(sc.getServiceTypeID());
+//                    row.put("taskID", Integer.toString(t.getId()));
+//                    row.put("taskName", t.getName());
+//                    row.put("serviceLocation", order.getServiceLocation());
+//                    row.put("serviceDescription", st.getService());
+//                    row.put("price", Integer.toString(sc.getPrice()));
+//                    tasksEngFull.add(row);
+//                }
             } else {
                 tasksEng = taskDAO.getTasksByID((page-1) * RECORDS_PER_PAGE+1, offset, user.getId());
             }
-            request.setAttribute("tasksEng", tasksEng);
+                tasksEngFull = new ArrayList<Map<String, String>>();
+                for (Task t: tasksEng) {
+                    Map<String,String> row = new HashMap<String, String>();
+                    ServiceOrderDAOImpl soDAO = new ServiceOrderDAOImpl(dbManager);
+                    ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
+                    ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
+                    ServiceOrder order = soDAO.find(t.getServiceOrderID());
+                    ServiceCatalog sc  = catalogDAO.find(order.getServiceCatalogID());
+                    ServiceType st = typeDAO.find(sc.getServiceTypeID());
+                    row.put("taskID", Integer.toString(t.getId()));
+                    row.put("taskName", t.getName());
+                    row.put("serviceLocation", order.getServiceLocation());
+                    row.put("serviceDescription", st.getService());
+                    row.put("price", Integer.toString(sc.getPrice()));
+                    tasksEngFull.add(row);
+                }
+            //}
+            request.setAttribute("tasksEngFull", tasksEngFull);
             request.setAttribute("type", personal);
             request.setAttribute("user", user);
             request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
-            return;
+            //return;
         } finally {
             dbManager.close();
         }
