@@ -26,60 +26,63 @@
         
         
         
-        <table border="1" id="table">
-            <tbody>
+        <table class='table table-striped table-hover'>
+            <thead>
                 <tr>
-                    <td>
+                    <th>
                         Task Number
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         Task name
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         Service Location
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         Type of Service
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         Price
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         Action
-                    </td>
+                    </th>
                 </tr>
+            </thead>
+            <tbody>
                 <%for (Map<String, String> m: tasksEngFull) {%>
-                <form action="TasksAssignment" method="POST">
                     <tr>
                         <td>
-                            <input type="text" name="taskid" value="<%=m.get("taskID")%>" readonly/>
+                            <%=m.get("taskID")%>
                         </td>
                         <td>
                             <%= m.get("taskName") %>
                         </td>
                         <td>
-                        	<%= m.get("serviceLocation") %>
+                            <%= m.get("serviceLocation") %>
                         </td>
                         <td>
-                        	<%= m.get("serviceDescription") %>
+                            <%= m.get("serviceDescription") %>
                         </td>
                         <td>
-                        	<%= m.get("price") %>
+                            <%= m.get("price") %>
                         </td>
                         <td>
+                        <form action="TasksAssignment" method="POST">
+                            <input type="hidden" name="taskid" value="<%=m.get("taskID")%>" />
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
                             <% if(personal) { %>
                             <input type="hidden" name="type" value="personal"/>
                             <% } %>
-                            <input type="submit" name="action" id="button" value="Submit" />
+                            <input type="submit" value="Submit" name="action" class="btn btn-primary">
+                        </form>
                         </td>
                     </tr>
-                    </form>
                     <% } %>
                 </tbody>
             </table>
-            
-<div id="pagination">
+
+<div style="text-align: center;"><ul class="pagination" style="margin: 0 0">
         <%
 			if (request.getAttribute("noOfPages") != null && request.getAttribute("page") != null) {
 			long noOfPages = (Long) request.getAttribute("noOfPages");
@@ -92,25 +95,17 @@
 			} else {
 				url = "TasksAssignment?";
 			}
-			boolean isPrevious = false;
-			if(currentPage > 1) {
-                            isPrevious = true;
 	%>
-	<a style="font-size: 14pt;"  href="<%=url%>page=<%=(currentPage-1)%>">Previous</a>
+	<li<%=currentPage > 1 ? "" : " class=\"disabled\""%>>
+        <a href="<%=currentPage > 1 ? url + "page=" + (currentPage-1) : "#"%>">&laquo;</a></li>
 	<%
-	}
 			boolean previousPageIsEllipsis = false;
-			
+
 			for (long i = 1; i <= noOfPages; i++) {
 				if (i == currentPage) {
-					if(!isPrevious) {
-					%>
-					<label style="font-size: 14pt;">Previous</label>
-					<%
-					}
 			%>
+             <li class="active"><a href="#">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;</a></li>
 
-			<label id="pagination_label" style="font-size: 12pt;">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;</label>
 			<%
 		} else {
 		if( i == 1
@@ -124,32 +119,27 @@
 		        {
 		         previousPageIsEllipsis = false;
 	%>
-	<a  href="<%=url%>page=<%=i%>">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;</a>
+	<li><a  href="<%=url%>page=<%=i%>">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;</a></li>
 	<%
 		} else {
 									if (previousPageIsEllipsis) {
 										//an ellipsis was already added. Do not add it again. Do nothing.
 										continue;
 									} else { %>
-										<label style="font-size: 12pt;">&nbsp;&nbsp;...&nbsp;&nbsp;</label>
+										<li><a href="#">&nbsp;&nbsp;...&nbsp;&nbsp;</a></li>
 									<%
 										previousPageIsEllipsis = true;
 									}
 								}
 							}
 						}
-					if(currentPage != noOfPages) {
 				%>
-			<a style="font-size: 14pt;"  href="<%=url%>page=<%=(currentPage+1)%>">Next</a>
+    <li<%=currentPage < noOfPages ? "" : " class=\"disabled\""%>>
+        <a href="<%=currentPage < noOfPages ? url + "page=" + (currentPage+1) : "#"%>">&raquo;</a></li>
 			<%
-			} else {
-			%>
-			<label style="font-size: 14pt;">&nbsp;&nbsp;Next&nbsp;&nbsp;</label>
-			<%
-			}
-				
-					
+
+
 					}
 				}
 	%>
-</div>
+</ul></div>
