@@ -59,7 +59,6 @@ public class RegistrationServlet extends HttpServlet {
         //local variable derclaration
         boolean isParamsValid = false;
         StringBuilder errMessage = new StringBuilder();
-
         // logic actions
         isAdmin = request.isUserInRole("ADMINISTRATOR");
         readParamaters(request);
