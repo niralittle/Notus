@@ -198,6 +198,7 @@ public class NewScenarioWorkflow extends Workflow {
      * @param taskID taskID ID of task for installation engineer
      * @param cableID ID of Cable to plug
      * @param portID ID of Port to plug Cable to
+     * @throws DBManagerException
      */
     public void plugCableToPort(int taskID, int cableID, int portID) throws DBManagerException {
         try {

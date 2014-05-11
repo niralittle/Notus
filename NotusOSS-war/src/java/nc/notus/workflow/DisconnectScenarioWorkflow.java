@@ -52,6 +52,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
      * This method proceeds Order by creating tasks for corresponding user
      * groups which take part in Order execution. Order should have status
      * "Entering" and workflow scenario "Disconnect"
+     * @throws DBManagerException
      */
     @Override
     public void proceedOrder() throws DBManagerException {
@@ -84,6 +85,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
      * @param cableID ID of Cable to unplug
      * @param portID ID of Port to unplug Cable from
      * @param serviceInstanceID
+     * @throws DBManagerException
      */
     public void unplugCableFromPort(int taskID, int cableID, int portID,
             int serviceInstanceID) throws DBManagerException {
@@ -119,6 +121,13 @@ public class DisconnectScenarioWorkflow extends Workflow {
         }
     }
 
+    /**
+     * This method removes Circuit from given Service Instance.
+     * Then method changes status of Service Instance to "Disconnected".
+     * Then sends disconnect e-mail.
+     * @param taskID taskID ID of task for provisioning engineer
+     * @throws DBManagerException
+     */
     public void removeCurcuitFromSI(int taskID) throws DBManagerException {
         try {
             if (!isTaskValid(taskID, UserRole.PROVISION_ENGINEER.toInt())) {

@@ -35,10 +35,19 @@ import nc.notus.states.UserRole;
  * @author Igor Litvinenko
  */
 public abstract class Workflow {
-
-    protected ServiceOrder order; // Service Order for which workflow was created
+    /**
+     * Service Order for which workflow was created
+     */
+    protected ServiceOrder order;
+    /**
+     * DBManager
+     */
     protected DBManager dbManager;
-
+    /**
+     * Construtor of workflow
+     * @param order Service Order for which workflow was created
+     * @param dbManager
+     */
     public Workflow(ServiceOrder order, DBManager dbManager) {
         this.order = order;
         this.dbManager = dbManager;
@@ -47,6 +56,7 @@ public abstract class Workflow {
     /**
      * This method proceeds Order by creating tasks for
      * corresponding user groups which take part in Order execution
+     * @throws DBManagerException
      */
     public abstract void proceedOrder() throws DBManagerException;
 
@@ -55,7 +65,7 @@ public abstract class Workflow {
      * responsible for task execution
      * @param taskID ID of task to assign user to
      * @param userID ID of user to assign
-     * @throws WorkflowException if task is not valid
+     * @throws DBManagerException
      */
     public void assignTask(int taskID, int userID) throws DBManagerException {
         try {
@@ -86,6 +96,8 @@ public abstract class Workflow {
      * Method is <code>protected</code> because it can only be invoked in
      * Workflow methods.
      * @param userRole identifies user group to create task for
+     * @param name task name
+     * @throws DBManagerException
      */
     protected void createTask(UserRole userRole, String name) throws DBManagerException {
         TaskDAOImpl taskDAO = new TaskDAOImpl(dbManager);
@@ -105,6 +117,7 @@ public abstract class Workflow {
      * Method is <code>protected</code> because it can only be invoked in
      * Workflow methods.
      * @param taskID ID of task
+     * @throws DBManagerException
      */
     protected void completeTask(int taskID) throws DBManagerException {
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
@@ -116,6 +129,11 @@ public abstract class Workflow {
         taskDAO.update(task);
     }
 
+    /**
+     * This method gets status of given Service Order
+     * @throws DBManagerException
+     * @return status status of given Service Order
+     */
     protected String getOrderStatus() throws DBManagerException {
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
         int statusID = order.getServiceOrderStatusID();
@@ -123,6 +141,11 @@ public abstract class Workflow {
         return status.getStatus();
     }
 
+    /**
+     * This method gets scenario of given Service Order
+     * @throws DBManagerException
+     * @return scenario scenario of given Service Order
+     */
     protected String getOrderScenario() throws DBManagerException {
         ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
         int scenarioID = order.getScenarioID();
@@ -130,6 +153,11 @@ public abstract class Workflow {
         return scenario.getScenario();
     }
 
+    /**
+     * This method changes status of Service Instance
+     * @param status new status of Service Instance
+     * @throws DBManagerException
+     */
     protected void changeServiceInstanceStatus(InstanceStatus status) throws DBManagerException {
         ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
         ServiceInstanceStatusDAO sisDAO = new ServiceInstanceStatusDAOImpl(dbManager);
@@ -140,6 +168,11 @@ public abstract class Workflow {
         siDAO.update(si);
     }
 
+    /**
+     * This method changes status of Service Order
+     * @param status new status of Service Order
+     * @throws DBManagerException
+     */
     protected void changeOrderStatus(OrderStatus status) throws DBManagerException {
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
@@ -156,6 +189,7 @@ public abstract class Workflow {
      * @param userRoleID ID of User Role the Task was created for
      * @return <code>true</code> if Task is valid for execution and
      * <code>false</code> otherwise
+     * @throws DBManagerException
      */
     protected boolean isTaskValid(int taskID, int userRoleID) throws DBManagerException {
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
