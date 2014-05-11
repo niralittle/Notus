@@ -286,7 +286,8 @@ public class CustomerUserServlet extends HttpServlet {
                 int catalogID = o.getServiceCatalogID();
                 ServiceCatalog sc = catalogDAO.find(catalogID);
                 ServiceType st = typeDAO.find(sc.getServiceTypeID());
-                
+
+                row.put("orderID", Integer.toString(o.getId()));
                 row.put("serviceLocation", o.getServiceLocation());
                 row.put("serviceDescription", st.getService());
                 row.put("orderDate", o.getServiceOrderDate().toString());
@@ -332,7 +333,7 @@ public class CustomerUserServlet extends HttpServlet {
             ServiceCatalog sc = catalogDAO.find(catalogID);
             ServiceType st = typeDAO.find(sc.getServiceTypeID());
             Scenario s = scenarioDAO.find(o.getScenarioID());
-            
+            row.put("orderID", Integer.toString(o.getId()));
             row.put("scenario", s.getScenario());
             row.put("serviceLocation", o.getServiceLocation());
             row.put("serviceDescription", st.getService());

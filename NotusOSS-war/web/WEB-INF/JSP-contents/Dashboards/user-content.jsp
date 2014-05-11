@@ -46,6 +46,7 @@
         <table class='activeInstances table table-striped table-hover'>
             <thead>
                <tr>
+                    <th>Order ID</th>
                     <th>Location</th>
                     <th>Type of Service</th>
                     <th>Since</th>
@@ -59,6 +60,7 @@
             <tbody>
     <% for (Map<String, String> m: activeInstances) { %>
             <tr>
+                <td><%= m.get("orderID") %></td>
                 <td><%= m.get("serviceLocation") %></td>
                 <td><%= m.get("serviceDescription") %></td>
                 <td><%= m.get("orderDate") %></td>
@@ -118,6 +120,7 @@
     <table class='processingOrders table table-striped table-hover'>
         <thead>
             <tr>
+                <th>Order ID</th>
                 <th>Order type</th>
                 <th>Location</th>
                 <th>Type of Service</th>
@@ -127,6 +130,7 @@
         <tbody>
  <% for (Map<String, String> m: processingOrders) { %>
         <tr>
+            <td><%= m.get("orderID") %></td>
             <td><%= m.get("scenario") %></td>
             <td><%= m.get("serviceLocation") %></td>
             <td><%= m.get("serviceDescription") %></td>
