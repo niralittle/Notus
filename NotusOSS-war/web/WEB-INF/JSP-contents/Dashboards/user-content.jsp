@@ -76,7 +76,9 @@
     <%  } /*end of 'for' statement*/ %>
             </tbody>
         </table>
-<div style="text-align: center;"><ul class="pagination">
+
+<div style="text-align: center;">
+    <ul class="pagination">
 <%  if (numbOfSIPages > 1) {
         String buttonTemplate = "<li><a href='CustomerUser?siPage="
                     + "%d&soPage="+ currentSOPage + userIDparam +"'>%s</a></li>";
@@ -87,9 +89,10 @@
         }
         for (int i = 1; i < currentSIPage; i++) {
             out.println(String.format(buttonTemplate, i, i));
-        }
-%><li class ="active"><a href="#"><span><%=currentSIPage%></span></a></li> <%
-        for (int i = currentSIPage + 1; i <= numbOfSIPages; i++) {
+        } %>
+
+        <li class ="active"><a href="#"><span><%=currentSIPage%></span></a></li>
+        <% for (int i = currentSIPage + 1; i <= numbOfSIPages; i++) {
             out.println(String.format(buttonTemplate, i, i));
         }
         if (currentSIPage < numbOfSIPages) {
@@ -97,9 +100,10 @@
         } else {
             out.println(String.format(disabledButtonTemplate, "&raquo;"));
         }
-    }
-%>
-</ul></div>
+    } %>
+
+    </ul>
+</div>
  <%  } /*end of 'if' statement */%>
 
 <!-- End of active instances block -->
@@ -108,31 +112,33 @@
 <%  if (processingOrders != null && !processingOrders.isEmpty()) {
         if (activeInstances != null && !activeInstances.isEmpty()) { %>
 <hr>
-<%      }%>
+     <% } %>
 
 <h3>Orders being processed:</h3>
-        <table class='processingOrders table table-striped table-hover'>
-            <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Location</th>
-                    <th>Type of Service</th>
-                    <th>Order Date</th>
-                </tr>
-            </thead>
-            <tbody>
-     <% for (Map<String, String> m: processingOrders) { %>
+    <table class='processingOrders table table-striped table-hover'>
+        <thead>
             <tr>
-                <td><%= m.get("scenario") %></td>
-                <td><%= m.get("serviceLocation") %></td>
-                <td><%= m.get("serviceDescription") %></td>
-                <td><%= m.get("orderDate") %></td> 
+                <th>Order type</th>
+                <th>Location</th>
+                <th>Type of Service</th>
+                <th>Order Date</th>
             </tr>
-    <%  } %>
-            </tbody>
-        </table>
+        </thead>
+        <tbody>
+ <% for (Map<String, String> m: processingOrders) { %>
+        <tr>
+            <td><%= m.get("scenario") %></td>
+            <td><%= m.get("serviceLocation") %></td>
+            <td><%= m.get("serviceDescription") %></td>
+            <td><%= m.get("orderDate") %></td>
+        </tr>
+<%  } %>
+        </tbody>
+    </table>
 <!-- End of rocessing orders block -->
-<div style="text-align: center;"><ul class="pagination">
+
+<div style="text-align: center;">
+    <ul class="pagination">
 <%  if (numbOfSOPages > 1) {
         String buttonTemplate = "<li><a href='CustomerUser?siPage="
                     + currentSIPage + userIDparam + "&soPage=%d'>%s</a></li>";
@@ -144,9 +150,9 @@
 
         for (int i = 1; i < currentSOPage; i++) {
             out.println(String.format(buttonTemplate, i, i));
-        }
-%><li class ="active"><a href="#"><span><%=currentSOPage%></span></a></li> <%
-        for (int i = currentSOPage + 1; i <= numbOfSOPages; i++) {
+        } %>
+        <li class ="active"><a href="#"><span><%=currentSOPage%></span></a></li>
+<% for (int i = currentSOPage + 1; i <= numbOfSOPages; i++) {
             out.println(String.format(buttonTemplate, i, i));
         }
         if (currentSOPage < numbOfSOPages) {
@@ -154,7 +160,7 @@
         } else {
             out.println(String.format(disabledButtonTemplate, "&raquo;"));
         }
-    }
-%>
-</ul></div>
+    } %>
+    </ul>
+</div>
  <%  } %>

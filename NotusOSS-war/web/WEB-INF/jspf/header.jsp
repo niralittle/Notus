@@ -3,10 +3,10 @@
         && !request.getRequestURL().toString().contains("login.jsp")){%>
     <form method="POST" action="Auth" class="navbar-form navbar-right" role="form">
         <div class="form-group">
-            <input required="required" type="text" name="j_username"  placeholder="Login" class="form-control">
+            <input required type="text" name="j_username"  placeholder="Login" class="form-control">
         </div>
         <div class="form-group">
-            <input required="required" type="password" name="j_password" placeholder="Password" class="form-control">
+            <input required type="password" name="j_password" placeholder="Password" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary" value="Login">Login</button>
     </form>
@@ -50,24 +50,24 @@
     </div>
 
     <div id="pages_list">
-                <div id="home">
-                    <div style="width: 200px;float:left;margin-top: -30px;">
-                        <a href="index.jsp">
-                            <h1>NOTUS</h1>
-                        </a>
-                    </div>
-                </div>
+        <div id="home">
+            <div style="width: 200px;float:left;margin-top: -30px;">
+                <a href="index.jsp">
+                    <h1>NOTUS</h1>
+                </a>
+            </div>
+        </div>
+        <div style="text-align: right; margin-top: 50px; height: 36px">
+            <ul>
 
-        <ul>
-            <div style="text-align: right; margin-top: 50px; height: 36px">
-            <%  if (!(request.isUserInRole("SUPPORT_ENGINEER") ||
-                    request.isUserInRole("PROVISION_ENGINEER") ||
-                    request.isUserInRole("INSTALLATION_ENGINEER") ||
-                    request.isUserInRole("ADMINISTRATOR"))) {%>
+    <%  if (!(request.isUserInRole("SUPPORT_ENGINEER") ||
+            request.isUserInRole("PROVISION_ENGINEER") ||
+            request.isUserInRole("INSTALLATION_ENGINEER") ||
+            request.isUserInRole("ADMINISTRATOR"))) {%>
                 <li><a href="selectLocation.jsp">SELECT SERVICE</a></li>
                 <li><a href="serviceCatalog.jsp">OUR SERVICES</a> </li>
-            <%  }%>
-            </div>
-        </ul>
+    <%  }%>
+            </ul>
+       </div>
     </div>
 </div>

@@ -2,20 +2,18 @@
 <%@page import="nc.notus.entity.Task"%>
 
 
-<%--<%=request.getParameter("wfScenario") %> --%>
-
 <%
-            if (request.getAttribute("success") != null) {
-                out.print("<p>" + request.getAttribute("success") + "</p>");
-                request.setAttribute("success", null);
-            }
-            if (request.getAttribute("task") != null) {
-                Task task = (Task) request.getAttribute("task");
-                String serviceType = (String) request.getAttribute("serviceType");
+    if (request.getAttribute("success") != null) {
+        out.print("<p>" + request.getAttribute("success") + "</p>");
+        request.setAttribute("success", null);
+    }
+    if (request.getAttribute("task") != null) {
+        Task task = (Task) request.getAttribute("task");
+        String serviceType = (String) request.getAttribute("serviceType");
 %>
 
 <form action="TasksAssignment?type=personal" method="POST">
-		<input type="submit" name="action" value="Back to Tasks" />
+    <input type="submit" name="action" value="Back to Tasks" />
 </form>
 
 <form method="Post" action="Support">
@@ -37,6 +35,4 @@
     </table>
     <input type="submit" value="Send bill" name="action" />
 </form>
-<%
-            }
-%>
+ <% } %>

@@ -1,54 +1,63 @@
 <script type="text/javascript" src="assets/dashboard.js"></script>
-
-
+<script type="text/javascript" src="assets/registerValidator.js"></script>
 <div id="content">
     <ul class="tabs">
-        <li><a href="javascript:tabSwitch('tab_1', 'dash-left');" id="tab_1" class="active">Create Employee Account</a></li>
-        <li><a href="javascript:tabSwitch('tab_2', 'dash-center');" id="tab_2">Reassign task</a></li>
-        <li><a href="javascript:tabSwitch('tab_3', 'dash-right');" id="tab_3">Block Account</a></li>
-        <li><a href="javascript:tabSwitch('tab_4', 'dash-report');" id="tab_4">Reports</a></li>
+        <li><a href="javascript:tabSwitch('tab_1', 'dash-left');" 
+               id="tab_1" class="active">Create Employee Account</a></li>
+        <li><a href="javascript:tabSwitch('tab_2', 'dash-center');"
+               id="tab_2">Reassign task</a></li>
+        <li><a href="javascript:tabSwitch('tab_3', 'dash-right');"
+               id="tab_3">Block Account</a></li>
+        <li><a href="javascript:tabSwitch('tab_4', 'dash-report');"
+               id="tab_4">Reports</a></li>
     </ul>
     <div id="dash-left" class="content">
-        <div id="container-header"><span>Create Employee Account</span>        </div>  
-        <script type="text/javascript" src="assets/registerValidator.js"></script>
-        <%--      <form name="Register" method="post" onsubmit="return validate()" action="Register">--%>
+        <div id="container-header">
+            <h3>Create employee account</h3>
+        </div>
         <table border="0" cellpadding="5">
             <tr>
                 <td>Login: </td>
-                <td><input required type="text" name="login" id="login" oninput="loginValidate()" value="" />
+                <td><input required type="text" name="login" id="login"
+                           oninput="loginValidate()" value="" />
                     <div id="loginMsg"></div>
                 </td>
             </tr>
             <tr>
                 <td>Password: </td>
-                <td><input required type="password" name="password" id="pass" value="" />
+                <td><input required type="password" name="password"
+                           id="pass" value="" />
 
                     <div id="passMsg"></div>
                 </td>
             </tr>
             <tr>
                 <td>Repeat password: </td>
-                <td><input required type="password" name="password2" id="pass2" value="" />
+                <td><input required type="password" name="password2"
+                           id="pass2" value="" />
 
                     <div id="passMs2"></div>
                 </td>
             </tr>
             <tr>
                 <td>Email: </td>
-                <td><input required type="text" name="email" oninput="emailValidate()" id="email"  value="" />
+                <td><input required type="text" name="email"
+                           oninput="emailValidate()" id="email"  value="" />
                     <div id="emailMsg"></div>
                 </td>
             </tr>
 
             <tr>
                 <td>First name: </td>
-                <td><input required type="text" name="firstName" id="fname" value="" />
+                <td><input required type="text" name="firstName"
+                           id="fname" value="" />
                     <div id="fnameMsg"></div>
                 </td>
             </tr>
             <tr>
                 <td>Last name: </td>
-                <td><input required type="text" name="lastName" id="lname" value="" />
+                <td><input required type="text" name="lastName"
+                           id="lname" value="" />
                     <div id="lnameMsg"></div>
                 </td>
             </tr>
@@ -92,7 +101,8 @@
                     Reason:
                 </td>
                 <td>
-                    <input type="text" name="reasonBlock" value="" style="width:200px;height:200px;" />
+                    <input type="text" name="reasonBlock" value=""
+                           style="width:200px;height:200px;" />
                 </td>
             </tr>
             <tr>
@@ -104,7 +114,7 @@
     </div>
 
     <div id="dash-right" class="content">
-        <div id="container-header"><span>Block Account</span>          </div>
+        <div id="container-header"><span>Block Account</span></div>
         <table>
             <tr>
                 <td>
@@ -119,7 +129,8 @@
                     Reason:
                 </td>
                 <td>
-                    <input type="text" name="reasonBlock" value="" style="width:200px;height:200px;" />
+                    <input type="text" name="reasonBlock" value=""
+                           style="width:200px;height:200px;" />
                 </td>
             </tr>
             <tr>
@@ -149,12 +160,14 @@
                     displayDay();
                 </SCRIPT>
             </SELECT>
-            <SELECT id="monthFrom" onChange="checkYear(this.form.dayFrom, this.form.monthFrom, this.form.yearFrom)">
+            <SELECT id="monthFrom" onChange="checkYear(this.form.dayFrom,
+                this.form.monthFrom, this.form.yearFrom)">
                 <SCRIPT LANGUAGE="JavaScript">
                     displayMonth();
                 </SCRIPT>
             </SELECT>
-            <SELECT id="yearFrom" onChange="checkYear(this.form.dayFrom, this.form.monthFrom, this.form.yearFrom)">
+            <SELECT id="yearFrom" onChange="checkYear(this.form.dayFrom,
+                this.form.monthFrom, this.form.yearFrom)">
                 <SCRIPT LANGUAGE="JavaScript">
                     displayYearVariable(5, 5);
                 </SCRIPT>
@@ -165,29 +178,20 @@
                     displayDay();
                 </SCRIPT>
             </SELECT>
-            <SELECT id="monthTo" onChange="checkYear(this.form.dayTo, this.form.monthTo, this.form.yearTo)">
+            <SELECT id="monthTo" onChange="checkYear(this.form.dayTo,
+                this.form.monthTo, this.form.yearTo)">
                 <SCRIPT LANGUAGE="JavaScript">
                     displayMonth();
                 </SCRIPT>
             </SELECT>
-            <SELECT id="yearTo" onChange="checkYear(this.form.dayTo, this.form.monthTo, this.form.yearTo)">
+            <SELECT id="yearTo" onChange="checkYear(this.form.dayTo,
+                this.form.monthTo, this.form.yearTo)">
                 <SCRIPT LANGUAGE="JavaScript">
                     displayYearVariable(5, 5);
                 </SCRIPT>
             </SELECT>
             <hr>
-            <%--<input type="radio" name="report" value="4" onselect="enableMonthSelect()"/>
-            <select id="month">
-                <script>
-                    displayMonth();
-                </script>
-            </select>
-            <select id="year">
-                <script>
-                    displayYearVariable(5, 5);
-                </script>
-            </select>
-            Profitability by month<br>--%>
+             
             <input type="submit" value="View report" id="viewreport"/><br>
             <input type="hidden" name="fromdate" id="fromdate"/>
             <input type="hidden" name="todate" id="todate"/>

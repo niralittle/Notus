@@ -9,7 +9,6 @@
         <filter-name>InstallationEngeenier</filter-name>
         <filter-class>nc.notus.filters.InstallationEngeenierFilter</filter-class>
     </filter>
-
     <filter-mapping>
         <filter-name>Registration</filter-name>
         <url-pattern>/registration.jsp</url-pattern>
@@ -135,6 +134,7 @@
         <servlet-name>GroupMailSend</servlet-name>
         <servlet-class>nc.notus.GroupMailSend</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
@@ -183,7 +183,6 @@
         <servlet-name>ProvisionEngineerTasksServlet</servlet-name>
         <url-pattern>/ProvisionEngineerTasksServlet</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>CreateCircuit</servlet-name>
         <url-pattern>/CreateCircuit</url-pattern>
@@ -200,7 +199,6 @@
         <servlet-name>GetingUsersInfo</servlet-name>
         <url-pattern>/GetUsers</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>ReportPagingServlet</servlet-name>
         <url-pattern>/reportPaging</url-pattern>
@@ -249,11 +247,11 @@
         <servlet-name>GroupMailSend</servlet-name>
         <url-pattern>/GroupMailSend</url-pattern>
     </servlet-mapping>
+
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout> 30 </session-timeout>
     </session-config>
+
     <welcome-file-list>
         <welcome-file>Welcome</welcome-file>
     </welcome-file-list>
@@ -262,12 +260,11 @@
         <error-code>403</error-code>
         <location>/deniedResource.jsp</location>
     </error-page>
-
-
     <error-page>
         <error-code>404</error-code>
         <location>/404.html</location>
     </error-page>
+
     <security-constraint>
         <display-name>Admin Dash</display-name>
         <web-resource-collection>
@@ -346,8 +343,6 @@
             </auth-constraint>
     </security-constraint>
 
-
-
     <security-constraint>
         <display-name>AdminSupportUserActions</display-name>
         <web-resource-collection>
@@ -380,6 +375,7 @@
             <role-name>SUPPORT_ENGINEER</role-name>
             </auth-constraint>
         </security-constraint>
+
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>jdbcNotusRealm</realm-name>
@@ -403,8 +399,6 @@
     </security-role>
     <security-role>
         <role-name>CUSTOMER_USER</role-name>
-    </security-role>
-
-
+    </security-role> 
 
 </web-app>

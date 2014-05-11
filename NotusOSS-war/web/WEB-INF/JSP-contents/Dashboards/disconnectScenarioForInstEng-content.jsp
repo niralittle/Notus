@@ -4,7 +4,6 @@
     Author     : Vladimir Ermolenko
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="nc.notus.entity.Port"%>
 <%@page import="nc.notus.entity.Cable"%>
 <%@page import="nc.notus.entity.ServiceOrder"%>
@@ -31,29 +30,17 @@
         price = (Integer) request.getAttribute("price");
     }
 
-    if (request.getAttribute("taskid") != null) {
-        taskID = (Integer) request.getAttribute("taskid");
-    } else {
-       taskID = 0;
-    }
+    taskID = request.getAttribute("taskid") != null ?
+        (Integer) request.getAttribute("taskid") : 0;
 
-   if (request.getAttribute("port") != null) {
-        port = (Port) request.getAttribute("port");
-   } else {
-       port = new Port();
-   }
+    port = (request.getAttribute("port") != null) ?
+       (Port) request.getAttribute("port") : new Port();
 
-   if (request.getAttribute("cable") != null) {
-        cable = (Cable) request.getAttribute("cable");
-   } else {
-       cable = new Cable();
-   }
+    cable = (request.getAttribute("cable") != null) ?
+       (Cable) request.getAttribute("cable") : new Cable();
 
-   if (request.getAttribute("soid") != null) {
-        soID = (Integer) request.getAttribute("soid");
-    } else {
-       soID = 0;
-    }
+    soID = (request.getAttribute("soid") != null) ?
+        (Integer) request.getAttribute("soid") : 0;
 %>
    <form action="TasksAssignment?type=personal" method="POST">
        <input type="submit" name="action" value="Back to Tasks" />
@@ -61,60 +48,27 @@
    <table border="1" id="table">
     <tbody>
         <tr>
-            <th>
-                Task ID
-            </th>
-            <th>
-                Service Order ID
-            </th>
-            <th>
-                Task name
-            </th>
-            <th>
-                Service Location
-            </th>
-            <th>
-                Type of Service
-            </th>
-            <th>
-                Price
-            </th>
-            <th>
-                Cable
-            </th>
-            <th>
-                Port
-            </th>
+            <th> Task ID </th>
+            <th> Service Order ID </th>
+            <th> Task name </th>
+            <th> Service Location </th>
+            <th> Type of Service </th>
+            <th> Price </th>
+            <th> Cable </th>
+            <th> Port </th>
         </tr>
         <tr>
-            <td>
-                <%=taskID%>
-            </td>
-            <td>
-                <%=soID%>
-            </td>
-            <td>
-                <%=taskName%>
-            </td>
-            <td>
-                <%=serviceLocation%>
-            </td>
-            <td>
-                <%=serviceDescription%>
-            </td>
-            <td>
-                <%=price%>
-            </td>
-            <td>
-                <%=cable.getCable()%>
-            </td>
-            <td>
-                <%=port.getPortNumber()%>
-            </td>
+            <td> <%=taskID%> </td>
+            <td> <%=soID%> </td>
+            <td> <%=taskName%> </td>
+            <td> <%=serviceLocation%> </td>
+            <td> <%=serviceDescription%> </td>
+            <td> <%=price%> </td>
+            <td> <%=cable.getCable()%> </td>
+            <td> <%=port.getPortNumber()%> </td>
         </tr>
     </tbody>
-   </table>
-
+</table>
 
 <form action="DisconnectScenarioForInstEng" method="POST">
     <input type="hidden" name="taskid" value="<%=taskID%>"/>

@@ -4,6 +4,4 @@
     Author     : Andrey Ilin
 --%>
 
-
-
 <h2><%=request.getSession().getAttribute("ErrorString")%></h2>

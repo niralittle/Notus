@@ -14,26 +14,23 @@
 
 </head>
 <body>
-    <div id="page_content">
+        <div id="page_content">
         <div id="wrapper">
             <div id="main">
-            	<jsp:include page="/WEB-INF/jspf/dashboardsHeader.jsp"/> 
-                 <h2 id="Dash-title"><%=request.getParameter("title")%></h2>
+                <jsp:include page="/WEB-INF/jspf/dashboardsHeader.jsp"/>
+                <h2 id="title"><%=request.getParameter("title")%></h2>
                 <div id="main-content">
-                   
                     <% pageContext.include("/WEB-INF/JSP-contents/" + request.getParameter("content") + ".jsp");%>
                 </div>
-            </div>
+            </div> 
+            <footer>
+                <div style="margin-top: 30px; padding: 20px;
+                height:auto; background-image: url(assets/cables.gif);
+                background-position: top right;  background-repeat: no-repeat;">
+                    <h5> Communications fast as wind.<br>
+                    &copy; Notus 2014</h5>
+                </div>
+            </footer>
         </div>
     </div>
-
-</body>
-<footer>
-    <div style="margin-top: 30px; padding: 20px;
-    height:auto; background-image: url(assets/cables.gif);
-    background-position: top right;  background-repeat: no-repeat;">
-        <h5> Communications fast as wind.<br>
-        &copy; Notus 2014</h5>
-    </div>
-</footer>
 </html>
