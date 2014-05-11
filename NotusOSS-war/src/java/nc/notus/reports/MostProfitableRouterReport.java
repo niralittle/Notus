@@ -110,4 +110,13 @@ public class MostProfitableRouterReport extends AbstractReport {
             dbManager.close();
         }
     }
+
+    /**
+     * Gets number of records per page
+     * @return number of records per page
+     */
+    @Override
+    public int getRecordsNumberPerPage() {
+        return 1; //no pagination
+    }
 }

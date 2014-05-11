@@ -1,4 +1,5 @@
 package nc.notus.reports;
+
 import java.io.Writer;
 import nc.notus.dbmanager.DBManagerException;
 
@@ -36,6 +37,12 @@ public abstract class AbstractReport {
      */
     public abstract void getFileData(Writer writer, String fileSeparator)
             throws DBManagerException;
+
+    /**
+     * Gets number of records per page
+     * @return number of records per page
+     */
+    public abstract int getRecordsNumberPerPage();
 
     /*
      * This methods should be overridden if report has paging functionality.

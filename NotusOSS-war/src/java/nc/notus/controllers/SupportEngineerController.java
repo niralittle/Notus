@@ -6,6 +6,9 @@ import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
+import nc.notus.email.Email;
+import nc.notus.email.EmailSender;
+import nc.notus.email.NewPasswordEmail;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
@@ -84,7 +87,12 @@ public class SupportEngineerController extends AbstractController {
             if (isInternal) {
                 dbManager.commit();
             }
-            actionStatus = "Password for user, " + user.getLogin() + " successfully changed!";
+            actionStatus = "Password for user " + user.getLogin() + " was successfully changed!";
+
+            Email mail = new NewPasswordEmail(user.getFirstName(), newPassword);
+            EmailSender emailSender = new EmailSender();
+            emailSender.sendEmail(userID, mail);
+
         } catch (DBManagerException ex) {
             if (isInternal) {
                 dbManager.rollback();

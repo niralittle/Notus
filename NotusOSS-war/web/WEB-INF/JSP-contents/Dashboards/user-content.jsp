@@ -29,6 +29,7 @@
 
    int numbOfSIPages = (Integer) request.getAttribute("numbOfSIPages");
    int numbOfSOPages = (Integer) request.getAttribute("numbOfSOPages");
+   String disabledButtonTemplate = "<li class=\"disabled\"><a href=\"#\">%s</a></li>";
 %>
 
 <!-- End of Paging -->
@@ -75,11 +76,15 @@
     <%  } /*end of 'for' statement*/ %>
             </tbody>
         </table>
-<ul class="pagination">
+<div style="text-align: center;"><ul class="pagination">
 <%  if (numbOfSIPages > 1) {
         String buttonTemplate = "<li><a href='CustomerUser?siPage="
-                    + "%d&soPage="+ currentSOPage + userIDparam +"'>%d</a></li>";
-
+                    + "%d&soPage="+ currentSOPage + userIDparam +"'>%s</a></li>";
+        if (currentSIPage > 1) {
+            out.println(String.format(buttonTemplate, currentSIPage - 1, "&laquo;"));
+        } else {
+            out.println(String.format(disabledButtonTemplate, "&laquo;"));
+        }
         for (int i = 1; i < currentSIPage; i++) {
             out.println(String.format(buttonTemplate, i, i));
         }
@@ -87,20 +92,23 @@
         for (int i = currentSIPage + 1; i <= numbOfSIPages; i++) {
             out.println(String.format(buttonTemplate, i, i));
         }
+        if (currentSIPage < numbOfSIPages) {
+            out.println(String.format(buttonTemplate, currentSIPage + 1, "&raquo;"));
+        } else {
+            out.println(String.format(disabledButtonTemplate, "&raquo;"));
+        }
     }
 %>
-</ul>
+</ul></div>
  <%  } /*end of 'if' statement */%>
 
 <!-- End of active instances block -->
 <!-- Processing orders block -->
 
-<%  if (processingOrders != null && !processingOrders.isEmpty()) { %>
-<hr style="height: 5px;
-  background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
-  background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
-  background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));
-  background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.1), rgba(0,0,0,0));">
+<%  if (processingOrders != null && !processingOrders.isEmpty()) {
+        if (activeInstances != null && !activeInstances.isEmpty()) { %>
+<hr>
+<%      }%>
 
 <h2>Orders being processed:</h2>
         <table class='processingOrders table table-striped table-hover'>
@@ -124,10 +132,15 @@
             </tbody>
         </table>
 <!-- End of rocessing orders block -->
-<ul class="pagination">
+<div style="text-align: center;"><ul class="pagination">
 <%  if (numbOfSOPages > 1) {
         String buttonTemplate = "<li><a href='CustomerUser?siPage="
-                    + currentSIPage + userIDparam + "&soPage=%d'>%d</a></li>";
+                    + currentSIPage + userIDparam + "&soPage=%d'>%s</a></li>";
+        if (currentSOPage > 1) {
+            out.println(String.format(buttonTemplate, currentSOPage - 1, "&laquo;"));
+        } else {
+            out.println(String.format(disabledButtonTemplate, "&laquo;"));
+        }
 
         for (int i = 1; i < currentSOPage; i++) {
             out.println(String.format(buttonTemplate, i, i));
@@ -136,7 +149,12 @@
         for (int i = currentSOPage + 1; i <= numbOfSOPages; i++) {
             out.println(String.format(buttonTemplate, i, i));
         }
+        if (currentSOPage < numbOfSOPages) {
+            out.println(String.format(buttonTemplate, currentSOPage + 1, "&raquo;"));
+        } else {
+            out.println(String.format(disabledButtonTemplate, "&raquo;"));
+        }
     }
 %>
-</ul>
+</ul></div>
  <%  } %>

@@ -114,16 +114,9 @@ public class DisconnectScenarioWorkflow extends Workflow {
             Date date = new Date(cal.getTimeInMillis());
             si.setServiceInstanceDate(date);
             siDAO.update(si);
-            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
-            OSSUser user = userDAO.find(order.getUserID());
+
             completeTask(taskID);
             changeOrderStatus(OrderStatus.COMPLETED);
-
-            Email disconnectMail = new DisconnectSuccessfulEmail(
-                    user.getFirstName(), portID, order.getServiceLocation());
-            EmailSender emailSender = new EmailSender();
-            emailSender.sendEmail(user.getId(), disconnectMail);
-            
             // dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
@@ -143,6 +136,9 @@ public class DisconnectScenarioWorkflow extends Workflow {
             ServiceInstance si = siDAO.find(order.getServiceInstanceID());
 
             int circuitID = si.getCircuitID();
+            int portID = si.getPortID();
+            OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
+            OSSUser user = userDAO.find(order.getUserID());
             si.setCircuitID(null);
             siDAO.update(si);
 
@@ -152,6 +148,11 @@ public class DisconnectScenarioWorkflow extends Workflow {
             completeTask(taskID);
             createTask(UserRole.INSTALLATION_ENGINEER, "Remove port and cable from SI");
             // dbManager.commit();
+
+            Email disconnectMail = new DisconnectSuccessfulEmail(
+                    user.getFirstName(), portID, order.getServiceLocation());
+            EmailSender emailSender = new EmailSender();
+            emailSender.sendEmail(user.getId(), disconnectMail);
 
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);

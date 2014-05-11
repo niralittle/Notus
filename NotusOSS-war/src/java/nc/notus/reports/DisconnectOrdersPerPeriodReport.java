@@ -206,4 +206,13 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
             dbManager.close();
         }
     }
+
+    /**
+     * Gets number of records per page
+     * @return number of records per page
+     */
+    @Override
+    public int getRecordsNumberPerPage() {
+        return this.recordsPerPage;
+    }
 }

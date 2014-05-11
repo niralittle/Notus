@@ -52,9 +52,15 @@ public class ReportViewServlet extends HttpServlet {
                     break;
 
             }
-            if (currentReport.getReportData().length > 1) {
+            int length = currentReport.getReportData().length;
+            int recNum = currentReport.getRecordsNumberPerPage();
+            if (length > 1) {   //because there is a header always
                 ReportGenerator reportGenerator = new ReportGenerator(currentReport);
 
+                if ((length <= recNum + 1) &&
+                        !currentReport.checkNextPage()) {
+                    request.setAttribute("paging", "style=display:none");
+                }
                 request.getSession().setAttribute("table", reportGenerator.getReportHTML());
                 String objectId = UUID.randomUUID().toString();
                 request.setAttribute("prevpage", "disabled");
@@ -63,6 +69,7 @@ public class ReportViewServlet extends HttpServlet {
                 } else {
                     request.setAttribute("nextpage", "disabled");
                 }
+
                 request.getSession().setAttribute("objectId", objectId);
                 request.getSession().setAttribute(objectId, (Object) reportGenerator);
                 request.getSession().setAttribute("title", currentReport.getReportName());
