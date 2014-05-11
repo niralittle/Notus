@@ -6,7 +6,7 @@
 
 <script type="text/javascript" src="assets/registerValidator.js"></script>
 
-<form id="login" method="post" action="CustomerUser">
+<form method="post" action="CustomerUser">
     <input id="serviceLocationID" name="serviceLocationID" type='hidden' 
            value ="<%=request.getParameter("serviceLocationID") == null
                    ? "" : request.getParameter("serviceLocationID")%>">
