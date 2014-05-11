@@ -9,7 +9,7 @@
     <meta name="description" content="Notus Internet provider"/>
     <title><%=request.getParameter("title")%> | Notus</title>
     <script src="assets/registerValidator.js"></script>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/bootstrap.min.css">
     <link rel="stylesheet" href="assets/main.css">
 
 </head>
