@@ -79,7 +79,13 @@
     <input type="hidden" name="serviceorderid" value="<%=soID%>"/>
     <input type="hidden" name="cable" value="<%=cable%>"/>
     <input type="hidden" name="port" value="<%=port%>"/>
+    <% if(port == null) { %>
     <input type="submit" name="action" value="Create Router" />
+    <% }  %>
+    <% if(cable.getCable() == null) { %>
     <input type="submit" name="action" value="Create Cable" />
+    <% }  %>
+    <% if(cable.getCable() != null && port != null) { %>
     <input type="submit" name="action" value="Connect Cable to Port" />
+    <% }  %>
 </form>

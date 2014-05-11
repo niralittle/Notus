@@ -79,34 +79,35 @@ public class SubmitTask extends HttpServlet {
 
             //Action "Create Router"
             if (request.getParameter("action") != null && "Create Router".equals(request.getParameter("action"))){
-                if (port == null){
-                	nwf.createRouter(taskID, portQuantity);
+                try {
+                    nwf.createRouter(taskID, portQuantity);
                     dbManager.commit();
+                } catch (DBManagerException ex) {
+                    dbManager.rollback();
                 }
+                port = portDAO.getFreePort();
             }
 
             //Action "Create Cable"
             if (request.getParameter("action") != null && "Create Cable".equals(request.getParameter("action"))){
-                if (cable == null){
+                try {
                     nwf.createCable(taskID, "UTP Cable");
                     dbManager.commit();
-                    cable = cableDAO.getFreeCable();
+                    
+                } catch (DBManagerException ex) {
+                    dbManager.rollback();
                 }
+                cable = cableDAO.getFreeCable();
             }
 
             //Action "Connect Cable to Port" and redirect to personal tasks page
             if (request.getParameter("action") != null && "Connect Cable to Port".equals(request.getParameter("action"))){
-                if (cable == null){
-                    nwf.createCable(taskID, "UTP Cable");
-                    cable = cableDAO.getFreeCable();
+                 try {
+                     nwf.plugCableToPort(taskID, cable.getId(), port.getId());
+                     dbManager.commit();
+                 } catch (DBManagerException ex) {
+                    dbManager.rollback();
                 }
-                if (port == null){
-                nwf.createRouter(taskID, portQuantity);
-                port = portDAO.getFreePort();
-                }
-                nwf.plugCableToPort(taskID, cable.getId(), port.getId());
-                dbManager.commit();
-
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int offset = 0;
                 int numbOfRecords = 10;
