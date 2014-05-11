@@ -56,6 +56,7 @@ public interface ReportDAO {
     public List<RoutersUtilizationCapacity> getRoutersUtilizationCapacityData(
             int offset, int numberOfRecords) throws DBManagerException;
 
+    // CODE REVIEW: how can be calculated profit in different months using current month only?
     /**
      * Method that returns list of data about profitability by current month
      * @return list of data about profitability by current month

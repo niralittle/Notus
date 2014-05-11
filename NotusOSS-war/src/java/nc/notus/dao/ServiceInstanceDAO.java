@@ -20,6 +20,7 @@ public interface ServiceInstanceDAO extends GenericDAO<ServiceInstance> {
     public List<ServiceInstance> getServiceInstancesByUserID(int userID, 
             int offset, int numberOfRecords) throws DBManagerException;
 
+    //CODE REVIEW: need to be documented
 	List<ServiceInstance> getPendingToDisconnect(int userID, int offset,
 			int numberOfRecords) throws DBManagerException;
 }

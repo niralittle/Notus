@@ -211,6 +211,12 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
         return serviceOrders;
     }
 
+    /**
+     * Method that returns number of ServiceOrders with specified status and userID
+     * @param userID
+     * @param serviceOrderStatus for searching
+     * @return number of ServiceOrders with specified status and userID
+     */
     @Override
     public int countAllSOByStatus(int userID, int serviceOrderStatus) throws DBManagerException {
         Statement statement = null;
