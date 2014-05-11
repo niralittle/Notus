@@ -3,12 +3,16 @@ package nc.notus.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 import nc.notus.dbmanager.ResultIterator;
 import nc.notus.dbmanager.Statement;
 import nc.notus.entity.ServiceOrder;
+import nc.notus.states.InstanceStatus;
+import nc.notus.states.OrderStatus;
 
 /**
  * Implementation of DAO for entity ServiceOrder
@@ -278,5 +282,41 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
             statement.close();
         }
         return serviceOrder;
+    }
+
+    /**
+     * Method that returns number of ServiceInstances with status Active
+     * that user with specified ID has
+     * @param userID
+     * @return number of active instances of this user
+     */
+    public int countUsersActiveSIs(int userID) { 
+        Statement statement = null;
+        ResultIterator ri;
+
+        String query = "SELECT COUNT(*) total " +
+                       "FROM (SELECT so.serviceinstanceid " +
+                              "FROM serviceorder so, serviceinstance si" +
+                              "WHERE so.userid = ? " +
+                              "AND so.serviceorderstatusid = ?" +
+                              "AND so.serviceinstanceid = si.id" +
+                              "AND si.serviceinstancestatusid = ?);";
+        try {
+            statement = dbManager.prepareStatement(query);
+            statement.setInt(1, userID);
+            statement.setInt(2, OrderStatus.COMPLETED.toInt());
+            statement.setInt(3, InstanceStatus.ACTIVE.toInt());
+            ri = statement.executeQuery();
+            if (ri.next()) {
+                return ri.getInt("total");
+            }
+        } catch (DBManagerException ex) {
+            Logger.getLogger(ServiceOrderDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+        }
+        return 0;
     }
 }

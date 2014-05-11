@@ -40,6 +40,14 @@ public interface ServiceOrderDAO extends GenericDAO<ServiceOrder> {
     int countAllSOByStatus(int userID, int serviceOrderStatus) throws DBManagerException;
 
     /**
+     * Method that returns number of ServiceInstances with status Active
+     * that user with specified ID has
+     * @param userID
+     * @return number of active instances of this user
+     */
+    int countUsersActiveSIs(int userID);
+
+    /**
      * Method that returns list of ServiceOrders with selected scenario
      * @param scenario for searching
      * @param offset - offset from start position in paging
