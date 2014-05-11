@@ -25,6 +25,6 @@ public class GroupMessageEmail extends Email {
         super("/groupMessage.html");
         this.text = t;
         subject = topic + " -- NOTUS Internet Provider";
-        message = String.format(message, text);
+        message = String.format(message, topic, text);
     }
 }

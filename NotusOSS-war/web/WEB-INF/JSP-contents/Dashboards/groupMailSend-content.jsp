@@ -12,36 +12,27 @@
 
 %>
 <form action="GroupMailSend" method="post" action="GroupMailSend">
-    <table border="1" id="table">
-        <tbody>
-            <tr>
-                <td>Group</td>
-                <td><select name="selectRole">
-                        <%for (UserRole roles : UserRole.values()) {%>
-                        <%if (!UserRole.ADMINISTRATOR.equals(roles)) {%>
-                        <option><%=roles%></option>
-                        <%}%>
-                        <%}%>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Subject</td>
-                <td><input type="text" name="subject" value="" /></td>
-            </tr>
-            <tr>
-                <td>Message</td>
-                <td><input type="text" name="text" value="" /></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-
-                    <input type="submit" value="Send" />
-
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="form-group" style="width: 250px">
+        <label for="select">Group</label>
+        <select class="form-control" id="select" name="selectRole"><%
+            for (UserRole roles : UserRole.values()) {
+                if (!UserRole.ADMINISTRATOR.equals(roles)) {%>
+                <option><%=roles%></option><%
+                }
+            }%>
+        </select>
+    </div>
+    <div class="form-group" style="width: 250px">
+        <label for="subject">Subject</label>
+        <input type="text" name="subject" class="form-control" id="subject">
+    </div>
+    <div class="form-group" style="width: 400px">
+        <label for="text">Message</label>
+        <textarea name="text" rows="4" cols="3" class="form-control" id="text"
+                  style="width: 450px;">
+        </textarea>
+    </div>
+    <button type="submit" class="btn btn-info">Send</button>
 </form>
 
 
