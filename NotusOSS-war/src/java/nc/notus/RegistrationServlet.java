@@ -57,9 +57,12 @@ public class RegistrationServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
         //local variable derclaration
-        boolean isParamsValid = false;
+        boolean isParamsValid;
         StringBuilder errMessage = new StringBuilder();
-        // logic actions
+        if("Refresh".equals(request.getParameter("action"))) {
+            redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
+        } else {
+        // logic actions 
         isAdmin = request.isUserInRole("ADMINISTRATOR");
         readParamaters(request);
 
@@ -69,34 +72,40 @@ public class RegistrationServlet extends HttpServlet {
             redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
         }
         if (!isParamsValid && !isAdmin) {
+        	request.setAttribute("errMessage", errMessage);
             redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
-        }
+		} else {
 
-        try {
-            // if user is ADMINISTRATOR we only register new engineer
-            // NC.KYIV.2014.WIND.REG.3
-            if (isAdmin) {
-                AdministratorController adminControl = null;
-                adminControl = new AdministratorController();
-                adminControl.registerNewEngineer(login, password, email,
-                        firstName, lastName, groupID);
-                request.setAttribute("success", adminControl.getActionStatus());
-                redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
-            } else {
-                CustomerUserController userControl = null;
-                userControl = new CustomerUserController();
-                userControl.register(login, password, email, firstName,
-                        lastName, catalogID, serviceLocation);
-                redirectTo(CONGRATULATION_PAGE, request, response);
-            }
-        } catch (DBManagerException exc) {
-            request.setAttribute("errMessage", exc.getMessage());
-            if (isAdmin) {
-                redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
-            }
-            redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
-        }
-    }
+			try {
+				// if user is ADMINISTRATOR we only register new engineer
+				// NC.KYIV.2014.WIND.REG.3
+				if (isAdmin) {
+					AdministratorController adminControl = null;
+					adminControl = new AdministratorController();
+					adminControl.registerNewEngineer(login, password, email,
+							firstName, lastName, groupID);
+					request.setAttribute("success",
+							adminControl.getActionStatus());
+					redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
+				} else {
+					CustomerUserController userControl = null;
+					userControl = new CustomerUserController();
+					userControl.register(login, password, email, firstName,
+							lastName, catalogID, serviceLocation);
+					redirectTo(CONGRATULATION_PAGE, request, response);
+				}
+			} catch (DBManagerException exc) {
+				request.setAttribute("errMessage", exc.getMessage());
+				if (isAdmin) {
+					redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
+				}
+				redirectTo(CUSTOMER_REGISTRATION_PAGE, request, response);
+			}
+		}
+	 }
+   }
+        
+    
 
     /**
      * Read inputted params from request scope.
@@ -147,11 +156,12 @@ public class RegistrationServlet extends HttpServlet {
 
         boolean isValid = true;
 		if (!isAdmin) {
-			if (!generatedCaptcha.equals(inputtedCaptcha)) {
+			if (!generatedCaptcha.equalsIgnoreCase(inputtedCaptcha)) {
 				isValid = false;
 				errMessage.append(" - Code don't matches. <br />");
 			}
 		}
+		
         pattern = Pattern.compile(LOGIN_PATTERN);
         matcher = pattern.matcher(login);
         if (!matcher.matches()) {

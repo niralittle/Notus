@@ -120,7 +120,10 @@
             </td>
         </tr>
         <tr>
-            <td><img style="margin-left: 75px" src="Captcha"></td>
+            <td>
+            	<img style="margin-left: 75px" src="Captcha">
+            	<button name="action" value="Refresh" type="submit" class="btn btn-success" style="margin-top: 25px">Refresh</button>         	
+            </td>
         </tr>
     </table>
 

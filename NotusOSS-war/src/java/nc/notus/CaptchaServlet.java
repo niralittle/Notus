@@ -22,18 +22,21 @@ import javax.servlet.http.*;
  */
 public class CaptchaServlet extends HttpServlet {
 
+	private static final String ABC = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private static Random rnd = new Random();
+	
+	private final static int WIDTH = 140;
+	private final static int HEIGHT = 50;
+	private final static int CAPTCHA_LENGHT = 6;
+	
 	protected void processRequest(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		int width = 140;
-		int height = 50;
+		char[] test = generateCaptcha(CAPTCHA_LENGHT);
+		String captcha = String.copyValueOf(test);
+		request.getSession().setAttribute("captcha", captcha);
 
-		char data[][] = { { 'z', 'e', 't', 'c', 'o', 'd', 'e' },
-				{ 'l', 'i', 'n', 'u', 'x' },
-				{ 'f', 'r', 'e', 'e', 'b', 's', 'd' },
-				{ 'u', 'b', 'u', 'n', 't', 'u' }, { 'j', 'e', 'e' } };
-
-		BufferedImage bufferedImage = new BufferedImage(width, height,
+		BufferedImage bufferedImage = new BufferedImage(WIDTH, HEIGHT,
 				BufferedImage.TYPE_INT_RGB);
 
 		Graphics2D g2d = bufferedImage.createGraphics();
@@ -49,27 +52,22 @@ public class CaptchaServlet extends HttpServlet {
 
 		g2d.setRenderingHints(rh);
 
-		GradientPaint gp = new GradientPaint(0, 0, Color.white, 0, height / 2,
+		GradientPaint gp = new GradientPaint(0, 0, Color.white, 0, HEIGHT / 2,
 				Color.blue, true);
 
 		g2d.setPaint(gp);
-		g2d.fillRect(0, 0, width, height);
+		g2d.fillRect(0, 0, WIDTH, HEIGHT);
 
 		g2d.setColor(Color.white);
 
-		Random r = new Random();
-		int index = Math.abs(r.nextInt()) % 5;
-
-		String captcha = String.copyValueOf(data[index]);
-		request.getSession().setAttribute("captcha", captcha);
-
 		int x = 0;
 		int y = 0;
-
-		for (int i = 0; i < data[index].length; i++) {
+		Random r = new Random();
+		
+		for (int i = 0; i < test.length; i++) {
 			x += 10 + (Math.abs(r.nextInt()) % 15);
 			y = 20 + Math.abs(r.nextInt()) % 20;
-			g2d.drawChars(data[index], i, 1, x, y);
+			g2d.drawChars(test, i, 1, x, y);
 		}
 
 		g2d.dispose();
@@ -88,5 +86,13 @@ public class CaptchaServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request, response);
+	}
+	
+	private char[] generateCaptcha(int lenght) {
+		char[] rndCaptcha = new char[lenght];
+		for (int i = 0; i < lenght; i++) {
+			rndCaptcha[i] = ABC.charAt(rnd.nextInt(ABC.length()));
+		}
+		return rndCaptcha;
 	}
 }
