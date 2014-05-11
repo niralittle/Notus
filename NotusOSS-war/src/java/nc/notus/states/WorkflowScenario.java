@@ -19,10 +19,16 @@ public enum WorkflowScenario {
         this.scenarioId = scenarioId;
     }
 
+    /**
+     * Returns scenario id
+     */
     public int toInt() {
     	return scenarioId;
     }
-    
+
+    /**
+     * Returns scenario name
+     */
     @Override
     public String toString() {
         return scenario;

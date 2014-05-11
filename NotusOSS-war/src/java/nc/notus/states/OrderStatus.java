@@ -19,11 +19,15 @@ public enum OrderStatus {
         this.status = status;
         this.statusId = statusId;
     }
-
+    /**
+     * Returns order status id
+     */
     public int toInt() {
     	return statusId;
     }
-    
+    /**
+     * Returns order status name
+     */
     @Override
     public String toString() {
         return status;

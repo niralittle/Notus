@@ -14,7 +14,9 @@ public enum TaskState {
     }
 
     private final String state;
-
+    /**
+     * Returns task state
+     */
     @Override
     public String toString() {
         return state;

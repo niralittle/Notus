@@ -15,7 +15,9 @@ public enum PortState {
     PortState(int state) {
         this.state = state;
     }
-
+    /**
+     * Returns port state
+     */
     public int toInt() {
         return state;
     }
