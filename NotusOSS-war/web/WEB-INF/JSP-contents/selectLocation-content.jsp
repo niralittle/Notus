@@ -10,9 +10,9 @@
 <script type="text/javascript" src="assets/google_maps_api.js"></script>
 <script type="text/javascript" src="assets/getServices.js"></script>
 
-<h2>To make an order for a new connection, select location by placing a pin on
+<h3>To make an order for a new connection, select location by placing a pin on
         the map or typing the desired address into the textbox and choose from
-        the list of available services.</h2>
+        the list of available services.</h3>
 <div id ="map-container">
     <div id="map-canvas"></div>
 

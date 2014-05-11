@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import javax.servlet.http.HttpSession;
+
 import nc.notus.dao.CableDAO;
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.PortDAO;
@@ -258,8 +258,18 @@ public class TasksAssignment extends HttpServlet {
 			return;
 		}
 		if (roleID == UserRole.PROVISION_ENGINEER.toInt()) {
+			String serviceType = request.getParameter("serviceDescription");
+			request.setAttribute("serviceType", serviceType);
+			
 			String wfScenario = getTaskScenario(task, dbManager);
 			request.setAttribute("wfScenario", wfScenario);
+		}
+		if(roleID  == UserRole.SUPPORT_ENGINEER.toInt()){
+			String serviceType = request.getParameter("serviceDescription");
+			String price = request.getParameter("price");
+					
+			request.setAttribute("price", price);
+			request.setAttribute("serviceType", serviceType);
 		}
 		request.setAttribute("task", task);
 	}

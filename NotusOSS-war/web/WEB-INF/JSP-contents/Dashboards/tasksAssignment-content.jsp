@@ -18,9 +18,9 @@
         }
         OSSUser user = (OSSUser) request.getAttribute("user");
        %>
-        <h2>
+        <h3>
             <%=title+" "%> tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
-        </h2>
+        </h3>
         <%
         if (request.getAttribute("actionStatus") != null) { %>
         <%=request.getAttribute("actionStatus")%>
@@ -74,6 +74,8 @@
                         <form action="TasksAssignment" method="POST">
                             <input type="hidden" name="taskid" value="<%=m.get("taskID")%>" />
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
+                            <input type="hidden" name="serviceDescription" value="<%=m.get("serviceDescription")%>" />
+                            <input type="hidden" name="price" value="<%=m.get("price")%>" />
                             <% if(personal) { %>
                             <input type="hidden" name="type" value="personal"/>
                             <input type="hidden" name="taskName" value="<%=m.get("taskName")%>"/>

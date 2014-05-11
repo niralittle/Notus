@@ -11,6 +11,7 @@
             }
             if (request.getAttribute("task") != null) {
                 Task task = (Task) request.getAttribute("task");
+                String serviceType = (String) request.getAttribute("serviceType");
 %>
 
 <form action="TasksAssignment?type=personal" method="POST">
@@ -23,12 +24,15 @@
         <tr>
             <td>Task Number</td>
             <td>Service Order ID</td>
+            <td>Service type</td>
+            <td>Price</td>
         </tr>
         <tr>
             <td><input type="text" name="taskid" value="<%=task.getId()%>"
                        readonly="readonly" /></td>
             <td><input type="text" name="serviceorderid"
                        value="<%=task.getServiceOrderID()%>" readonly="readonly" /></td>
+        	<td><%=serviceType %>
         </tr>
     </table>
     <input type="submit" value="Send bill" name="action" />

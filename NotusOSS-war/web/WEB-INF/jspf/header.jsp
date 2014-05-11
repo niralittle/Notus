@@ -8,7 +8,7 @@
         <div class="form-group">
             <input required="required" type="password" name="j_password" placeholder="Password" class="form-control">
         </div>
-        <button type="submit" class="btn btn-success" value="Login">Login</button>
+        <button type="submit" class="btn btn-primary" value="Login">Login</button>
     </form>
     <%  } %>
         <div class="dashboard_links_etc" width="610px" align="right" style="height: 37px; padding: 6px; margin-right: 3px;">
@@ -19,7 +19,8 @@
         <%  } else if (request.isUserInRole("ADMINISTRATOR")) {%>
         <a href="Reassign">Reassign task</a>
         <div class="separator"></div>
-
+        <a href="groupMailSend.jsp">Send group mail</a>
+        <div class="separator"></div>
         <a href="registerEngineer.jsp">Register new engineer</a>
         <div class="separator"></div>
 
@@ -30,7 +31,7 @@
         <div class="separator"></div>
         <%  } else if (request.isUserInRole("PROVISION_ENGINEER") ||
           request.isUserInRole("SUPPORT_ENGINEER") ||
-          request.isUserInRole("INSTALLATION_ENGINEER")) {%>
+          request.isUserInRole("INSTALLATION_ENGfINEER")) {%>
 
         <a href="TasksAssignment">Group Tasks</a>
         <div class="separator"></div>
@@ -67,11 +68,6 @@
                 <li><a href="serviceCatalog.jsp">OUR SERVICES</a> </li>
             <%  }%>
             </div>
-            <!-- Don't display this links
-	            <li><a href="#">OUR TEAM</a></li>
-	            <li><a href="#">PROMOTIONS</a></li>
-	            <li><a href="#">SOCIAL</a></li>
-            -->
         </ul>
     </div>
 </div>

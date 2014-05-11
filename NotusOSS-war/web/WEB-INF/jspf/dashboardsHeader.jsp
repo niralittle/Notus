@@ -7,7 +7,8 @@
         <%  if (request.isUserInRole("ADMINISTRATOR")) {%>
         <a href="Reassign">Reassign task</a>
         <div class="separator"></div>
-
+        <a href="groupMailSend.jsp">Send group mail</a>
+        <div class="separator"></div>
         <a href="registerEngineer.jsp">Register new engineer</a>
         <div class="separator"></div>
 

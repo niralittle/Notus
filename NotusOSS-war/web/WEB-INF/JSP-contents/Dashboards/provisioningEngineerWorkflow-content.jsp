@@ -28,6 +28,8 @@
 	<%
 		if ("NEW".equalsIgnoreCase((String) request.getAttribute("wfScenario"))) {
 			Task task = (Task) request.getAttribute("task");
+			String serviceType = (String) request.getAttribute("serviceType");
+			
 			Integer taskID = task.getId();
 			Integer soID = task.getServiceOrderID();
 	%>
@@ -39,12 +41,14 @@
 				<tr>
 					<th>Task ID</th>
 					<th>Service Order ID</th>
+					<th>Service type</th>
 					<th>Circuit</th>
 				</tr>
 				<tr>
 					<td><%=taskID%></td>
 					<td><%=soID%></td>
-					<td><input type="text" name="circuit" /></td>
+					<td><%=serviceType%></td>
+					<td><input required type="text"  name="circuit"  /></td>
 				</tr>
 			</tbody>
 		</table>
