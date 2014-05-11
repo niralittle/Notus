@@ -14,7 +14,7 @@
 %>
 
 <form action="ReassigTaskToEngineerServlet" method="post" id="sendTask">
-    <table id="table">
+    <table class="table table-hover table-striped">
         <tr>
             <th>Task ID</th>
             <th>Service order address</th>
@@ -36,9 +36,9 @@
             <td><%=task.get("name")%></td>
             <td><%=task.get("surname")%></td>
             <td><%=task.get("role")%></td>
-            <td><input type="submit" id="button" value="Reassign"
-                        onclick="document.getElementById('taskID')
-                            .setAttribute('value', <%=task.get("taskID")%>)">
+            <td><button type="submit" class="btn btn-primary" onclick="document
+                    .getElementById('taskID').setAttribute('value',
+                <%=task.get("taskID")%>)">Reassign</button>
             </td>
                 <%-- <td id="send"></td> --%>
         </tr>

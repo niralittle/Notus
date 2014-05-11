@@ -89,7 +89,7 @@ if (request.getAttribute("findedUsers") != null) {
         } else {
 %>
 
-<table border="1" id="table">
+<table class="table table-striped table-hover">
     <tr>
         <th>LOGIN</th>
         <th>EMAIL</th>
@@ -99,6 +99,7 @@ if (request.getAttribute("findedUsers") != null) {
         <th>BLOCK USER</th>
 <%      } else { %>
         <th>NEW PASSWORD</th>
+        <th></th>
         <th colspan="2">ACTION</th>
 <% } %>
     </tr>
@@ -112,12 +113,12 @@ if (request.getAttribute("findedUsers") != null) {
         <td><%=user.getFirstName()%></td>
         <td><%=user.getLastName()%></td>
                 <% if (!isAdmin) { %>
-        <td><input type="text" name="newPassword" value="" />
-                <input type="submit" value="Change password" name="action" /></td>
+        <td><input class="form-control"type="text" name="newPassword" value="" />
+                </td><td><button type="submit" class="btn btn-warning" name="action">Apply</button></td>
         <td><a href="CustomerUser?userID=<%=user.getId()%>"
                 target="_blank">View information about SO and SI</a></td>
                 <% } else { %>
-        <td><input type="submit" value="Block user" name="action" /></td>
+        <td><button type="submit" class="btn btn-danger" name="action" >Block user</button></td>
             <% } %>
     </tr>
      <input type="hidden" value="<%=user.getId()%>" name="userId" />
@@ -130,7 +131,7 @@ if (request.getAttribute("findedUsers") != null) {
 </table>
 
 <div style="text-align: center;">
-    <ul class="pagination" style="margin: 0 0">
+    <ul class="pagination">
 <%  }
 if (request.getAttribute("noOfPages") != null 
 		 && request.getAttribute("page") != null) {

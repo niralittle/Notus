@@ -17,7 +17,7 @@
 <h3 align="center">You are reassigning task #<%=taskId%> for <%=role%>s</h3>
 
 <form action="Reassign" method="post">
-    <table id="table">
+    <table class="table table-hover table-striped">
         <tr>
             <th>Employee ID</th>
             <th>First Name</th>
@@ -33,9 +33,9 @@
             <td><%=engineer.getId()%></td>
             <td><%=engineer.getFirstName()%></td>
             <td><%=engineer.getLastName()%></td>
-            <td><input type="submit" id="button" value="Assign"
+            <td><button type="submit" class="btn btn-primary"
                     onclick="document.getElementById('engineerID')
-                        .setAttribute('value', <%=engineer.getId()%>)">
+                    .setAttribute('value', <%=engineer.getId()%>)">Assign</button>
             </td>
         </tr>
 <%
