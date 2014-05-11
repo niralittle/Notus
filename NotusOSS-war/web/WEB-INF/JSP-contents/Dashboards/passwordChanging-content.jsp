@@ -71,7 +71,7 @@
 		</div>
 	</div>
 
-	<input type="submit" value="Find user" />
+    <button type="submit" class="btn btn-sm btn-warning">Find user</button>
 </form>
 
 <%
@@ -150,8 +150,8 @@ if (request.getAttribute("noOfPages") != null
 		if (currentPage > 1) {
 				isPrevious = true;
 %>
-<a style="font-size: 14pt;"
-	href="GetUsers?page=<%=(currentPage - 1)%>&lastName=<%=lastName%>&login=<%=login%>&email=<%=email%>">Previous</a>
+<li><a href="GetUsers?page=<%=(currentPage - 1)%>&lastName=<%=lastName%>&login=<%=login%>&email=<%=email%>">&laquo;</a>
+</li>
 <%
 	}
 
@@ -160,12 +160,11 @@ for (long i = 1; i <= noOfPages; i++) {
 		if (i == (currentPage)) {
 			if (!isPrevious) {
 %>
-<label style="font-size: 14pt;">Previous</label>
+    <li class="disabled"><a href="#">&laquo;</a></li>
 <%
 	}
 %>
-<label style="font-size: 12pt;">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;
-</label>
+    <li class="active"><a href="#"><%=i%></a></li>
 <%
 	} else {
 		if (i == 1 || i == 2 || i == currentPage - 2
@@ -176,9 +175,9 @@ for (long i = 1; i <= noOfPages; i++) {
 					|| i == noOfPages) {
 			previousPageIsEllipsis = false;
 %>
-<a
-	href="GetUsers?page=<%=i%>&lastName=<%=lastName%>&login=<%=login%>&email=<%=email%>">&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;
-</a>
+<li><a
+	href="GetUsers?page=<%=i%>&lastName=<%=lastName%>&login=<%=login%>&email=<%=email%>"><%=i%>
+</a></li>
 <%
 	} else {
 		if (previousPageIsEllipsis) {
@@ -186,7 +185,7 @@ for (long i = 1; i <= noOfPages; i++) {
 			continue;
 		} else {
 %>
-<label style="font-size: 12pt;">&nbsp;&nbsp;...&nbsp;&nbsp;</label>
+    <li class="disabled"><a href="#">...</a></li>
 <%
 	previousPageIsEllipsis = true;
 		}
@@ -196,12 +195,12 @@ for (long i = 1; i <= noOfPages; i++) {
 
 if (currentPage != noOfPages) {
 %>
-<a style="font-size: 14pt;"
-	href="GetUsers?page=<%=(currentPage + 1)%>&lastName=<%=lastName%>&login=<%=login%>&email=<%=email%>">Next</a>
+<li><a
+	href="GetUsers?page=<%=(currentPage + 1)%>&lastName=<%=lastName%>&login=<%=login%>&email=<%=email%>">&raquo;</a></li>
 <%
 	} else {
 %>
-<label style="font-size: 14pt;">&nbsp;&nbsp;Next&nbsp;&nbsp;</label>
+    <li class="disabled"><a href="#">&raquo</a></li>
 <%
 	}
 		}
