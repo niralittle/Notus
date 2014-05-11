@@ -35,7 +35,7 @@ public class ServicesServlet extends HttpServlet {
         StringBuffer sb = new StringBuffer();
         int providerLocationID = 0;
         try {
-            if(!request.getParameter("providerLocationID").equals("undefined")){
+            if(!("undefined".equals(request.getParameter("providerLocationID")))){
                 providerLocationID = Integer.valueOf(request.getParameter("providerLocationID"));
             }
             GetServiceCatalogs gsc = new GetServiceCatalogs(providerLocationID);

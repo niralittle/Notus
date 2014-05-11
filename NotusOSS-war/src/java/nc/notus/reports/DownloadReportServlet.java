@@ -25,13 +25,13 @@ public class DownloadReportServlet extends HttpServlet {
         String reportGenId = request.getParameter("objectId");
         Object a = request.getSession().getAttribute(reportGenId.toString());
         ReportGenerator rg = (ReportGenerator) a;
-        if (request.getParameter("type").equals("xls")) {
+        if ("xls".equals(request.getParameter("type"))) {
 
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment; filename=" +
                     rg.getReportName() + ".xls");
         }
-        if (request.getParameter("type").equals("csv")) {
+        if ("csv".equals(request.getParameter("type"))) {
 
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=" +
