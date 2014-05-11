@@ -56,7 +56,7 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
             Role role = roleDAO.find(task.getRoleID());
             request.setAttribute("role", role.getRole());
             long countAll = userDAO.countAssignedByRoleID(roleID);
-            Integer numberOfPages = Math.round(countAll/RECORDS_PER_PAGE);
+            Integer numberOfPages = (int)(countAll - 1) / RECORDS_PER_PAGE + 1;
             request.setAttribute("pages", numberOfPages);
             
             int page = 1;
