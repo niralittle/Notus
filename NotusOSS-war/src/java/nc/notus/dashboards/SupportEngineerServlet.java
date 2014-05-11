@@ -67,7 +67,7 @@ public class SupportEngineerServlet extends HttpServlet {
         }
     }
 
-    private void sendBill(HttpServletRequest request) {
+    private void sendBill(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         SupportEngineerController supportControl = null;
         if (request.getParameter("taskid") != null) {
@@ -81,13 +81,14 @@ public class SupportEngineerServlet extends HttpServlet {
                         supportControl.getActionStatus());
             } catch (DBManagerException exc) {
                 request.setAttribute("errMessage", exc.getMessage());
+                redirectTo(SUPPORT_PAGE, request, response);
             }
         } else {
             request.setAttribute("success", "TaskID not passed!");
         }
     }
 
-    private void changePassword(HttpServletRequest request) {
+    private void changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         SupportEngineerController supportControl = null;
         // read necessary parameters from request scope
@@ -104,6 +105,7 @@ public class SupportEngineerServlet extends HttpServlet {
                         supportControl.getActionStatus());
             } catch (DBManagerException exc) {
                 request.setAttribute("errMessage", exc.getMessage());
+                redirectTo(CHANGE_PASSWORD_PAGE, request, response);
             }
         }
 
@@ -126,11 +128,11 @@ public class SupportEngineerServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
 
         if ("Send bill".equalsIgnoreCase(request.getParameter("action"))) {
-            sendBill(request);
+            sendBill(request, response);
             redirectTo(SUPPORT_PAGE, request, response);
 
         } else if ("Change password".equals(request.getParameter("action"))) {
-            changePassword(request);
+            changePassword(request, response);
             redirectTo(CHANGE_PASSWORD_PAGE, request, response);
 
         } else if ("Block user".equals(request.getParameter("action"))) {
