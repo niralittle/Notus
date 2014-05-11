@@ -131,6 +131,10 @@
         <servlet-name>RedirectingServlet</servlet-name>
         <servlet-class>nc.notus.filters.RedirectingServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GroupMailSend</servlet-name>
+        <servlet-class>nc.notus.GroupMailSend</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SupportEngineerServlet</servlet-name>
         <url-pattern>/Support</url-pattern>
@@ -241,6 +245,10 @@
         <servlet-name>RedirectingServlet</servlet-name>
         <url-pattern>/Welcome</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GroupMailSend</servlet-name>
+        <url-pattern>/GroupMailSend</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -346,6 +354,18 @@
             <web-resource-name>User password changing or user blocking</web-resource-name>
             <description/>
             <url-pattern>/passwordChanging.jsp</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Group Mail</web-resource-name>
+            <description/>
+            <url-pattern>/groupMailSend.jsp</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>HEAD</http-method>

@@ -19,7 +19,8 @@
         <%  } else if (request.isUserInRole("ADMINISTRATOR")) {%>
         <a href="Reassign">Reassign task</a>
         <div class="separator"></div>
-
+        <a href="groupMailSend.jsp">Send group mail</a>
+        <div class="separator"></div>
         <a href="registerEngineer.jsp">Register new engineer</a>
         <div class="separator"></div>
 
@@ -30,7 +31,7 @@
         <div class="separator"></div>
         <%  } else if (request.isUserInRole("PROVISION_ENGINEER") ||
           request.isUserInRole("SUPPORT_ENGINEER") ||
-          request.isUserInRole("INSTALLATION_ENGINEER")) {%>
+          request.isUserInRole("INSTALLATION_ENGfINEER")) {%>
 
         <a href="TasksAssignment">Group Tasks</a>
         <div class="separator"></div>
