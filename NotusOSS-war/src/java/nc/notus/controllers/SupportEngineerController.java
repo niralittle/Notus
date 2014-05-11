@@ -14,6 +14,10 @@ import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
 import nc.notus.workflow.NewScenarioWorkflow;
 
+/**
+ * Class which contains Support Engineer's actions
+ * @author Dima
+ */
 public class SupportEngineerController extends AbstractController {
 
     /**
@@ -23,6 +27,10 @@ public class SupportEngineerController extends AbstractController {
         super();
     }
 
+    /**
+     * Initializes controller with dbManager
+     * @param dbManager data base manager
+     */
     public SupportEngineerController(DBManager dbManager) {
         super(dbManager);
     }
@@ -30,12 +38,10 @@ public class SupportEngineerController extends AbstractController {
     /**
      * Send bill to customer user.
      * (Implementation note: Commit changes in the DB after updating user)
-     *
-     * @param taskID
+     * @param taskID id of task for Support Engoneer
      * @throws DBManagerException
      */
     public void sendBillToCustomer(int taskID) throws DBManagerException {
-
         NewScenarioWorkflow wf = null;
         ServiceOrderDAOImpl orderDAO = null;
         TaskDAO taskDAO = null;
@@ -61,7 +67,6 @@ public class SupportEngineerController extends AbstractController {
             if (isInternal) {
                 dbManager.rollback();
             }
-
             throw new DBManagerException("Error was occured while sending bill.", ex);
         } finally {
             if (isInternal) {
@@ -70,20 +75,24 @@ public class SupportEngineerController extends AbstractController {
         }
     }
 
+    /**
+     * Method for changing customer's password
+     * Sends "change password" e-mail
+     * @param userID customer's id
+     * @param newPassword new password
+     * @throws DBManagerException
+     */
     public void changeCustomerPassword(int userID, String newPassword) throws DBManagerException {
         OSSUserDAOImpl userDAO = null;
-
         try {
             if (isInternal) {
                 dbManager = new DBManager();
             }
             userDAO = new OSSUserDAOImpl(dbManager);
-
             // get user by id and set him new password
             OSSUser user = userDAO.find(userID);
             user.setPassword(newPassword);
             userDAO.update(user);
-
             if (isInternal) {
                 dbManager.commit();
             }
@@ -97,7 +106,6 @@ public class SupportEngineerController extends AbstractController {
             if (isInternal) {
                 dbManager.rollback();
             }
-
             throw new DBManagerException(
                     "Error was occured while changing password.", ex);
         } finally {

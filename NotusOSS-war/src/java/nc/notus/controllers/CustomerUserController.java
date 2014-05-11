@@ -28,14 +28,25 @@ import nc.notus.workflow.DisconnectScenarioWorkflow;
 import nc.notus.workflow.NewScenarioWorkflow;
 import nc.notus.workflow.Workflow;
 
+/**
+ *
+ * @author Dima
+ */
 public class CustomerUserController extends AbstractController {
 
     private static Logger logger = Logger.getLogger(DBManager.class.getName());
 
+    /**
+     *
+     * @param dbManager
+     */
     public CustomerUserController(DBManager dbManager) {
         super(dbManager);
     }
 
+    /**
+     *
+     */
     public CustomerUserController() {
         super();
     }
@@ -43,12 +54,10 @@ public class CustomerUserController extends AbstractController {
     /**
      * Proceed order to disconnect.
      * [Implementation note: Used in external transaction ]
-     *
      * @param serviceInstanceID
      * @throws DBManagerException
      */
     public void proceedToDisconnect(int serviceInstanceID) throws DBManagerException {
-
         ServiceOrder serviceOrder = null;
         ServiceOrderDAOImpl soDAO = null;
         DisconnectScenarioWorkflow disconnectWF = null;
@@ -59,14 +68,11 @@ public class CustomerUserController extends AbstractController {
             // get order by SI
             soDAO = new ServiceOrderDAOImpl(dbManager);
             serviceOrder = soDAO.getServiceOrderBySIId(serviceInstanceID);
-
             // change scenario of got order
             serviceOrder.setScenarioID(WorkflowScenario.DISCONNECT.toInt());
             serviceOrder.setServiceOrderStatusID(OrderStatus.ENTERING.toInt());
-
             disconnectWF = new DisconnectScenarioWorkflow(serviceOrder, dbManager);
             disconnectWF.proceedOrder();
-
             if (isInternal) {
                 dbManager.commit();
             }
@@ -84,7 +90,6 @@ public class CustomerUserController extends AbstractController {
 
     /**
      * Register in system after selecting service and creating new order.
-     *
      * @param login
      * @param password
      * @param email
@@ -98,7 +103,6 @@ public class CustomerUserController extends AbstractController {
     public int register(String login, String password, String email,
             String firstName, String lastName, int catalogID,
             String serviceLocation) throws DBManagerException {
-
         OSSUserDAO userDAO = null;
         int userID;
         try {
@@ -123,11 +127,8 @@ public class CustomerUserController extends AbstractController {
             user.setPassword(password);
             user.setBlocked(UserState.ACTIVE.toInt());
             user.setRoleID(UserRole.CUSTOMER_USER.toInt());
-
             userID = (Integer) userDAO.add(user);
-
             proceedNewOrder(userID, catalogID, serviceLocation);
-
             if (isInternal) {
                 dbManager.commit();
             }
@@ -142,9 +143,7 @@ public class CustomerUserController extends AbstractController {
                 dbManager.close();
             }
         }
-
         return userID;
-
     }
 
     private void sendEmail(int userID, String firstName, String login, String password) {
@@ -156,17 +155,14 @@ public class CustomerUserController extends AbstractController {
 
     private void proceedNewOrder(int userID, int catalogID,
             String serviceLocation) throws DBManagerException {
-
         ServiceOrder newOrder = createOrder(userID, catalogID,
                 serviceLocation);
-
         Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
         wf.proceedOrder();
     }
 
     private ServiceOrder createOrder(int userID,
             int catalogID, String serviceLocation) throws DBManagerException {
-
         ServiceOrderStatusDAO statusDAO = null;
         ScenarioDAO scenarioDAO = null;
         ServiceOrderDAO orderDAO = null;
@@ -192,8 +188,6 @@ public class CustomerUserController extends AbstractController {
 
         int orderID = (Integer) orderDAO.add(so);
         so.setId(orderID);
-
-
         return so;
     }
 }

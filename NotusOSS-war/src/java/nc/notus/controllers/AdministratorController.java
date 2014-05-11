@@ -9,20 +9,41 @@ import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.states.UserState;
 
+/**
+ *
+ * @author Dima
+ */
 public class AdministratorController extends AbstractController {
 
+    /**
+     *
+     * @param dbManager
+     */
     public AdministratorController(DBManager dbManager) {
         super(dbManager);
     }
 
+    /**
+     *
+     */
     public AdministratorController() {
         super();
     }
     private static Logger logger = Logger.getLogger(DBManager.class.getName());
 
+    /**
+     *
+     * @param login
+     * @param password
+     * @param email
+     * @param firstName
+     * @param lastName
+     * @param roleID
+     * @return
+     * @throws DBManagerException
+     */
     public int registerNewEngineer(String login, String password, String email,
             String firstName, String lastName, int roleID) throws DBManagerException {
-
         OSSUserDAO userDAO = null;
         int userID;
         try {
@@ -30,7 +51,6 @@ public class AdministratorController extends AbstractController {
                 dbManager = new DBManager();
             }
             userDAO = new OSSUserDAOImpl(dbManager);
-
             // check inputted login
             if (userDAO.isExist(login)) {
                 throw new DBManagerException("User with specified login - " + login + " already exist. Choose another.");
@@ -39,7 +59,6 @@ public class AdministratorController extends AbstractController {
             if (userDAO.isEmailDuplicate(email)) {
                 throw new DBManagerException("User with specified email - " + email + " already exist. Input another email. ");
             }
-
             // create new user if unique login and email
             OSSUser user = new OSSUser();
             user.setFirstName(firstName);
@@ -52,7 +71,6 @@ public class AdministratorController extends AbstractController {
 
             userID = (Integer) userDAO.add(user);
             actionStatus = "New engineer - " + login + " successfully registered.";
-
             if (isInternal) {
                 dbManager.commit();
             }
@@ -67,9 +85,13 @@ public class AdministratorController extends AbstractController {
             }
         }
         return userID;
-
     }
 
+    /**
+     *
+     * @param userID
+     * @throws DBManagerException
+     */
     public void blockUser(int userID) throws DBManagerException {
         try {
             if (isInternal) {
@@ -77,7 +99,6 @@ public class AdministratorController extends AbstractController {
             }
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
             OSSUser user = userDAO.find(userID);
-
             user.setBlocked(UserState.BLOCKED.toInt());
             userDAO.update(user);
             if (isInternal) {
