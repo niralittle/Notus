@@ -61,6 +61,7 @@ function clear() {
 function parseMessages(responseXML) {
     if (responseXML == null) {
         clear();
+        alert("Error was occured, contact an administrator!");
     } else {
         var services = responseXML.getElementsByTagName("service");
         contents = document.getElementById("services");

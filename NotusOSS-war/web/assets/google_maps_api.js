@@ -51,6 +51,7 @@ function call() {
 function parseMessage(responseXML) {
     if (responseXML == null) {
         clear();
+        window.location = "selectServiceNotAvailable.jsp";
     } else {
         locations = responseXML.getElementsByTagName("providerLocation");
         for(var k=0; k<locations.length;k++){

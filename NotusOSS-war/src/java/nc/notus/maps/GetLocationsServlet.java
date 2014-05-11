@@ -9,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ProviderLocation;
 
 /**
@@ -27,11 +26,11 @@ public class GetLocationsServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, DBManagerException {
-        PrintWriter out = response.getWriter();
-        StringBuffer sb = new StringBuffer();
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        PrintWriter out = null;
         try {
+            out = response.getWriter();
+            StringBuffer sb = new StringBuffer();
             GetProviderLocations gpl = new GetProviderLocations();
             List<ProviderLocation> providerLocations = gpl.getProviderLocations();
             //forms the responseXML
@@ -44,8 +43,12 @@ public class GetLocationsServlet extends HttpServlet {
             response.setContentType("text/xml");
             response.setHeader("Cache-Control", "no-cache");
             response.getWriter().write("<providerLocations>" + sb.toString() + "</providerLocations>");
-        } finally {
-            out.close();
+        }catch (Exception ex) {
+            Logger.getLogger(GetLocationsServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            if(out != null){
+                out.close();
+            }
         }
     }
 
@@ -60,11 +63,7 @@ public class GetLocationsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(GetLocationsServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -77,11 +76,7 @@ public class GetLocationsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(GetLocationsServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       processRequest(request, response);
     }
 
     /**

@@ -9,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.ServiceCatalog;
 import nc.notus.entity.ServiceType;
 
@@ -29,12 +28,12 @@ public class ServicesServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, DBManagerException {
-        PrintWriter out = response.getWriter();
-        StringBuffer sb = new StringBuffer();
-        int providerLocationID = 0;
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
+        PrintWriter out = null;
         try {
+            out = response.getWriter();
+            StringBuffer sb = new StringBuffer();
+            int providerLocationID = 0;
             if(!("undefined".equals(request.getParameter("providerLocationID")))){
                 providerLocationID = Integer.valueOf(request.getParameter("providerLocationID"));
             }
@@ -54,8 +53,12 @@ public class ServicesServlet extends HttpServlet {
             response.setContentType("text/xml");
             response.setHeader("Cache-Control", "no-cache");
             response.getWriter().write("<services>" + sb.toString() + "</services>");
+        } catch (Exception ex) {
+            Logger.getLogger(ServicesServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            out.close();
+            if(out != null){
+                out.close();
+            }
         }
     }
 
@@ -70,11 +73,7 @@ public class ServicesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(ServicesServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -87,11 +86,7 @@ public class ServicesServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (DBManagerException ex) {
-            Logger.getLogger(ServicesServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       processRequest(request, response);
     }
 
     /**
