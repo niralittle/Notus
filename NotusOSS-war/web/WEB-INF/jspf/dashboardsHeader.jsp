@@ -38,15 +38,7 @@
         <%  }%>
 
     </div>
-    <div id="pages_list">
-        <ul>
-            <li>
-                <div id="home">
-                    <a href="index.jsp" id="home">
-                        <h1>NOTUS</h1>
-                    </a>
+    <div id="home">
+                    <a href="index.jsp"><img src="assets/logo.png" /></a>
                 </div>
-            </li>
-        </ul>
-    </div>
 </div>
