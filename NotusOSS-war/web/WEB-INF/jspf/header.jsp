@@ -1,6 +1,17 @@
 <div id="top_menu">
-
-    <div class="dashboard_links_etc" width="610px" align="right" style="padding: 6px; margin-right: 3px;">
+    <%  if (request.getUserPrincipal() == null && request.getParameter("serviceLocationID") == null
+        && !request.getRequestURL().toString().contains("login.jsp")){%>
+    <form method="POST" action="Auth" class="navbar-form navbar-right" role="form">
+        <div class="form-group">
+            <input required="required" type="text" name="j_username"  placeholder="Login" class="form-control">
+        </div>
+        <div class="form-group">
+            <input required="required" type="password" name="j_password" placeholder="Password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-success" value="Login">Login</button>
+    </form>
+    <%  } %>
+        <div class="dashboard_links_etc" width="610px" align="right" style="height: 37px; padding: 6px; margin-right: 3px;">
 
         <%  if (request.isUserInRole("CUSTOMER_USER")) {%>
         <a href="CustomerUser">Go to Cabinet</a>
@@ -31,31 +42,32 @@
         <%  }%>
         <%  }%>
 
-        <%  if (request.getUserPrincipal() == null) {%>
-        <a href="login.jsp">Login</a>
-        <%  } else {%>
+        <%  if (request.getUserPrincipal() != null) {%>
         <a href="logout">Logout</a>
         <%  }%>
 
     </div>
 
     <div id="pages_list">
-        <ul>
-            <li>
                 <div id="home">
-                    <a href="index.jsp" id="home">
-                        <h1>NOTUS</h1>
-                    </a>
+                    <div style="width: 200px;float:left;margin-top: -30px;">
+                        <a href="index.jsp">
+                            <h1>NOTUS</h1>
+                        </a>
+                    </div>
                 </div>
-            </li>
+
+        <ul>
+            <div style="text-align: right; margin-top: 50px; height: 36px">
             <%  if (!(request.isUserInRole("SUPPORT_ENGINEER") ||
                     request.isUserInRole("PROVISION_ENGINEER") ||
                     request.isUserInRole("INSTALLATION_ENGINEER") ||
                     request.isUserInRole("ADMINISTRATOR"))) {%>
-            <li><a href="selectLocation.jsp">SELECT SERVICE</a></li>
-            <li><a href="serviceCatalog.jsp">OUR SERVICES</a> </li>
+                <li><a href="selectLocation.jsp">SELECT SERVICE</a></li>
+                <li><a href="serviceCatalog.jsp">OUR SERVICES</a> </li>
             <%  }%>
-            <!-- Don't display this links 
+            </div>
+            <!-- Don't display this links
 	            <li><a href="#">OUR TEAM</a></li>
 	            <li><a href="#">PROMOTIONS</a></li>
 	            <li><a href="#">SOCIAL</a></li>

@@ -86,7 +86,7 @@ public class CustomerUserServlet extends HttpServlet {
             int userID = getUserID(request);
             ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
             int numbOfSORecords = orderDAO.countAllSOByStatus(userID, OrderStatus.PROCESSING.toInt());
-            int numbOfSIRecords = orderDAO.countAllSOByStatus(userID, OrderStatus.COMPLETED.toInt());
+            int numbOfSIRecords = orderDAO.countUsersActiveSIs(userID);
             
             Integer numbOfSOPages = (numbOfSORecords - 1) / NUMBER_OF_RECORDS + 1;
             Integer numbOfSIPages = (numbOfSIRecords - 1) / NUMBER_OF_RECORDS + 1;

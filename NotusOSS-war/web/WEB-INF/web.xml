@@ -117,11 +117,11 @@
     </servlet>
     <servlet>
         <servlet-name>TasksForReassignmentServlet</servlet-name>
-        <servlet-class>nc.notus.TasksForReassignmentServlet</servlet-class>
+        <servlet-class>nc.notus.dashboards.TasksForReassignmentServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
-        <servlet-class>nc.notus.ReassigTaskToEngineerServlet</servlet-class>
+        <servlet-class>nc.notus.dashboards.ReassigTaskToEngineerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DisconnectOrderProceed</servlet-name>
