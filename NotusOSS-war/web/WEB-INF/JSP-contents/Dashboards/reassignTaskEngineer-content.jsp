@@ -16,7 +16,9 @@
 	List<OSSUser> engineers = (List) request.getAttribute("listOfEngineers");
 	Integer numberOfPages = (Integer) request.getAttribute("pages");
 	Integer taskId = Integer.parseInt(request.getParameter("taskID"));
+        String role = (String)request.getAttribute("role");
 %>
+<h3 align="center">You are reassigning task #<%=taskId%> for <%=role%>s</h3>
 <form action="Reassign" method="post">
 	<table id="table">
 		<tr>

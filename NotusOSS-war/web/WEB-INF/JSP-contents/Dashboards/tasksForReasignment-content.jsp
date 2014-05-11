@@ -8,10 +8,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <%@page import="nc.notus.entity.Task"%>
 
 <%
-	List<Task> tasks = (List) request.getAttribute("listOfTasks");
+	List<Map<String,String>> tasksInfo = (List) request.getAttribute("listOfTasks");
 	Integer numberOfPages = (Integer) request.getAttribute("pages");
 %>
 
@@ -19,26 +20,31 @@
 	<table id="table">
 		<tr>
 			<th>Task ID</th>
-			<th>Service order ID</th>
-			<th>Name</th>
+			<th>Service order address</th>
+			<th>Task Name</th>
 			<th>Employee ID</th>
-			<th>Role ID</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+			<th>Role</th>
 			<th>Action</th>
 		</tr>
 
 		<%
-			if (tasks != null) {
-				for (Task task : tasks) {
+			if (tasksInfo != null) {
+				for (Map<String,String> task : tasksInfo) {
 		%>
+                
 		<tr>
 
-			<td><%=task.getId()%></td>
-			<td><%=task.getServiceOrderID()%></td>
-			<td><%=task.getName()%></td>
-			<td><%=task.getEmployeeID()%></td>
-			<td><%=task.getRoleID()%></td>
+			<td><%=task.get("taskID")%></td>
+			<td><%=task.get("soAdr")%></td>
+			<td><%=task.get("taskName")%></td>
+			<td><%=task.get("empID")%></td>
+			<td><%=task.get("name")%></td>
+                        <td><%=task.get("surname")%></td>
+                        <td><%=task.get("role")%></td>
 			<td><input type="submit" id="button" value="Reassign"
-				onclick="document.getElementById('taskID').setAttribute('value', <%=task.getId()%>)"></td>
+				onclick="document.getElementById('taskID').setAttribute('value', <%=task.get("taskID")%>)"></td>
 			<%-- <td id="send"></td> --%>
 		</tr>
 		<%
