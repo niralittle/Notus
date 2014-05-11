@@ -1,7 +1,7 @@
 
 <div id="top_menu">
 
-    <div class="dashboard_links_etc" width="610px" align="right" style="padding: 6px; margin-right: 3px;">
+    <div class="dashboard_links_etc" width="610px" align="right" style="height: 37px; padding: 6px; margin-right: 3px;">
 
 
         <%  if (request.isUserInRole("ADMINISTRATOR")) {%>
@@ -39,14 +39,15 @@
 
     </div>
     <div id="pages_list">
-        <ul>
-            <li>
                 <div id="home">
-                    <a href="index.jsp" id="home">
+                    <div style="width: 200px;float:left;margin-top: -30px;">
+
+                    <a href="index.jsp">
                         <h1>NOTUS</h1>
                     </a>
+                    </div>
                 </div>
-            </li>
-        </ul>
+            <div style="text-align: right; margin-top: 50px;  height: 36px">
+            </div>
     </div>
 </div>
