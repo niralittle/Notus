@@ -122,13 +122,11 @@
         <tr>
             <td>
             	<img style="margin-left: 75px" src="Captcha">
-            	<button name="action" value="Refresh" type="submit" class="btn btn-success" style="margin-top: 25px">Refresh</button>         	
+                <button name="action" value="Refresh" type="submit"
+                        class="btn btn-success btn-sm">Refresh
+                </button>
             </td>
         </tr>
     </table>
-
     <button type="submit" class="btn btn-success" style="margin-top: 25px">Register</button>
-    <a href="index.jsp"><button type="submit" class="btn btn-info"
-                                style="margin-top: 25px">Home</button></a>
 </form>
-
