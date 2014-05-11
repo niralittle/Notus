@@ -50,7 +50,7 @@
 		value="<%=request.getParameter("taskID")%>">
 </form>
 
-<div id="pagination">
+<div style="text-align: center"><ul class="pagination">
 	<%
 		if (numberOfPages > 1) {
 			int currentPage = (Integer) request.getAttribute("page");
@@ -59,8 +59,7 @@
 			if (currentPage > 1) {
 				isPrevious = true;
 	%>
-	<a
-		href="ReassigTaskToEngineerServlet?page=<%=(currentPage - 1)%>&taskID=<%=taskId%>">Previous</a>
+	<li><a href="ReassigTaskToEngineerServlet?page=<%=(currentPage - 1)%>&taskID=<%=taskId%>">&laquo;</a></li>
 	<%
 		}
 
@@ -70,12 +69,11 @@
 				if (i == (currentPage)) {
 					if (!isPrevious) {
 	%>
-	<label style="font-size: 14pt;">Previous</label>
+    <li class="disabled"><a href="#">&laquo;</a></li>
 	<%
 		}
 	%>
-	<label>&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;
-	</label>
+	<li class="active"><a href="#"><%=i%></a></li>
 	<%
 		} else {
 					if (i == 1 || i == 2 || i == currentPage - 2
@@ -84,9 +82,9 @@
 							|| i == numberOfPages - 1 || i == numberOfPages) {
 						previousPageIsEllipsis = false;
 	%>
-	<a href="ReassigTaskToEngineerServlet?page=<%=(i)%>&taskID=<%=taskId%>">
-		&nbsp;&nbsp;<%=i%>&nbsp;&nbsp;
-	</a>
+	<li><a href="ReassigTaskToEngineerServlet?page=<%=(i)%>&taskID=<%=taskId%>">
+		<%=i%>
+	</a></li>
 	<%
 		} else {
 						if (previousPageIsEllipsis) {
@@ -94,7 +92,7 @@
 							continue;
 						} else {
 	%>
-	<label style="font-size: 12pt;">&nbsp;&nbsp;...&nbsp;&nbsp;</label>
+	<li class="disabled"><a href="#">...</a></li>
 	<%
 		previousPageIsEllipsis = true;
 						}
@@ -104,17 +102,17 @@
 
 			if (currentPage != numberOfPages) {
 	%>
-	<a
-		href="ReassigTaskToEngineerServlet?page=<%=(currentPage + 1)%>&taskID=<%=taskId%>">Next</a>
+	<li><a
+		href="ReassigTaskToEngineerServlet?page=<%=(currentPage + 1)%>&taskID=<%=taskId%>">&raquo;</a></li>
 	<%
 		} else {
 	%>
-	<label style="font-size: 14pt;">&nbsp;&nbsp;Next&nbsp;&nbsp;</label>
+	<li class="disabled"><a href="#">&raquo</a></li>
 	<%
 		}
 		}
 	%>
 
-</div>
+</ul></div>
 
 
