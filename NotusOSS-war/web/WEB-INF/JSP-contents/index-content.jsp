@@ -12,7 +12,7 @@
  
 <div style="background-image: url(assets/girl_laptop.jpg);
             background-repeat: no-repeat;
-            height: 400px; width: 840px;
+            height: 500px; width: 840px;
             margin: 0 auto;">
   <div style="float: right; position:static; 
        padding-right: 68px;
