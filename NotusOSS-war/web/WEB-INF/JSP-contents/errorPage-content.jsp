@@ -6,4 +6,4 @@
 
 
 
-<h1><%=request.getSession().getAttribute("ErrorString")%></h1>
+<h2><%=request.getSession().getAttribute("ErrorString")%></h2>

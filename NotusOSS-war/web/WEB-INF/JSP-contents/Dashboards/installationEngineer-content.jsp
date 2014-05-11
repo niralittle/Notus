@@ -26,7 +26,7 @@
             </div>
             <div id ="contents">
                 <div id="selectTask">
-                    <h2>Please, choose Task:</h2>
+                    <h3>Please, choose Task:</h3>
                     <%List<Task> tasks = (List) request.getAttribute("tasks");
             int userID = (Integer) request.getAttribute("userid");%>
                 <form action="SubmitTask" method="POST">
@@ -60,7 +60,7 @@
                 </div>
 
                 <div id="createRouter">
-                    <h2>Create Router</h2>
+                    <h3>Create Router</h3>
                     <table border="1" id="tablename1">
                         <tbody>
                             <tr>
@@ -80,13 +80,13 @@
                 </div>
 
                 <div id="createCable">
-                    <h2>Create Cable</h2>
+                    <h3>Create Cable</h3>
                     <p>Press Create button</p>
                     <a href="javascript:void(0)" class="button28"onclick="f(id)">Create</a>
                     <div id="cableCreateDiv"></div>
                     <p>Now, connect the Cable to Port.</p>
 
-                    <h2>Connect to Port:</h2>
+                    <h3>Connect to Port:</h3>
                     <select name="PortsList">
                     </select>
                     <br>
@@ -94,7 +94,7 @@
                 </div>
 
                 <div id="deleteRouter">
-                    <h2>Delete Cable</h2>
+                    <h3>Delete Cable</h3>
                     <p>Choose Cable from the list below</p>
                     <select name="deleteCabelList">
                     </select>

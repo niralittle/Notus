@@ -18,7 +18,7 @@
         <div id="wrapper">
             <div id="main">
             	<jsp:include page="/WEB-INF/jspf/dashboardsHeader.jsp"/> 
-                 <h1 id="Dash-title"><%=request.getParameter("title")%></h1>
+                 <h2 id="Dash-title"><%=request.getParameter("title")%></h2>
                 <div id="main-content">
                    
                     <% pageContext.include("/WEB-INF/JSP-contents/" + request.getParameter("content") + ".jsp");%>
