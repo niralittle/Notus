@@ -302,11 +302,11 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
 
         String query = "SELECT COUNT(*) total " +
                        "FROM (SELECT so.serviceinstanceid " +
-                              "FROM serviceorder so, serviceinstance si" +
+                              "FROM serviceorder so, serviceinstance si " +
                               "WHERE so.userid = ? " +
-                              "AND so.serviceorderstatusid = ?" +
-                              "AND so.serviceinstanceid = si.id" +
-                              "AND si.serviceinstancestatusid = ?);";
+                              "AND so.serviceorderstatusid = ? " +
+                              "AND so.serviceinstanceid = si.id " +
+                              "AND si.serviceinstancestatusid = ?)";
         try {
             statement = dbManager.prepareStatement(query);
             statement.setInt(1, userID);
