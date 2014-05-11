@@ -52,22 +52,23 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
         int taskID = 0;
         int soID = 0;
         int userID = 0;
+        String actionStatus;
         try {
-            if (request.getParameter("taskid") != null){
-                taskID  = Integer.parseInt(request.getParameter("taskid"));
-            }
-            if (request.getParameter("userid") != null){
-                userID  = Integer.parseInt(request.getParameter("userid"));
-            }
+//            if (request.getParameter("taskid") != null){
+//                taskID  = Integer.parseInt(request.getParameter("taskid"));
+//            }
+//            if (request.getParameter("userid") != null){
+//                userID  = Integer.parseInt(request.getParameter("userid"));
+//            }
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
             }
-            if (request.getParameter("cable") != null){
-                cable  = (Cable) (request.getAttribute("cable"));
-            }
-            if (request.getParameter("port") != null){
-                port  = (Port) (request.getAttribute("port"));
-            }
+//            if (request.getParameter("cable") != null){
+//                cable  = (Cable) (request.getAttribute("cable"));
+//            }
+//            if (request.getParameter("port") != null){
+//                port  = (Port) (request.getAttribute("port"));
+//            }
 
             session = request.getSession();
             if (session.getAttribute("userid") != null) {
@@ -90,8 +91,14 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
 
             //Action "Disconnect Cable from Port" and redirect to personal tasks page
             if (request.getParameter("action") != null && "Disconnect Cable from Port".equals(request.getParameter("action"))){
-                dwf.unplugCableFromPort(taskID, cable.getId(), port.getId(), si.getId());
-                dbManager.commit();
+                try {
+                    dwf.unplugCableFromPort(taskID, cable.getId(), port.getId(), si.getId());
+                    actionStatus = "Cable was disconnected";
+                    dbManager.commit();
+                } catch (DBManagerException ex) {
+                    dbManager.rollback();
+                    actionStatus = "Cable was not disconnected";
+                }
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int offset = 0;
                 int numbOfRecords = 10;
@@ -100,7 +107,7 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
                 request.setAttribute("userid", userID);
                 request.setAttribute("tasks", tasks);
                 request.setAttribute("type", personal);
-                response.sendRedirect("TasksAssignment?type=personal");
+                response.sendRedirect("TasksAssignment?type=personal&actionStatus="+actionStatus);
                 return;
             }
             request.setAttribute("cable", cable);

@@ -34,7 +34,8 @@ import nc.notus.workflow.NewScenarioWorkflow;
  * @author Vladimir Ermolenko
  */
 public class SubmitTask extends HttpServlet {
-   
+
+    private String actionStatus;
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -81,9 +82,11 @@ public class SubmitTask extends HttpServlet {
             if (request.getParameter("action") != null && "Create Router".equals(request.getParameter("action"))){
                 try {
                     nwf.createRouter(taskID, portQuantity);
+                    actionStatus = "Router was created";
                     dbManager.commit();
                 } catch (DBManagerException ex) {
                     dbManager.rollback();
+                    actionStatus = "Error! Router was not created";
                 }
                 port = portDAO.getFreePort();
             }
@@ -92,10 +95,11 @@ public class SubmitTask extends HttpServlet {
             if (request.getParameter("action") != null && "Create Cable".equals(request.getParameter("action"))){
                 try {
                     nwf.createCable(taskID, "UTP Cable");
+                    actionStatus = "Cable was created";
                     dbManager.commit();
-                    
                 } catch (DBManagerException ex) {
                     dbManager.rollback();
+                    actionStatus = "Cable was not created";
                 }
                 cable = cableDAO.getFreeCable();
             }
@@ -104,9 +108,11 @@ public class SubmitTask extends HttpServlet {
             if (request.getParameter("action") != null && "Connect Cable to Port".equals(request.getParameter("action"))){
                  try {
                      nwf.plugCableToPort(taskID, cable.getId(), port.getId());
+                     actionStatus = "Cable connection was created";
                      dbManager.commit();
                  } catch (DBManagerException ex) {
                     dbManager.rollback();
+                    actionStatus = "Cable connection was not created";
                 }
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int offset = 0;
@@ -116,7 +122,7 @@ public class SubmitTask extends HttpServlet {
                 request.setAttribute("userid", userID);
                 request.setAttribute("tasks", tasks);
                 request.setAttribute("type", personal);
-                response.sendRedirect("TasksAssignment?type=personal");
+                response.sendRedirect("TasksAssignment?type=personal&actionStatus="+actionStatus);
                 return;
             }
             request.setAttribute("cable", cable);
@@ -124,6 +130,7 @@ public class SubmitTask extends HttpServlet {
             request.setAttribute("taskid", taskID);
             request.setAttribute("soid", soID);
             request.setAttribute("userid", userID);
+            request.setAttribute("actionStatus", actionStatus);
             request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
         } finally {
                 dbManager.close();

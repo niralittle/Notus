@@ -85,6 +85,7 @@ public class TasksAssignment extends HttpServlet {
         Cable cable = null;
         Port port = null;
         boolean personal = false;
+        String actionStatus = null;
 
         try {
             taskDAO = new TaskDAOImpl(dbManager);
@@ -105,8 +106,11 @@ public class TasksAssignment extends HttpServlet {
             if (userDAO.getUserByLogin(login) != null){
                 user = userDAO.getUserByLogin(login);
             }
+            if (request.getParameter("actionStatus") != null ){
+                actionStatus = (String) request.getParameter("actionStatus");
+            }
 
-            //Action "Assign" tasks from group to personal or choose task from personal to execute it
+            //Action "Assign to myself" tasks from group to personal or choose task from personal to execute it
             if (request.getParameter("action") != null && !"Back to Tasks".equals(request.getParameter("action"))){
                 if (request.getParameter("taskid") != null){
                     taskID  = Integer.parseInt(request.getParameter("taskid"));
@@ -210,6 +214,7 @@ public class TasksAssignment extends HttpServlet {
             request.setAttribute("tasksEngFull", tasksEngFull);
             request.setAttribute("type", personal);
             request.setAttribute("user", user);
+            request.setAttribute("actionStatus", actionStatus);
             request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
         } finally {
             dbManager.close();

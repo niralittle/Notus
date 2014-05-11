@@ -21,7 +21,10 @@
         <h2>
             <%=title+" "%> tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
         </h2>
-        
+        <%
+        if (request.getAttribute("actionStatus") != null) { %>
+        <%=request.getAttribute("actionStatus")%>
+        <% } %>
 
         
         

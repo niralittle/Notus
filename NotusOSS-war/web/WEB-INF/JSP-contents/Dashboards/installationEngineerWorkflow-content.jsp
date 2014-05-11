@@ -41,6 +41,10 @@
    <form action="TasksAssignment?type=personal" method="POST">
        <input type="submit" name="action" value="Back to Tasks" />
    </form>
+   <%
+    if (request.getAttribute("actionStatus") != null) { %>
+    <%=request.getAttribute("actionStatus")%>
+   <% } %>
    <table border="1" id="table">
     <tbody>
         <tr>
