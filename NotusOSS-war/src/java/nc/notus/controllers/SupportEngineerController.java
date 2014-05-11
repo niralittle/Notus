@@ -84,7 +84,7 @@ public class SupportEngineerController extends AbstractController {
             if (isInternal) {
                 dbManager.commit();
             }
-            actionStatus = "Password for user, " + user.getLogin() + " successfully changed!";
+            actionStatus = "Password for user " + user.getLogin() + " was successfully changed!";
         } catch (DBManagerException ex) {
             if (isInternal) {
                 dbManager.rollback();
