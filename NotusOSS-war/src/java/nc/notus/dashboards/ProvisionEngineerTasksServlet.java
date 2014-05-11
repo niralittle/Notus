@@ -77,6 +77,7 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 			} finally {
 				dbManager.close();
 			}
+		}
 	}
 	
 	/**
