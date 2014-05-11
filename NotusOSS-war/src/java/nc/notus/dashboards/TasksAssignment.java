@@ -86,6 +86,10 @@ public class TasksAssignment extends HttpServlet {
         Port port = null;
         boolean personal = false;
         String actionStatus = null;
+        String taskName = null;
+        String serviceLocation = null;
+        String serviceDescription = null;
+        int price = 0;
 
         try {
             taskDAO = new TaskDAOImpl(dbManager);
@@ -110,6 +114,19 @@ public class TasksAssignment extends HttpServlet {
                 actionStatus = (String) request.getParameter("actionStatus");
             }
 
+            if (request.getParameter("taskName") != null){
+                taskName  = (String) request.getParameter("taskName");
+            }
+            if (request.getParameter("serviceLocation") != null){
+                serviceLocation  = (String) request.getParameter("serviceLocation");
+            }
+            if (request.getParameter("serviceDescription") != null){
+                serviceDescription  = (String) request.getParameter("serviceDescription");
+            }
+            if (request.getParameter("price") != null){
+                price  = Integer.parseInt(request.getParameter("price"));
+            }
+
             //Action "Assign to myself" tasks from group to personal or choose task from personal to execute it
             if (request.getParameter("action") != null && !"Back to Tasks".equals(request.getParameter("action"))){
                 if (request.getParameter("taskid") != null){
@@ -118,59 +135,71 @@ public class TasksAssignment extends HttpServlet {
                 }
                 if (!personal) {
                     task.setEmployeeID(user.getId());
-                    taskDAO.update(task);
-                    dbManager.commit();
+                    try {
+                        taskDAO.update(task);
+                        dbManager.commit();
+                    } catch (DBManagerException ex) {
+                        dbManager.rollback();
+                        actionStatus = "Task was was not assigned";
+                    }
                 } else {
                 	int roleID = user.getRoleID();
                 	
-                    request.setAttribute("taskid", task.getId());
-                    request.setAttribute("user", user);
-                    if (user.getRoleID() == UserRole.INSTALLATION_ENGINEER.toInt()) {
-                        ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
-                        ServiceOrder so = soDAO.find(task.getServiceOrderID());
-                        PortDAO portDAO = new PortDAOImpl(dbManager);
-                        ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
-                        CableDAO cableDAO = new CableDAOImpl(dbManager);
-                        if (so.getScenarioID() == WorkflowScenario.NEW.toInt()){
-                            port = portDAO.getFreePort();
-                            cable = cableDAO.getFreeCable();
+//                    request.setAttribute("taskid", task.getId());
+//                    request.setAttribute("user", user);
+                        if (user.getRoleID() == UserRole.INSTALLATION_ENGINEER.toInt()) {
+                            ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
+                            ServiceOrder so = soDAO.find(task.getServiceOrderID());
+                            PortDAO portDAO = new PortDAOImpl(dbManager);
+                            ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
+                            CableDAO cableDAO = new CableDAOImpl(dbManager);
+                            if (so.getScenarioID() == WorkflowScenario.NEW.toInt()){
+                                port = portDAO.getFreePort();
+                                cable = cableDAO.getFreeCable();
+                            }
+                            if (so.getScenarioID() == WorkflowScenario.DISCONNECT.toInt()){
+                                ServiceInstance si = siDAO.find(so.getServiceInstanceID());
+                                port = portDAO.find(si.getPortID());
+                                cable = cableDAO.find(port.getCableID());
+                            }
+
+
+                            request.setAttribute("taskName", taskName);
+                            request.setAttribute("serviceLocation", serviceLocation);
+                            request.setAttribute("serviceDescription", serviceDescription);
+                            request.setAttribute("price", price);
+                            request.setAttribute("port", port);
+                            request.setAttribute("cable", cable);
+                            request.setAttribute("taskid", task.getId());
+                            request.setAttribute("soid", task.getServiceOrderID());
+                            request.setAttribute("userid", user.getId());
+                            String wfScenario = getTaskScenario(task, dbManager);
+                            session = request.getSession();
+                            session.setAttribute("taskid", task.getId());
+                            session.setAttribute("serviceorderid", task.getServiceOrderID());
+                            session.setAttribute("port", port);
+                            session.setAttribute("cable", cable);
+                            session.setAttribute("userid", user.getId());
+                            if (wfScenario.equalsIgnoreCase(WorkflowScenario.NEW.toString())) {
+                                request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+                                return;
+                            }
+                            if (wfScenario.equalsIgnoreCase(WorkflowScenario.DISCONNECT.toString())) {
+                                request.getRequestDispatcher("disconnectScenarioForInstEng.jsp").forward(request, response);
+                                return;
+                            }
                         }
-                        if (so.getScenarioID() == WorkflowScenario.DISCONNECT.toInt()){
-                            ServiceInstance si = siDAO.find(so.getServiceInstanceID());
-                            port = portDAO.find(si.getPortID());
-                            cable = cableDAO.find(port.getCableID());
-                        }
-                        request.setAttribute("port", port);
-                        request.setAttribute("cable", cable);
-                        request.setAttribute("taskid", task.getId());
-                        request.setAttribute("soid", task.getServiceOrderID());
-                        request.setAttribute("userid", user.getId());
-                        String wfScenario = getTaskScenario(task, dbManager);
-                        session = request.getSession();
-                        session.setAttribute("taskid", task.getId());
-                        session.setAttribute("port", port);
-                        session.setAttribute("cable", cable);
-                        session.setAttribute("userid", user.getId());
-                        if (wfScenario.equalsIgnoreCase(WorkflowScenario.NEW.toString())) {
-                            request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+                        if (roleID  == UserRole.PROVISION_ENGINEER.toInt()) {
+                            prepareTask(task, request, dbManager, roleID );
+                            request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
                             return;
                         }
-                        if (wfScenario.equalsIgnoreCase(WorkflowScenario.DISCONNECT.toString())) {
-                            request.getRequestDispatcher("disconnectScenarioForInstEng.jsp").forward(request, response);
+                        if (roleID  == UserRole.SUPPORT_ENGINEER.toInt()) {
+                            prepareTask(task, request, dbManager, roleID );
+                            request.getRequestDispatcher("supportEngineer.jsp").forward(request, response);
                             return;
                         }
-                    }   
-                    if (roleID  == UserRole.PROVISION_ENGINEER.toInt()) {
-                    	prepareTask(task, request, dbManager, roleID );
-                        request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
-                        return;
                     }
-                    if (roleID  == UserRole.SUPPORT_ENGINEER.toInt()) {
-                    	prepareTask(task, request, dbManager, roleID );
-                        request.getRequestDispatcher("supportEngineer.jsp").forward(request, response);                 	
-                    	return;
-                    }
-                }
             }
             
             

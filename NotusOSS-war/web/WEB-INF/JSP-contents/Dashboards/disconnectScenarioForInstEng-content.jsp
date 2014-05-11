@@ -13,6 +13,23 @@
    Cable cable;
    Integer soID;
    Integer taskID;
+   String taskName = "";
+   String serviceLocation = "";
+   String serviceDescription = "";
+   Integer price = 0;
+
+    if (request.getAttribute("taskName") != null) {
+        taskName = (String) request.getAttribute("taskName");
+    }
+    if (request.getAttribute("serviceLocation") != null) {
+        serviceLocation = (String) request.getAttribute("serviceLocation");
+    }
+    if (request.getAttribute("serviceDescription") != null) {
+        serviceDescription = (String) request.getAttribute("serviceDescription");
+    }
+    if (request.getAttribute("price") != null) {
+        price = (Integer) request.getAttribute("price");
+    }
 
     if (request.getAttribute("taskid") != null) {
         taskID = (Integer) request.getAttribute("taskid");
@@ -41,21 +58,33 @@
    <form action="TasksAssignment?type=personal" method="POST">
        <input type="submit" name="action" value="Back to Tasks" />
    </form>
-   <table border="1" id="tablename1">
+   <table border="1" id="table">
     <tbody>
         <tr>
-            <td>
+            <th>
                 Task ID
-            </td>
-            <td>
+            </th>
+            <th>
                 Service Order ID
-            </td>
-            <td>
+            </th>
+            <th>
+                Task name
+            </th>
+            <th>
+                Service Location
+            </th>
+            <th>
+                Type of Service
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
                 Cable
-            </td>
-            <td>
+            </th>
+            <th>
                 Port
-            </td>
+            </th>
         </tr>
         <tr>
             <td>
@@ -63,6 +92,18 @@
             </td>
             <td>
                 <%=soID%>
+            </td>
+            <td>
+                <%=taskName%>
+            </td>
+            <td>
+                <%=serviceLocation%>
+            </td>
+            <td>
+                <%=serviceDescription%>
+            </td>
+            <td>
+                <%=price%>
             </td>
             <td>
                 <%=cable.getCable()%>
@@ -73,6 +114,7 @@
         </tr>
     </tbody>
    </table>
+
 
 <form action="DisconnectScenarioForInstEng" method="POST">
     <input type="hidden" name="taskid" value="<%=taskID%>"/>

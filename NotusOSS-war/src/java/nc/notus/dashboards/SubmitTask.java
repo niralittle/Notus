@@ -54,6 +54,10 @@ public class SubmitTask extends HttpServlet {
         int taskID = 0;
         int soID = 0;
         int userID = 0;
+        String taskName = "";
+        String serviceLocation = "";
+        String serviceDescription = "";
+        int price = 0;
         try {
             if (request.getParameter("taskid") != null){
                 taskID  = Integer.parseInt(request.getParameter("taskid"));
@@ -69,6 +73,18 @@ public class SubmitTask extends HttpServlet {
             }
             if (request.getParameter("port") != null){
                 port  = (Port) (request.getAttribute("port"));
+            }
+            if (request.getParameter("taskName") != null){
+                taskName  = (String) request.getParameter("taskName");
+            }
+            if (request.getParameter("serviceLocation") != null){
+                serviceLocation  = (String) request.getParameter("serviceLocation");
+            }
+            if (request.getParameter("serviceDescription") != null){
+                serviceDescription  = (String) request.getParameter("serviceDescription");
+            }
+            if (request.getParameter("price") != null){
+                price  = Integer.parseInt(request.getParameter("price"));
             }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);
@@ -125,6 +141,10 @@ public class SubmitTask extends HttpServlet {
                 response.sendRedirect("TasksAssignment?type=personal&actionStatus="+actionStatus);
                 return;
             }
+            request.setAttribute("taskName", taskName);
+            request.setAttribute("serviceLocation", serviceLocation);
+            request.setAttribute("serviceDescription", serviceDescription);
+            request.setAttribute("price", price);
             request.setAttribute("cable", cable);
             request.setAttribute("port", port);
             request.setAttribute("taskid", taskID);

@@ -76,6 +76,10 @@
                             <input type="hidden" name="login" value="<%=request.getUserPrincipal().getName()%>"/>
                             <% if(personal) { %>
                             <input type="hidden" name="type" value="personal"/>
+                            <input type="hidden" name="taskName" value="<%=m.get("taskName")%>"/>
+                            <input type="hidden" name="serviceLocation" value="<%=m.get("serviceLocation")%>"/>
+                            <input type="hidden" name="serviceDescription" value="<%=m.get("serviceDescription")%>"/>
+                            <input type="hidden" name="price" value="<%=m.get("price")%>"/>
                             <input type="submit" value="Execute" name="action" class="btn btn-primary">
                             <% } else { %>
                             <input type="submit" value="Assign to myself" name="action" class="btn btn-primary">
