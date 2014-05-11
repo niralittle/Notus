@@ -9,8 +9,8 @@
 <script src="assets/user-content.js"></script>
 
 <% if (request.getParameter("user") != null) {
-    out.println("<h2>Viewing info of " + request.getParameter("user") +
-            "</h2>");
+    out.println("<h3>Viewing info of " + request.getParameter("user") +
+            "</h3>");
     }
 %>
 <!-- Paging -->
@@ -41,7 +41,7 @@
             (List<Map<String, String>>) request.getAttribute("processingOrders");
 
     if (activeInstances != null && !activeInstances.isEmpty()) { %>
-    <h2>Currently active connections:</h2>
+    <h3>Currently active connections:</h3>
 
         <table class='activeInstances table table-striped table-hover'>
             <thead>
@@ -110,7 +110,7 @@
 <hr>
 <%      }%>
 
-<h2>Orders being processed:</h2>
+<h3>Orders being processed:</h3>
         <table class='processingOrders table table-striped table-hover'>
             <thead>
                 <tr>

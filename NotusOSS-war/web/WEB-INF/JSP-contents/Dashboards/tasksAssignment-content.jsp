@@ -18,9 +18,9 @@
         }
         OSSUser user = (OSSUser) request.getAttribute("user");
        %>
-        <h2>
+        <h3>
             <%=title+" "%> tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
-        </h2>
+        </h3>
         <%
         if (request.getAttribute("actionStatus") != null) { %>
         <%=request.getAttribute("actionStatus")%>
