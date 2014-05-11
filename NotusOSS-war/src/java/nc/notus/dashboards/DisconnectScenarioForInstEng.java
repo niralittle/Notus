@@ -97,11 +97,11 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
             if (request.getParameter("action") != null && "Disconnect Cable from Port".equals(request.getParameter("action"))){
                 try {
                     dwf.unplugCableFromPort(taskID, cable.getId(), port.getId(), si.getId());
-                    actionStatus = "Cable was disconnected";
+                    actionStatus = "Cable was disconnected from port";
                     dbManager.commit();
                 } catch (DBManagerException ex) {
                     dbManager.rollback();
-                    actionStatus = "Cable was not disconnected";
+                    actionStatus = "Cable was not disconnected from port";
                 }
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int offset = 0;
