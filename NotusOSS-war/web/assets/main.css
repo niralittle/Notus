@@ -22,8 +22,7 @@ hr {
 }
 footer {
     background-color: #E9F2FF;
-    bottom: 0;
-    height: 60px;
+    bottom: 0; 
     width: 100%;
 }
 #page_content {
@@ -79,7 +78,7 @@ footer {
 
 #main-content {
     background-color:#E9F2FF;
-    padding:5px 5px 5px 5px;
+    padding:20px 20px 20px 20px;
 }
 /* Map service stuff*/
 #map-canvas {

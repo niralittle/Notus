@@ -31,9 +31,14 @@
                     <% pageContext.include("/WEB-INF/JSP-contents/" + request.getParameter("content") + ".jsp");%>
                 </div>
             </div>
+
             <footer>
-                Communications fast as wind. <br>
-                &copy; Notus 2014
+                <div style="margin-top: 30px; padding: 20px; 
+                height:auto; background-image: url(assets/cables.gif);
+                background-position: top right;  background-repeat: no-repeat;">
+                    <h5> Communications fast as wind.<br>
+                    &copy; Notus 2014</h5> 
+                </div>
             </footer>
         </div>
     </div>
