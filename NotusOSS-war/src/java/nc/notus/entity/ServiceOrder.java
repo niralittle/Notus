@@ -4,6 +4,7 @@ import java.sql.Date;
 
 /**
  * This class implements entity ServiceOrder
+ * 
  * @author Vladimir Ermolenko
  */
 public class ServiceOrder {
@@ -16,7 +17,6 @@ public class ServiceOrder {
     private int serviceCatalogID;
     private Integer serviceInstanceID; // could be null
     private String serviceLocation;
-
 
     public ServiceOrder() {
     }

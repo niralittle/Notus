@@ -36,6 +36,7 @@ import nc.notus.workflow.NewScenarioWorkflow;
 public class SubmitTask extends HttpServlet {
 
     private String actionStatus;
+    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -43,9 +44,9 @@ public class SubmitTask extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
+    	
         response.setContentType("text/html;charset=UTF-8");
         DBManager dbManager = new DBManager();
         int portQuantity = 60;
@@ -152,12 +153,14 @@ public class SubmitTask extends HttpServlet {
             request.setAttribute("userid", userID);
             request.setAttribute("actionStatus", actionStatus);
             request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
-        } finally {
+        } catch (DBManagerException e) {
+			request.setAttribute("errMessage", "Error was occured. ");
+			request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
+		} finally {
                 dbManager.close();
         }
     } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
@@ -199,6 +202,6 @@ public class SubmitTask extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }

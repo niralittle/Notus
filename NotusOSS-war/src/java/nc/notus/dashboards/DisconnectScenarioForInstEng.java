@@ -1,25 +1,23 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dashboards;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceOrderDAO;
 import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
+import nc.notus.dashboards.CustomerUserServlet;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Cable;
@@ -30,14 +28,17 @@ import nc.notus.entity.Task;
 import nc.notus.workflow.DisconnectScenarioWorkflow;
 
 /**
- *
+ * Proceed disconnect task for installation engineer.
+ * 
  * @author Vladimir Ermolenko
  */
 public class DisconnectScenarioForInstEng extends HttpServlet {
 
     private HttpSession session;
+    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+     * 
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -45,7 +46,9 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
+    	
         response.setContentType("text/html;charset=UTF-8");
+        
         DBManager dbManager = new DBManager();
         Cable cable = null;
         Port port = null;
@@ -57,12 +60,13 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
         String serviceLocation = "";
         String serviceDescription = "";
         int price = 0;
+        
         try {
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
             }
-
             session = request.getSession();
+            
             if (session.getAttribute("userid") != null) {
                 userID = (Integer) session.getAttribute("userid");
             }
@@ -89,12 +93,16 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
             }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);
+            
             ServiceInstanceDAO siDAO = new ServiceInstanceDAOImpl(dbManager);
             ServiceInstance si = siDAO.find(so.getServiceInstanceID());
-            DisconnectScenarioWorkflow dwf = new DisconnectScenarioWorkflow(so,dbManager);
+            
+            DisconnectScenarioWorkflow dwf = new 
+            			DisconnectScenarioWorkflow(so,dbManager);
 
             //Action "Disconnect Cable from Port" and redirect to personal tasks page
-            if (request.getParameter("action") != null && "Disconnect Cable from Port".equals(request.getParameter("action"))){
+            if (request.getParameter("action") != null 
+            		&& "Disconnect Cable from Port".equals(request.getParameter("action"))){
                 try {
                     dwf.unplugCableFromPort(taskID, cable.getId(), port.getId(), si.getId());
                     actionStatus = "Cable was disconnected from port";
@@ -124,9 +132,12 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
             request.setAttribute("soid", soID);
             request.setAttribute("userid", userID);
             request.getRequestDispatcher("disconnectScenarioForInstEng.jsp").forward(request, response);
-        } finally {
-                dbManager.close();
-        }
+		} catch (DBManagerException wfExc) {
+			request.setAttribute("errorMessage", "Service unavailable."); 
+			request.getRequestDispatcher("disconnectScenarioForInstEng.jsp").forward(request, response);
+		} finally {
+			dbManager.close();
+		}
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -171,6 +182,6 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }

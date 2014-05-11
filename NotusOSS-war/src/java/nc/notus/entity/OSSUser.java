@@ -1,24 +1,80 @@
 package nc.notus.entity;
 
+import nc.notus.states.UserRole;
+
+/**
+ * Library used to encrypt password to SHA-256 hash.
+ */
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
- * This class implements entity OSSUser
+ * Implements entity OSSUser.
+ * 
  * @author Vladimir Ermolenko
  */
 public class OSSUser {
+	
+	/**
+	 * <tt>OSSUser</tt> identifier.
+	 */
     private int id;
+    
+    /**
+     * <tt>OSSUser</tt> first name.
+     */
     private String firstName;
+    
+    /**
+     * <tt>OSSUser</tt> last name.
+     */
     private String lastName;
+    
+    /**
+     * <tt>OSSUser</tt> email.
+     */
     private String email;
+    
+    /**
+     * <tt>OSSUser</tt> login to authentication in system.
+     */
     private String login;
+    
+    /**
+     * <tt>OSSUser</tt> password used to authentication in system.
+     */
     private String password;
+    
+    /**
+     * Indicates that <tt>OSSUser</tt> blocked or not.
+     */
     private int blocked;
+    
+    /**
+     * <tt>OSSUser</tt> role in system.
+     * 
+     * @see {@link UserRole}
+     */
     private int roleID;
 
+    /**
+     * Constructs empty <tt>OSSUser</tt>.
+     */
     public OSSUser() {
     }
 
+    /**
+     * Constructs <tt>OSSUser</tt>.
+     * 
+     * @param id - <tt>OSSUser</tt> identifier.
+     * @param firstName - <tt>OSSUser</tt> first name.
+     * @param lastName - <tt>OSSUser</tt> last name.
+     * @param email <tt>OSSUser</tt> email.
+     * @param login - <tt>OSSUser</tt> login.
+     * @param password - <tt>OSSUser</tt> clear-text password.
+     * 					Set password in SHA-256 encryption format.
+     * @param blocked - Indicates that <tt>OSSUser</tt> blocked or not.
+     * @param roleID - tt>OSSUser</tt> role in system.
+     */
     public OSSUser(int id, String firstName, String lastName, String email,
                     String login, String password, int blocked, int roleID) {
         this.id = id;
@@ -31,6 +87,18 @@ public class OSSUser {
         this.roleID = roleID;
     }
     
+    /**
+     * Construct tt>OSSUser</tt> without specifying idetfier.
+     * 
+     * @param firstName - <tt>OSSUser</tt> first name.
+     * @param lastName - <tt>OSSUser</tt> last name.
+     * @param email <tt>OSSUser</tt> email.
+     * @param login - <tt>OSSUser</tt> login.
+     * @param password - <tt>OSSUser</tt> clear-text password.
+     * 					Set password in SHA-256 encryption format.
+     * @param blocked - Indicates that <tt>OSSUser</tt> blocked or not.
+     * @param roleID - tt>OSSUser</tt> role in system.
+     */
      public OSSUser(String firstName, String lastName, String email,
                     String login, String password, int blocked, int roleID) {
         this.firstName = firstName;
@@ -97,6 +165,7 @@ public class OSSUser {
     /**
      * This method calculates SHA-256 hash of given clear-text password and
      * writes it into class variable.
+     * 
      * @param password clear-text password
      */
     public void setPassword(String password) {

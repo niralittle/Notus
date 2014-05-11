@@ -23,10 +23,12 @@ import nc.notus.entity.Task;
 
 /**
  * Servlet for getting all employees by role
- * and forwards it to jsp
+ * and forwards it to jsp-page.
+ * 
  * @author Alina Vorobiova
  */
 public class ReassigTaskToEngineerServlet extends HttpServlet {
+	
     private final int RECORDS_PER_PAGE = 5;
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -37,7 +39,9 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
+    	
         response.setContentType("text/html;charset=UTF-8");
+        
         PrintWriter out = response.getWriter();
         DBManager dbManager = new DBManager();
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
@@ -65,18 +69,21 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
             }
             request.setAttribute("page", page);
             int offset = (page-1) * RECORDS_PER_PAGE;
+            
             List<OSSUser> engineers = userDAO.getUsersByRoleID(roleID, offset, RECORDS_PER_PAGE);
             request.setAttribute("listOfEngineers", engineers);
             request.setAttribute("taskID", taskID);
             
             request.getRequestDispatcher("reassignTaskEngineer.jsp").forward(request, response);
-        } finally { 
+        } catch (DBManagerException e) {
+			request.setAttribute("errMessage", "Error was occured. ");
+			request.getRequestDispatcher("reassignTaskEngineer.jsp").forward(request, response);
+		} finally { 
             out.close();
             dbManager.close();
         }
     } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
@@ -119,6 +126,6 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+   }
 
 }

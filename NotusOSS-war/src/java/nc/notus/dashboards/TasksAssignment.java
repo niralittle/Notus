@@ -54,16 +54,17 @@ import nc.notus.states.WorkflowScenario;
 /**
  * Implements tasks assignment from role tasks to personal task for
  * all types of engineers
+ * 
  * @author Vladimir Ermolenko
  */
 public class TasksAssignment extends HttpServlet {
    
 	private static final int RECORDS_PER_PAGE = 5;
-	
-	
+
 	private int offset;
 	private int page;
 	private HttpSession session;
+	
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -74,6 +75,7 @@ public class TasksAssignment extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
+        
         DBManager dbManager = new DBManager();
         String login = "";
         OSSUser user = null;
@@ -243,12 +245,19 @@ public class TasksAssignment extends HttpServlet {
             request.setAttribute("user", user);
             request.setAttribute("actionStatus", actionStatus);
             request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
+        } catch(DBManagerException ex) {
+        	request.setAttribute("errMessage", "Service unavailable.");
+            request.getRequestDispatcher("tasksAssignment.jsp").forward(request, response);
         } finally {
             dbManager.close();
         }
 
     } 
     
+    /**
+     * Prepare some data before redirecting to engineer page.
+     * 
+     */
     private void prepareTask(Task task, HttpServletRequest request, DBManager dbManager, 
     		int roleID) throws DBManagerException {
     		
@@ -272,6 +281,9 @@ public class TasksAssignment extends HttpServlet {
 		request.setAttribute("task", task);
 	}
     
+    /**
+     * Get workflow scenario for given task.
+     */
     private String getTaskScenario(Task task, DBManager dbManager) throws DBManagerException {
 		ServiceOrderDAOImpl soDAO = new ServiceOrderDAOImpl(dbManager);
 		ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
@@ -290,7 +302,9 @@ public class TasksAssignment extends HttpServlet {
 		return null;
 	}
     
-    
+    /**
+     * Get count of pages with tasks in DB.
+     */
     private long getPageCount(TaskDAO taskDAO, OSSUser user, boolean personal) throws DBManagerException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		
@@ -306,9 +320,7 @@ public class TasksAssignment extends HttpServlet {
 		long quantityOfPages = (long) Math.ceil(quantityOfRecords * 1.0/ RECORDS_PER_PAGE);
 		return quantityOfPages;
 	}
-	
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
@@ -350,6 +362,6 @@ public class TasksAssignment extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }

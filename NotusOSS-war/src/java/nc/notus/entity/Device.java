@@ -1,18 +1,40 @@
 package nc.notus.entity;
 
 /**
- * This class implements entity Device
+ * Implements entity Device.
+ * 
  * @author Vladimir Ermolenko
  */
 public class Device {
 
+	/**
+	 * <tt>Device</tt> identifier.
+	 */
     private int id;
+    
+    /**
+     * <tt>Device</tt> model name.
+     */
     private String name;
+    
+    /**
+     * Quantity of ports in the device. 
+     */
     private int portQuantity;
 
+    /**
+     * Constructs empty <tt>device</tt>.
+     */
     public Device() {
     }
-
+    
+    /**
+     * Constructs a device with passes parameters.
+     * 
+     * @param id - <tt>Device</tt> identifier.
+     * @param name - <tt>Device</tt> model name.
+     * @param portQuantity - Quantity of ports.
+     */
     public Device(int id, String name, int portQuantity) {
         this.id = id;
         this.name = name;

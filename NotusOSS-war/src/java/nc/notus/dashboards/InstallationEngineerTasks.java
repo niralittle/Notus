@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package nc.notus.dashboards;
 
 import java.io.IOException;
@@ -22,7 +17,8 @@ import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Task;
 
 /**
- * Implements part of Installation Engineer dashboard
+ * Implements part of Installation Engineer dashboard.
+ * 
  * @author Vladimir Ermolenko
  */
 public class InstallationEngineerTasks extends HttpServlet {
@@ -38,6 +34,7 @@ public class InstallationEngineerTasks extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
+        
         int page = 1;
         int numbOfRecords = 10;
         DBManager dbManager = new DBManager();
@@ -62,7 +59,10 @@ public class InstallationEngineerTasks extends HttpServlet {
             request.setAttribute("tasks", tasks);
             request.setAttribute("userid", userID);
             request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
-        } finally {
+        } catch (DBManagerException wfExc) {
+			request.setAttribute("errorMessage", "Service unavailable."); 
+			request.getRequestDispatcher("installationEngineer.jsp").forward(request, response);
+		}finally {
             dbManager.close();
         }
 

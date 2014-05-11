@@ -1,24 +1,43 @@
 package nc.notus.entity;
 
 /**
- * This class implements entity ServiceCatalog
+ * This class implements entity ServiceCatalog.
+ * 
  * @author Vladimir Ermolenko
  */
 public class ServiceCatalog {
+	
+	/**
+	 * Catalog identifier.
+	 */
     private int id;
+    
+    /**
+     * Provider location identifier that gives services.
+     */
     private int providerLocationID;
+    
+    /**
+     * Service identifier.
+     */
     private int serviceTypeID;
+    
+    /**
+     * Price of service.
+     */
     private int price;
 
     public ServiceCatalog() {
+    	
     }
 
-    public ServiceCatalog(int id, int providerLocationID, int serviceTypeID, int price) {
-        this.id = id;
-        this.providerLocationID = providerLocationID;
-        this.serviceTypeID = serviceTypeID;
-        this.price = price;
-    }
+	public ServiceCatalog(int id, int providerLocationID, int serviceTypeID,
+						  int price) {
+		this.id = id;
+		this.providerLocationID = providerLocationID;
+		this.serviceTypeID = serviceTypeID;
+		this.price = price;
+	}
 
     public int getId() {
         return id;

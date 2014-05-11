@@ -27,17 +27,31 @@ import nc.notus.states.UserRole;
 public class GettingUsersInfo extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+    
+    //page to changing user password
     private static final String CHANGE_PASSWORD_PAGE = "passwordChanging.jsp";
     private static int RECORDS_PER_PAGE = 5;
+    
+    //user list to return
     private List<OSSUser> users = null;
     private String login;
     private String email;
     private String lastName;
+    
     private int offset;
     private int page;
 
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+     * 
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	
         response.setContentType("text/html;charset=UTF-8");
 
         DBManager dbManager = null;
@@ -52,7 +66,8 @@ public class GettingUsersInfo extends HttpServlet {
             dbManager = new DBManager();
             userDAO = new OSSUserDAOImpl(dbManager);
             
-            noOfPages = getPageCount(userDAO); 		
+            noOfPages = getPageCount(userDAO); 	
+            
             if (request.getParameter("page") == null) {
                 page = 1;
             } else {
@@ -89,12 +104,22 @@ public class GettingUsersInfo extends HttpServlet {
         redirect(request, response, CHANGE_PASSWORD_PAGE);
     }
 
+    /**
+     * Read inputet data from request scope.
+     * 
+     * @param request servlet request
+     */
     private void readInputtedData(HttpServletRequest request) {
         email = request.getParameter("email");
         login = request.getParameter("login");
         lastName = request.getParameter("lastName");
     }
 
+    /**
+     * Check if read data are valid.
+     * 
+     * @param request servlet request
+     */
     private boolean isValidParams(HttpServletRequest request) {
         if (login.isEmpty() & email.isEmpty() & lastName.isEmpty()) {
             request.setAttribute("errMessage",
@@ -127,6 +152,9 @@ public class GettingUsersInfo extends HttpServlet {
         return true;
     }
 
+    /**
+     * Calculate count of pages for specified search parameter.
+     */
     private long getPageCount(OSSUserDAO userDAO) throws DBManagerException {
         Map<String, Object> params = new HashMap<String, Object>();
 
@@ -141,6 +169,7 @@ public class GettingUsersInfo extends HttpServlet {
 
         long quantityOfRecords = userDAO.countAllWithLikeCause(params);
         long quantityOfPages = (long) Math.ceil(quantityOfRecords * 1.0 / RECORDS_PER_PAGE);
+        
         return quantityOfPages;
     }
 
@@ -161,6 +190,13 @@ public class GettingUsersInfo extends HttpServlet {
         return;
     }
 
+    /** 
+     * Handles the HTTP <code>GET</code> method.
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {

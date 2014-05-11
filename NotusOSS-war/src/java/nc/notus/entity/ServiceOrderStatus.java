@@ -9,6 +9,14 @@ public class ServiceOrderStatus {
     private int id;
     private String status;
 
+    public ServiceOrderStatus() {
+    }
+
+    public ServiceOrderStatus(int id, String status) {
+        this.id = id;
+        this.status = status;
+    }
+    
     public int getId() {
         return id;
     }
@@ -22,14 +30,6 @@ public class ServiceOrderStatus {
     }
 
     public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public ServiceOrderStatus() {
-    }
-
-    public ServiceOrderStatus(int id, String status) {
-        this.id = id;
         this.status = status;
     }
 }

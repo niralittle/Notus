@@ -69,15 +69,20 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 				request.setAttribute("wfScenario", wfScenario);
 				request.setAttribute("task", task);
 				
-				request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
+				redirectTo(PROVISIONING_PAGE, request, response);
 				
+			} catch (DBManagerException e) {
+				request.setAttribute("errMessage", "Error was occured. ");
+				redirectTo(PROVISIONING_PAGE, request, response);
 			} finally {
 				dbManager.close();
 			}
-		}
-
 	}
-
+	
+	/**
+	 * Return workflow scenario for given task.
+	 * 
+	 */
 	private String getTaskScenario(Task task, DBManager dbManager) throws DBManagerException {
 
 		String wfScenario = null;
@@ -99,8 +104,6 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 		return wfScenario;
 	}
 
-	// <editor-fold defaultstate="collapsed"
-	// desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
 	/**
 	 * Handles the HTTP <code>GET</code> method.
 	 * 
@@ -162,11 +165,13 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 		} catch (DBManagerException e) {
 			request.setAttribute("errMessage", "Error was occured. ");
 			redirectTo(PROVISIONING_PAGE, request, response);
-		}
+		} 
 	
 	}
 	
-	
+	/**
+	 * Remove circuit using <tt>ProvisioningEngineerController</tt>.
+	 */
 	private void removeCircuit(HttpServletRequest request, 
 			HttpServletResponse response) throws ServletException, IOException {
 		

@@ -2,9 +2,11 @@ package nc.notus.entity;
 
 /**
  * This class implements entity ServiceType
+ * 
  * @author Vladimir Ermolenko
  */
 public class ServiceType {
+	
     private int id;
     private String service;
 

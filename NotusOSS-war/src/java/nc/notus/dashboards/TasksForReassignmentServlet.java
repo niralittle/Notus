@@ -31,10 +31,12 @@ import nc.notus.entity.Task;
 
 /**
  * Servlet for getting all assigned tasks
- * and forwards it to jsp
+ * and forwards it to jsp-page.
+ * 
  * @author Alina Vorobiova
  */
 public class TasksForReassignmentServlet extends HttpServlet {
+	
     private final int RECORDS_PER_PAGE  = 10;
    
     /** 
@@ -47,6 +49,7 @@ public class TasksForReassignmentServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
+        
         PrintWriter out = response.getWriter();
         DBManager dbManager = new DBManager();
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
@@ -101,13 +104,15 @@ public class TasksForReassignmentServlet extends HttpServlet {
             }
             request.setAttribute("listOfTasks", tasksInfo);
             request.getRequestDispatcher("tasksForReasignment.jsp").forward(request, response);
+        } catch(DBManagerException ex) {
+        	request.setAttribute("errMessage", "Service unavailable.");
+        	request.getRequestDispatcher("tasksForReasignment.jsp").forward(request, response);
         } finally { 
             out.close();
             dbManager.close();
         }
     } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
@@ -149,6 +154,6 @@ public class TasksForReassignmentServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }

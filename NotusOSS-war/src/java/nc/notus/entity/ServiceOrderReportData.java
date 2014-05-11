@@ -18,8 +18,8 @@ public class ServiceOrderReportData {
     }
 
     public ServiceOrderReportData(int id, String date, String serviceLocation,
-            String service, int price, String providerLocationName,
-            String providerLocation) {
+			            String service, int price, String providerLocationName,
+			            String providerLocation) {
         this.id = id;
         this.date = date;
         this.serviceLocation = serviceLocation;
@@ -84,6 +84,5 @@ public class ServiceOrderReportData {
     public void setServiceLocation(String serviceLocation) {
         this.serviceLocation = serviceLocation;
     }
-    
 
 }

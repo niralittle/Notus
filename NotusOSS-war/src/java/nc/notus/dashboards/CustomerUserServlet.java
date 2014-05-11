@@ -68,11 +68,11 @@ public class CustomerUserServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
+        
         String siPageAttr = request.getParameter("siPage");
         String soPageAttr = request.getParameter("soPage");
         int siPage = (siPageAttr == null) ? 1 : Integer.parseInt(siPageAttr);
         int soPage = (soPageAttr == null) ? 1 : Integer.parseInt(soPageAttr);
-
 
         try {
             dbManager = new DBManager();
@@ -80,7 +80,6 @@ public class CustomerUserServlet extends HttpServlet {
             Logger.getLogger(CustomerUserServlet.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
-
 
         try {
             int userID = getUserID(request);
@@ -133,16 +132,22 @@ public class CustomerUserServlet extends HttpServlet {
             if (request.getParameter("serviceInstanceID") != null) {
                 int serviceInstanceId;
                 CustomerUserController userControl;
-                serviceInstanceId = Integer.parseInt(request
-                        .getParameter("serviceInstanceID"));
                 try {
+                    serviceInstanceId = Integer.parseInt(
+                    		request.getParameter("serviceInstanceID"));
+                    
                     userControl = new CustomerUserController();
                     userControl.proceedToDisconnect(serviceInstanceId);
                 } catch (DBManagerException wfExc) {
                     Logger.getLogger(CustomerUserServlet.class.getName())
                             .log(Level.SEVERE, null, wfExc);
+                    response.sendRedirect("CustomerUser");
+                } catch(NumberFormatException numExc) {
+                	response.sendRedirect("CustomerUser");
                 }
             }
+            
+            //redirect to user cabinet
             response.sendRedirect("CustomerUser");
             return;
         }
@@ -162,9 +167,9 @@ public class CustomerUserServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
             return "Creates data to display on customer user dashboard";
-    }// </editor-fold>
+    }
 
-    /*
+    /**
      * Get userID from request; if there is none - get one from DB,
      * put it in there and return the value
      */
@@ -179,6 +184,13 @@ public class CustomerUserServlet extends HttpServlet {
         return Integer.parseInt(request.getParameter("userID"));
     }
 
+    /**
+     * Proceed the service order. 
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     private void processOrder(HttpServletRequest request, 
             HttpServletResponse response) 
             throws IOException {
@@ -194,6 +206,7 @@ public class CustomerUserServlet extends HttpServlet {
             ServiceOrder newOrder = createOrder(dbManager, userID,
                     serviceLocation, catalogID);
             dbManager.commit();
+            
             Workflow wf = new NewScenarioWorkflow(newOrder, dbManager);
             wf.proceedOrder();
             dbManager.commit();
@@ -206,7 +219,7 @@ public class CustomerUserServlet extends HttpServlet {
         }
     }
 
-    /*
+    /**
      * Creates new Service Order with status ENTERING
      * @param dbManager
      * @param userID
@@ -232,6 +245,7 @@ public class CustomerUserServlet extends HttpServlet {
 
         int orderID = (Integer) orderDAO.add(so);
         so.setId(orderID);
+        
         return so;
     }
 
@@ -252,27 +266,33 @@ public class CustomerUserServlet extends HttpServlet {
      */
     public List<Map<String, String>> getActiveInstancesList(int userID,
             int page, int numbOfRecords) throws DBManagerException {
+    	
         ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
         ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
+        
         List<Map<String, String>> activeInstances =
                new ArrayList<Map<String, String>>();
         List<ServiceOrder> completeOrders = orderDAO.getSOByStatus(userID,
                             OrderStatus.COMPLETED.toInt(),
                            (numbOfRecords * (page - 1)), numbOfRecords);
+        
         for (ServiceOrder o: completeOrders) {
             Map<String,String> row = new HashMap<String, String>();
             ServiceInstanceDAO instanceDAO = new ServiceInstanceDAOImpl(dbManager);
+            
             ServiceInstance instance = instanceDAO.find(o.getServiceInstanceID());
             if (instance.getServiceInstanceStatusID() == InstanceStatus.ACTIVE.toInt()) {
                 int catalogID = o.getServiceCatalogID();
                 ServiceCatalog sc = catalogDAO.find(catalogID);
                 ServiceType st = typeDAO.find(sc.getServiceTypeID());
+                
                 row.put("serviceLocation", o.getServiceLocation());
                 row.put("serviceDescription", st.getService());
                 row.put("orderDate", o.getServiceOrderDate().toString());
                 row.put("price", Integer.toString(sc.getPrice()));
                 row.put("instanceID", Integer.toString(o.getServiceInstanceID()));
+                
                 activeInstances.add(row);
             }
         } 
@@ -295,10 +315,12 @@ public class CustomerUserServlet extends HttpServlet {
      */
     public List<Map<String, String>> getProcessingOrdersList(int userID,
             int page, int numbOfRecords) throws DBManagerException {
+    	
         ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);
         ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
         ServiceTypeDAO typeDAO = new ServiceTypeDAOImpl(dbManager);
         ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
+        
         List<Map<String, String>> processingOrders =
                new ArrayList<Map<String, String>>();
         List<ServiceOrder> orders = orderDAO.getSOByStatus(userID,
@@ -310,10 +332,12 @@ public class CustomerUserServlet extends HttpServlet {
             ServiceCatalog sc = catalogDAO.find(catalogID);
             ServiceType st = typeDAO.find(sc.getServiceTypeID());
             Scenario s = scenarioDAO.find(o.getScenarioID());
+            
             row.put("scenario", s.getScenario());
             row.put("serviceLocation", o.getServiceLocation());
             row.put("serviceDescription", st.getService());
             row.put("orderDate", o.getServiceOrderDate().toString());
+            
             processingOrders.add(row);
         }
         return processingOrders;

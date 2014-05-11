@@ -2,9 +2,11 @@ package nc.notus.entity;
 
 /**
  * This class implements entity ServiceInstanceStatus
+ * 
  * @author Vladimir Ermolenko
  */
 public class ServiceInstanceStatus {
+	
     private int id;
     private String status;
 

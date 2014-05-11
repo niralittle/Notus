@@ -1,16 +1,35 @@
 package nc.notus.entity;
 
 /**
- * This class implements entity Role
+ * Implements entity Role.
+ * 
  * @author Vladimir Ermolenko
  */
 public class Role {
+	
+	/**
+	 * Role identifier.
+	 */
     private int id;
+    
+    /**
+     * Name of role.
+     */
     private String role;
 
+    /**
+     * Constructs empty role.
+     */
     public Role() {
+    	
     }
 
+    /**
+     * Constructs role with passed parameters.
+     * 
+     * @param id - Role identifier.
+     * @param role - Role name.
+     */
     public Role(int id, String role) {
         this.id = id;
         this.role = role;

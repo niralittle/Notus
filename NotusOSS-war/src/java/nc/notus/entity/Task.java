@@ -2,9 +2,11 @@ package nc.notus.entity;
 
 /**
  * This class implements entity Task
+ * 
  * @author Vladimir Ermolenko & Panchenko Dmytro
  */
 public class Task {
+	
     private int id;
     private int serviceOrderID;
     private Integer employeeID; // could be null
@@ -15,14 +17,15 @@ public class Task {
     public Task() {
     }
 
-    public Task(int id, int serviceOrderID, Integer employeeID, int roleID, int taskStatusID, String name) {
-        this.id = id;
-        this.serviceOrderID = serviceOrderID;
-        this.employeeID = employeeID;
-        this.roleID = roleID;
-        this.taskStatusID = taskStatusID;
-        this.name = name;
-    }
+	public Task(int id, int serviceOrderID, Integer employeeID, int roleID,
+				int taskStatusID, String name) {
+		this.id = id;
+		this.serviceOrderID = serviceOrderID;
+		this.employeeID = employeeID;
+		this.roleID = roleID;
+		this.taskStatusID = taskStatusID;
+		this.name = name;
+	}
 
     public Integer getEmployeeID() {
         return employeeID;

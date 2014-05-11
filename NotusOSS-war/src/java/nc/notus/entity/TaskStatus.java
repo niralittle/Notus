@@ -2,9 +2,11 @@ package nc.notus.entity;
 
 /**
  * This class implements entity TaskStatus
+ * 
  * @author Vladimir Ermolenko
  */
 public class TaskStatus {
+	
     private int id;
     private String status;
 

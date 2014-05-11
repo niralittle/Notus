@@ -3,6 +3,7 @@ package nc.notus.dashboards;
 import java.io.IOException;
 
 
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,7 +43,12 @@ public class SupportEngineerServlet extends HttpServlet {
         return;
     }
 
-    private void blockUser(HttpServletRequest request) {
+    /**
+     * Block user by ADMINISTRATOR.
+     * 
+     * @param request servlet request
+     */
+    private void blockUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AdministratorController adminControl = null;
 
         if (request.isUserInRole("ADMINISTRATOR")) {
@@ -56,6 +62,7 @@ public class SupportEngineerServlet extends HttpServlet {
                     request.setAttribute("success", adminControl.getActionStatus());
                 } catch (DBManagerException exc) {
                     request.setAttribute("errMessage", exc.getMessage());
+                    redirectTo(CHANGE_PASSWORD_PAGE, request, response);
                 }
 
             } else {
@@ -66,7 +73,10 @@ public class SupportEngineerServlet extends HttpServlet {
             request.setAttribute("errMessage", "To perfrom this action you must be" + " logged in as Administrator! ");
         }
     }
-
+    
+    /**
+     * Send bill to customer user by SUPPORT_ENGINEER
+     */
     private void sendBill(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         SupportEngineerController supportControl = null;
@@ -88,6 +98,9 @@ public class SupportEngineerServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Change password by SUPPORT_ENGINEER.
+     */
     private void changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         SupportEngineerController supportControl = null;
@@ -136,7 +149,7 @@ public class SupportEngineerServlet extends HttpServlet {
             redirectTo(CHANGE_PASSWORD_PAGE, request, response);
 
         } else if ("Block user".equals(request.getParameter("action"))) {
-            blockUser(request);
+            blockUser(request, response);
             redirectTo(CHANGE_PASSWORD_PAGE, request, response);
         }
 
@@ -150,5 +163,5 @@ public class SupportEngineerServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Registers user in the system, creates a new order " + "and executes it ('New' scenario workflow).";
-    }// </editor-fold>
+    }
 }

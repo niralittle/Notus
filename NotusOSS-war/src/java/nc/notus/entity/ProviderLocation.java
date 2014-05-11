@@ -1,17 +1,40 @@
 package nc.notus.entity;
 
 /**
- * This class implements entity ProviderLocation
+ * Implements entity ProviderLocation.
+ * 
  * @author Vladimir Ermolenko
  */
 public class ProviderLocation {
+	
+	/**
+	 * ProviderLocation identifier.
+	 */
     private int id;
+    
+    /**
+     * Concrete provider name for concrete location. 
+     */
     private String name;
+    
+    /**
+     * Concrete provider location.
+     */
     private String location;
 
+    /**
+     * Constructs empty provider location.
+     */
     public ProviderLocation() {
     }
 
+    /**
+     * Construct provider location.
+     * 
+     * @param id - <tt>ProviderLocation</tt> identifier.
+     * @param name - Concrete provider name for location. 
+     * @param location - Concrete provider location.
+     */
     public ProviderLocation(int id, String name, String location) {
         this.id = id;
         this.name = name;
