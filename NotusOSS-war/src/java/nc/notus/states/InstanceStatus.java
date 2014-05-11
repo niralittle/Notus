@@ -22,6 +22,7 @@ public enum InstanceStatus {
 
     /**
      * Returns instance status name
+     * @return status
      */
     @Override
     public String toString() {
@@ -29,6 +30,7 @@ public enum InstanceStatus {
     }
     /**
      * Returns instance status id
+     * @return id
      */
     public int toInt() {
         return id;

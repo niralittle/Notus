@@ -21,13 +21,18 @@ public class GetServiceCatalogs {
     private final int NUMBER_OF_RECORDS = 20;
     private int providerLocationID;
 
+    /**
+     * Initialize a newly created GetServiceCatalogs
+     * @param providerLocationID
+     */
     public GetServiceCatalogs(int providerLocationID) {
         this.providerLocationID = providerLocationID;
     }
 
     /**
      * Gets serviceCatalogs by providerLocationID via DAO
-     * @return serviceCatalogs - list of service catalogs
+     * @return list of service catalogs
+     * @throws DBManagerException
      */
     public List<ServiceCatalog> getServiceCatalogs() throws DBManagerException {
         DBManager dbManager = new DBManager();
@@ -44,8 +49,9 @@ public class GetServiceCatalogs {
 
     /**
      * Gets serviceType by serviceTypeID via DAO
-     * @param serviceCatalog - service catalog
-     * @return serviceType - type of service catalog
+     * @param serviceCatalog service catalog
+     * @return type of service catalog
+     * @throws DBManagerException
      */
     public ServiceType getServiceType(ServiceCatalog serviceCatalog) throws DBManagerException {
         DBManager dbManager = new DBManager();

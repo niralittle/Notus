@@ -17,7 +17,10 @@ public enum UserRole {
     UserRole(int role) {
         this.role = role;
     }
-
+    /**
+     * Returns role id
+     * @return id
+     */
     public int toInt() {
         return role;
     }

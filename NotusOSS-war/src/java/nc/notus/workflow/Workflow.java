@@ -40,13 +40,13 @@ public abstract class Workflow {
      */
     protected ServiceOrder order;
     /**
-     * DBManager
+     * Data base manager
      */
     protected DBManager dbManager;
     /**
-     * Construtor of workflow
+     * Initialize newly created workflow object
      * @param order Service Order for which workflow was created
-     * @param dbManager
+     * @param dbManager data base manager
      */
     public Workflow(ServiceOrder order, DBManager dbManager) {
         this.order = order;
@@ -132,7 +132,7 @@ public abstract class Workflow {
     /**
      * This method gets status of given Service Order
      * @throws DBManagerException
-     * @return status status of given Service Order
+     * @return status of given Service Order
      */
     protected String getOrderStatus() throws DBManagerException {
         ServiceOrderStatusDAO orderStatusDAO = new ServiceOrderStatusDAOImpl(dbManager);
@@ -144,7 +144,7 @@ public abstract class Workflow {
     /**
      * This method gets scenario of given Service Order
      * @throws DBManagerException
-     * @return scenario scenario of given Service Order
+     * @return scenario of given Service Order
      */
     protected String getOrderScenario() throws DBManagerException {
         ScenarioDAO scenarioDAO = new ScenarioDAOImpl(dbManager);

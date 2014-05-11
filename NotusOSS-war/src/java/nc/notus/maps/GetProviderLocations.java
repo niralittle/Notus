@@ -19,7 +19,8 @@ public class GetProviderLocations {
 
     /**
      * Gets list of adresses of providerLocations via DAO
-     * @return providerList - list of provider locations
+     * @return list of provider locations
+     * @throws DBManagerException
      */
     public List<ProviderLocation> getProviderLocations() throws DBManagerException {
         DBManager dbManager = new DBManager();

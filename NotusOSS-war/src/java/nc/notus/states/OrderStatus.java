@@ -21,12 +21,14 @@ public enum OrderStatus {
     }
     /**
      * Returns order status id
+     * @return status id
      */
     public int toInt() {
     	return statusId;
     }
     /**
      * Returns order status name
+     * @return status
      */
     @Override
     public String toString() {

@@ -21,6 +21,7 @@ public enum WorkflowScenario {
 
     /**
      * Returns scenario id
+     * @return id
      */
     public int toInt() {
     	return scenarioId;
@@ -28,6 +29,7 @@ public enum WorkflowScenario {
 
     /**
      * Returns scenario name
+     * @return name
      */
     @Override
     public String toString() {

@@ -24,7 +24,6 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
     /* Dates for report request */
     private Date startDate = null;
     private Date finishDate = null;
-
     private int pageNumber = 0;
     private int recordsPerPage = 10;
 
@@ -52,6 +51,12 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
         getDataFromDatabase();
     }
 
+    /**
+     * Checks if next page exists
+     * @throws DBManagerException
+     * @return <code>true</code> if next page exists and
+     * <code>false</code> otherwise
+     */
     @Override
     public boolean checkNextPage() throws DBManagerException {
         DBManager dbManager = new DBManager();
@@ -87,7 +92,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-               StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 sb.append(orders.get(i - 1).getId());
                 sb.append(COLUMN_SEPARATOR);
                 sb.append(orders.get(i - 1).getDate());

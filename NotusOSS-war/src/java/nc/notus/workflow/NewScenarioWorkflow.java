@@ -58,7 +58,7 @@ public class NewScenarioWorkflow extends Workflow {
      * This method creates NewScenarioWorkflow for given Order. It doesn't
      * proceed Order to execution(See {@link Workflow#proceedOrder()})
      * @param order Order to create Workflow for
-     * @param dbManager 
+     * @param dbManager data base manager
      * @throws DBManagerException
      */
     public NewScenarioWorkflow(ServiceOrder order, DBManager dbManager)
@@ -170,7 +170,7 @@ public class NewScenarioWorkflow extends Workflow {
     /**
      * This method creates Cable entity
      * @param taskID ID of task for installation engineer
-     * @param cableType
+     * @param cableType type of cable
      * @throws DBManagerException
      */
     public void createCable(int taskID, String cableType) throws DBManagerException {
@@ -231,8 +231,8 @@ public class NewScenarioWorkflow extends Workflow {
 
     /**
      * Creates new Circuit Instance
-     * @param taskID
-     * @param circuitConfig
+     * @param taskID id of task
+     * @param circuitConfig configuration of Circuit
      * @throws DBManagerException 
      */
     public void createCircuit(int taskID, String circuitConfig) throws DBManagerException {

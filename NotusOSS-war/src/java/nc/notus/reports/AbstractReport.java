@@ -48,7 +48,6 @@ public abstract class AbstractReport {
      * This methods should be overridden if report has paging functionality.
      * Return value of methods below specified for reports that don't have
      * paging functionality. Documentation given with implementations.
-     *
      */
     protected boolean checkNextPage() throws DBManagerException {
         return false;

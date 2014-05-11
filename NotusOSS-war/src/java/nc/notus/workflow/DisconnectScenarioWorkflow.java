@@ -37,8 +37,8 @@ public class DisconnectScenarioWorkflow extends Workflow {
     /**
      * This method creates DisconnectScenarioWorkflow for given Order. It
      * doesn't proceed Order to execution(See {@link Workflow#proceedOrder()})
-     * @param order - Order to create Workflow for
-     * @param dbManager
+     * @param order Order to create Workflow for
+     * @param dbManager data base manager
      * @throws DBManagerException
      */
     public DisconnectScenarioWorkflow(ServiceOrder order, DBManager dbManager) throws DBManagerException {
@@ -84,7 +84,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
      * @param taskID taskID ID of task for installation engineer
      * @param cableID ID of Cable to unplug
      * @param portID ID of Port to unplug Cable from
-     * @param serviceInstanceID
+     * @param serviceInstanceID id of Service Instance
      * @throws DBManagerException
      */
     public void unplugCableFromPort(int taskID, int cableID, int portID,

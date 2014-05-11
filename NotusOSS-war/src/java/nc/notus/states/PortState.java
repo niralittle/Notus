@@ -17,6 +17,7 @@ public enum PortState {
     }
     /**
      * Returns port state
+     * @return state
      */
     public int toInt() {
         return state;

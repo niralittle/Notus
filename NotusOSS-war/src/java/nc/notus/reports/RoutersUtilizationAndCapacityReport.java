@@ -148,7 +148,12 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
     public int getCurrentPageIndex() {
         return this.pageNumber;
     }
-
+    /**
+     * Checks if next page exists
+     * @throws DBManagerException
+     * @return <code>true</code> if next page exists and
+     * <code>false</code> otherwise
+     */
     @Override
     public boolean checkNextPage() throws DBManagerException {
         DBManager dbManager = new DBManager();
