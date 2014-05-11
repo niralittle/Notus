@@ -50,8 +50,11 @@ public class ProfitabilityByMonthReport extends AbstractReport {
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = profit.get(i - 1).getMonth() +
-                        COLUMN_SEPARATOR + profit.get(i - 1).getProfit();
+                StringBuilder sb = new StringBuilder();
+                sb.append(profit.get(i - 1).getMonth());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(profit.get(i - 1).getProfit());
+                this.reportData[i] = sb.toString();
             }
         } finally {
             dbManager.close();

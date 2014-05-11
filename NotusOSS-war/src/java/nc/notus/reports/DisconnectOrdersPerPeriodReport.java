@@ -74,13 +74,21 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = orders.get(i - 1).getId() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getDate() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getServiceLocation() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getServiceName() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getPrice() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getProviderLocationName() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getProviderLocation();
+                StringBuilder sb = new StringBuilder();
+                sb.append(orders.get(i - 1).getId());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getDate());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getServiceLocation());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getServiceName());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getPrice());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getProviderLocationName());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getProviderLocation());
+                this.reportData[i] = sb.toString();
             }
         } finally {
             dbManager.close();
@@ -176,7 +184,7 @@ public class DisconnectOrdersPerPeriodReport extends AbstractReport {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             List<ServiceOrderReportData> orders = reportDAO.getDisconnectServiceOrders(startDate,
                     finishDate, (pageNumber + 1) * recordsPerPage, 1);
-            if (orders.size() == 0) {
+            if (orders.isEmpty()) {
                 return false;
             } else {
                 return true;

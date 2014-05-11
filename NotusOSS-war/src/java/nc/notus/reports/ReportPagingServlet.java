@@ -58,7 +58,6 @@ public class ReportPagingServlet extends HttpServlet {
             request.setAttribute("ErrorString", exc.getMessage());
             request.getRequestDispatcher("errorPage.jsp").forward(request, response);
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

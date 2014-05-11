@@ -26,13 +26,11 @@ public class DownloadReportServlet extends HttpServlet {
         Object a = request.getSession().getAttribute(reportGenId.toString());
         ReportGenerator rg = (ReportGenerator) a;
         if ("xls".equals(request.getParameter("type"))) {
-
             response.setContentType("application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment; filename=" +
                     rg.getReportName() + ".xls");
         }
         if ("csv".equals(request.getParameter("type"))) {
-
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=" +
                     rg.getReportName() + ".csv");

@@ -14,7 +14,6 @@ import nc.notus.entity.RoutersUtilizationCapacity;
  */
 public class RoutersUtilizationAndCapacityReport extends AbstractReport {
     /* Report name */
-
     private String reportName;
 
     /* Separates columns in reportData row strings */
@@ -57,10 +56,16 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = routersUtilCap.get(i - 1).getDeviceId() +
-                        COLUMN_SEPARATOR + routersUtilCap.get(i - 1).getDeviceName() +
-                        COLUMN_SEPARATOR + routersUtilCap.get(i - 1).getUtilization() + "%" +
-                        COLUMN_SEPARATOR + routersUtilCap.get(i - 1).getCapacity();
+                StringBuilder sb = new StringBuilder();
+                sb.append(routersUtilCap.get(i - 1).getDeviceId());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(routersUtilCap.get(i - 1).getDeviceName());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(routersUtilCap.get(i - 1).getUtilization());
+                sb.append("%");
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(routersUtilCap.get(i - 1).getCapacity());
+                this.reportData[i] = sb.toString();
             }
         } finally {
             dbManager.close();
@@ -151,7 +156,7 @@ public class RoutersUtilizationAndCapacityReport extends AbstractReport {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             List<RoutersUtilizationCapacity> routersUtilCap =
                     reportDAO.getRoutersUtilizationCapacityData((pageNumber + 1) * recordsPerPage, 1);
-            if (routersUtilCap.size() == 0) {
+            if (routersUtilCap.isEmpty()) {
                 return false;
             } else {
                 return true;

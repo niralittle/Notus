@@ -1,8 +1,6 @@
 package nc.notus.reports;
 
-import java.io.IOException;
 import java.io.Writer;
-
 import nc.notus.dao.ReportDAO;
 import nc.notus.dao.impl.ReportDAOImpl;
 import nc.notus.dbmanager.DBManager;
@@ -43,21 +41,16 @@ public class MostProfitableRouterReport extends AbstractReport {
         DBManager dbManager = new DBManager();
         try {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
-
             this.reportName = "Most profitable router";
-
             /* Data */
             MostProfitableRouterReportData dev = reportDAO.getMostProfitableRouter();
             if (dev != null) {
-
                 /* 1. Column headers 2. Device data */
                 this.reportData = new String[2];
-
                 /* Column headers */
                 this.reportData[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
                         COLUMN_SEPARATOR + "Port quantity" + COLUMN_SEPARATOR +
                         "Profit";
-
                 this.reportData[1] = dev.getId() + COLUMN_SEPARATOR + dev.getName() +
                         COLUMN_SEPARATOR + dev.getPortQuantity() + COLUMN_SEPARATOR +
                         dev.getProfit();

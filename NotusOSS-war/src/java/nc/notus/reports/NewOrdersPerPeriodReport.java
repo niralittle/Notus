@@ -42,7 +42,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
      * @param reportName report name
      * @param startDate  start date of the report term
      * @param finishDate end date of the report term
-     * @throws DBManagerException 
+     * @throws DBManagerException
      */
     public NewOrdersPerPeriodReport(String reportName, String startDate,
             String finishDate) throws DBManagerException {
@@ -59,7 +59,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
             ReportDAO reportDAO = new ReportDAOImpl(dbManager);
             List<ServiceOrderReportData> order = reportDAO.getNewServiceOrders(startDate,
                     finishDate, (pageNumber + 1) * recordsPerPage, 1);
-            if (order.size() == 0) {
+            if (order.isEmpty()) {
                 return false;
             } else {
                 return true;
@@ -87,13 +87,21 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
-                this.reportData[i] = orders.get(i - 1).getId() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getDate() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getServiceLocation() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getServiceName() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getPrice() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getProviderLocationName() + COLUMN_SEPARATOR +
-                        orders.get(i - 1).getProviderLocation();
+               StringBuilder sb = new StringBuilder();
+                sb.append(orders.get(i - 1).getId());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getDate());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getServiceLocation());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getServiceName());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getPrice());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getProviderLocationName());
+                sb.append(COLUMN_SEPARATOR);
+                sb.append(orders.get(i - 1).getProviderLocation());
+                this.reportData[i] = sb.toString();
             }
         } finally {
             dbManager.close();
@@ -122,7 +130,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
      * Gets a next data page for report
      * @return true - if this page is complete with specified number of records
      * and false - if not.
-     * @throws DBManagerException 
+     * @throws DBManagerException
      */
     @Override
     public boolean getNextDataPage() throws DBManagerException {
@@ -138,7 +146,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
     /**
      * Gets a previous data page for report
      * @return true - if this page isn't last and false - if not.
-     * @throws DBManagerException 
+     * @throws DBManagerException
      */
     @Override
     public boolean getPreviousDataPage() throws DBManagerException {
@@ -158,7 +166,7 @@ public class NewOrdersPerPeriodReport extends AbstractReport {
     /**
      * Sets a current page of report selected
      * @param pageIndex page to select
-     * @throws DBManagerException 
+     * @throws DBManagerException
      */
     @Override
     public void setCurrentPageIndex(int pageIndex) throws DBManagerException {
