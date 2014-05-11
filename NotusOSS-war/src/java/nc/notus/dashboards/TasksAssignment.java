@@ -145,8 +145,6 @@ public class TasksAssignment extends HttpServlet {
                 } else {
                 	int roleID = user.getRoleID();
                 	
-//                    request.setAttribute("taskid", task.getId());
-//                    request.setAttribute("user", user);
                         if (user.getRoleID() == UserRole.INSTALLATION_ENGINEER.toInt()) {
                             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
                             ServiceOrder so = soDAO.find(task.getServiceOrderID());
