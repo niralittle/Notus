@@ -90,7 +90,6 @@
 		<th>EMAIL</th>
 		<th>FIRST NAME</th>
 		<th>LAST NAME</th>
-		<th>STATUS</th>
 		<%
 			if (isAdmin) {
 		%>
@@ -113,20 +112,11 @@
 			<td><%=user.getEmail()%></td>
 			<td><%=user.getFirstName()%></td>
 			<td><%=user.getLastName()%></td>
-			<td>
-				<%
-					if (user.getBlocked() == 1) {
-									out.print("BLOCKED");
-								} else {
-									out.print("ACTIVE");
-								}
-				%>
-			</td>
 			<%
 				if (!isAdmin) {
 			%>
-			<td><input type="text" name="newPassword" value="" /></td>
-			<td><input type="submit" value="Change password" name="action" /></td>
+			<td><input type="text" name="newPassword" value="" />
+				<input type="submit" value="Change password" name="action" /></td>
 			<td><a href="CustomerUser?userID=<%=user.getId()%>"
 				target="_blank">View information about SO and SI</a></td>
 			<%
@@ -146,7 +136,7 @@
 	%>
 </table>
 
-<div id="pagination">
+<div style="text-align: center;"><ul class="pagination" style="margin: 0 0">
 <%
 	}
 if (request.getAttribute("noOfPages") != null 
@@ -217,5 +207,4 @@ if (currentPage != noOfPages) {
 		}
 	}
 %>
-</div>
-
+</ul></div>

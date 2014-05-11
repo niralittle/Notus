@@ -1,9 +1,6 @@
 <%@page import="java.util.List"%>
 <%@page import="nc.notus.entity.Task"%>
-<div id="suppDash">
-    <a href="passwordChanging.jsp">Change user password</a> <br>
-    <a href="TasksAssignment?type=personal">Go to personal tasks</a>
-</div>
+
 
 <%--<%=request.getParameter("wfScenario") %> --%>
 
@@ -15,6 +12,10 @@
             if (request.getAttribute("task") != null) {
                 Task task = (Task) request.getAttribute("task");
 %>
+
+<form action="TasksAssignment?type=personal" method="POST">
+		<input type="submit" name="action" value="Back to Tasks" />
+</form>
 
 <form method="Post" action="Support">
     <table id="table">

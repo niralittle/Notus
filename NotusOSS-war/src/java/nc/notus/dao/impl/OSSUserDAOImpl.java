@@ -76,14 +76,16 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "LEFT JOIN role r ON u.roleid = r.id " +
                         "WHERE r.role  = 'Customer User' " +
                         "AND u.login LIKE ? " +
+                        "AND u.blocked = ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
                         "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setString(1, ("%" + login + "%"));
-			statement.setInt(2, offset + numberOfRecords);
-			statement.setInt(3, offset);
+			statement.setInt(2, UserState.ACTIVE.toInt());
+			statement.setInt(3, offset + numberOfRecords);
+			statement.setInt(4, offset);
 			
 			ri = statement.executeQuery();
 			users = new ArrayList<OSSUser>();
@@ -136,14 +138,16 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "LEFT JOIN role r ON u.roleid = r.id " +
                         "WHERE r.role  = 'Customer User' " +
                         "AND u.lastname LIKE ? " +
+                        "AND u.blocked = ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
                         "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setString(1, ("%" + lastname + "%"));
-			statement.setInt(2, offset + numberOfRecords);
-			statement.setInt(3, offset);
+			statement.setInt(2, UserState.ACTIVE.toInt());
+			statement.setInt(3, offset + numberOfRecords);
+			statement.setInt(4, offset);
 
 			ri = statement.executeQuery();
 			users = new ArrayList<OSSUser>();
@@ -315,14 +319,17 @@ public class OSSUserDAOImpl extends GenericDAOImpl<OSSUser> implements OSSUserDA
                         "LEFT JOIN role r ON u.roleid = r.id " +
                         "WHERE r.role  = 'Customer User' " +
                         "AND u.email LIKE ? " +
+                        "AND u.blocked = ? " +
                         "ORDER BY u.firstname " +
                         " ) a where ROWNUM <= ? )" +
                         "WHERE rnum  > ?";
 		try {
 			statement = dbManager.prepareStatement(query);
 			statement.setString(1, ("%" + email + "%"));
-			statement.setInt(2, offset + numberOfRecords);
-			statement.setInt(3, offset);
+			statement.setInt(2, UserState.ACTIVE.toInt());
+			statement.setInt(3, offset + numberOfRecords);
+			statement.setInt(4, offset);
+
 			
 			ri = statement.executeQuery();
 			users = new ArrayList<OSSUser>();
