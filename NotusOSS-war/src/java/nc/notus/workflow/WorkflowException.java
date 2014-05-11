@@ -12,7 +12,6 @@ public class WorkflowException extends RuntimeException {
     public WorkflowException() {
     }
 
-
     /**
      * Constructs an instance of <code>WorkflowException</code> with the specified detail message.
      * @param msg the detail message.

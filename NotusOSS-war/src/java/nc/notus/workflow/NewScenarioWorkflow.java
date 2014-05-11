@@ -69,7 +69,6 @@ public class NewScenarioWorkflow extends Workflow {
         if (scID != WorkflowScenario.NEW.toInt()) {
             throw new DBManagerException("Cannot proceed Order: wrong order scenario");
         }
-
     }
 
     /**
@@ -81,7 +80,7 @@ public class NewScenarioWorkflow extends Workflow {
     @Override
     public void proceedOrder() throws DBManagerException {
         try {
-            if (!getOrderStatus().equals(OrderStatus.ENTERING.toString())) {
+            if (!OrderStatus.ENTERING.toString().equals(getOrderStatus())) {
                 throw new DBManagerException("Cannot proceed Order: wrong order state");
             }
             ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
@@ -179,9 +178,7 @@ public class NewScenarioWorkflow extends Workflow {
             if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new DBManagerException("Given Task is not valid");
             }
-
             CableDAO cableDAO = new CableDAOImpl(dbManager);
-
             Cable cable = new Cable();
             cable.setCable(cableType);
             cableDAO.add(cable);
@@ -208,7 +205,6 @@ public class NewScenarioWorkflow extends Workflow {
                 throw new DBManagerException("Given Task is not valid");
             }
             PortDAO portDAO = new PortDAOImpl(dbManager);
-
             Port port = portDAO.find(portID);
             if (port.getPortStatus() == PortState.BUSY.toInt()) {
                 throw new DBManagerException("Port is busy");

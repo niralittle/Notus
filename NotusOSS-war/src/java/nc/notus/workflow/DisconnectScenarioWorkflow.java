@@ -29,7 +29,6 @@ import nc.notus.states.WorkflowScenario;
 
 /**
  * This class provides functionality for "Disconnect" scenario workflow
- *
  * @author Igor Litvinenko & Panchenko Dmytro
  */
 public class DisconnectScenarioWorkflow extends Workflow {
@@ -38,15 +37,13 @@ public class DisconnectScenarioWorkflow extends Workflow {
     /**
      * This method creates DisconnectScenarioWorkflow for given Order. It
      * doesn't proceed Order to execution(See {@link Workflow#proceedOrder()})
-     *
-     * @param order
-     *            Order to create Workflow for
+     * @param order - Order to create Workflow for
      * @param dbManager
      * @throws DBManagerException
      */
     public DisconnectScenarioWorkflow(ServiceOrder order, DBManager dbManager) throws DBManagerException {
         super(order, dbManager);
-        if (!getOrderScenario().equals(WorkflowScenario.DISCONNECT.toString())) {
+        if (!WorkflowScenario.DISCONNECT.toString().equals(getOrderScenario())) {
             throw new DBManagerException("Cannot proceed Order: " + "wrong order scenario");
         }
     }
@@ -59,7 +56,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
     @Override
     public void proceedOrder() throws DBManagerException {
         try {
-            if (!getOrderStatus().equals(OrderStatus.ENTERING.toString())) {
+            if (!OrderStatus.ENTERING.toString().equals(getOrderStatus())) {
                 throw new DBManagerException("Cannot proceed Order: " + "wrong order state");
             }
 
@@ -78,11 +75,11 @@ public class DisconnectScenarioWorkflow extends Workflow {
         }
     }
 
-    /**This method unassigns given Port from given Service Instance.
+    /**
+     * This method unassigns given Port from given Service Instance.
      * Then method unplugs Cable from specified Port. Then delete cable.
      * And it sets Port status to
      * "Free" and changes status of Task to "Completed" after execution.
-     *
      * @param taskID taskID ID of task for installation engineer
      * @param cableID ID of Cable to unplug
      * @param portID ID of Port to unplug Cable from
@@ -90,13 +87,10 @@ public class DisconnectScenarioWorkflow extends Workflow {
      */
     public void unplugCableFromPort(int taskID, int cableID, int portID,
             int serviceInstanceID) throws DBManagerException {
-
         try {
             if (!isTaskValid(taskID, UserRole.INSTALLATION_ENGINEER.toInt())) {
                 throw new DBManagerException("Given Task is not valid");
             }
-
-
             PortDAO portDAO = new PortDAOImpl(dbManager);
             Port port = portDAO.find(portID);
             port.setCableID(null);
