@@ -24,7 +24,11 @@ public class ReportViewServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int reportTypeValue = Integer.parseInt(request.getParameter("report"));
+        String param = request.getParameter("report");
+        int reportTypeValue = -1; //default branch of switch
+        if (param != null) {
+            reportTypeValue = Integer.parseInt(param);
+        }
         String startDate = request.getParameter("fromdate");
         String finishDate = request.getParameter("todate");
 
@@ -49,6 +53,8 @@ public class ReportViewServlet extends HttpServlet {
                     currentReport = new ProfitabilityByMonthReport("Profitability by month");
                     break;
                 default:
+                    request.getSession().setAttribute("ErrorString", "There was no report selected");
+                    request.getRequestDispatcher("errorPage.jsp").forward(request, response);
                     break;
 
             }
@@ -83,6 +89,7 @@ public class ReportViewServlet extends HttpServlet {
             request.getSession().setAttribute("ErrorString", exc.getMessage());
             request.getRequestDispatcher("errorPage.jsp").forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
