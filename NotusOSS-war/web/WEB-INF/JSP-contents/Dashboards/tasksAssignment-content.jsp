@@ -19,7 +19,7 @@
         OSSUser user = (OSSUser) request.getAttribute("user");
        %>
         <h2>
-            <b><%=title+" "%> tasks assignmnet for</b> <%=user.getFirstName() + " " + user.getLastName()%>
+            <%=title+" "%> tasks assignmnet for <%=user.getFirstName() + " " + user.getLastName()%>
         </h2>
         
 

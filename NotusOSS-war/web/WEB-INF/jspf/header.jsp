@@ -38,12 +38,16 @@
         <%  }%>
 
     </div>
-                <div id="home">
-                    <a href="index.jsp"><img src="assets/logo.png" /></a>
-                </div>
 
     <div id="pages_list">
         <ul>
+            <li>
+                <div id="home">
+                    <a href="index.jsp" id="home">
+                        <h1>NOTUS</h1>
+                    </a>
+                </div>
+            </li>
             <%  if (!(request.isUserInRole("SUPPORT_ENGINEER") ||
                     request.isUserInRole("PROVISION_ENGINEER") ||
                     request.isUserInRole("INSTALLATION_ENGINEER") ||

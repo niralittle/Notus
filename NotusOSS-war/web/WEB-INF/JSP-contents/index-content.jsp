@@ -8,12 +8,12 @@
 	if (request.getUserPrincipal() != null) {
 %>
 
-<h3><b>You logged in as</b> <%=request.getUserPrincipal()%></h3>
-<%--
+<h3>You logged in as, <%=request.getUserPrincipal()%></h3>
+
 <form method="GET" action="logout">
 	<input type="submit" value="Logout" />
 </form>
---%>
+
 <%
 	}
 %>
