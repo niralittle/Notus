@@ -32,7 +32,6 @@ import nc.notus.entity.Task;
 /**
  * Servlet for getting all assigned tasks
  * and forwards it to jsp-page.
- * 
  * @author Alina Vorobiova
  */
 public class TasksForReassignmentServlet extends HttpServlet {
@@ -45,11 +44,11 @@ public class TasksForReassignmentServlet extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * @throws DBManagerException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
-        response.setContentType("text/html;charset=UTF-8");
-        
+        response.setContentType("text/html;charset=UTF-8");        
         PrintWriter out = response.getWriter();
         DBManager dbManager = new DBManager();
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
@@ -62,8 +61,7 @@ public class TasksForReassignmentServlet extends HttpServlet {
                 task.setEmployeeID(Integer.parseInt(engineerID));
                 taskDAO.update(task);
                 dbManager.commit();
-            }
-            
+            }            
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("taskStatusID", "1");
            

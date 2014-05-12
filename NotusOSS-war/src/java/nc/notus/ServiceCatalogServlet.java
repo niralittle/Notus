@@ -26,7 +26,7 @@ import nc.notus.entity.ServiceType;
  * Gets request from javaScript,
  * gets all service catalogs via DAO
  * and forms responseXML to javaScript
- * @author Alina
+ * @author Alina Vorobiova
  */
 public class ServiceCatalogServlet extends HttpServlet {
    
@@ -36,6 +36,7 @@ public class ServiceCatalogServlet extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * @throws DBManagerException
      */
     private final int OFFSET = 0;
     private final int NUMBER_OF_RECORDS = 20;

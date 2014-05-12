@@ -24,7 +24,6 @@ import nc.notus.entity.Task;
 /**
  * Servlet for getting all employees by role
  * and forwards it to jsp-page.
- * 
  * @author Alina Vorobiova
  */
 public class ReassigTaskToEngineerServlet extends HttpServlet {
@@ -36,12 +35,11 @@ public class ReassigTaskToEngineerServlet extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * @throws DBManagerException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException, DBManagerException {
-    	
-        response.setContentType("text/html;charset=UTF-8");
-        
+    throws ServletException, IOException, DBManagerException {    	
+        response.setContentType("text/html;charset=UTF-8");        
         PrintWriter out = response.getWriter();
         DBManager dbManager = new DBManager();
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
