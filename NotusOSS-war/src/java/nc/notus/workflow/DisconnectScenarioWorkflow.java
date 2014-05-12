@@ -26,6 +26,7 @@ import nc.notus.states.OrderStatus;
 import nc.notus.states.PortState;
 import nc.notus.states.UserRole;
 import nc.notus.states.WorkflowScenario;
+import org.apache.log4j.Logger;
 
 /**
  * This class provides functionality for "Disconnect" scenario workflow
@@ -33,7 +34,7 @@ import nc.notus.states.WorkflowScenario;
  */
 public class DisconnectScenarioWorkflow extends Workflow {
 
-    //private static Logger logger = Logger.getLogger(DisconnectScenarioWorkflow.class.getName());
+    private static Logger logger = Logger.getLogger(DisconnectScenarioWorkflow.class.getName());
     /**
      * This method creates DisconnectScenarioWorkflow for given Order. It
      * doesn't proceed Order to execution(See {@link Workflow#proceedOrder()})
@@ -70,7 +71,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
             changeOrderStatus(OrderStatus.PROCESSING);
             createTask(UserRole.PROVISIONING_ENGINEER, "Remove circuit from SI");
         } catch (DBManagerException ex) {
-            // logger.error("Error while proceed the order!", ex);
+            logger.error(ex.getMessage(), ex);
             throw new DBManagerException("Error was occured, contact to administrator!");
         }
     }
@@ -113,7 +114,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
             completeTask(taskID);
             changeOrderStatus(OrderStatus.COMPLETED);
         } catch (DBManagerException ex) {
-            // logger.error("Error while proceed the order!", ex);
+            logger.error(ex.getMessage(), ex);
             throw new DBManagerException("Error was occured, contact to administrator!");
         }
     }
@@ -154,7 +155,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
             emailSender.sendEmail(user.getId(), disconnectMail);
 
         } catch (DBManagerException ex) {
-            // logger.error("Error while proceed the order!", ex);
+            logger.error(ex.getMessage(), ex);
             throw new DBManagerException("Error was occured, contact to administrator!");
         }
     }
