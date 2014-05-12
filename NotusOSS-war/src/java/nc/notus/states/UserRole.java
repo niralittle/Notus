@@ -8,7 +8,7 @@ package nc.notus.states;
 public enum UserRole {
     ADMINISTRATOR(1),
     SUPPORT_ENGINEER(2),
-    PROVISION_ENGINEER(3),
+    PROVISIONING_ENGINEER(3),
     INSTALLATION_ENGINEER(4),
     CUSTOMER_USER(5);
 

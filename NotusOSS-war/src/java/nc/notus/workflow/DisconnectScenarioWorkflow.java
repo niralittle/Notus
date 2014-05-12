@@ -68,7 +68,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
             siDAO.update(si);
 
             changeOrderStatus(OrderStatus.PROCESSING);
-            createTask(UserRole.PROVISION_ENGINEER, "Remove circuit from SI");
+            createTask(UserRole.PROVISIONING_ENGINEER, "Remove circuit from SI");
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
             dbManager.rollback();
@@ -130,7 +130,7 @@ public class DisconnectScenarioWorkflow extends Workflow {
      */
     public void removeCurcuitFromSI(int taskID) throws DBManagerException {
         try {
-            if (!isTaskValid(taskID, UserRole.PROVISION_ENGINEER.toInt())) {
+            if (!isTaskValid(taskID, UserRole.PROVISIONING_ENGINEER.toInt())) {
                 throw new DBManagerException("Given Task is not valid");
             }
             ServiceInstanceDAOImpl siDAO = new ServiceInstanceDAOImpl(dbManager);

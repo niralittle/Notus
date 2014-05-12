@@ -189,7 +189,7 @@ public class TasksAssignment extends HttpServlet {
                                 return;
                             }
                         }
-                        if (roleID  == UserRole.PROVISION_ENGINEER.toInt()) {
+                        if (roleID  == UserRole.PROVISIONING_ENGINEER.toInt()) {
                             prepareTask(task, request, dbManager, roleID );
                             request.getRequestDispatcher("provisioningEngineerWorkflow.jsp").forward(request, response);
                             return;
@@ -264,7 +264,7 @@ public class TasksAssignment extends HttpServlet {
 		if (roleID == UserRole.INSTALLATION_ENGINEER.toInt()) {
 			return;
 		}
-		if (roleID == UserRole.PROVISION_ENGINEER.toInt()) {
+		if (roleID == UserRole.PROVISIONING_ENGINEER.toInt()) {
 			String serviceType = request.getParameter("serviceDescription");
 			request.setAttribute("serviceType", serviceType);
 			

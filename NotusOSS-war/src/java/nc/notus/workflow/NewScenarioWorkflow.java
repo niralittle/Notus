@@ -220,7 +220,7 @@ public class NewScenarioWorkflow extends Workflow {
             siDAO.update(si);
 
             this.completeTask(taskID);
-            this.createTask(UserRole.PROVISION_ENGINEER, "Create circuit");
+            this.createTask(UserRole.PROVISIONING_ENGINEER, "Create circuit");
             //dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
@@ -237,7 +237,7 @@ public class NewScenarioWorkflow extends Workflow {
      */
     public void createCircuit(int taskID, String circuitConfig) throws DBManagerException {
         try {
-            if (!isTaskValid(taskID, UserRole.PROVISION_ENGINEER.toInt())) {
+            if (!isTaskValid(taskID, UserRole.PROVISIONING_ENGINEER.toInt())) {
                 throw new DBManagerException("Given Task is not valid");
             }
             CircuitDAO circuitDAO = new CircuitDAOImpl(dbManager);

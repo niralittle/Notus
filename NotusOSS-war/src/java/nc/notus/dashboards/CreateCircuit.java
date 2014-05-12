@@ -78,7 +78,7 @@ public class CreateCircuit extends HttpServlet {
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
                 int offset = 0;
                 int numbOfRecords = 10;
-                List<Task> tasksEng = taskDAO.getEngTasks(offset, numbOfRecords, UserRole.PROVISION_ENGINEER.toInt());
+                List<Task> tasksEng = taskDAO.getEngTasks(offset, numbOfRecords, UserRole.PROVISIONING_ENGINEER.toInt());
                 redirect(request, response, PERSONAL_TASKS_PAGE);
             }
             request.setAttribute("taskid", taskID);
