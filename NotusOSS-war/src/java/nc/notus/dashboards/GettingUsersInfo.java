@@ -167,7 +167,7 @@ public class GettingUsersInfo extends HttpServlet {
             params.put("email", "%" + email + "%");
         }
         params.put("roleid", UserRole.CUSTOMER_USER.toInt());
-        params.put("blocked", UserState.ACTIVE);
+        params.put("blocked", UserState.ACTIVE.toInt());
         long quantityOfRecords = userDAO.countAllWithLikeCause(params);
         long quantityOfPages = (long) Math.ceil(quantityOfRecords * 1.0 / RECORDS_PER_PAGE);
         
