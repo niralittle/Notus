@@ -144,11 +144,11 @@ public class SupportEngineerServlet extends HttpServlet {
             sendBill(request, response);
             redirectTo(SUPPORT_PAGE, request, response);
 
-        } else if ("Change password".equals(request.getParameter("action"))) {
+        } else if ("Apply".equals(request.getParameter("action"))) {
             changePassword(request, response);
             redirectTo(CHANGE_PASSWORD_PAGE, request, response);
 
-        } else if ("Block user".equals(request.getParameter("action"))) {
+        } else if ("Block".equals(request.getParameter("action"))) {
             blockUser(request, response);
             redirectTo(CHANGE_PASSWORD_PAGE, request, response);
         }

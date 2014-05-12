@@ -114,11 +114,12 @@ if (request.getAttribute("findedUsers") != null) {
         <td><%=user.getLastName()%></td>
                 <% if (!isAdmin) { %>
         <td><input class="form-control"type="text" name="newPassword" value="" />
-                </td><td><button type="submit" class="btn btn-warning" name="action">Apply</button></td>
+                </td><td><input type="submit" class="btn btn-warning" name="action"
+                                value="Apply"/></td>
         <td><a href="CustomerUser?userID=<%=user.getId()%>"
                 target="_blank">View information about SO and SI</a></td>
                 <% } else { %>
-        <td><button type="submit" class="btn btn-danger" name="action" >Block user</button></td>
+        <td><input type="submit" class="btn btn-danger" name="action" value="Block"/></td>
             <% } %>
     </tr>
      <input type="hidden" value="<%=user.getId()%>" name="userId" />
