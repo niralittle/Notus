@@ -53,7 +53,7 @@ import nc.notus.entity.ServiceType;
  */
 public class NewScenarioWorkflow extends Workflow {
 
-    //private static Logger logger = Logger.getLogger(NewScenarioWorkflow.class.getName());
+    private static Logger logger = Logger.getLogger(NewScenarioWorkflow.class.getName());
     /**
      * This method creates NewScenarioWorkflow for given Order. It doesn't
      * proceed Order to execution(See {@link Workflow#proceedOrder()})
@@ -100,7 +100,7 @@ public class NewScenarioWorkflow extends Workflow {
             createTask(UserRole.INSTALLATION_ENGINEER, "Proceed new order");
 
         } catch (DBManagerException ex) {
-            // logger.error("Error while proceed the order!", ex);
+            logger.error(ex.getMessage(), ex);
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -158,7 +158,7 @@ public class NewScenarioWorkflow extends Workflow {
             }
 
         } catch (DBManagerException ex) {
-            // logger.error("Error while proceed the order!", ex);
+            logger.error(ex.getMessage(), ex);
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -180,7 +180,7 @@ public class NewScenarioWorkflow extends Workflow {
             cableDAO.add(cable);
 
         } catch (DBManagerException ex) {
-            // logger.error("Error while proceed the order!", ex);
+            logger.error(ex.getMessage(), ex);
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -216,7 +216,7 @@ public class NewScenarioWorkflow extends Workflow {
             this.completeTask(taskID);
             this.createTask(UserRole.PROVISIONING_ENGINEER, "Create circuit");
         } catch (DBManagerException ex) {
-            // logger.error("Error while proceed the order!", ex);
+            logger.error(ex.getMessage(), ex);
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -247,7 +247,7 @@ public class NewScenarioWorkflow extends Workflow {
             this.completeTask(taskID);
             this.createTask(UserRole.SUPPORT_ENGINEER, "Approve bill");
         } catch (DBManagerException ex) {
-            // logger.error("Error while proceed the order!", ex);
+            logger.error(ex.getMessage(), ex);
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -284,7 +284,7 @@ public class NewScenarioWorkflow extends Workflow {
                     serviceType.getService(), String.valueOf(catalog.getPrice()));
             emailSender.sendEmail(order.getUserID(), mail);
         } catch (DBManagerException ex) {
-            // logger.error("Error while proceed the order!", ex);
+            logger.error(ex.getMessage(), ex);
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
