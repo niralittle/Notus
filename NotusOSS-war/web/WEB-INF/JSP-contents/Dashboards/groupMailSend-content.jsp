@@ -11,11 +11,13 @@
     function test(form) {
         if (form.text.value.length==0){
            alert("Input Message");
+           return false;
         }
         if (form.subject.value.length==0){
            alert("Input Subject");
+           return false;
         }
-        return false;
+        
     }
 </script>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
