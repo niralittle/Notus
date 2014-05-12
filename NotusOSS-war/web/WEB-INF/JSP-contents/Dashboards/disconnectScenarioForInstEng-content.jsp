@@ -75,5 +75,5 @@
     <input type="hidden" name="serviceorderid" value="<%=soID%>"/>
     <input type="hidden" name="cable" value="<%=cable%>"/>
     <input type="hidden" name="port" value="<%=port%>"/>
-    <input type="submit" name="action" value="Disconnect Cable from Port" />
+    <input type="submit" name="action" class="btn btn-info" value="Disconnect Cable from Port" />
 </form>

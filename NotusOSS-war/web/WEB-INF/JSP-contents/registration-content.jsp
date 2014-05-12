@@ -121,7 +121,7 @@
         </tr>
         <tr>
             <td>
-            	<img style="margin-left: 75px" src="Captcha">
+            	<img src="Captcha">
                 <button name="action" value="Refresh" type="submit"
                         class="btn btn-success btn-sm">Refresh
                 </button>

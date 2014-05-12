@@ -24,7 +24,7 @@ OSSUser user = (OSSUser) request.getAttribute("user");
 </h3>
 <%
 if (request.getAttribute("actionStatus") != null) { %>
-    <%=request.getAttribute("actionStatus")%>
+<div id="installationMessage"><%=request.getAttribute("actionStatus")%> !!!</div>    
 <% } %>
 
 <table class='table table-striped table-hover'>

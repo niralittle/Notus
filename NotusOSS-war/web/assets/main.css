@@ -79,6 +79,7 @@ footer {
 #main-content {
     background-color:#E9F2FF;
     padding:20px 20px 20px 20px;
+    min-height:500px;
 }
 /* Map service stuff*/
 #map-canvas {
@@ -334,10 +335,11 @@ ul.tabs li a.active {
     -moz-border-radius:3px;
     -webkit-border-radius:3px;
     border-radius:3px;
-
     -moz-box-shadow: 0 1px 2px #d1d1d1;
     -webkit-box-shadow: 0 1px 2px #d1d1d1;
     box-shadow: 0 1px 2px #d1d1d1;
+    margin-bottom: 10px;
+    margin-top: 5px;
 }
 #table th {
     padding:21px 25px 22px 25px;
@@ -570,4 +572,16 @@ a.button28:active {
     border: 1px solid #f0f0f0;
     border-radius: 10px;
     background-color:#464646;
+}
+
+#installationMessage{
+    font-size:16px;
+    font-weight:bold;
+    margin-top:5px;
+    color: rgb(0, 31, 255);
+}
+
+caption{
+    font-size:18px;
+    font-weight:bold;
 }

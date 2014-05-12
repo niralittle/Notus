@@ -48,7 +48,7 @@
 
 
 <% if (request.getAttribute("actionStatus") != null) { %>
-    <%=request.getAttribute("actionStatus")%>
+    <div id="installationMessage"><%=request.getAttribute("actionStatus")%> !!!</div>
 <% } %>
    <table border="1" id="table">
     <tbody>
@@ -85,12 +85,12 @@
     <input type="hidden" name="serviceDescription" value="<%=serviceDescription%>"/>
     <input type="hidden" name="price" value="<%=price%>"/>
 <% if(port == null) { %>
-    <input type="submit" name="action" value="Create Router" />
+    <input type="submit" name="action" class="btn btn-info" value="Create Router" />
 <% }
    if(cable.getCable() == null) { %>
-    <input type="submit" name="action" value="Create Cable" />
+    <input type="submit" name="action" class="btn btn-info" value="Create Cable" />
 <% }
    if(cable.getCable() != null && port != null) { %>
-    <input type="submit" name="action" value="Connect Cable to Port" />
+    <input type="submit" name="action" class="btn btn-info" value="Connect Cable to Port" />
 <% }  %>
 </form>
