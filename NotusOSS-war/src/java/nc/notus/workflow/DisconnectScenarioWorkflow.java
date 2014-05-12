@@ -71,7 +71,6 @@ public class DisconnectScenarioWorkflow extends Workflow {
             createTask(UserRole.PROVISIONING_ENGINEER, "Remove circuit from SI");
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
-            dbManager.rollback();
             throw new DBManagerException("Error was occured, contact to administrator!");
         }
     }
@@ -113,10 +112,8 @@ public class DisconnectScenarioWorkflow extends Workflow {
 
             completeTask(taskID);
             changeOrderStatus(OrderStatus.COMPLETED);
-            // dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
-            dbManager.rollback();
             throw new DBManagerException("Error was occured, contact to administrator!");
         }
     }
@@ -150,7 +147,6 @@ public class DisconnectScenarioWorkflow extends Workflow {
             changeServiceInstanceStatus(InstanceStatus.DISCONNECTED);
             completeTask(taskID);
             createTask(UserRole.INSTALLATION_ENGINEER, "Remove port and cable from SI");
-            // dbManager.commit();
 
             Email disconnectMail = new DisconnectSuccessfulEmail(
                     user.getFirstName(), portID, order.getServiceLocation());
@@ -159,7 +155,6 @@ public class DisconnectScenarioWorkflow extends Workflow {
 
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
-            dbManager.rollback();
             throw new DBManagerException("Error was occured, contact to administrator!");
         }
     }

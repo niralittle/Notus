@@ -99,10 +99,8 @@ public class NewScenarioWorkflow extends Workflow {
              */
             createTask(UserRole.INSTALLATION_ENGINEER, "Proceed new order");
 
-            // dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
-            dbManager.rollback();
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -159,10 +157,8 @@ public class NewScenarioWorkflow extends Workflow {
                 portDAO.add(port);
             }
 
-            //dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
-            dbManager.rollback();
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -183,10 +179,8 @@ public class NewScenarioWorkflow extends Workflow {
             cable.setCable(cableType);
             cableDAO.add(cable);
 
-            //dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
-            dbManager.rollback();
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -221,10 +215,8 @@ public class NewScenarioWorkflow extends Workflow {
 
             this.completeTask(taskID);
             this.createTask(UserRole.PROVISIONING_ENGINEER, "Create circuit");
-            //dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
-            dbManager.rollback();
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -254,10 +246,8 @@ public class NewScenarioWorkflow extends Workflow {
 
             this.completeTask(taskID);
             this.createTask(UserRole.SUPPORT_ENGINEER, "Approve bill");
-            // dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
-            dbManager.rollback();
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
@@ -293,10 +283,8 @@ public class NewScenarioWorkflow extends Workflow {
             Email mail = new BillEmail(user.getFirstName(),
                     serviceType.getService(), String.valueOf(catalog.getPrice()));
             emailSender.sendEmail(order.getUserID(), mail);
-            // dbManager.commit();
         } catch (DBManagerException ex) {
             // logger.error("Error while proceed the order!", ex);
-            dbManager.rollback();
             throw new DBManagerException("Error was occured, contact an administrator!");
         }
     }
