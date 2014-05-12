@@ -4,6 +4,20 @@
     Author     : Roman Martynuyk
 --%>
 
+<script>
+    window.onload = function(){
+        document.getElementById("text").value = '';
+    };
+    function test(form) {
+        if (form.text.value.length==0){
+           alert("Input Message");
+        }
+        if (form.subject.value.length==0){
+           alert("Input Subject");
+        }
+        return false;
+    }
+</script>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -11,28 +25,27 @@
 <%
 
 %>
-<form action="GroupMailSend" method="post" action="GroupMailSend">
+<form action="GroupMailSend" method="post" action="GroupMailSend" >
     <div class="form-group" style="width: 250px">
         <label for="select">Group</label>
         <select class="form-control" id="select" name="selectRole"><%
             for (UserRole roles : UserRole.values()) {
                 if (!UserRole.ADMINISTRATOR.equals(roles)) {%>
-                <option><%=roles%></option><%
-                }
-            }%>
+            <option><%=roles%></option><%
+            }
+        }%>
         </select>
     </div>
     <div class="form-group" style="width: 250px">
         <label for="subject">Subject</label>
         <input type="text" name="subject" class="form-control" id="subject">
-    </div>
+    </div>        
     <div class="form-group" style="width: 400px">
         <label for="text">Message</label>
-        <textarea name="text" rows="4" cols="3" class="form-control" id="text"
-                  style="width: 450px;">
+        <textarea name="text" rows="4" cols="3" class="form-control" id="text" style="width: 450px;">
         </textarea>
     </div>
-    <button type="submit" class="btn btn-info">Send</button>
+    <button type="submit" class="btn btn-info" onClick="return test(this.form)">Send</button>
 </form>
 
 

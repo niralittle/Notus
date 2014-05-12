@@ -50,9 +50,9 @@
         </tbody>
     </table>
 
-    <input type="hidden" name="taskid" value="<%=taskID%>" /> <input
-            type="hidden" name="serviceorderid" value="<%=soID%>" /> <input
-            type="submit" name="action" value="Create Circuit" />
+    <input type="hidden" name="taskid" value="<%=taskID%>" /> 
+    <input type="hidden" name="serviceorderid" value="<%=soID%>" />
+    <input type="submit" name="action" value="Create Circuit" />
 </form>
 <%
     } else if ("DISCONNECT".equalsIgnoreCase((String) request.getAttribute("wfScenario"))) {
@@ -67,12 +67,12 @@
         <tr>
             <th>Task Number</th>
             <th>Service Order ID</th>
+            <th>Action</th>
         </tr>
         <tr>
             <td><%=task.getId()%></td>
             <td><%=task.getServiceOrderID()%></td>
-            <td><input type="submit" value="Delete Circuit from SI"
-                    name="action" /></td>
+            <td><input type="submit" class="btn btn-info" value="Delete Circuit from SI" name="action" /></td>
         </tr>
     </table>
     <input type="hidden" name="d_taskid" value="<%=task.getId()%>"  />
