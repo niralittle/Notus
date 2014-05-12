@@ -1,7 +1,7 @@
 <%-- 
     Document   : provisioningEngineerWorkflow-content
     Created on : Apr 23, 2014, 12:20:17 PM
-    Author     : Panchenko Dmytro
+    Author     : Panchenko Dmytro 
 --%>
 
 <%@page import="nc.notus.entity.Port"%>
@@ -62,21 +62,21 @@
 %>
 	
 <form method="Post" action="ProvisionEngineerTasksServlet">
-    <table id="tablename2">
+    <table border="1" id="table">
         <caption>DISCONNECT SCENARIO TASK</caption>
         <tr>
-            <td>Task Number</td>
-            <td>Service Order ID</td>
+            <th>Task Number</th>
+            <th>Service Order ID</th>
         </tr>
         <tr>
-            <td><input type="text" name="d_taskid"
-                    value="<%=task.getId()%>" readonly="readonly" /></td>
-            <td><input type="text" name="d_orderid"
-                    value="<%=task.getServiceOrderID()%>" readonly="readonly" /></td>
+            <td><%=task.getId()%></td>
+            <td><%=task.getServiceOrderID()%></td>
             <td><input type="submit" value="Delete Circuit from SI"
                     name="action" /></td>
         </tr>
     </table>
+    <input type="hidden" name="d_taskid" value="<%=task.getId()%>"  />
+    <input type="hidden" name="d_orderid" value="<%=task.getServiceOrderID()%>" />
 </form>
 
 <%
