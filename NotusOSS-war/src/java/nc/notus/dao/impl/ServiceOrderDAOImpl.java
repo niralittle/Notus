@@ -58,7 +58,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                 "LEFT JOIN serviceorderstatus sos ON " +
                 "so.serviceorderstatusid = sos.id " +
                 "WHERE sos.status = ? " +
-                "ORDER BY so.serviceorderdate " +
+                "ORDER BY so.serviceorderdate, so.id " +
                 ") a where ROWNUM <= ? ) " +
                 "WHERE rnum  > ?";
 
@@ -123,7 +123,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                 "FROM serviceorder so " +
                 "LEFT JOIN scenario s ON so.scenarioid = s.id " +
                 "WHERE s.scenario = ? " +
-                "ORDER BY so.serviceorderdate " +
+                "ORDER BY so.serviceorderdate, so.id " +
                 ") a where ROWNUM <= ? ) " +
                 "WHERE rnum  > ?";
         try {
@@ -179,7 +179,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                 "so.serviceinstanceid, so.servicelocation " +
                 "FROM serviceorder so " +
                 "WHERE so.userid = ? AND so.serviceorderstatusid = ? " +
-                "ORDER BY so.serviceorderdate) a " +
+                "ORDER BY so.serviceorderdate, so.id) a " +
                 "WHERE ROWNUM <= ? )  " +
                 "WHERE rnum  > ? ";
         try {
@@ -227,8 +227,7 @@ public class ServiceOrderDAOImpl extends GenericDAOImpl<ServiceOrder>
                 "so.scenarioid, so.userid, so.servicecatalogid," +
                 "so.serviceinstanceid, so.servicelocation " +
                 "FROM serviceorder so " +
-                "WHERE so.userid = ? AND so.serviceorderstatusid = ? " +
-                "ORDER BY so.serviceorderdate) a )";
+                "WHERE so.userid = ? AND so.serviceorderstatusid = ? ) a )";
         try {
             statement = dbManager.prepareStatement(query);
             statement.setInt(1, userID);
