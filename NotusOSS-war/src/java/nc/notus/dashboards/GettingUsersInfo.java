@@ -17,6 +17,7 @@ import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
 import nc.notus.states.UserRole;
+import nc.notus.states.UserState;
 
 /**
  * Get users information for specified last name, email or login that uses by
@@ -166,7 +167,7 @@ public class GettingUsersInfo extends HttpServlet {
             params.put("email", "%" + email + "%");
         }
         params.put("roleid", UserRole.CUSTOMER_USER.toInt());
-
+        params.put("blocked", UserState.ACTIVE);
         long quantityOfRecords = userDAO.countAllWithLikeCause(params);
         long quantityOfPages = (long) Math.ceil(quantityOfRecords * 1.0 / RECORDS_PER_PAGE);
         
