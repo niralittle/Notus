@@ -62,7 +62,6 @@ public class SupportEngineerController extends AbstractController {
             if (isInternal) {
                 dbManager.commit();
             }
-            actionStatus = "Bill successfully sent!";
         } catch (DBManagerException ex) {
             if (isInternal) {
                 dbManager.rollback();
@@ -96,12 +95,10 @@ public class SupportEngineerController extends AbstractController {
             if (isInternal) {
                 dbManager.commit();
             }
-            actionStatus = "Password for user " + user.getLogin() + " was successfully changed!";
-
+            
             Email mail = new NewPasswordEmail(user.getFirstName(), newPassword);
             EmailSender emailSender = new EmailSender();
             emailSender.sendEmail(userID, mail);
-
         } catch (DBManagerException ex) {
             if (isInternal) {
                 dbManager.rollback();

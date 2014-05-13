@@ -76,6 +76,10 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 			} catch (DBManagerException e) {
 				request.setAttribute("errMessage", "Error was occured. ");
 				redirectTo(PROVISIONING_PAGE, request, response);
+			} catch (NumberFormatException numbExc) {
+				request.setAttribute("errMessage",
+						"Passed parameter not correct. Try again.");
+				redirectTo(PROVISIONING_PAGE, request, response);
 			} finally {
 				dbManager.close();
 			}
@@ -160,7 +164,7 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 				provControl = new ProvisioningEngineerController();
 				provControl.createCircuit(orderID, taskID, circuit);
 				request.setAttribute("success",
-						provControl.getActionStatus());
+						"Circuit was successfully created!");
 
 			}
 			redirectTo(PROVISIONING_PAGE, request, response);
@@ -195,7 +199,7 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 				provControl = new ProvisioningEngineerController();
 				provControl.removeCircuit(orderID, taskID);
 				request.setAttribute("success",
-						provControl.getActionStatus());
+						"Circuit was successfully removed!");
 
 			}
 			redirectTo(PROVISIONING_PAGE, request, response);
@@ -204,6 +208,7 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 			request.setAttribute("errMessage", "Error was occured. ");
 			redirectTo(PROVISIONING_PAGE, request, response);
 		} 
+	
 	}
 
 	/**

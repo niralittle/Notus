@@ -22,14 +22,11 @@ public abstract class AbstractController {
      *
      */
     protected DBManager dbManager;
+    
     /**
      *
      */
     protected boolean isInternal;
-    /**
-     *
-     */
-    protected String actionStatus;
 
     /**
      * Default constructor. Used to internal transactions.
@@ -105,19 +102,4 @@ public abstract class AbstractController {
         return wfScenario;
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getActionStatus() {
-        return actionStatus;
-    }
-
-    /**
-     *
-     * @param actionStatus
-     */
-    public void setActionStatus(String actionStatus) {
-        this.actionStatus = actionStatus;
-    }
 }

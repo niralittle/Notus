@@ -85,7 +85,7 @@ public class RegistrationServlet extends HttpServlet {
 					adminControl.registerNewEngineer(login, password, email,
 							firstName, lastName, groupID);
 					request.setAttribute("success",
-							adminControl.getActionStatus());
+							"New engineer was successfully registred!");
 					redirectTo(ENGINEER_REGISTRATION_PAGE, request, response);
 				} else {
 					CustomerUserController userControl = null;

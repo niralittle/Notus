@@ -70,7 +70,7 @@ public class AdministratorController extends AbstractController {
             user.setRoleID(roleID);
 
             userID = (Integer) userDAO.add(user);
-            actionStatus = "New engineer - " + login + " successfully registered.";
+ 
             if (isInternal) {
                 dbManager.commit();
             }
@@ -104,7 +104,6 @@ public class AdministratorController extends AbstractController {
             if (isInternal) {
                 dbManager.commit();
             }
-            setActionStatus("User " + user.getLogin() + " successfully blocked!");
         } catch (DBManagerException wfExc) {
             if (isInternal) {
                 dbManager.rollback();

@@ -4,12 +4,14 @@ import java.io.IOException;
 
 
 
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import nc.notus.NumberValidator;
 import nc.notus.controllers.AdministratorController;
 import nc.notus.controllers.SupportEngineerController;
 import nc.notus.dbmanager.DBManagerException;
@@ -42,7 +44,7 @@ public class SupportEngineerServlet extends HttpServlet {
         view.forward(request, response);
         return;
     }
-
+    
     /**
      * Block user by ADMINISTRATOR.
      * 
@@ -55,16 +57,15 @@ public class SupportEngineerServlet extends HttpServlet {
 
             if (request.getParameter("userId") != null) {
                 try { // try block user
-                    int userID = Integer.parseInt(request.getParameter("userId"));
-
+                	int userID = Integer.parseInt(request.getParameter("userId"));
+                	
                     adminControl = new AdministratorController();
                     adminControl.blockUser(userID);
-                    request.setAttribute("success", adminControl.getActionStatus());
+                    request.setAttribute("success", "User was successfully blocked!");
                 } catch (DBManagerException exc) {
                     request.setAttribute("errMessage", exc.getMessage());
                     redirectTo(CHANGE_PASSWORD_PAGE, request, response);
                 } 
-
             } else {
                 request.setAttribute("errMessage", "TaskID not passed!");
             }
@@ -88,11 +89,11 @@ public class SupportEngineerServlet extends HttpServlet {
 				supportControl.sendBillToCustomer(taskID);
 
 				request.setAttribute("success",
-						supportControl.getActionStatus());
+						"Bill was successfully sent!");
 			} catch (DBManagerException exc) {
 				request.setAttribute("errMessage", exc.getMessage());
 				redirectTo(SUPPORT_PAGE, request, response);
-			} 
+			}
 		} else {
 			request.setAttribute("success", "TaskID not passed!");
 		}
@@ -115,7 +116,7 @@ public class SupportEngineerServlet extends HttpServlet {
                 supportControl.changeCustomerPassword(userID, newPassword);
 
                 request.setAttribute("success",
-                        supportControl.getActionStatus());
+                        "Password was successfully changed!");
             } catch (DBManagerException exc) {
                 request.setAttribute("errMessage", exc.getMessage());
                 redirectTo(CHANGE_PASSWORD_PAGE, request, response);
