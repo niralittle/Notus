@@ -76,10 +76,6 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 			} catch (DBManagerException e) {
 				request.setAttribute("errMessage", "Error was occured. ");
 				redirectTo(PROVISIONING_PAGE, request, response);
-			} catch (NumberFormatException numbExc) {
-				request.setAttribute("errMessage",
-						"Passed parameter not correct. Try again.");
-				redirectTo(PROVISIONING_PAGE, request, response);
 			} finally {
 				dbManager.close();
 			}
@@ -172,10 +168,6 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 		} catch (DBManagerException e) {
 			request.setAttribute("errMessage", "Error was occured. ");
 			redirectTo(PROVISIONING_PAGE, request, response);
-		} catch (NumberFormatException numbExc) {
-			request.setAttribute("errMessage",
-					"Passed parameters not correct. Try again.");
-			redirectTo(PROVISIONING_PAGE, request, response);
 		} 
 	
 	}
@@ -211,12 +203,7 @@ public class ProvisionEngineerTasksServlet extends HttpServlet {
 		} catch (DBManagerException e) {
 			request.setAttribute("errMessage", "Error was occured. ");
 			redirectTo(PROVISIONING_PAGE, request, response);
-		} catch (NumberFormatException numbExc) {
-			request.setAttribute("errMessage",
-					"Passed parameters not correct. Try again.");
-			redirectTo(PROVISIONING_PAGE, request, response);
 		} 
-	
 	}
 
 	/**

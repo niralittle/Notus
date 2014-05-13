@@ -63,10 +63,7 @@ public class SupportEngineerServlet extends HttpServlet {
                 } catch (DBManagerException exc) {
                     request.setAttribute("errMessage", exc.getMessage());
                     redirectTo(CHANGE_PASSWORD_PAGE, request, response);
-                } catch (NumberFormatException numbExc) {
-                	 request.setAttribute("errMessage","Passed parameter not correct. Try again.");
-                     redirectTo(CHANGE_PASSWORD_PAGE, request, response);
-                }
+                } 
 
             } else {
                 request.setAttribute("errMessage", "TaskID not passed!");
@@ -95,11 +92,7 @@ public class SupportEngineerServlet extends HttpServlet {
 			} catch (DBManagerException exc) {
 				request.setAttribute("errMessage", exc.getMessage());
 				redirectTo(SUPPORT_PAGE, request, response);
-			} catch (NumberFormatException numbExc) {
-				request.setAttribute("errMessage",
-						"Passed parameter not correct. Try again.");
-				redirectTo(CHANGE_PASSWORD_PAGE, request, response);
-			}
+			} 
 		} else {
 			request.setAttribute("success", "TaskID not passed!");
 		}
