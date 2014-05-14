@@ -12,7 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import nc.notus.dao.CableDAO;
 import nc.notus.dao.OSSUserDAO;
@@ -58,7 +57,6 @@ public class TasksAssignment extends HttpServlet {
 
 	private int offset;
 	private int page;
-	private HttpSession session;
 	
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -169,12 +167,6 @@ public class TasksAssignment extends HttpServlet {
                             request.setAttribute("soid", task.getServiceOrderID());
                             request.setAttribute("userid", user.getId());
                             String wfScenario = getTaskScenario(task, dbManager);
-                            session = request.getSession();
-                            session.setAttribute("taskid", task.getId());
-                            session.setAttribute("serviceorderid", task.getServiceOrderID());
-                            session.setAttribute("port", port);
-                            session.setAttribute("cable", cable);
-                            session.setAttribute("userid", user.getId());
                             if (wfScenario.equalsIgnoreCase(WorkflowScenario.NEW.toString())) {
                                 request.getRequestDispatcher("installationEngineerWorkflow.jsp").forward(request, response);
                                 return;
@@ -288,8 +280,7 @@ public class TasksAssignment extends HttpServlet {
 		int scenarioID = order.getScenarioID();
 		Scenario scenario = scenarioDAO.find(scenarioID);
 
-		
-		if (scenario.getScenario().equalsIgnoreCase(WorkflowScenario.NEW.toString())) {
+                if (scenario.getScenario().equalsIgnoreCase(WorkflowScenario.NEW.toString())) {
 			return "NEW";
 		} else if ((scenario.getScenario().equalsIgnoreCase(WorkflowScenario.DISCONNECT.toString()))) {
 			return "DISCONNECT";

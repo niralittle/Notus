@@ -65,20 +65,13 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
             }
-            session = request.getSession();
-            
-            if (session.getAttribute("userid") != null) {
-                userID = (Integer) session.getAttribute("userid");
-            }
-            if (session.getAttribute("taskid") != null) {
-                taskID = (Integer) session.getAttribute("taskid");
-            }
-            if (session.getAttribute("port") != null) {
-                port = (Port) session.getAttribute("port");
-            }
-            if (session.getAttribute("cable") != null) {
-                cable = (Cable) session.getAttribute("cable");
-            }
+
+            port = (request.getAttribute("port") != null) ?
+                        (Port) request.getAttribute("port") : new Port();
+
+            cable = (request.getAttribute("cable") != null) ?
+                        (Cable) request.getAttribute("cable") : new Cable();
+
             if (request.getParameter("taskName") != null){
                 taskName  = (String) request.getParameter("taskName");
             }

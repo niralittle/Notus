@@ -48,25 +48,19 @@ public class CreateCircuit extends HttpServlet {
     throws ServletException, IOException, DBManagerException {
         response.setContentType("text/html;charset=UTF-8");
         DBManager dbManager = new DBManager();
-        int taskID;
-        int soID;
-        String circuitConf;
+        int taskID = 0;
+        int soID = 0;
+        String circuitConf = "";
         try {
             if (request.getParameter("taskid") != null){
                 taskID  = Integer.parseInt(request.getParameter("taskid"));
-            } else {
-                taskID = 0;
-            }
+            } 
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
-            } else {
-                soID = 0;
-            }
+            } 
             if (request.getParameter("circuit") != null){
                 circuitConf  = request.getParameter("circuit");
-            } else {
-                circuitConf = "";
-            }
+            } 
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);
             NewScenarioWorkflow nwf = new NewScenarioWorkflow(so, dbManager);
