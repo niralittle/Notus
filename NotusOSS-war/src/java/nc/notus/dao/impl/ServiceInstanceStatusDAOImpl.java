@@ -33,8 +33,9 @@ public class ServiceInstanceStatusDAOImpl extends GenericDAOImpl<ServiceInstance
     	Statement statement = null;
     	ResultIterator ri = null;
     	String serviceInstanceStatusName = status.toString();
-		String queryString = "SELECT sis.id, sis.status "
-				+ "FROM ServiceInstanceStatus sis " + "WHERE sis.status = ?";
+		String queryString = "SELECT sis.id, sis.status " +
+                                     "FROM ServiceInstanceStatus sis " +
+                                     "WHERE sis.status = ?";
 		try {
 			statement = dbManager.prepareStatement(queryString);
 			statement.setString(1, serviceInstanceStatusName);
