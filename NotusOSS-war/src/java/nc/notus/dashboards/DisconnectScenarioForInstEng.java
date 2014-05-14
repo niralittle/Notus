@@ -60,17 +60,13 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
         String serviceLocation = "";
         String serviceDescription = "";
         int price = 0;
+        int cableID = 0;
+        int portID = 0;
         
         try {
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
             }
-
-            port = (request.getAttribute("port") != null) ?
-                        (Port) request.getAttribute("port") : new Port();
-
-            cable = (request.getAttribute("cable") != null) ?
-                        (Cable) request.getAttribute("cable") : new Cable();
 
             if (request.getParameter("taskName") != null){
                 taskName  = (String) request.getParameter("taskName");
@@ -83,6 +79,15 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
             }
             if (request.getParameter("price") != null){
                 price  = Integer.parseInt(request.getParameter("price"));
+            }
+            if (request.getParameter("taskid") != null){
+                taskID  = Integer.parseInt(request.getParameter("taskid"));
+            }
+            if (request.getParameter("cableid") != null){
+                cableID  = Integer.parseInt(request.getParameter("cableid"));
+            }
+            if (request.getParameter("portid") != null){
+                portID  = Integer.parseInt(request.getParameter("portid"));
             }
             ServiceOrderDAO soDAO = new ServiceOrderDAOImpl(dbManager);
             ServiceOrder so = soDAO.find(soID);
@@ -97,7 +102,7 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
             if (request.getParameter("action") != null 
             		&& "Disconnect Cable from Port".equals(request.getParameter("action"))){
                 try {
-                    dwf.unplugCableFromPort(taskID, cable.getId(), port.getId(), si.getId());
+                    dwf.unplugCableFromPort(taskID, cableID, portID, si.getId());
                     actionStatus = "Cable was disconnected from port";
                     dbManager.commit();
                 } catch (DBManagerException ex) {
