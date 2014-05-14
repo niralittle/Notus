@@ -1,23 +1,8 @@
 <%@page import="nc.notus.entity.OSSUser"%>
 <%@page import="java.util.List"%>
 
-<script>
-    var show;
-    function hidetxt(type) {
-        //clean all fields if chosen other criteria to searching
-        document.getElementById("get_users").reset();
-
-        param = document.getElementById(type);
-        if (param.style.display == "none") {
-            if (show) {
-                show.style.display = "none";
-            }
-            param.style.display = "block";
-            show = param;
-        } else
-            param.style.display = "none";
-    }
-</script>
+<script type="text/javascript" src="assets/hideText.js"></script>
+<script type="text/javascript" src="assets/registerValidator.js"></script>
 
 <%
     String login = request.getParameter("login") == null ? "" : request
@@ -28,7 +13,8 @@
                     .getParameter("email");
     boolean isAdmin = request.isUserInRole("ADMINISTRATOR");
 %>
-
+ <div id="passMsg" style="color: red;"></div>
+ 
 <h3 style="color: red;">
     <%=request.getAttribute("errMessage") == null ? "" :
         request.getAttribute("errMessage")%>
@@ -82,11 +68,13 @@
 </form>
 
 <%
-if (request.getAttribute("findedUsers") != null) {
+	if (request.getAttribute("findedUsers") != null) {
     List<OSSUser> users = (List<OSSUser>) request.getAttribute("findedUsers");
-        if (users.size() < 1) {
-                out.print("<h3>User with the specified parameter was not found!</h3>");
-        } else {
+   
+	if (users.isEmpty()) {
+		out.print("<h3>User with the specified parameter was not found!</h3>");
+	} else {
+		
 %>
 
 <table class="table table-striped table-hover">
@@ -106,16 +94,19 @@ if (request.getAttribute("findedUsers") != null) {
 <%
             for (OSSUser user : users) {
 %>
-<form method="post" action="Support">
+<form method="post" onsubmit="return passValidate()" action="Support" >
     <tr>
         <td><%=user.getLogin()%></td>
         <td><%=user.getEmail()%></td>
         <td><%=user.getFirstName()%></td>
         <td><%=user.getLastName()%></td>
                 <% if (!isAdmin) { %>
-        <td><input class="form-control"type="text" name="newPassword" value="" />
-                </td><td><input type="submit" class="btn btn-warning" name="action"
-                                value="Apply"/></td>
+        <td>
+        	<input type="password" class="form-control" 
+        			type="text" name="newPassword" id="pass"  value="" />
+         </td>
+         <td><input type="submit" class="btn btn-warning" name="action"
+                                value="Apply" /></td>
         <td><a href="CustomerUser?userID=<%=user.getId()%>"
                 target="_blank">View information about SO and SI</a></td>
                 <% } else { %>
@@ -123,6 +114,7 @@ if (request.getAttribute("findedUsers") != null) {
             <% } %>
     </tr>
      <input type="hidden" value="<%=user.getId()%>" name="userId" />
+
 </form>
 <%
             }

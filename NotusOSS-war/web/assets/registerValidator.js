@@ -85,9 +85,29 @@ function emailValidate () {
 
 };
 
+function passValidate() {
+	
+	var valid = true;
+	// getting inputed values in fields
+	var pass = document.getElementById("pass");
+
+	// Regex for validation inputed data
+	var password_check = /^[A-Za-z0-9!@#$%^&*()_]{6,40}$/;
+
+	if (!password_check.test(pass.value)) {
+		document.getElementById("passMsg").innerHTML = "Password not valid:" 
+								+ "<br>- minimum length 6 char;" 
+								+ "<br>- only letters and numbers are acceptable.";
+		valid = false;
+	} else {
+		document.getElementById("passMsg").innerHTML = " ";
+	}
+	return valid;
+};
+
 function loginValidate() {
 		// getting inputed values in fields
-		var login = document.getElementById("login");
+		var pass = document.getElementById("newPassword");
 
 		// Regex for validation inputed data
 		var login_check =/^[A-Za-z0-9_-]{3,40}$/;

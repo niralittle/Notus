@@ -2,8 +2,8 @@ package nc.notus.dashboards;
 
 import java.io.IOException;
 
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,6 +27,9 @@ public class SupportEngineerServlet extends HttpServlet {
     private static final String SUPPORT_PAGE = "supportEngineer.jsp";
     // page to redirect
     private static final String CHANGE_PASSWORD_PAGE = "passwordChanging.jsp";
+    
+    //pattern to server-side password validation
+    private static final String PASSWORD_PATTERN = "^[A-Za-z0-9!@#$%^&*()_]{6,40}$";
 
     /**
      * Redirect to passes page.
@@ -107,23 +110,50 @@ public class SupportEngineerServlet extends HttpServlet {
         SupportEngineerController supportControl = null;
         // read necessary parameters from request scope
         if (request.getParameter("userId") != null) {
-
-            String newPassword = request.getParameter("newPassword");
-            int userID = Integer.parseInt(request.getParameter("userId"));
-
-            try {		//try change password
-                supportControl = new SupportEngineerController();
-                supportControl.changeCustomerPassword(userID, newPassword);
-
-                request.setAttribute("success",
-                        "Password was successfully changed!");
-            } catch (DBManagerException exc) {
-                request.setAttribute("errMessage", exc.getMessage());
+        	String newPassword = request.getParameter("newPassword");	
+            if(!isPasswordValid(newPassword)) {
+            	request.setAttribute("errMessage", 
+            				"Password not valid:" 
+							+ "<br>- minimum length 6 char;" 
+							+ "<br>- only letters and numbers are acceptable.");
                 redirectTo(CHANGE_PASSWORD_PAGE, request, response);
-            }
-        }
+			} else {
+
+				try { // try change password
+					int userID = 
+							Integer.parseInt(request.getParameter("userId"));
+					
+					supportControl = new SupportEngineerController();
+					supportControl.changeCustomerPassword(userID, newPassword);
+
+					request.setAttribute("success",
+							"Password was successfully changed!");
+				} catch (DBManagerException exc) {
+					request.setAttribute("errMessage", exc.getMessage());
+					redirectTo(CHANGE_PASSWORD_PAGE, request, response);
+				} catch (NumberFormatException numbExc) {
+					request.setAttribute("errMessage", "Passed paramater not valid!");
+					redirectTo(CHANGE_PASSWORD_PAGE, request, response);
+				}
+			}
+		}
 
     }
+    
+	private boolean isPasswordValid(String password) {
+		boolean isValid = true;
+		Pattern pattern;
+		Matcher matcher;
+		
+		pattern = Pattern.compile(PASSWORD_PATTERN);
+		matcher = pattern.matcher(password);
+		
+		//check if valid
+		if (!matcher.matches()) {
+			isValid = false;
+		}
+		return isValid;
+	}
 
     /**
      * Handles the HTTP <code>POST</code> method.
