@@ -9,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import nc.notus.dao.ServiceInstanceDAO;
 import nc.notus.dao.ServiceOrderDAO;
@@ -17,7 +16,6 @@ import nc.notus.dao.TaskDAO;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.TaskDAOImpl;
-import nc.notus.dashboards.CustomerUserServlet;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.Cable;
@@ -33,8 +31,8 @@ import nc.notus.workflow.DisconnectScenarioWorkflow;
  * @author Vladimir Ermolenko
  */
 public class DisconnectScenarioForInstEng extends HttpServlet {
-
-    private HttpSession session;
+    private int offset = 0;
+    private int numbOfRecords = 10;
     
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -110,8 +108,7 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
                     actionStatus = "Cable was not disconnected from port";
                 }
                 TaskDAO taskDAO = new TaskDAOImpl(dbManager);
-                int offset = 0;
-                int numbOfRecords = 10;
+                
                 boolean personal = true;
                 List<Task> tasks = taskDAO.getTasksByID(offset, numbOfRecords, userID);
                 request.setAttribute("userid", userID);
