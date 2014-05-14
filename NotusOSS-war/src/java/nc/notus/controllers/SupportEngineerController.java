@@ -12,6 +12,7 @@ import nc.notus.email.NewPasswordEmail;
 import nc.notus.entity.OSSUser;
 import nc.notus.entity.ServiceOrder;
 import nc.notus.entity.Task;
+import nc.notus.states.UserRole;
 import nc.notus.workflow.NewScenarioWorkflow;
 
 /**
@@ -62,7 +63,6 @@ public class SupportEngineerController extends AbstractController {
             if (isInternal) {
                 dbManager.commit();
             }
-            actionStatus = "Bill successfully sent!";
         } catch (DBManagerException ex) {
             if (isInternal) {
                 dbManager.rollback();
@@ -84,6 +84,7 @@ public class SupportEngineerController extends AbstractController {
      */
     public void changeCustomerPassword(int userID, String newPassword) throws DBManagerException {
         OSSUserDAOImpl userDAO = null;
+        boolean isUser = false;
         try {
             if (isInternal) {
                 dbManager = new DBManager();
@@ -91,27 +92,36 @@ public class SupportEngineerController extends AbstractController {
             userDAO = new OSSUserDAOImpl(dbManager);
             // get user by id and set him new password
             OSSUser user = userDAO.find(userID);
-            user.setPassword(newPassword);
-            userDAO.update(user);
-            if (isInternal) {
-                dbManager.commit();
-            }
-            actionStatus = "Password for user " + user.getLogin() + " was successfully changed!";
-
-            Email mail = new NewPasswordEmail(user.getFirstName(), newPassword);
-            EmailSender emailSender = new EmailSender();
-            emailSender.sendEmail(userID, mail);
-
+            
+            int userRoleID = user.getRoleID();
+			if (userRoleID == UserRole.CUSTOMER_USER.toInt()) {
+				user.setPassword(newPassword);
+				userDAO.update(user);
+				if (isInternal) {
+					dbManager.commit();
+				}
+				isUser = true;
+				
+				Email mail = new NewPasswordEmail(
+				 						user.getFirstName(), newPassword); 
+				EmailSender emailSender = new EmailSender();
+				emailSender.sendEmail(userID, mail);
+				 
+			}
         } catch (DBManagerException ex) {
             if (isInternal) {
                 dbManager.rollback();
             }
             throw new DBManagerException(
-                    "Error was occured while changing password.", ex);
+                    "Error was occured while changing password.");
         } finally {
             if (isInternal) {
                 dbManager.close();
             }
+        }
+        if(!isUser) {
+				throw new DBManagerException(
+	                    "You can change password for customer users only.");
         }
     }
 }

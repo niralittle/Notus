@@ -4,10 +4,6 @@
     Author     : Katya Atamanchuk
 --%>
 
-<% if (request.getUserPrincipal() != null) { %>
-    <h3>You logged in as, <%=request.getUserPrincipal()%></h3>
-<% } %>
-
   <!-- Static filler-content for index page starts here !-->
  
 <div style="background-image: url(assets/girl_laptop.jpg);
