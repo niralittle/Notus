@@ -48,35 +48,16 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         DBManager dbManager = new DBManager();
-        Cable cable = null;
-        Port port = null;
         int taskID = 0;
         int soID = 0;
         int userID = 0;
         String actionStatus;
-        String taskName = "";
-        String serviceLocation = "";
-        String serviceDescription = "";
-        int price = 0;
         int cableID = 0;
         int portID = 0;
         
         try {
             if (request.getParameter("serviceorderid") != null){
                 soID  = Integer.parseInt(request.getParameter("serviceorderid"));
-            }
-
-            if (request.getParameter("taskName") != null){
-                taskName  = (String) request.getParameter("taskName");
-            }
-            if (request.getParameter("serviceLocation") != null){
-                serviceLocation  = (String) request.getParameter("serviceLocation");
-            }
-            if (request.getParameter("serviceDescription") != null){
-                serviceDescription  = (String) request.getParameter("serviceDescription");
-            }
-            if (request.getParameter("price") != null){
-                price  = Integer.parseInt(request.getParameter("price"));
             }
             if (request.getParameter("taskid") != null){
                 taskID  = Integer.parseInt(request.getParameter("taskid"));
@@ -117,16 +98,6 @@ public class DisconnectScenarioForInstEng extends HttpServlet {
                 response.sendRedirect("TasksAssignment?type=personal&actionStatus="+actionStatus);
                 return;
             }
-            request.setAttribute("taskName", taskName);
-            request.setAttribute("serviceLocation", serviceLocation);
-            request.setAttribute("serviceDescription", serviceDescription);
-            request.setAttribute("price", price);
-            request.setAttribute("cable", cable);
-            request.setAttribute("port", port);
-            request.setAttribute("taskid", taskID);
-            request.setAttribute("soid", soID);
-            request.setAttribute("userid", userID);
-            request.getRequestDispatcher("disconnectScenarioForInstEng.jsp").forward(request, response);
 		} catch (DBManagerException wfExc) {
 			request.setAttribute("errorMessage", "Service unavailable."); 
 			request.getRequestDispatcher("disconnectScenarioForInstEng.jsp").forward(request, response);
