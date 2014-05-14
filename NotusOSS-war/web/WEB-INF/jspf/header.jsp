@@ -29,7 +29,7 @@
 
         <a href="adminDashboard.jsp">Reports</a>
         <div class="separator"></div>
-        <%  } else if (request.isUserInRole("PROVISION_ENGINEER") ||
+        <%  } else if (request.isUserInRole("PROVISIONING_ENGINEER") ||
           request.isUserInRole("SUPPORT_ENGINEER") ||
           request.isUserInRole("INSTALLATION_ENGfINEER")) {%>
 
@@ -61,11 +61,11 @@
             <ul>
 
     <%  if (!(request.isUserInRole("SUPPORT_ENGINEER") ||
-            request.isUserInRole("PROVISION_ENGINEER") ||
+            request.isUserInRole("PROVISIONING_ENGINEER") ||
             request.isUserInRole("INSTALLATION_ENGINEER") ||
             request.isUserInRole("ADMINISTRATOR"))) {%>
                 <li><a href="selectLocation.jsp">SELECT SERVICE</a></li>
-                <li><a href="serviceCatalog.jsp">OUR SERVICES</a> </li>
+                <li><a href="serviceCatalog.jsp">SERVICE CATALOG</a> </li>
     <%  }%>
             </ul>
        </div>

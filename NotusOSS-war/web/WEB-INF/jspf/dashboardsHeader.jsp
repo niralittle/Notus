@@ -19,7 +19,7 @@
 
         <a href="adminDashboard.jsp">Reports</a>
         <div class="separator"></div>
-<% } else if (request.isUserInRole("PROVISION_ENGINEER") ||
+<% } else if (request.isUserInRole("PROVISIONING_ENGINEER") ||
         request.isUserInRole("SUPPORT_ENGINEER") ||
         request.isUserInRole("INSTALLATION_ENGINEER")) { %>
 
