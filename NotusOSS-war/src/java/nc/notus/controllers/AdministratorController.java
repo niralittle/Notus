@@ -1,17 +1,17 @@
 package nc.notus.controllers;
 
-import org.apache.log4j.Logger;
-
 import nc.notus.dao.OSSUserDAO;
 import nc.notus.dao.impl.OSSUserDAOImpl;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
+import nc.notus.states.UserRole;
 import nc.notus.states.UserState;
 
 /**
+ * Provide actions of Administrator role. 
  *
- * @author Dima
+ * @author Pacnhenko Dmytro
  */
 public class AdministratorController extends AbstractController {
 
@@ -29,17 +29,16 @@ public class AdministratorController extends AbstractController {
     public AdministratorController() {
         super();
     }
-    private static Logger logger = Logger.getLogger(DBManager.class.getName());
 
     /**
+     * Register new engineer in system.
      *
-     * @param login
-     * @param password
-     * @param email
-     * @param firstName
-     * @param lastName
-     * @param roleID
-     * @return
+     * @param login engineer login
+     * @param password engineer password 
+     * @param email engineer email
+     * @param firstName engineer first name
+     * @param lastName engineer last name
+     * @param roleID engineer role {@link UserRole}
      * @throws DBManagerException
      */
     public int registerNewEngineer(String login, String password, String email,
@@ -78,7 +77,7 @@ public class AdministratorController extends AbstractController {
             if (isInternal) {
                 dbManager.rollback();
             }
-            throw new DBManagerException("Error while proceed to disconnect", wfExc);
+            throw new DBManagerException("Error while proceed to disconnect");
         } finally {
             if (isInternal) {
                 dbManager.close();
@@ -93,27 +92,36 @@ public class AdministratorController extends AbstractController {
      * @throws DBManagerException
      */
     public void blockUser(int userID) throws DBManagerException {
-        try {
+    	boolean isUser = false;
+    	try {
             if (isInternal) {
                 dbManager = new DBManager();
             }
             OSSUserDAO userDAO = new OSSUserDAOImpl(dbManager);
             OSSUser user = userDAO.find(userID);
-            user.setBlocked(UserState.BLOCKED.toInt());
-            userDAO.update(user);
-            if (isInternal) {
-                dbManager.commit();
-            }
+            
+            int userRoleID = user.getRoleID();
+			if (userRoleID == UserRole.CUSTOMER_USER.toInt()) {
+				user.setBlocked(UserState.BLOCKED.toInt());
+				userDAO.update(user);
+				if (isInternal) {
+					dbManager.commit();
+				}
+				isUser = true;
+			}
         } catch (DBManagerException wfExc) {
             if (isInternal) {
                 dbManager.rollback();
             }
-            throw new DBManagerException("Error while user blocking. ", wfExc);
+            throw new DBManagerException("Error while user blocking. ");
         } finally {
             if (isInternal) {
                 dbManager.close();
             }
         }
+    	if(!isUser) {
+    		throw new DBManagerException("You can block customer users only.");
+    	}
     }
 }
 
