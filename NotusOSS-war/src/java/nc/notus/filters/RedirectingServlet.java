@@ -37,7 +37,7 @@ public class RedirectingServlet extends HttpServlet {
 	
 	private boolean isEngineer(HttpServletRequest request) {
 		if(request.isUserInRole("SUPPORT_ENGINEER") 
-				|| request.isUserInRole("PROVISION_ENGINEER")
+				|| request.isUserInRole("PROVISIONING_ENGINEER")
 				|| request.isUserInRole("INSTALLATION_ENGINEER")) {
 			return true;
 		}

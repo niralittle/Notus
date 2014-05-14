@@ -14,7 +14,7 @@
 	</security-role-mapping>
 	
 	<security-role-mapping>
-		<role-name>PROVISION_ENGINEER</role-name>
+		<role-name>PROVISIONING_ENGINEER</role-name>
 		<group-name>3</group-name>
 	</security-role-mapping>
 	
