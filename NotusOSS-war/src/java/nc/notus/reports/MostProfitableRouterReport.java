@@ -50,7 +50,7 @@ public class MostProfitableRouterReport extends AbstractReport {
                 /* Column headers */
                 this.reportData[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
                         COLUMN_SEPARATOR + "Port quantity" + COLUMN_SEPARATOR +
-                        "Profit";
+                        "Profit, $";
                 this.reportData[1] = dev.getId() + COLUMN_SEPARATOR + dev.getName() +
                         COLUMN_SEPARATOR + dev.getPortQuantity() + COLUMN_SEPARATOR +
                         dev.getProfit();
@@ -58,7 +58,7 @@ public class MostProfitableRouterReport extends AbstractReport {
                 this.reportData = new String[1];
                 this.reportData[0] = "Router ID" + COLUMN_SEPARATOR + "Router name" +
                         COLUMN_SEPARATOR + "Port quantity" + COLUMN_SEPARATOR +
-                        "Profit";
+                        "Profit, $";
             }
         } finally {
             dbManager.close();

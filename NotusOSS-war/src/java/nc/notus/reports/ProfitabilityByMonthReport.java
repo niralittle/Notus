@@ -46,7 +46,7 @@ public class ProfitabilityByMonthReport extends AbstractReport {
             this.reportData = new String[profit.size() + 1];
 
             /* Column headers */
-            this.reportData[0] = "Month" + COLUMN_SEPARATOR + "Profit";
+            this.reportData[0] = "Month" + COLUMN_SEPARATOR + "Profit, $";
 
             /* Data */
             for (int i = 1; i < this.reportData.length; i++) {
