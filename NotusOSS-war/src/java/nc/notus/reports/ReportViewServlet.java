@@ -82,7 +82,7 @@ public class ReportViewServlet extends HttpServlet {
 
                 request.getRequestDispatcher("report.jsp").forward(request, response);
             } else {
-                request.getSession().setAttribute("ErrorString", "There is no report found.");
+                request.getSession().setAttribute("ErrorString", "No data found for selected report");
                 request.getRequestDispatcher("errorPage.jsp").forward(request, response);
             }
         } catch (DBManagerException exc) {

@@ -5,6 +5,6 @@
 --%>
 <jsp:include page="/WEB-INF/template.jsp">
     <jsp:param name="content" value="errorPage-content"/>
-    <jsp:param name="title" value='(¬_¬) Problems'/>
+    <jsp:param name="title" value='Report'/>
 </jsp:include>
 
