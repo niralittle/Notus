@@ -9,7 +9,7 @@
         Map<String, Integer>>) request.getAttribute("providerLocations");
    Collection<String> types = (Collection<String>)
            request.getAttribute("serviceTypes");%>
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover table-bordered">
     <tbody>
     <tr>
         <th><center><h4>Address</h4></center></th>
