@@ -1,10 +1,12 @@
 package nc.notus;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +28,7 @@ import nc.notus.entity.ServiceType;
  * Gets request from javaScript,
  * gets all service catalogs via DAO
  * and forms responseXML to javaScript
- * @author Alina Vorobiova
+ * @author Alina Vorobiova & Katya Atamanchuk
  */
 public class ServiceCatalogServlet extends HttpServlet {
    
@@ -42,37 +44,32 @@ public class ServiceCatalogServlet extends HttpServlet {
     private final int NUMBER_OF_RECORDS = 20;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
         DBManager dbManager = new DBManager();
-        StringBuffer sb = new StringBuffer();
         try {
             ProviderLocationDAO locationsDAO = new ProviderLocationDAOImpl(dbManager);
-            List<ProviderLocation> locations = locationsDAO.getProviderLocations(OFFSET, NUMBER_OF_RECORDS);
+            List<ProviderLocation> locations = locationsDAO.getProviderLocations(
+                    OFFSET, NUMBER_OF_RECORDS);
+            Map<String, Map<String, Integer>> map = new TreeMap<String, Map<String, Integer>>();
+            ServiceTypeDAO type = new ServiceTypeDAOImpl(dbManager);
+            Map<Integer, String> types = new TreeMap<Integer, String>();
             for(ProviderLocation location : locations){
-                sb.append("<location>");
-                sb.append("<name>"+location.getName()+"</name>");
-                sb.append("<address>"+location.getLocation()+"</address>");
-                sb.append("<catalogs>");
                 ServiceCatalogDAO catalogDAO = new ServiceCatalogDAOImpl(dbManager);
                 List<ServiceCatalog> serviceCatalogs =
-                        catalogDAO.getServiceCatalogByProviderLocationID(location.getId(), OFFSET, NUMBER_OF_RECORDS);
-                for(ServiceCatalog serviceCatalog : serviceCatalogs){
-                    sb.append("<catalog>");
-                    ServiceTypeDAO type = new ServiceTypeDAOImpl(dbManager);
-                    ServiceType serviceType =type.find(serviceCatalog.getServiceTypeID());
-                    sb.append("<name>" + serviceType.getService() + "</name>");
-                    sb.append("<price>"+serviceCatalog.getPrice()+"</price>");
-                    sb.append("</catalog>");
+                        catalogDAO.getServiceCatalogByProviderLocationID(
+                        location.getId(), OFFSET, NUMBER_OF_RECORDS);
+                Map<String, Integer> prices = new TreeMap<String, Integer>();
+                for (ServiceCatalog catalog : serviceCatalogs) {
+                    ServiceType serviceType = type.find(catalog.getServiceTypeID());
+                    types.put(catalog.getServiceTypeID(), serviceType.getService());
+                    prices.put(serviceType.getService(), catalog.getPrice());
                 }
-                sb.append("</catalogs>");
-                sb.append("</location>");
+                map.put(location.getLocation(), prices);
             }
-            response.setContentType("text/xml");
-            response.setHeader("Cache-Control", "no-cache");
-            response.getWriter().write("<locations>" + sb.toString() + "</locations>");
+            request.setAttribute("serviceTypes", types.values());
+            request.setAttribute("providerLocations", map);
+            RequestDispatcher view = request.getRequestDispatcher("serviceCatalog.jsp");
+            view.forward(request, response);
         } finally { 
-            out.close();
             dbManager.close();
         }
     } 
