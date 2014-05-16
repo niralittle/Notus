@@ -68,8 +68,9 @@ public class ServiceCatalogServlet extends HttpServlet {
                 sb.append("</catalogs>");
                 sb.append("</location>");
             }
-            request.setAttribute("xml", "<locations>" + sb.toString() + "</locations>");
-            
+            response.setContentType("text/xml");
+            response.setHeader("Cache-Control", "no-cache");
+            response.getWriter().write("<locations>" + sb.toString() + "</locations>");
         } finally { 
             out.close();
             dbManager.close();

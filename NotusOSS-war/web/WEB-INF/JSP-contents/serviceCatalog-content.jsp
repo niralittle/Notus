@@ -11,5 +11,4 @@
 <div style="display:block; margin:0px auto; width: 300px;">
 <input id="see" type="button" class="btn btn-info btn-lg btn-block"
        value="Make an order" onclick="goToSelectLocation()"/>
-
 </div>

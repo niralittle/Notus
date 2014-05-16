@@ -65,7 +65,7 @@
             request.isUserInRole("INSTALLATION_ENGINEER") ||
             request.isUserInRole("ADMINISTRATOR"))) {%>
                 <li><a href="selectLocation.jsp">SELECT SERVICE</a></li>
-                <li><a href="ServiceCatalog">SERVICE CATALOG</a> </li>
+                <li><a href="serviceCatalog.jsp">SERVICE CATALOG</a> </li>
     <%  }%>
             </ul>
        </div>
