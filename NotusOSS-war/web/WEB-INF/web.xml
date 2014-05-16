@@ -189,7 +189,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServiceCatalogServlet</servlet-name>
-        <url-pattern>/ServiceCatalogServlet</url-pattern>
+        <url-pattern>/ServiceCatalog</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ChangeUserPassword</servlet-name>

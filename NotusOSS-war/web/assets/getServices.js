@@ -127,7 +127,6 @@ function goToRegistration(){
         addErrorMessage("Choose service, please");
     }
 }
-
 //finds, which service is selected
 function getSelected(){
     var radios = document.getElementsByName("serv");
