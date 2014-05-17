@@ -13,6 +13,10 @@
     Integer numberOfPages = (Integer) request.getAttribute("pages");
 %>
 
+<%if (request.getAttribute("actionStatus") != null) { %>
+<div id="installationMessage"><%=request.getAttribute("actionStatus")%> !!!</div>    
+<% } %>
+
 <form action="ReassigTaskToEngineerServlet" method="post" id="sendTask">
     <table class="table table-hover table-striped">
         <tr>

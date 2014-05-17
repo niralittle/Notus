@@ -48,7 +48,8 @@ public class TasksForReassignmentServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException, DBManagerException {
-        response.setContentType("text/html;charset=UTF-8");        
+        response.setContentType("text/html;charset=UTF-8");
+        String actionStatus = null;
         PrintWriter out = response.getWriter();
         DBManager dbManager = new DBManager();
         TaskDAO taskDAO = new TaskDAOImpl(dbManager);
@@ -59,8 +60,14 @@ public class TasksForReassignmentServlet extends HttpServlet {
             if(taskID != null && engineerID != null){
                 Task task = taskDAO.find(Integer.parseInt(taskID));
                 task.setEmployeeID(Integer.parseInt(engineerID));
-                taskDAO.update(task);
-                dbManager.commit();
+                try {
+                    taskDAO.update(task);
+                    dbManager.commit();
+                    actionStatus = "Task was reassigned";
+                } catch (DBManagerException ex) {
+                        dbManager.rollback();
+                        actionStatus = "Task was not reassigned";
+                }
             }            
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("taskStatusID", "1");
@@ -101,6 +108,7 @@ public class TasksForReassignmentServlet extends HttpServlet {
                 tasksInfo.add(taskInfo);
             }
             request.setAttribute("listOfTasks", tasksInfo);
+            request.setAttribute("actionStatus", actionStatus);
             request.getRequestDispatcher("tasksForReasignment.jsp").forward(request, response);
         } catch(DBManagerException ex) {
         	request.setAttribute("errMessage", "Service unavailable.");
