@@ -133,9 +133,10 @@ public class TasksAssignment extends HttpServlet {
                     try {
                         taskDAO.update(task);
                         dbManager.commit();
+                        actionStatus = "Task was assigned";
                     } catch (DBManagerException ex) {
                         dbManager.rollback();
-                        actionStatus = "Task was was not assigned";
+                        actionStatus = "Task was not assigned";
                     }
                 } else {
                 	int roleID = user.getRoleID();

@@ -112,7 +112,7 @@ public class SubmitTask extends HttpServlet {
             if (request.getParameter("action") != null && "Create Cable".equals(request.getParameter("action"))){
                 try {
                     nwf.createCable(taskID, "UTP Cable");
-                    actionStatus = "Cable was created";
+                    actionStatus = "Cable was created, task completed";
                     dbManager.commit();
                 } catch (DBManagerException ex) {
                     dbManager.rollback();
