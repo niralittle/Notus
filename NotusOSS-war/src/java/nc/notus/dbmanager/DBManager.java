@@ -83,6 +83,11 @@ public class DBManager implements Closeable {
     private Connection getConnection() throws DBManagerException {
         try {
             conn = dataSource.getConnection();
+            
+            if(conn == null) {
+                throw new DBManagerException("Cannot obtain connection", exc);
+            }
+            
             conn.setAutoCommit(false);
             return conn;
         } catch (SQLException exc) {
