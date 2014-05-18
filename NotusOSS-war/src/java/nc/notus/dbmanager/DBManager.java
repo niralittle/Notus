@@ -101,7 +101,9 @@ public class DBManager implements Closeable {
      */
     private void releaseConnection() throws DBManagerException {
         try {
-            conn.close();
+            if(conn != null) {
+                conn.close();
+            }
         } catch (SQLException exc) {
             logger.error(exc.getMessage(), exc);
             throw new DBManagerException("Cannot close connection", exc);
