@@ -52,14 +52,15 @@ public class SupportEngineerServlet extends HttpServlet {
      * 
      * @param request servlet request
      */
-    private void blockUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void blockUser(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         AdministratorController adminControl = null;
 
         if (request.isUserInRole("ADMINISTRATOR")) {
 
             if (request.getParameter("userId") != null) {
                 try { // try block user
-                	int userID = Integer.parseInt(request.getParameter("userId"));
+                    int userID = Integer.parseInt(request.getParameter("userId"));
                 	
                     adminControl = new AdministratorController();
                     adminControl.blockUser(userID);
@@ -68,49 +69,52 @@ public class SupportEngineerServlet extends HttpServlet {
                     request.setAttribute("errMessage", exc.getMessage());
                     redirectTo(CHANGE_PASSWORD_PAGE, request, response);
                 } catch (NumberFormatException numbExc) {
-					request.setAttribute("errMessage", "Passed paramater not valid!");
-					redirectTo(CHANGE_PASSWORD_PAGE, request, response);
-				}
+                        request.setAttribute("errMessage", "Passed paramater not valid!");
+                        redirectTo(CHANGE_PASSWORD_PAGE, request, response);
+                }
             } else {
                 request.setAttribute("errMessage", "TaskID not passed!");
             }
 
         } else {
-            request.setAttribute("errMessage", "To perfrom this action you must be" + " logged in as Administrator! ");
+            request.setAttribute("errMessage", "To perfrom this action " +
+                    "you must be logged in as Administrator! ");
         }
     }
     
     /**
      * Send bill to customer user by SUPPORT_ENGINEER
      */
-    private void sendBill(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void sendBill(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         SupportEngineerController supportControl = null;
         if (request.getParameter("taskid") != null) {
             int taskID = Integer.parseInt(request.getParameter("taskid"));
 
-			try { // try send bill
-				supportControl = new SupportEngineerController();
-				supportControl.sendBillToCustomer(taskID);
+            try { // try send bill
+                    supportControl = new SupportEngineerController();
+                    supportControl.sendBillToCustomer(taskID);
 
-				request.setAttribute("success",
-						"Bill was successfully sent!");
-			} catch (DBManagerException exc) {
-				request.setAttribute("errMessage", exc.getMessage());
-				redirectTo(SUPPORT_PAGE, request, response);
-			} catch (NumberFormatException numbExc) {
-				request.setAttribute("errMessage", "Passed paramater not valid!");
-				redirectTo(SUPPORT_PAGE, request, response);
-			}
-		} else {
-			request.setAttribute("success", "TaskID not passed!");
-		}
+                    request.setAttribute("success",
+                                    "Bill was successfully sent!");
+            } catch (DBManagerException exc) {
+                    request.setAttribute("errMessage", exc.getMessage());
+                    redirectTo(SUPPORT_PAGE, request, response);
+            } catch (NumberFormatException numbExc) {
+                    request.setAttribute("errMessage", "Passed paramater not valid!");
+                    redirectTo(SUPPORT_PAGE, request, response);
+            }
+        } else {
+                request.setAttribute("success", "TaskID not passed!");
+        }
     }
 
     /**
      * Change password by SUPPORT_ENGINEER.
      */
-    private void changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void changePassword(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
 
         SupportEngineerController supportControl = null;
         // read necessary parameters from request scope
@@ -118,31 +122,29 @@ public class SupportEngineerServlet extends HttpServlet {
         	String newPassword = request.getParameter("newPassword");	
             if(!isPasswordValid(newPassword)) {
             	request.setAttribute("errMessage", 
-            				"Password not valid:" 
-							+ "<br>- minimum length 6 char;" 
-							+ "<br>- only letters and numbers are acceptable.");
+                            "Password not valid:" +
+                            "<br>- minimum length 6 char;" +
+                            "<br>- only letters and numbers are acceptable.");
                 redirectTo(CHANGE_PASSWORD_PAGE, request, response);
-			} else {
+            } else {
 
-				try { // try change password
-					int userID = 
-							Integer.parseInt(request.getParameter("userId"));
-					
-					supportControl = new SupportEngineerController();
-					supportControl.changeCustomerPassword(userID, newPassword);
+                try { // try change password
+                    int userID =  Integer.parseInt(request.getParameter("userId"));
 
-					request.setAttribute("success",
-							"Password was successfully changed!");
-				} catch (DBManagerException exc) {
-					request.setAttribute("errMessage", exc.getMessage());
-					redirectTo(CHANGE_PASSWORD_PAGE, request, response);
-				} catch (NumberFormatException numbExc) {
-					request.setAttribute("errMessage", "Passed paramater not valid!");
-					redirectTo(CHANGE_PASSWORD_PAGE, request, response);
-				}
-			}
-		}
+                    supportControl = new SupportEngineerController();
+                    supportControl.changeCustomerPassword(userID, newPassword);
 
+                    request.setAttribute("success",
+                                    "Password was successfully changed!");
+                } catch (DBManagerException exc) {
+                    request.setAttribute("errMessage", exc.getMessage());
+                    redirectTo(CHANGE_PASSWORD_PAGE, request, response);
+                } catch (NumberFormatException numbExc) {
+                    request.setAttribute("errMessage", "Passed paramater not valid!");
+                    redirectTo(CHANGE_PASSWORD_PAGE, request, response);
+                }
+            }
+        }
     }
     
 	private boolean isPasswordValid(String password) {
@@ -198,6 +200,7 @@ public class SupportEngineerServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Registers user in the system, creates a new order " + "and executes it ('New' scenario workflow).";
+        return "Registers user in the system, creates a new order " +
+                "and executes it ('New' scenario workflow).";
     }
 }

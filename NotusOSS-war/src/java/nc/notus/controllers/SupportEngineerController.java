@@ -82,7 +82,8 @@ public class SupportEngineerController extends AbstractController {
      * @param newPassword new password
      * @throws DBManagerException
      */
-    public void changeCustomerPassword(int userID, String newPassword) throws DBManagerException {
+    public void changeCustomerPassword(int userID, String newPassword)
+            throws DBManagerException {
         OSSUserDAOImpl userDAO = null;
         boolean isUser = false;
         try {
@@ -94,20 +95,20 @@ public class SupportEngineerController extends AbstractController {
             OSSUser user = userDAO.find(userID);
             
             int userRoleID = user.getRoleID();
-			if (userRoleID == UserRole.CUSTOMER_USER.toInt()) {
-				user.setPassword(newPassword);
-				userDAO.update(user);
-				if (isInternal) {
-					dbManager.commit();
-				}
-				isUser = true;
-				
-				Email mail = new NewPasswordEmail(
-				 						user.getFirstName(), newPassword); 
-				EmailSender emailSender = new EmailSender();
-				emailSender.sendEmail(userID, mail);
+                if (userRoleID == UserRole.CUSTOMER_USER.toInt()) {
+                    user.setPassword(newPassword);
+                    userDAO.update(user);
+                    if (isInternal) {
+                            dbManager.commit();
+                    }
+                    isUser = true;
+
+                    Email mail = new NewPasswordEmail(
+                    user.getFirstName(), newPassword);
+                    EmailSender emailSender = new EmailSender();
+                    emailSender.sendEmail(userID, mail);
 				 
-			}
+                }
         } catch (DBManagerException ex) {
             if (isInternal) {
                 dbManager.rollback();
@@ -119,9 +120,10 @@ public class SupportEngineerController extends AbstractController {
                 dbManager.close();
             }
         }
-        if(!isUser) {
-				throw new DBManagerException(
-	                    "You can change password for customer users only.");
+
+        if (!isUser) {
+            throw new DBManagerException(
+                "You can change password for customer users only.");
         }
     }
 }
