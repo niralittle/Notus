@@ -29,7 +29,6 @@ import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
-import nc.notus.dashboards.CustomerUserServlet;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
@@ -83,15 +82,10 @@ public class CustomerUserServlet extends HttpServlet {
         }
         try {
             dbManager = new DBManager();
-        } catch (DBManagerException ex) {
-            Logger.getLogger(CustomerUserServlet.class.getName())
-                    .log(Level.SEVERE, null, ex);
-        }
-
-        try {
             int userID = getUserID(request);
             ServiceOrderDAO orderDAO = new ServiceOrderDAOImpl(dbManager);
-            int numbOfSORecords = orderDAO.countAllSOByStatus(userID, OrderStatus.PROCESSING.toInt());
+            int numbOfSORecords = orderDAO.countAllSOByStatus(userID, 
+                    OrderStatus.PROCESSING.toInt());
             int numbOfSIRecords = orderDAO.countUsersActiveSIs(userID);
             
             Integer numbOfSOPages = (numbOfSORecords - 1) / NUMBER_OF_RECORDS + 1;
@@ -137,25 +131,19 @@ public class CustomerUserServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
     	 if ("Disconnect".equals(request.getParameter("action"))) {
              if (request.getParameter("serviceInstanceID") != null) {
-                 int serviceInstanceId;
-                 int userId;
                  CustomerUserController userControl;
                  try {
                      dbManager = new DBManager();
-                     serviceInstanceId = Integer.parseInt(
+                     int serviceInstanceId = Integer.parseInt(
                      		request.getParameter("serviceInstanceID"));
-                     
-                     userId = getUserID(request);
                      userControl = new CustomerUserController();
-                     userControl.proceedToDisconnect(userId, serviceInstanceId);
+                     userControl.proceedToDisconnect(getUserID(request),
+                             serviceInstanceId);
                  } catch (DBManagerException wfExc) {
                      Logger.getLogger(CustomerUserServlet.class.getName())
                              .log(Level.SEVERE, null, wfExc);
-                     response.sendRedirect("CustomerUser");
-                     return;
-                 } catch(NumberFormatException numExc) {
-                 	response.sendRedirect("CustomerUser");
-                 	return;
+                 } finally {
+                     dbManager.close();
                  }
              }
              
