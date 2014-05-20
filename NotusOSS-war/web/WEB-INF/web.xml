@@ -53,10 +53,6 @@
         <servlet-class>nc.notus.dashboards.SubmitTask</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>EmailTestServlet</servlet-name>
-        <servlet-class>nc.notus.EmailTestServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ProvisionEngineerTasksServlet</servlet-name>
         <servlet-class>nc.notus.dashboards.ProvisionEngineerTasksServlet</servlet-class>
     </servlet>
@@ -73,11 +69,6 @@
     <servlet>
         <servlet-name>ServiceCatalogServlet</servlet-name>
         <servlet-class>nc.notus.ServiceCatalogServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ChangeUserPassword</servlet-name>
-        <servlet-class>nc.notus.dashboards.ChangeUserPassword</servlet-class>
     </servlet>
 
     <servlet>
@@ -117,10 +108,6 @@
     <servlet>
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
         <servlet-class>nc.notus.dashboards.ReassigTaskToEngineerServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DisconnectOrderProceed</servlet-name>
-        <servlet-class>nc.notus.dashboards.DisconnectOrderProceed</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RedirectingServlet</servlet-name>
@@ -168,10 +155,6 @@
         <url-pattern>/SubmitTask</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>EmailTestServlet</servlet-name>
-        <url-pattern>/EmailTestServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ProvisionEngineerTasksServlet</servlet-name>
         <url-pattern>/ProvisionEngineerTasksServlet</url-pattern>
     </servlet-mapping>
@@ -182,10 +165,6 @@
     <servlet-mapping>
         <servlet-name>ServiceCatalogServlet</servlet-name>
         <url-pattern>/ServiceCatalogServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ChangeUserPassword</servlet-name>
-        <url-pattern>/ChangeUserPassword</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetingUsersInfo</servlet-name>
@@ -226,10 +205,6 @@
     <servlet-mapping>
         <servlet-name>ReassigTaskToEngineerServlet</servlet-name>
         <url-pattern>/ReassigTaskToEngineerServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DisconnectOrderProceed</servlet-name>
-        <url-pattern>/DisconnectOrderProceed</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RedirectingServlet</servlet-name>
