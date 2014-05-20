@@ -110,7 +110,7 @@
     </servlet>
     <servlet>
         <servlet-name>GroupMailSend</servlet-name>
-        <servlet-class>nc.notus.GroupMailSend</servlet-class>
+        <servlet-class>nc.notus.dashboards.GroupMailSend</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -211,7 +211,7 @@
     </session-config>
 
     <welcome-file-list>
-        <welcome-file>Welcome</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
     <error-page>
@@ -229,6 +229,9 @@
             <web-resource-name>Report Page</web-resource-name>
             <description/>
             <url-pattern>/adminDashboard.jsp</url-pattern>
+            <url-pattern>/report.jsp</url-pattern>
+            <url-pattern>/downloadReport</url-pattern>
+            <url-pattern>/getReport</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>HEAD</http-method>
@@ -253,6 +256,21 @@
             <web-resource-name>Reassign Task</web-resource-name>
             <description/>
             <url-pattern>/Reassign</url-pattern>
+            <url-pattern>/reassignTaskEngineer.jsp</url-pattern>
+            <url-pattern>/ReassigTaskToEngineerServlet</url-pattern>
+            <url-pattern>/tasksForReasignment</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>Group mail send</web-resource-name>
+            <description/>
+            <url-pattern>/groupMailSend.jsp</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>HEAD</http-method>
@@ -294,10 +312,21 @@
             <http-method>DELETE</http-method>
         </web-resource-collection>
 
+        <web-resource-collection>
+            <web-resource-name>Order received page</web-resource-name>
+            <description/>
+            <url-pattern>/orderRecieved.jsp</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>CUSTOMER_USER</role-name>
-            <role-name>SUPPORT_ENGINEER</role-name>
             </auth-constraint>
     </security-constraint>
 
@@ -307,18 +336,7 @@
             <web-resource-name>User password changing or user blocking</web-resource-name>
             <description/>
             <url-pattern>/passwordChanging.jsp</url-pattern>
-            <http-method>GET</http-method>
-            <http-method>POST</http-method>
-            <http-method>HEAD</http-method>
-            <http-method>PUT</http-method>
-            <http-method>OPTIONS</http-method>
-            <http-method>TRACE</http-method>
-            <http-method>DELETE</http-method>
-        </web-resource-collection>
-        <web-resource-collection>
-            <web-resource-name>Group Mail</web-resource-name>
-            <description/>
-            <url-pattern>/groupMailSend.jsp</url-pattern>
+            <url-pattern>/GetUsers</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>HEAD</http-method>
@@ -334,7 +352,6 @@
             </auth-constraint>
         </security-constraint>
 
-
   	<security-constraint>
         <display-name>InstallationEngineer</display-name>
         <web-resource-collection>
@@ -342,16 +359,22 @@
             <description/>
             <url-pattern>/installationEngineerWorkflow.jsp</url-pattern>
             <url-pattern>/installationEngineer.jsp</url-pattern>
-		    <url-pattern>/disconnectScenarioForInstEng.jsp</url-pattern>
-		    <url-pattern>/DisconnectScenarioForInstEng</url-pattern>
- 			<url-pattern>/InstallationEngineerTasks</url-pattern>
-        </web-resource-collection>      
+            <url-pattern>/disconnectScenarioForInstEng.jsp</url-pattern>
+            <url-pattern>/DisconnectScenarioForInstEng</url-pattern>
+            <url-pattern>/InstallationEngineerTasks</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+            </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>INSTALLATION_ENGINEER</role-name>
             </auth-constraint>
         </security-constraint>
-
 
   	<security-constraint>
         <display-name>ProvisioningEngineer</display-name>
@@ -359,39 +382,60 @@
             <web-resource-name>ProvisioningEngineer</web-resource-name>
             <description/>
             <url-pattern>/provisioningEngineerWorkflow.jsp</url-pattern>
-            <url-pattern>/provisioningEngineer.jsp</url-pattern>
-		    <url-pattern>/ProvisionEngineerTasksServlet</url-pattern>
-        </web-resource-collection>      
+            <url-pattern>/ProvisionEngineerTasksServlet</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+            </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>PROVISIONING_ENGINEER</role-name>
             </auth-constraint>
         </security-constraint>
-        
+
         <security-constraint>
         <display-name>SupportEngineer</display-name>
         <web-resource-collection>
             <web-resource-name>SupportEngineer</web-resource-name>
             <description/>
             <url-pattern>/supportEngineer.jsp</url-pattern>
-            <url-pattern>/passwordChanging.jsp</url-pattern>
             <url-pattern>/Support</url-pattern>
-            <url-pattern>/GetUsers</url-pattern>
-        </web-resource-collection>      
+            <url-pattern>/userSOandSI</url-pattern>
+            <url-pattern>/CustomerUserServlet</url-pattern>
+            <url-pattern>/CustomerUser</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+            </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>SUPPORT_ENGINEER</role-name>
             </auth-constraint>
         </security-constraint>
 
-		<security-constraint>
+        <security-constraint>
         <display-name>Engineers</display-name>
         <web-resource-collection>
             <web-resource-name>Engineers</web-resource-name>
             <description/>
             <url-pattern>/tasksAssignment.jsp</url-pattern>
-        	<url-pattern>/TasksAssignment</url-pattern>
-        </web-resource-collection>      
+            <url-pattern>/TasksAssignment</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+            </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>INSTALLATION_ENGINEER</role-name>
@@ -399,7 +443,6 @@
             <role-name>PROVISIONING_ENGINEER</role-name>
             </auth-constraint>
         </security-constraint>
-
 
     <login-config>
         <auth-method>FORM</auth-method>
