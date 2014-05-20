@@ -47,6 +47,12 @@
         <a href="logout">Logout</a>
         <%  }%>
 
+        <%  if (request.getUserPrincipal() != null) {%>
+        <div style="text-align: right; margin-top: 30px;  height: 36px">
+            Welcome, <%=request.getUserPrincipal().getName()%> !
+        </div>
+        <%  }%>
+
     </div>
 
     <div id="pages_list">
