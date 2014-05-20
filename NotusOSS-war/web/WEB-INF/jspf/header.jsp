@@ -31,7 +31,7 @@
         <div class="separator"></div>
         <%  } else if (request.isUserInRole("PROVISIONING_ENGINEER") ||
           request.isUserInRole("SUPPORT_ENGINEER") ||
-          request.isUserInRole("INSTALLATION_ENGfINEER")) {%>
+          request.isUserInRole("INSTALLATION_ENGINEER")) {%>
 
         <a href="TasksAssignment">Group Tasks</a>
         <div class="separator"></div>
