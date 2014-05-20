@@ -19,10 +19,18 @@
    int currentSOPage = 1;
 
    if (request.getParameter("siPage") != null) {
-       currentSIPage = Integer.parseInt((String) request.getParameter("siPage"));
+       try {
+            currentSIPage = Integer.parseInt(request.getParameter("siPage"));
+       } catch (NumberFormatException ex) {
+            currentSIPage = 1;
+       }
    }
    if (request.getParameter("soPage") != null) {
-       currentSOPage = Integer.parseInt((String) request.getParameter("soPage"));
+       try {
+            currentSOPage = Integer.parseInt(request.getParameter("soPage"));
+        } catch (NumberFormatException ex) {
+            currentSOPage = 1;
+        }
    }
    String userIDparam =  request.getParameter("userID") != null
            ? "&userID=" + request.getParameter("userID") : "";
