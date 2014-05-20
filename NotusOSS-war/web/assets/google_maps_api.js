@@ -1,35 +1,57 @@
-var map;
-var marker;
-var geocoder;
-var objSel; //HTML <select> object for multiple addresses
-var destination = [];
-var minPosition = 0; // The nearest provider!!!!
+/*   This js allow to use google maps, by using google maps API. */
 
-//Map initialization: map, marker and clock listener
+var map; //Google Map
+var marker;  //customer marker
+var geocoder; //object, that allow to use geocode Google Geocode API
+var objSel; //HTML <select> object for multiple addresses
+var destination = []; //array of provider locations addresses
+var minPosition; // The nearest provider!!!!
+var delayTime = 500; //time to perform the functions request to Google
+
+
+/**
+ * This function initialize map and marker using specific parameters describe in it
+ * Also fill array of provider locations address, and place them on the map
+ */
 function initialize() {
 
-    var startPosition = new google.maps.LatLng(50.464580, 30.523078);
-    geocoder = new google.maps.Geocoder();
+    //Initialize parameters
+    var startPositionLat = 50.464580; //Kyiv
+    var startPositionLng = 30.523078;
+    var startZoom = 10;
+    var startPosition = new google.maps.LatLng(startPositionLat, startPositionLng); 
     var mapOptions = {
-        zoom: 10,
+        zoom: startZoom,
         center: startPosition,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
+
+
     map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
+   
     marker = new google.maps.Marker({
         map: map
     });
+
+    geocoder = new google.maps.Geocoder();
+
+
     getProviderLocations();
     window.setTimeout(function(){
         getProviderMarkers();
-    },500);
+    },delayTime);
+    
     google.maps.event.addListener(map, 'click', function(event) {
         addMarker(event.latLng);
     });
-
     
 }
-//makes request and implements the ajax
+
+
+/*
+ *makes request and implements the ajax
+ */
+
 function getProviderLocations(){
     var url = "GetLocationsServlet";
     req = initRequest();
@@ -38,16 +60,25 @@ function getProviderLocations(){
     req.send(null);
 }
 
-//callback function
+/*
+ *callback function
+ */
 function call() {
     clear();
-    if (req.readyState == 4) {
-        if (req.status == 200) {
+    var requestFinishState = 4;
+    var requestFinishStatus = 200;
+    
+    if (req.readyState == requestFinishState) {
+        if (req.status == requestFinishStatus) {
             parseMessage(req.responseXML);
         }
     }
 }
-//parses the responseXML and get neccessary data
+
+
+/*
+ *parses the responseXML and get service location data
+ */
 function parseMessage(responseXML) {
     if (responseXML == null) {
         clear();
@@ -59,7 +90,12 @@ function parseMessage(responseXML) {
         }
     }
 }
-// Add a marker to the map if ZOOM is more than 15
+
+/*
+ *  Add a marker to the map
+ *  Hide a list of similar addresses
+ */
+
 function addMarker(location) {
     if (marker == null){
         marker = new google.maps.Marker({
@@ -68,20 +104,28 @@ function addMarker(location) {
     }
     codeLatLng(location);
     document.getElementById("addressSelect").style.display = "none";
-    clear();
+   
 }
 
-//geocode from coordinates to address
+/*
+ * Function allow to get address from coordinates of marker
+ * Place a marker on the map, if address is define, and zoom level is correct
+ */
+
 function codeLatLng(input) {
+
+    //this variable show that result from geocode is define
+    var resultExists = 0;
+    //this variable define the minimum level of map zooming, which can allows you to place marker
+    var zoomLevel = 15;
     var latlng = getLatLng(input);
-    geocoder.geocode({
-        'latLng': latlng
-    }, function(results, status) {
+
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
-            if (results[1]) {
-                if(map.getZoom()>15){
+            if (results[resultExists]) {
+                if(map.getZoom()>zoomLevel){
                     marker.setPosition(input);
-                    document.getElementById('address').value = results[0].formatted_address;
+                    document.getElementById('address').value = results[resultExists].formatted_address;
                 }else{
                     showErrorMessage("You should zoom more");
                 }
@@ -94,17 +138,23 @@ function codeLatLng(input) {
     });
 }
 
-//geocode from address to coordinates
+/*
+ * Function allow to get coordinates from address
+ * objSel object is created when there are some objects with same address
+ */
+
 function codeAddress() {
-    if(document.getElementById('address').value==""){
+    if(""==document.getElementById('address').value){
         showErrorMessage('Please, input the address');
     }else{
+        //this variable show that strict result from geocode is define
+        var strictResultExists = 0;
+        var zoomLevel = 16;
         var address = document.getElementById('address').value;
+        
         objSel = document.getElementById("addressSelect");
         var latlng;
-        geocoder.geocode( {
-            'address': address
-        }, function(results, status) {
+        geocoder.geocode( {'address': address}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 if(results.length>1){
                     objSel.style.display = "block";
@@ -112,12 +162,10 @@ function codeAddress() {
                         objSel.options[i] = new Option(results[i].formatted_address, results[i].geometry.location);
                     }
                 }
-                
-
-                latlng = getLatLng(results[0].geometry.location);
+                latlng = getLatLng(results[strictResultExists].geometry.location);
                 map.setCenter(latlng);
-                document.getElementById('address').value = results[0].formatted_address;
-                map.setZoom(16);
+                document.getElementById('address').value = results[strictResultExists].formatted_address;
+                map.setZoom(zoomLevel);
             } else {
                 showErrorMessage('Wrong address. Please input another one');
             }
@@ -125,7 +173,9 @@ function codeAddress() {
     }
 }
 
-//Set marker on select option. Changes the value of input address
+/*
+ *Set marker on select option. Changes the value of input address
+ */
 function selectFunction(){
     var select = document.getElementById("addressSelect");
     var position =  getLatLng(select.value);
@@ -133,7 +183,9 @@ function selectFunction(){
     document.getElementById("address").value = select.options[select.selectedIndex].text;
 }
 
-//Converts String to Google location Object
+/*
+ *Converts String to Google location Object
+ */
 function getLatLng(loc){
     var position =  String(loc).slice(1, -1);
     var latlngStr = position.split(',', 2);
@@ -143,31 +195,37 @@ function getLatLng(loc){
     return latlng;
 }
 
-//remove marker froma map
+/*
+ *remove marker from map
+ */
 function removePointer(){
     clear();
     marker.setMap(null);
     marker = null;
     document.getElementById("address").value = "";
-//    objSel.style.display = "none";
 }
 
-/*THIS function calculate distance*/
+/*
+ *THIS function calculate distance between marker and service locations
+ */
 function calcMinDistance(){
-    var k;
+    
     var minPosition;
-    var dis = 10000000000;
-    for(k=0; k<destination.length;k++){
-        geocoder.geocode({
-            'address': destination[k]
-        }, function(results, status) {
+    //value is created for comparing distances
+    var dis = Number.MAX_VALUE;
+    //this variable show that strict result from geocode is define
+    var strictResultExists = 0;
+    //maximum distance between 2 locations.
+    var maximumDistance = 50000;
+    for(var k=0; k<destination.length;k++){
+        geocoder.geocode({'address': destination[k]}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-                minLngLat = getLatLng(results[0].geometry.location);
+                minLngLat = getLatLng(results[strictResultExists].geometry.location);
                 var distance = google.maps.geometry.spherical.computeDistanceBetween(
                     getLatLng(marker.getPosition()),minLngLat).toFixed(2);
                 if(parseFloat(distance)<parseFloat(dis)){
                     dis = distance;
-                    minPosition = results[0].formatted_address;
+                    minPosition = results[strictResultExists].formatted_address;
                 }
             }else{
                 showErrorMessage('Wrong address. Please input another one');
@@ -177,7 +235,7 @@ function calcMinDistance(){
     window.setTimeout(function(){
         var m = marker.getPosition();
         if(m != undefined){
-            if(parseFloat(dis) < 50000){
+            if(parseFloat(dis) < maximumDistance){
                 minPos = minPosition;
             }else{
                 showErrorMessage("You are too far");
@@ -185,27 +243,15 @@ function calcMinDistance(){
         }else{
             showErrorMessage("Choose location, please");
         }
-    },500);
+    },delayTime);
 }
 
-function geocode(address){
-    geocoder.geocode( {
-        'address': address
-    }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            this.minLngLat = getLatLng(results[0].geometry.location);
-            showErrorMessage(minLngLat);
-        } else {
-            showErrorMessage('Wrong address. Please input another one');
-        }
-    });
-}
-
+/*
+ * Function display providerlocations markers on map
+ */
 function getProviderMarkers(){
     for(var i=0;i<destination.length;i++){
-        geocoder.geocode( {
-            'address': destination[i]
-        }, function(results, status) {
+        geocoder.geocode( {'address': destination[i]}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 var marker = new google.maps.Marker({
                     position: results[0].geometry.location,
@@ -218,7 +264,10 @@ function getProviderMarkers(){
         });
     }
 }
-    
+
+
+// block creates Google Map by initialize it with specific function
+// if maps are not available redirect to error page
 try{
     google.maps.event.addDomListener(window, 'load', initialize);
 }catch(e){

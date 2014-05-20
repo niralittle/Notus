@@ -1,9 +1,12 @@
 var req; //request to servlet
 var contents; //content of responseXML
-var locations;
-var minPos;
+var locations; //service provider locations
+var minPos; //minimal position between marker and provider location
+var delayTime = 1000; //time to perform the functions request to Google
 
-//makes request and implements the ajax
+/*
+ * makes request and implements the ajax
+ */
 function getServices(){
     minPos = undefined;
     if(marker != null){
@@ -13,11 +16,13 @@ function getServices(){
             var minID = getID();
             getAvailableServices(minID);
             removeLoad();
-        }, 1000);
+        }, delayTime);
     }else{
         showErrorMessage("Choose location, please");
     }
 }
+
+
 function getAvailableServices(minID){
     var url = "ServicesServlet?providerLocationID="+minID;
     req = initRequest();
@@ -25,6 +30,7 @@ function getAvailableServices(minID){
     req.onreadystatechange = callback;
     req.send(null);
 }
+
 //initializes request
 function initRequest() {
     if (window.ActiveXObject) {
@@ -33,6 +39,7 @@ function initRequest() {
         return new XMLHttpRequest();
     }
 }
+
 function getID(){
     for(var k=0; k<locations.length;k++){
         if(minPos == locations[k].getElementsByTagName("location")[0].firstChild.nodeValue){

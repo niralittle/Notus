@@ -8,6 +8,6 @@
 
 <div id="notAvailableService">
     <center><img src="assets/service.png"></img></center>
-    <input type="submit" value="Go back"
+    <input type="submit" value="Go Home"
            onclick="javascript:document.location.href='index.jsp';"/>
 </div>
