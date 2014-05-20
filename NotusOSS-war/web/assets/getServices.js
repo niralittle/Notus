@@ -115,6 +115,7 @@ function addButton() {
     ok.setAttribute("type", "button");
     ok.setAttribute("value", "Choose and proceed to order");
     ok.setAttribute("onclick", "goToRegistration()");
+    ok.setAttribute("class", "btn btn-success");
     td.appendChild(ok);
     tr.appendChild(td);
     contents.appendChild(tr);

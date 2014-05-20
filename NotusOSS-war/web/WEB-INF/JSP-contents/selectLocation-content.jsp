@@ -17,17 +17,17 @@ src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&lan
     <div id ="rightblock">
         <h3></h3>
         <input type="text" id="address" name="address" value="" 
-               style="width:489px;"/>
+               style="width:450px;"/>
         <select id="addressSelect" name="mySelect" onchange="selectFunction()" 
                 style="display:none; padding-left: 5px; "/>
-        <input type="button" value="Show on the map" onclick="codeAddress()" style="">
-        <input type="button" value="Remove Pointer" onclick="removePointer()">
+        <input type="button" value="Show on the map" onclick="codeAddress()" class="btn btn-info" style="">
+        <input type="button" value="Remove Pointer" onclick="removePointer()" class="btn btn-warning">
         
          <%-- form for the table of services --%>
          <form id="servicesForm" name="getservices" action="ServicesServlet">
              <input id="see" type="button" 
                     value="Show available services for this location"
-                    onclick="getServices()"/>
+                    onclick="getServices()" class="btn btn-success"/>
              <img id="loader" src="assets/ajax-loader.gif" alt="Loading..."
                   style="display:none;"/>
              <div id="errorPanel" style="padding-top:20px;"></div>
