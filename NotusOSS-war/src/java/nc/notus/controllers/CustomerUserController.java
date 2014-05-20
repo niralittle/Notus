@@ -57,36 +57,47 @@ public class CustomerUserController extends AbstractController {
      * @param serviceInstanceID
      * @throws DBManagerException
      */
-    public void proceedToDisconnect(int serviceInstanceID) throws DBManagerException {
-        ServiceOrder serviceOrder = null;
-        ServiceOrderDAOImpl soDAO = null;
-        DisconnectScenarioWorkflow disconnectWF = null;
-        try {
-            if (isInternal) {
-                dbManager = new DBManager();
-            }
-            // get order by SI
-            soDAO = new ServiceOrderDAOImpl(dbManager);
-            serviceOrder = soDAO.getServiceOrderBySIId(serviceInstanceID);
-            // change scenario of got order
-            serviceOrder.setScenarioID(WorkflowScenario.DISCONNECT.toInt());
-            serviceOrder.setServiceOrderStatusID(OrderStatus.ENTERING.toInt());
-            disconnectWF = new DisconnectScenarioWorkflow(serviceOrder, dbManager);
-            disconnectWF.proceedOrder();
-            if (isInternal) {
-                dbManager.commit();
-            }
-        } catch (DBManagerException wfExc) {
-            if (isInternal) {
-                dbManager.rollback();
-            }
-            throw new DBManagerException("Error while proceed to disconnect", wfExc);
-        } finally {
-            if (isInternal) {
-                dbManager.close();
-            }
-        }
-    }
+	public void proceedToDisconnect(int userId, int serviceInstanceID)
+			throws DBManagerException {
+		ServiceOrder serviceOrder = null;
+		ServiceOrderDAOImpl soDAO = null;
+		DisconnectScenarioWorkflow disconnectWF = null;
+		int userIdForDisconnect;
+		try {
+			if (isInternal) {
+				dbManager = new DBManager();
+			}
+			// get order by SI
+			soDAO = new ServiceOrderDAOImpl(dbManager);
+			serviceOrder = soDAO.getServiceOrderBySIId(serviceInstanceID);
+			serviceOrder.setScenarioID(WorkflowScenario.DISCONNECT.toInt());
+			serviceOrder.setServiceOrderStatusID(OrderStatus.ENTERING.toInt());
+
+			userIdForDisconnect = serviceOrder.getUserID();
+			if (userIdForDisconnect == userId) {
+				disconnectWF = new DisconnectScenarioWorkflow(serviceOrder, dbManager);
+				disconnectWF.proceedOrder();
+
+				if (isInternal) {
+					dbManager.commit();
+				}
+			} else {
+				throw new DBManagerException("You can proceed to "
+						+ "disconnect only your own service");
+			}
+
+		} catch (DBManagerException wfExc) {
+			if (isInternal) {
+				dbManager.rollback();
+			}
+			throw new DBManagerException("Error while proceed to disconnect",
+					wfExc);
+		} finally {
+			if (isInternal) {
+				dbManager.close();
+			}
+		}
+	}
 
     /**
      * Register in system after selecting service and creating new order.

@@ -114,7 +114,9 @@ public class Statement implements Closeable {
     @Override
     public void close() {
         try {
-            prStatement.close();
+        	if(prStatement != null) {
+        		prStatement.close();
+        	}
         } catch (SQLException exc) {
             logger.error(exc.getMessage(), exc);
         }

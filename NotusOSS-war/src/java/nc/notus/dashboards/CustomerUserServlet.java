@@ -29,6 +29,7 @@ import nc.notus.dao.impl.ServiceCatalogDAOImpl;
 import nc.notus.dao.impl.ServiceInstanceDAOImpl;
 import nc.notus.dao.impl.ServiceOrderDAOImpl;
 import nc.notus.dao.impl.ServiceTypeDAOImpl;
+import nc.notus.dashboards.CustomerUserServlet;
 import nc.notus.dbmanager.DBManager;
 import nc.notus.dbmanager.DBManagerException;
 import nc.notus.entity.OSSUser;
@@ -134,29 +135,34 @@ public class CustomerUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        if ("Disconnect".equals(request.getParameter("action"))) {
-            if (request.getParameter("serviceInstanceID") != null) {
-                int serviceInstanceId;
-                CustomerUserController userControl;
-                try {
-                    serviceInstanceId = Integer.parseInt(
-                    		request.getParameter("serviceInstanceID"));
-                    
-                    userControl = new CustomerUserController();
-                    userControl.proceedToDisconnect(serviceInstanceId);
-                } catch (DBManagerException wfExc) {
-                    Logger.getLogger(CustomerUserServlet.class.getName())
-                            .log(Level.SEVERE, null, wfExc);
-                    response.sendRedirect("CustomerUser");
-                } catch(NumberFormatException numExc) {
-                	response.sendRedirect("CustomerUser");
-                }
-            }
-            
-            //redirect to user cabinet
-            response.sendRedirect("CustomerUser");
-            return;
-        }
+    	 if ("Disconnect".equals(request.getParameter("action"))) {
+             if (request.getParameter("serviceInstanceID") != null) {
+                 int serviceInstanceId;
+                 int userId;
+                 CustomerUserController userControl;
+                 try {
+                     dbManager = new DBManager();
+                     serviceInstanceId = Integer.parseInt(
+                     		request.getParameter("serviceInstanceID"));
+                     
+                     userId = getUserID(request);
+                     userControl = new CustomerUserController();
+                     userControl.proceedToDisconnect(userId, serviceInstanceId);
+                 } catch (DBManagerException wfExc) {
+                     Logger.getLogger(CustomerUserServlet.class.getName())
+                             .log(Level.SEVERE, null, wfExc);
+                     response.sendRedirect("CustomerUser");
+                     return;
+                 } catch(NumberFormatException numExc) {
+                 	response.sendRedirect("CustomerUser");
+                 	return;
+                 }
+             }
+             
+             //redirect to user cabinet
+             response.sendRedirect("CustomerUser");
+             return;
+         }
                
         //if need to create new SO
         if (request.getParameter("serviceLocationID") != null
