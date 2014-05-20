@@ -94,7 +94,7 @@
 <%
             for (OSSUser user : users) {
 %>
-<form method="post" onsubmit="return passValidate()" action="Support" >
+<form method="post" onsubmit="return passValidate(<%=user.getId()%>)" action="Support" >
     <tr>
         <td><%=user.getLogin()%></td>
         <td><%=user.getEmail()%></td>
@@ -103,7 +103,7 @@
                 <% if (!isAdmin) { %>
         <td>
         	<input type="password" class="form-control" 
-        			type="text" name="newPassword" id="pass"  value="" />
+        			type="text" name="newPassword" id="pass<%=user.getId()%>"  value="" />
          </td>
          <td><input type="submit" class="btn btn-warning" name="action"
                                 value="Apply" /></td>
