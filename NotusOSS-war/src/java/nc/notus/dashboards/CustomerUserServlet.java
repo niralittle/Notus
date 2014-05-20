@@ -68,12 +68,18 @@ public class CustomerUserServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
-        
+
+        int siPage = 1;
+        int soPage = 1;
         String siPageAttr = request.getParameter("siPage");
         String soPageAttr = request.getParameter("soPage");
-        int siPage = (siPageAttr == null) ? 1 : Integer.parseInt(siPageAttr);
-        int soPage = (soPageAttr == null) ? 1 : Integer.parseInt(soPageAttr);
-
+        try {
+            siPage = (siPageAttr == null) ? 1 : Integer.parseInt(siPageAttr);
+            soPage = (soPageAttr == null) ? 1 : Integer.parseInt(soPageAttr);
+        } catch (NumberFormatException ex) {
+            siPage = 1;
+            soPage = 1;
+        }
         try {
             dbManager = new DBManager();
         } catch (DBManagerException ex) {
