@@ -54,7 +54,7 @@ public class ReportGenerator {
      */
     public String getReportHTML() throws DBManagerException {
         StringBuilder HTMLReportBuilder = new StringBuilder();
-        HTMLReportBuilder.append("<table border='1' id ='table' width='90%' cellpadding='10'>");
+        HTMLReportBuilder.append("<table class='table table-bordered table-striped table-hover'");
         if (reportRef.getReportData() != null) {
             String[] rows = reportRef.getReportData();
             String[] columns = rows[0].split(COLUMN_SEPARATOR); //headers

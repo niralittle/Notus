@@ -50,7 +50,7 @@
         </SCRIPT>
     </SELECT>
     <hr>
-    <input type="submit" value="View report" id="viewreport"/><br>
+    <input type="submit" class="btn btn-success" value="View report" id="viewreport"/><br>
     <input type="hidden" name="fromdate" id="fromdate"/>
     <input type="hidden" name="todate" id="todate"/>
     <input type="hidden" name="bymonth" id="bymonth"/>
