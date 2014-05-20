@@ -62,11 +62,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>CreateCircuit</servlet-name>
-        <servlet-class>nc.notus.dashboards.CreateCircuit</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ServiceCatalogServlet</servlet-name>
         <servlet-class>nc.notus.ServiceCatalogServlet</servlet-class>
     </servlet>
@@ -157,10 +152,6 @@
     <servlet-mapping>
         <servlet-name>ProvisionEngineerTasksServlet</servlet-name>
         <url-pattern>/ProvisionEngineerTasksServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CreateCircuit</servlet-name>
-        <url-pattern>/CreateCircuit</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServiceCatalogServlet</servlet-name>
